@@ -144,6 +144,7 @@ static struct bitfield limmoff = { { 0x1a, 32 }, .wrapok = 1 };
 static struct bitfield shcntoff = { 5, 5 };
 static struct bitfield bnumoff = { 0x37, 2 };
 static struct bitfield hnumoff = { 0x38, 1 };
+static struct bitfield cvt_imm = { 0x1a, 21};
 #define BAR atomimm, &baroff
 #define PM atomimm, &pmoff
 #define TCNT atomimm, &tcntoff
@@ -154,6 +155,7 @@ static struct bitfield hnumoff = { 0x38, 1 };
 #define SHCNT atomimm, &shcntoff
 #define BNUM atomimm, &bnumoff
 #define HNUM atomimm, &hnumoff
+#define CVTIMM atomimm, &cvt_imm
 
 /*
  * Register fields
@@ -445,6 +447,7 @@ static struct insn tabcs2[] = {
 static struct insn tabfs2[] = {
 	{ 0x0000000000000000ull, 0x0000c00000000000ull, SRC2 },
 	{ 0x0000400000000000ull, 0x0000c00000000000ull, CONST },
+	{ 0x0000800000000000ull, 0x0000c00000000000ull, SRC2 },
 	{ 0x0000c00000000000ull, 0x0000c00000000000ull, FIMM },
 	{ 0, 0, OOPS },
 };
@@ -603,6 +606,8 @@ static struct insn tabcvtisrc[] = {
 	{ 0x0000000001000200ull, 0x0000000003800200ull, T(neg2), T(abs2), N("s32"), T(cs2) },
 	{ 0x0000000001800000ull, 0x0000000003800200ull, T(neg2), T(abs2), N("u64"), SRC2D },
 	{ 0x0000000001800200ull, 0x0000000003800200ull, T(neg2), T(abs2), N("s64"), SRC2D },
+	{ 0x0000800001000000ull, 0x0000800003800200ull, N("u32"), CVTIMM }, //yes, it's pointless, redundant mov, which should be precomputed. neg/abs wasn't checked.
+	{ 0x0000800001000200ull, 0x0000800003800200ull, N("s32"), CVTIMM },
 	{ 0, 0, OOPS, T(neg2), T(abs2), SRC2 },
 };
 
@@ -770,6 +775,7 @@ static struct insn tabm[] = {
 	// 10?
 	{ 0x1800000000000000ull, 0xf800000000000007ull, N("set"), T(setdt), DST, T(setit), N("f32"), T(neg1), T(abs1), SRC1, T(neg2), T(abs2), T(fs2), T(setlop) },
 	{ 0x200000000001c000ull, 0xf80000000001c007ull, N("set"), PDST, T(setit), N("f32"), T(neg1), T(abs1), SRC1, T(neg2), T(abs2), T(fs2), T(setlop) }, // and these unknown bits are what? another predicate?
+	{ 0x280000000001c000ull, 0xf80000000001c007ull, N("set"), PDST, T(setit), N("f32"), T(neg1), T(abs1), SRC1, T(neg2), T(abs2), T(fs2), T(setlop) }, // FIXME: shouldn't it be somewhat different then 0x20*? hm.
 	// 28?
 	{ 0x3000000000000000ull, 0xf800000000000007ull, N("add"), T(fmf), T(ias), T(farm), N("f32"), DST, T(neg1), N("mul"), SRC1, T(fs2), T(neg2), SRC3 },
 	{ 0x3800000000000000ull, 0xf800000000000007ull, N("slct"), N("b32"), DST, SRC1, T(fs2), T(setit), N("f32"), SRC3 },
@@ -791,6 +797,7 @@ static struct insn tabm[] = {
 	{ 0xc80000000c000000ull, 0xf80000001c000007ull, N("lg2"), N("f32"), DST, T(neg1), T(abs1), SRC1 },
 	{ 0xc800000010000000ull, 0xf80000001c000007ull, N("rcp"), N("f32"), DST, T(neg1), T(abs1), SRC1 },
 	{ 0xc800000014000000ull, 0xf80000001c000007ull, N("rsqrt"), N("f32"), DST, T(neg1), T(abs1), SRC1 },
+	{ 0xc800000018000000ull, 0xf80000001c000007ull, N("ORTH_ME"), N("f32"), DST, SRC1 }, //a real wtf. looks like a very poor estimate of f(x)=3.6/x. NFI. Appears in trigonometric emulation.
 	{ 0x0000000000000000ull, 0x0000000000000007ull, OOPS, T(farm), N("f32"), DST, SRC1, T(fs2), SRC3 },
 
 
@@ -817,6 +824,7 @@ static struct insn tabm[] = {
 	{ 0x3800000000000002ull, 0xf8000000000000c7ull, N("and"), N("b32"), DST, SRC1, LIMM },
 	{ 0x3800000000000042ull, 0xf8000000000000c7ull, N("or"), N("b32"), DST, SRC1, LIMM },
 	{ 0x3800000000000082ull, 0xf8000000000000c7ull, N("xor"), N("b32"), DST, SRC1, LIMM },
+	{ 0x4000000000000002ull, 0xf800000000000007ull, N("add"), N("b32"), DST, N("shl"), SRC1, SHCNT, LIMM },	//FIXME: addop/addop2?
 	{ 0x0000000000000002ull, 0x0000000000000007ull, OOPS, N("b32"), DST, SRC1, LIMM },
 
 
@@ -901,6 +909,7 @@ static struct insn tabm[] = {
 	{ 0x9000000000000005ull, 0xf800000000000007ull, N("st"), T(ldstt), T(scop), T(gmem), T(ldstd) },
 	{ 0x9800000000000025ull, 0xfc00000000000027ull, N("prefetch"), T(prefetchl), GPMEM },
 	{ 0x9c00000000000025ull, 0xfc00000000000027ull, N("prefetch"), T(prefetchl), GDPMEM },
+	{ 0xd000000000000025ull, 0xfc00000000000027ull, N("prefetch"), T(prefetchl), LPMEM },
 	{ 0xb320003f00000005ull, 0xfb20003f00000007ull, N("prefetch"), DST, SRC1, SRC2 },
 	{ 0xb300000000000005ull, 0xf3e0000000000007ull, N("ldu"), N("b32"), DST, T(lduld_gmem2), N("ld"), N("b32"), LDULD_DST2, T(lduld_gmem1) },
 	{ 0xb320000000000005ull, 0xf3e0000000000007ull, N("ldu"), N("b64"), DSTD, T(lduld_gmem2), N("ld"), N("b32"), LDULD_DST2, T(lduld_gmem1) },
