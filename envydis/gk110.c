@@ -260,8 +260,10 @@ F1(neg34, 0x34, N("neg")) // fma f32,f64 src3
 F1(abs31, 0x31, N("abs")) // add f32 src1
 F1(abs34, 0x34, N("abs")) // add f32,f64 src2
 F1(abs39, 0x39, N("abs")) // add f32 long immediate
+F1(not2b, 0x2b, N("not")) // logop src2
 
 F1(acout32, 0x32, CC)
+F1(acin2e, 0x2e, CC)
 
 F1(pnot2d, 0x2d, N("not")) // minmax select
 
@@ -276,6 +278,21 @@ static struct insn tabaddop[] = {
 	{ 0x0008000000000000ull, 0x0018000000000000ull, N("sub") },
 	{ 0x0010000000000000ull, 0x0018000000000000ull, N("subr") },
 	{ 0x0018000000000000ull, 0x0018000000000000ull, N("addpo") }, // XXX: check me
+	{ 0, 0, OOPS },
+};
+
+static struct insn tablogop[] = {
+	{ 0x0000000000000000ull, 0x0000300000000000ull, N("and") },
+	{ 0x0000100000000000ull, 0x0000300000000000ull, N("or") },
+	{ 0x0000200000000000ull, 0x0000300000000000ull, N("xor") },
+	{ 0x0000300000000000ull, 0x0000300000000000ull, N("mov2") },
+	{ 0, 0, OOPS },
+};
+static struct insn tablogop38[] = {
+	{ 0x0000000000000000ull, 0x0300000000000000ull, N("and") },
+	{ 0x0100000000000000ull, 0x0300000000000000ull, N("or") },
+	{ 0x0200000000000000ull, 0x0300000000000000ull, N("xor") },
+	{ 0x0300000000000000ull, 0x0300000000000000ull, N("mov2") },
 	{ 0, 0, OOPS },
 };
 
@@ -302,7 +319,8 @@ static struct insn tabm[] = {
 	{ 0x0c00000000000002ull, 0x3e00000000000003ull, N("fma"), T(ftz38), T(sat35),  T(frm36), N("f32"), DST, T(neg33), SRC1, T(is2w3), T(neg34), T(is3) },
 	{ 0x1b80000000000002ull, 0x3f80000000000003ull, N("fma"), T(frm35), N("f64"), DSTD, T(neg33), SRC1D, T(ds2w3), T(neg34), T(ds3) },
 	{ 0x2000000000000002ull, 0x3a80000000000003ull, N("mul"), T(ftz38), T(sat3a), N("f32"), DST, SRC1, LIMM },
-	{ 0x2080000000000002ull, 0x3fc0000000000003ull, T(addop), T(sat35), N("b32"), DST, T(acout32), SRC1, T(is2) },
+	{ 0x2080000000000002ull, 0x3fc0000000000003ull, T(addop), T(sat35), N("b32"), DST, T(acout32), SRC1, T(is2), T(acin2e) },
+	{ 0x2200000000000002ull, 0x3fc0000000000003ull, T(logop), N("b32"), DST, SRC1, T(not2b), T(is2) },
 	{ 0x2280000000000002ull, 0x3fc0000000000003ull, T(minmax), N("f64"), DSTD, T(neg33), T(abs31), SRC1D, T(neg30), T(abs34), T(ds2) },
 	{ 0x22c0000000000002ull, 0x3fc0000000000003ull, N("add"), T(ftz2f), T(sat35), T(frm2a), N("f32"), DST, T(neg33), T(abs31), SRC1, T(neg30), T(abs34), T(is2) },
 	{ 0x2300000000000002ull, 0x3fc0000000000003ull, T(minmax), N("f32"), DST, T(neg33), T(abs31), SRC1, T(neg30), T(abs34), T(is2) },
@@ -372,6 +390,7 @@ static struct insn tabc[] = {
 	{ 0x1480000000000000ull, 0xff80000000000000ull, N("joinat"), BTARG },
 	{ 0x1800000000000000ull, 0xff80000000000000ull, T(p), T(cc), N("exit") },
 
+	{ 0x2000000000000000ull, 0xfc80000000000000ull, T(logop38), N("b32"), DST, SRC1, LIMM }, // XXX: [unknown: 001c0000 00000000]
 	{ 0x4000000000000000ull, 0xf180000000000000ull, N("add"), T(ftz3a), N("f32"), DST, T(neg3b), T(abs39), SRC1, LIMM }, // XXX: [unknown: 001c0000 00000000]
 
 	{ 0xc000000000000000ull, 0xe000000000000000ull, T(p), N("ld"), T(ldstt), T(ldstd), T(lcop), T(gmem) },
