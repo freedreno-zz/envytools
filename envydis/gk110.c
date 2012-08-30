@@ -296,6 +296,18 @@ static struct insn tablogop38[] = {
 	{ 0, 0, OOPS },
 };
 
+static struct insn tabsfuop[] = {
+	{ 0x00000000, 0x03800000, N("cos") },
+	{ 0x00800000, 0x03800000, N("sin") },
+	{ 0x01000000, 0x03800000, N("ex2") },
+	{ 0x01800000, 0x03800000, N("lg2") },
+	{ 0x02000000, 0x03800000, N("rcp") },
+	{ 0x02800000, 0x03800000, N("rsqrt") },
+	{ 0x03000000, 0x03800000, N("rcp64h") },
+	{ 0x03800000, 0x03800000, N("rsqrt64h") },
+	{ 0, 0, OOPS },
+};
+
 /*
  * Opcode format
  *
@@ -316,6 +328,9 @@ static struct insn tablogop38[] = {
  */
 
 static struct insn tabm[] = {
+	{ 0x8400000003000002ull, 0xbfc0000003800003ull, N("rcp64h"), DST, T(neg33), T(abs31), SRC1 },
+	{ 0x8400000003800002ull, 0xbfc0000003800003ull, N("rsqrt64h"), DST, T(neg33), T(abs31), SRC1 },
+	{ 0x8400000000000002ull, 0xbfc0000000000003ull, T(sfuop), N("f32"), DST, T(neg33), T(abs31), SRC1 },
 	{ 0x0c00000000000002ull, 0x3e00000000000003ull, N("fma"), T(ftz38), T(sat35),  T(frm36), N("f32"), DST, T(neg33), SRC1, T(is2w3), T(neg34), T(is3) },
 	{ 0x1b80000000000002ull, 0x3f80000000000003ull, N("fma"), T(frm35), N("f64"), DSTD, T(neg33), SRC1D, T(ds2w3), T(neg34), T(ds3) },
 	{ 0x2000000000000002ull, 0x3a80000000000003ull, N("mul"), T(ftz38), T(sat3a), N("f32"), DST, SRC1, LIMM },
@@ -327,6 +342,8 @@ static struct insn tabm[] = {
 	{ 0x2340000000000002ull, 0x3fc0000000000003ull, N("mul"), T(ftz2f), T(sat35), T(frm2a), T(neg33), N("f32"), DST, SRC1, T(is2) },
 	{ 0x2380000000000002ull, 0x3fc0000000000003ull, N("add"), T(frm2a), N("f64"), DSTD, T(neg33), T(abs31), SRC1D, T(neg30), T(abs34), T(ds2) },
 	{ 0x2400000000000002ull, 0x3fc0000000000003ull, N("mul"), T(frm2a), T(neg33), N("f64"), DSTD, SRC1D, T(ds2) },
+	{ 0x2480000000000002ull, 0x3fc0040000000003ull, N("presin"), N("f32"), DST, T(neg30), T(abs34), T(is2) },
+	{ 0x2480040000000002ull, 0x3fc0040000000003ull, N("preex2"), N("f32"), DST, T(neg30), T(abs34), T(is2) },
 	{ 0x24c0000000000002ull, 0x3fc0000000000003ull, T(lane2a), N("mov"), N("b32"), DST, T(is2) },
 	{ 0x0, 0x0, OOPS },
 };
