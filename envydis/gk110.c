@@ -84,6 +84,7 @@ static struct reg src3d_r = { &src3_bf, "r", "d" };
 static struct reg psrc1_r = { &psrc1_bf, "p", .specials = pred_sr, .cool = 1 };
 static struct reg pdst_r = { &pdst_bf, "p", .specials = pred_sr, .cool = 1 };
 static struct reg pred_r = { &pred_bf, "p", .specials = pred_sr, .cool = 1 };
+static struct reg cc_r = { 0, "c", .cool = 1 };
 
 #define DST atomreg, &dst_r
 #define DSTD atomreg, &dstd_r
@@ -96,6 +97,7 @@ static struct reg pred_r = { &pred_bf, "p", .specials = pred_sr, .cool = 1 };
 #define SRC3 atomreg, &src3_r
 #define SRC3D atomreg, &src3d_r
 #define PSRC1 atomreg, &psrc1_r
+#define CC atomreg, &cc_r
 
 /*
  * Memory fields
@@ -152,6 +154,34 @@ static struct insn tablane2a[] = {
 	{ 0x0000340000000000ull, 0x00003c0000000000ull, N("l023") },
 	{ 0x0000380000000000ull, 0x00003c0000000000ull, N("l123") },
 	{ 0x00003c0000000000ull, 0x00003c0000000000ull },
+	{ 0, 0, OOPS },
+};
+
+static struct insn tabcc[] = {
+	{ 0x0000000000000000ull, 0x000000000000007cull, N("never"), CC },
+	{ 0x0000000000000004ull, 0x000000000000007cull, N("l"), CC },
+	{ 0x0000000000000008ull, 0x000000000000007cull, N("e"), CC },
+	{ 0x000000000000000cull, 0x000000000000007cull, N("le"), CC },
+	{ 0x0000000000000010ull, 0x000000000000007cull, N("g"), CC },
+	{ 0x0000000000000014ull, 0x000000000000007cull, N("lg"), CC },
+	{ 0x0000000000000018ull, 0x000000000000007cull, N("ge"), CC },
+	{ 0x000000000000001cull, 0x000000000000007cull, N("lge"), CC },
+	{ 0x0000000000000020ull, 0x000000000000007cull, N("u"), CC },
+	{ 0x0000000000000024ull, 0x000000000000007cull, N("lu"), CC },
+	{ 0x0000000000000028ull, 0x000000000000007cull, N("eu"), CC },
+	{ 0x000000000000002cull, 0x000000000000007cull, N("leu"), CC },
+	{ 0x0000000000000030ull, 0x000000000000007cull, N("gu"), CC },
+	{ 0x0000000000000034ull, 0x000000000000007cull, N("lgu"), CC },
+	{ 0x0000000000000038ull, 0x000000000000007cull, N("geu"), CC },
+	{ 0x000000000000003cull, 0x000000000000007cull, },
+	{ 0x0000000000000040ull, 0x000000000000007cull, N("no"), CC },
+	{ 0x0000000000000044ull, 0x000000000000007cull, N("nc"), CC },
+	{ 0x0000000000000048ull, 0x000000000000007cull, N("ns"), CC },
+	{ 0x000000000000004cull, 0x000000000000007cull, N("na"), CC },
+	{ 0x0000000000000050ull, 0x000000000000007cull, N("a"), CC },
+	{ 0x0000000000000054ull, 0x000000000000007cull, N("s"), CC },
+	{ 0x0000000000000058ull, 0x000000000000007cull, N("c"), CC },
+	{ 0x000000000000005cull, 0x000000000000007cull, N("o"), CC },
 	{ 0, 0, OOPS },
 };
 
@@ -271,9 +301,9 @@ static struct insn tabp[] = {
 
 static struct insn tabc[] = {
 	{ 0x0880000000000000ull, 0x1f80000000000000ull, N("sched"), SCHED },
-	{ 0x1200000000000000ull, 0x1f80000000000000ull, T(p), N("bra"), BTARG },
+	{ 0x1200000000000000ull, 0x1f80000000000000ull, T(p), T(cc), N("bra"), BTARG },
 	{ 0x1480000000000000ull, 0x1f80000000000000ull, N("joinat"), BTARG },
-	{ 0x1800000000000000ull, 0x1f80000000000000ull, T(p), N("exit") },
+	{ 0x1800000000000000ull, 0x1f80000000000000ull, T(p), T(cc), N("exit") },
 	{ 0, 0, OOPS },
 };
 
