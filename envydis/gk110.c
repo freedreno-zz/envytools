@@ -44,12 +44,14 @@ static struct rbitfield ctargoff = { { 23, 24 }, RBF_SIGNED, .pcrel = 1, .addend
  * Misc number fields
  */
 static struct rbitfield uimmoff = { { 0x17, 19 }, RBF_UNSIGNED };
+static struct rbitfield suimmoff = { { 0x17, 18 }, RBF_UNSIGNED };
 static struct rbitfield iimmoff = { { 0x17, 19 }, RBF_SIGNED };
 static struct rbitfield fimmoff = { { 0x17, 19 }, .shr = 12 };
 static struct rbitfield limmoff = { { 0x17, 32 }, .wrapok = 1 };
 static struct rbitfield dimmoff = { { 0x17, 19 }, .shr = 44 };
 static struct rbitfield schedvals = { { 0x2, 56 }, .wrapok = 1 };
 #define UIMM atomrimm, &uimmoff
+#define SUIMM atomrimm, &suimmoff
 #define IIMM atomrimm, &iimmoff
 #define FIMM atomrimm, &fimmoff
 #define DIMM atomrimm, &dimmoff
@@ -77,14 +79,14 @@ static struct bitfield pred_bf = { 0x12, 3 };
 static struct bitfield psrc1_bf = { 0x2a, 3 };
 
 static struct reg dst_r = { &dst_bf, "r", .specials = reg_sr };
-static struct reg dstd_r = { &dst_bf, "r", "d" };
+static struct reg dstd_r = { &dst_bf, "r", "d", .specials = reg_sr };
 static struct reg dstq_r = { &dst_bf, "r", "q" };
 static struct reg src1_r = { &src1_bf, "r", .specials = reg_sr };
-static struct reg src1d_r = { &src1_bf, "r", "d" };
+static struct reg src1d_r = { &src1_bf, "r", "d", .specials = reg_sr };
 static struct reg src2_r = { &src2_bf, "r", .specials = reg_sr };
-static struct reg src2d_r = { &src2_bf, "r", "d" };
+static struct reg src2d_r = { &src2_bf, "r", "d", .specials = reg_sr };
 static struct reg src3_r = { &src3_bf, "r", .specials = reg_sr };
-static struct reg src3d_r = { &src3_bf, "r", "d" };
+static struct reg src3d_r = { &src3_bf, "r", "d", .specials = reg_sr };
 static struct reg psrc1_r = { &psrc1_bf, "p", .specials = pred_sr, .cool = 1 };
 static struct reg pdst_r = { &pdst_bf, "p", .specials = pred_sr, .cool = 1 };
 static struct reg pred_r = { &pred_bf, "p", .specials = pred_sr, .cool = 1 };
@@ -239,6 +241,14 @@ static struct insn tabii2[] = {
 	{ 0xc800000000000000ull, 0xc800000000000000ull, IIMM }, // XXX: check me
 	{ 0, 0, OOPS },
 };
+static struct insn tabsui2a[] = {
+	{ 0x8000000000000000ull, 0xc000000000000000ull, SUIMM },
+	{ 0, 0, OOPS },
+};
+static struct insn tabsui2b[] = {
+	{ 0xc000000000000000ull, 0xc000000000000000ull, SUIMM },
+	{ 0, 0, OOPS },
+};
 static struct insn tabfi2[] = {
 	{ 0xc000000000000000ull, 0xc000000000000000ull, FIMM },
 	{ 0, 0, OOPS },
@@ -266,6 +276,8 @@ F1(acout32, 0x32, CC)
 F1(acin2e, 0x2e, CC)
 
 F1(pnot2d, 0x2d, N("not")) // minmax select
+
+F(shfclamp, 0x35, N("clamp"), N("wrap"))
 
 static struct insn tabminmax[] = {
 	{ 0x00001c0000000000ull, 0x00003c0000000000ull, N("min") },
@@ -333,6 +345,8 @@ static struct insn tabm[] = {
 	{ 0x8400000000000002ull, 0xbfc0000000000003ull, T(sfuop), N("f32"), DST, T(neg33), T(abs31), SRC1 },
 	{ 0x0c00000000000002ull, 0x3e00000000000003ull, N("fma"), T(ftz38), T(sat35),  T(frm36), N("f32"), DST, T(neg33), SRC1, T(is2w3), T(neg34), T(is3) },
 	{ 0x1b80000000000002ull, 0x3f80000000000003ull, N("fma"), T(frm35), N("f64"), DSTD, T(neg33), SRC1D, T(ds2w3), T(neg34), T(ds3) },
+	{ 0x1fc0000000000002ull, 0x3fc0000000000003ull, N("lshf"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(shfclamp), T(is2) }, // XXX: check is2 and bits 0x29,0x33(swap srcs ?)
+	{ 0x2148000000000002ull, 0x3fc8000000000003ull, N("shr"), N("s32"), DST, SRC1, T(is2) }, // XXX: find shl and wrap bits
 	{ 0x2000000000000002ull, 0x3a80000000000003ull, N("mul"), T(ftz38), T(sat3a), N("f32"), DST, SRC1, LIMM },
 	{ 0x2080000000000002ull, 0x3fc0000000000003ull, T(addop), T(sat35), N("b32"), DST, T(acout32), SRC1, T(is2), T(acin2e) },
 	{ 0x2200000000000002ull, 0x3fc0000000000003ull, T(logop), N("b32"), DST, SRC1, T(not2b), T(is2) },
@@ -345,15 +359,19 @@ static struct insn tabm[] = {
 	{ 0x2480000000000002ull, 0x3fc0040000000003ull, N("presin"), N("f32"), DST, T(neg30), T(abs34), T(is2) },
 	{ 0x2480040000000002ull, 0x3fc0040000000003ull, N("preex2"), N("f32"), DST, T(neg30), T(abs34), T(is2) },
 	{ 0x24c0000000000002ull, 0x3fc0000000000003ull, T(lane2a), N("mov"), N("b32"), DST, T(is2) },
+	{ 0x27c0000000000002ull, 0x3fc0000000000003ull, N("rshf"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(shfclamp), T(is2) }, // XXX: check is2 and bits 0x29,0x33(swap srcs ?)
 	{ 0x0, 0x0, OOPS },
 };
 
 static struct insn tabi[] = {
 	{ 0x0080000000000001ull, 0x37c0000000000003ull, T(addop), T(sat35), N("b32"), DST, T(acout32), SRC1, T(ii2) },
+	{ 0x0148000000000001ull, 0x37c8000000000003ull, N("shr"), N("s32"), DST, SRC1, T(sui2b) }, // XXX: find shl and wrap bits
 	{ 0x02c0000000000001ull, 0x37c0000000000003ull, N("add"), T(ftz2f), T(sat35), T(frm2a), N("f32"), DST, T(neg33), T(abs31), SRC1, T(neg30), T(abs34), T(is2) }, // XXX
 	{ 0x0340000000000001ull, 0x37c0000000000003ull, N("mul"), T(ftz2f), T(sat35), T(frm2a), T(neg3b), N("f32"), DST, SRC1, T(fi2) },
 	{ 0x0400000000000001ull, 0x37c0000000000003ull, N("mul"), T(frm2a), T(neg3b), N("f64"), DSTD, SRC1D, T(di2) },
+	{ 0x07c0000000000001ull, 0x37c0000000000003ull, N("rshf"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(sui2b) }, // d = (s1 >> s2) | (s3 << (32 - s2))
 	{ 0x1400000000000001ull, 0x37c0000000000003ull, N("fma"), T(ftz38), T(sat35), T(frm36), N("f32"), DST, T(neg33), SRC1, T(is2w3), T(neg34), T(is3) }, // XXX
+	{ 0x37c0000000000001ull, 0x37c0000000000003ull, N("lshl"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(sui2a) }, // d = (s3 << s2) | (s1 >> (32 - s2))
 	{ 0x0, 0x0, OOPS },
 };
 
