@@ -44,7 +44,7 @@ static struct rbitfield ctargoff = { { 23, 24 }, RBF_SIGNED, .pcrel = 1, .addend
  * Misc number fields
  */
 static struct rbitfield uimmoff = { { 0x17, 19 }, RBF_UNSIGNED };
-static struct rbitfield suimmoff = { { 0x17, 18 }, RBF_UNSIGNED };
+static struct rbitfield suimmoff = { { 0x17, 18 }, RBF_UNSIGNED }; // XXX: for r/lshf, check size
 static struct rbitfield iimmoff = { { 0x17, 19 }, RBF_SIGNED };
 static struct rbitfield fimmoff = { { 0x17, 19 }, .shr = 12 };
 static struct rbitfield limmoff = { { 0x17, 32 }, .wrapok = 1 };
@@ -371,7 +371,7 @@ static struct insn tabi[] = {
 	{ 0x0400000000000001ull, 0x37c0000000000003ull, N("mul"), T(frm2a), T(neg3b), N("f64"), DSTD, SRC1D, T(di2) },
 	{ 0x07c0000000000001ull, 0x37c0000000000003ull, N("rshf"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(sui2b) }, // d = (s1 >> s2) | (s3 << (32 - s2))
 	{ 0x1400000000000001ull, 0x37c0000000000003ull, N("fma"), T(ftz38), T(sat35), T(frm36), N("f32"), DST, T(neg33), SRC1, T(is2w3), T(neg34), T(is3) }, // XXX
-	{ 0x37c0000000000001ull, 0x37c0000000000003ull, N("lshl"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(sui2a) }, // d = (s3 << s2) | (s1 >> (32 - s2))
+	{ 0x37c0000000000001ull, 0x37c0000000000003ull, N("lshf"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(sui2a) }, // d = (s3 << s2) | (s1 >> (32 - s2))
 	{ 0x0, 0x0, OOPS },
 };
 
@@ -425,8 +425,8 @@ static struct insn tabc[] = {
 	{ 0x1480000000000000ull, 0xff80000000000000ull, N("joinat"), BTARG },
 	{ 0x1800000000000000ull, 0xff80000000000000ull, T(p), T(cc), N("exit") },
 
-	{ 0x2000000000000000ull, 0xfc80000000000000ull, T(logop38), N("b32"), DST, SRC1, LIMM }, // XXX: [unknown: 001c0000 00000000]
-	{ 0x4000000000000000ull, 0xf180000000000000ull, N("add"), T(ftz3a), N("f32"), DST, T(neg3b), T(abs39), SRC1, LIMM }, // XXX: [unknown: 001c0000 00000000]
+	{ 0x2000000000000000ull, 0xfc80000000000000ull, T(p), T(logop38), N("b32"), DST, SRC1, LIMM },
+	{ 0x4000000000000000ull, 0xf180000000000000ull, T(p), N("add"), T(ftz3a), N("f32"), DST, T(neg3b), T(abs39), SRC1, LIMM },
 
 	{ 0xc000000000000000ull, 0xe000000000000000ull, T(p), N("ld"), T(ldstt), T(ldstd), T(lcop), T(gmem) },
 	{ 0xe000000000000000ull, 0xe000000000000000ull, T(p), N("st"), T(ldstt), T(scop), T(gmem), T(ldstd) },
