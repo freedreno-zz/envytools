@@ -128,6 +128,14 @@ static struct mem cmem_m = { "c", &cmem_idx, 0, &cmem_imm };
 
 F(gmem, 0x37, GLOBAL, GLOBALD)
 
+static struct insn tabfrmi[] = {
+	{ 0x0000000000000000, 0x00000c0000000000, N("rni") },
+	{ 0x0000040000000000, 0x00000c0000000000, N("rmi") },
+	{ 0x0000080000000000, 0x00000c0000000000, N("rpi") },
+	{ 0x00000c0000000000, 0x00000c0000000000, N("rzi") },
+	{ 0, 0, OOPS },
+};
+
 static struct insn tabfrm2a[] = {
 	{ 0x0000000000000000, 0x00000c0000000000, N("rn") },
 	{ 0x0000040000000000, 0x00000c0000000000, N("rm") },
@@ -258,6 +266,60 @@ static struct insn tabdi2[] = {
 	{ 0, 0, OOPS },
 };
 
+static struct insn tabcvtf2idst[] = {
+	{ 0x0000000000000400ull, 0x0000000000004c00ull, N("u16"), DST },
+	{ 0x0000000000004400ull, 0x0000000000004c00ull, N("s16"), DST },
+	{ 0x0000000000000800ull, 0x0000000000004c00ull, N("u32"), DST },
+	{ 0x0000000000004800ull, 0x0000000000004c00ull, N("s32"), DST },
+	{ 0x0000000000000c00ull, 0x0000000000004c00ull, N("u64"), DSTD },
+	{ 0x0000000000004c00ull, 0x0000000000004c00ull, N("s64"), DSTD },
+	{ 0, 0, OOPS },
+};
+static struct insn tabcvtf2isrc[] = {
+	{ 0x0000000000001000ull, 0x0000000000003000ull, N("f16"), T(is2) },
+	{ 0x0000000000002000ull, 0x0000000000003000ull, N("f32"), T(is2) },
+	{ 0x0000000000003000ull, 0x0000000000003000ull, N("f64"), T(ds2) },
+	{ 0, 0, OOPS },
+};
+
+static struct insn tabcvti2fdst[] = {
+	{ 0x0000000000000400ull, 0x0000000000000c00ull, N("f16"), DST },
+	{ 0x0000000000000800ull, 0x0000000000000c00ull, N("f32"), DST },
+	{ 0x0000000000000c00ull, 0x0000000000000c00ull, N("f64"), DSTD },
+	{ 0, 0, OOPS },
+};
+static struct insn tabcvti2fsrc[] = {
+	{ 0x0000000000000000ull, 0x000000000000b000ull, N("u8"), T(is2) },
+	{ 0x0000000000008000ull, 0x000000000000b000ull, N("s8"), T(is2) },
+	{ 0x0000000000001000ull, 0x000000000000b000ull, N("u16"), T(is2) },
+	{ 0x0000000000009000ull, 0x000000000000b000ull, N("s16"), T(is2) },
+	{ 0x0000000000002000ull, 0x000000000000b000ull, N("u32"), T(is2) },
+	{ 0x000000000000a000ull, 0x000000000000b000ull, N("s32"), T(is2) },
+	{ 0x0000000000003000ull, 0x000000000000b000ull, N("u64"), T(ds2) },
+	{ 0x000000000000b000ull, 0x000000000000b000ull, N("s64"), T(ds2) },
+	{ 0, 0, OOPS },
+};
+
+static struct insn tabcvti2isrc[] = {
+	{ 0x0000000000000000ull, 0x000000000000b000ull, N("u8"), T(is2) },
+	{ 0x0000000000008000ull, 0x000000000000b000ull, N("s8"), T(is2) },
+	{ 0x0000000000001000ull, 0x000000000000b000ull, N("u16"), T(is2) },
+	{ 0x0000000000009000ull, 0x000000000000b000ull, N("s16"), T(is2) },
+	{ 0x0000000000002000ull, 0x000000000000b000ull, N("u32"), T(is2) },
+	{ 0x000000000000a000ull, 0x000000000000b000ull, N("s32"), T(is2) },
+	{ 0, 0, OOPS },
+};
+static struct insn tabcvti2idst[] = {
+	{ 0x0000000000000000ull, 0x0000000000004c00ull, N("u8"), DST },
+	{ 0x0000000000004000ull, 0x0000000000004c00ull, N("s8"), DST },
+	{ 0x0000000000000400ull, 0x0000000000004c00ull, N("u16"), DST },
+	{ 0x0000000000004400ull, 0x0000000000004c00ull, N("s16"), DST },
+	{ 0x0000000000000800ull, 0x0000000000004c00ull, N("u32"), DST },
+	{ 0x0000000000004800ull, 0x0000000000004c00ull, N("s32"), DST },
+	// XXX: check 64 bit variants
+	{ 0, 0, OOPS },
+};
+
 F1(sat35, 0x35, N("sat")) // add,mul f32
 F1(sat3a, 0x3a, N("sat")) // mul f32 long immediate
 F1(ftz2f, 0x2f, N("ftz")) // add,mul f32
@@ -347,7 +409,7 @@ static struct insn tabm[] = {
 	{ 0x1b80000000000002ull, 0x3f80000000000003ull, N("fma"), T(frm35), N("f64"), DSTD, T(neg33), SRC1D, T(ds2w3), T(neg34), T(ds3) },
 	{ 0x1fc0000000000002ull, 0x3fc0000000000003ull, N("lshf"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(shfclamp), T(is2) }, // XXX: check is2 and bits 0x29,0x33(swap srcs ?)
 	{ 0x2148000000000002ull, 0x3fc8000000000003ull, N("shr"), N("s32"), DST, SRC1, T(is2) }, // XXX: find shl and wrap bits
-	{ 0x2000000000000002ull, 0x3a80000000000003ull, N("mul"), T(ftz38), T(sat3a), N("f32"), DST, SRC1, LIMM },
+	{ 0x2000000000000002ull, 0xfa80000000000003ull, N("mul"), T(ftz38), T(sat3a), N("f32"), DST, SRC1, LIMM },
 	{ 0x2080000000000002ull, 0x3fc0000000000003ull, T(addop), T(sat35), N("b32"), DST, T(acout32), SRC1, T(is2), T(acin2e) },
 	{ 0x2200000000000002ull, 0x3fc0000000000003ull, T(logop), N("b32"), DST, SRC1, T(not2b), T(is2) },
 	{ 0x2280000000000002ull, 0x3fc0000000000003ull, T(minmax), N("f64"), DSTD, T(neg33), T(abs31), SRC1D, T(neg30), T(abs34), T(ds2) },
@@ -359,6 +421,15 @@ static struct insn tabm[] = {
 	{ 0x2480000000000002ull, 0x3fc0040000000003ull, N("presin"), N("f32"), DST, T(neg30), T(abs34), T(is2) },
 	{ 0x2480040000000002ull, 0x3fc0040000000003ull, N("preex2"), N("f32"), DST, T(neg30), T(abs34), T(is2) },
 	{ 0x24c0000000000002ull, 0x3fc0000000000003ull, T(lane2a), N("mov"), N("b32"), DST, T(is2) },
+	{ 0x2540000000001402ull, 0x3fc0000000003c03ull, N("cvt"), T(sat35), T(frmi), N("f16"), DST, N("f16"), T(neg30), T(abs34), T(is2) },
+	{ 0x2540000000001802ull, 0x3fc0000000003c03ull, N("cvt"), T(ftz2f), T(sat35), N("f32"), DST, N("f16"), T(neg30), T(abs34), T(is2) },
+	{ 0x2540000000002402ull, 0x3fc0000000003c03ull, N("cvt"), T(ftz2f), T(sat35), T(frm2a), N("f16"), DST, N("f32"), T(neg30), T(abs34), T(is2) },
+	{ 0x2540000000002802ull, 0x3fc0000000003c03ull, N("cvt"), T(ftz2f), T(sat35), T(frmi), N("f32"), DST, N("f32"), T(neg30), T(abs34), T(is2) },
+	{ 0x2540000000002c02ull, 0x3fc0000000003c03ull, N("cvt"), N("f64"), DST, N("f32"), T(neg30), T(abs34), T(is2) }, // XXX: do ftz, sat work here ?
+	{ 0x2540000000003802ull, 0x3fc0000000003c03ull, N("cvt"), T(frm2a), N("f32"), DST, N("f64"), T(neg30), T(abs34), T(is2) }, // XXX: do ftz, sat work here ?
+	{ 0x2580000000000002ull, 0x3fc0000000000003ull, N("cvt"), T(ftz2f), T(frmi), T(cvtf2idst), T(neg30), T(abs34), T(cvtf2isrc) },
+	{ 0x2600000000000002ull, 0x3fc0000000000003ull, N("cvt"), T(sat35), T(cvti2idst), T(neg30), T(abs34), T(cvti2isrc) },
+	{ 0x25c0000000000002ull, 0x3fc0000000000003ull, N("cvt"), T(frm2a), T(cvti2fdst), T(neg30), T(abs34), T(cvti2fsrc) },
 	{ 0x27c0000000000002ull, 0x3fc0000000000003ull, N("rshf"), N("b32"), DST, SESTART, N("b64"), SRC1, SRC3, SEEND, T(shfclamp), T(is2) }, // XXX: check is2 and bits 0x29,0x33(swap srcs ?)
 	{ 0x0, 0x0, OOPS },
 };
