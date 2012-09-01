@@ -26,8 +26,6 @@
 
 #include "dis-intern.h"
 
-#define F_GK110 1
-
 /*
  * $r255: bit bucket on write, 0 on read
  */
