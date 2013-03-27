@@ -4,13 +4,20 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="copyright.xml"/>
 
-<!--
-<enum name="index_mode" inline="yes">
-	<value value="0" name="NONE" />
-	<value value="1" name="UINT8" />
-	<value value="2" name="UINT16" />
+<enum name="a3xx_threadmode" inline="yes">
+	<value value="0" name="MULTI"/>
+	<value value="1" name="SINGLE?"/>
 </enum>
--->
+
+<enum name="a3xx_instrbuffermode" inline="yes">
+	<value value="0" name="NO_BUFFER?"/>
+	<value value="1" name="BUFFER"/>
+</enum>
+
+<enum name="a3xx_threadsize" inline="yes">
+	<value value="0" name="TWO_QUADS"/>
+	<value value="1" name="FOUR_QUADS"/>
+</enum>
 
 <domain name="A3XX" width="32">
 	<reg32 offset="0x000" name="RBBM_HW_VERSION"/>
@@ -59,7 +66,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2072" name="GRAS_SC_CONTROL"/>
 
 	<bitset name="a3xx_reg_xy_wstl" inline="yes">
-		<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="bool"/>  <!-- I assume it is same as a2xx -->
+		<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>  <!-- I assume it is same as a2xx -->
 		<bitfield name="X" low="0" high="14" type="uint"/>
 		<bitfield name="Y" low="16" high="30" type="uint"/>
 	</bitset>
@@ -107,8 +114,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2201" name="HLSQ_CONTROL_1_REG"/>
 	<reg32 offset="0x2202" name="HLSQ_CONTROL_2_REG"/>
 	<reg32 offset="0x2203" name="HLSQ_CONTROL_3_REG"/>
-	<reg32 offset="0x2204" name="HLSQ_VS_CONTROL_REG"/>
-	<reg32 offset="0x2205" name="HLSQ_FS_CONTROL_REG"/>
+
+	<bitset name="a3xx_hlsq_vs_fs_control_reg" inline="yes">
+		<bitfield name="NUMUNIT" low="24" high="31" type="uint"/>
+	</bitset>
+
+	<reg32 offset="0x2204" name="HLSQ_VS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
+	<reg32 offset="0x2205" name="HLSQ_FS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
 	<reg32 offset="0x2206" name="HLSQ_CONST_VSPRESV_RANGE_REG"/>
 	<reg32 offset="0x2207" name="HLSQ_CONST_FSPRESV_RANGE_REG"/>
 	<reg32 offset="0x220a" name="HLSQ_CL_NDRANGE_0_REG"/>
@@ -181,8 +193,50 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2289" name="VPC_VARYING_PS_REPL_MODE_3"/>
 	<reg32 offset="0x228b" name="VPC_VARY_CYLWRAP_ENABLE_1"/>
 	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG"/>
-	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0"/>
-	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1"/>
+
+	<bitset name="a3xx_vs_fs_length_reg" inline="yes">
+		<bitfield name="SHADERLENGTH" low="0" high="31" type="uint"/>
+	</bitset>
+
+	<bitset name="a3xx_vs_fs_ctrl_reg0" inline="yes">
+		<bitfield name="THREADMODE" pos="0" type="a3xx_threadmode"/>
+		<bitfield name="INSTRBUFFERMODE" pos="1" type="a3xx_instrbuffermode"/>
+		<!-- maybe CACHEINVALID is two bits?? -->
+		<bitfield name="CACHEINVALID" pos="2" type="boolean"/>
+		<!--
+			The full/half register footprint is in units of four components,
+			so if r0.x is used, that counts as all of r0.[xyzw] as used.
+			There are separate full/half register footprint values as the
+			full and half registers are independent (not overlapping).
+			Presumably the thread scheduler hardware allocates the full/half
+			register names from the actual physical register file and
+			handles the register renaming.
+		 -->
+		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
+		<bitfield name="FULLREGFOOTPRINT" low="10" high="17" type="uint"/>
+		<!-- maybe INOUTREGOVERLAP is a bitflag? -->
+		<bitfield name="INOUTREGOVERLAP" low="18" high="19" type="uint"/>
+		<bitfield name="THREADSIZE" pos="20" type="a3xx_threadsize"/>
+		<bitfield name="SUPERTHREADMODE" pos="21" type="boolean"/>
+		<bitfield name="PIXLODENABLE" pos="22" type="boolean"/>
+		<!--
+			From regspec:
+			SP_FS_CTRL_REG0.FS_LENGTH [31:24]: FS length, unit = 256bits.
+			If bit31 is 1, it means overflow
+			or any long shader.
+		 -->
+		<bitfield name="LENGTH" low="24" high="31" type="uint"/>
+	</bitset>
+
+	<bitset name="a3xx_vs_fs_ctrl_reg1" inline="yes">
+		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
+		<bitfield name="INITIALOUTSTANDING" low="20" high="23" type="uint"/>
+		<!-- probably HALFPRECVAROFFSET goes to bit 31?? -->
+		<bitfield name="HALFPRECVAROFFSET" low="24" high="29" type="uint"/>
+	</bitset>
+
+	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a3xx_vs_fs_ctrl_reg0"/>
+	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1" type="a3xx_vs_fs_ctrl_reg1"/>
 	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG"/>
 	<reg32 offset="0x22c7" name="SP_VS_OUT_REG_0"/>
 	<reg32 offset="0x22c8" name="SP_VS_OUT_REG_1"/>
@@ -200,9 +254,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22d5" name="SP_VS_OBJ_START_REG"/>
 	<reg32 offset="0x22d7" name="SP_VS_PVT_MEM_ADDR_REG"/>
 	<reg32 offset="0x22d8" name="SP_VS_PVT_MEM_SIZE_REG"/>
-	<reg32 offset="0x22df" name="SP_VS_LENGTH_REG"/>
-	<reg32 offset="0x22e0" name="SP_FS_CTRL_REG0"/>
-	<reg32 offset="0x22e1" name="SP_FS_CTRL_REG1"/>
+
+	<reg32 offset="0x22df" name="SP_VS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
+	<reg32 offset="0x22e0" name="SP_FS_CTRL_REG0" type="a3xx_vs_fs_ctrl_reg0"/>
+	<reg32 offset="0x22e1" name="SP_FS_CTRL_REG1" type="a3xx_vs_fs_ctrl_reg1"/>
 	<reg32 offset="0x22e2" name="SP_FS_OBJ_OFFSET_REG"/>
 	<reg32 offset="0x22e3" name="SP_FS_OBJ_START_REG"/>
 	<reg32 offset="0x22e5" name="SP_FS_PVT_MEM_ADDR_REG"/>
@@ -218,7 +273,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22f5" name="SP_FS_IMAGE_OUTPUT_REG_1"/>
 	<reg32 offset="0x22f6" name="SP_FS_IMAGE_OUTPUT_REG_2"/>
 	<reg32 offset="0x22f7" name="SP_FS_IMAGE_OUTPUT_REG_3"/>
-	<reg32 offset="0x22ff" name="SP_FS_LENGTH_REG"/>
+	<reg32 offset="0x22ff" name="SP_FS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
 	<reg32 offset="0x2340" name="TPL1_TP_VS_TEX_OFFSET"/>
 	<reg32 offset="0x2342" name="TPL1_TP_FS_TEX_OFFSET"/>
 	<reg32 offset="0x2343" name="TPL1_TP_FS_BORDER_COLOR_BASE_ADDR"/>
