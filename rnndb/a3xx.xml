@@ -116,7 +116,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2203" name="HLSQ_CONTROL_3_REG"/>
 
 	<bitset name="a3xx_hlsq_vs_fs_control_reg" inline="yes">
-		<bitfield name="NUMUNIT" low="24" high="31" type="uint"/>
+		<bitfield name="CONSTLENGTH" low="0" high="11" type="uint"/>
+		<bitfield name="CONSTSTARTOFFSET" low="12" high="23" type="uint"/>
+		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</bitset>
 
 	<reg32 offset="0x2204" name="HLSQ_VS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
@@ -131,8 +133,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2215" name="HLSQ_CL_KERNEL_GROUP_X_REG"/>
 	<reg32 offset="0x2217" name="HLSQ_CL_KERNEL_GROUP_Z_REG"/>
 	<reg32 offset="0x221a" name="HLSQ_CL_WG_OFFSET_REG"/>
-	<reg32 offset="0x2240" name="VFD_CONTROL_0"/>
-	<reg32 offset="0x2241" name="VFD_CONTROL_1"/>
+
+	<reg32 offset="0x2240" name="VFD_CONTROL_0">
+		<bitfield name="TOTALATTRTOVS" low="0" high="17" type="uint"/>
+		<bitfield name="PACKETSIZE" low="18" high="21" type="uint"/>
+		<doc>STRMDECINSTRCNT and STRMFETCHINSTRCNT seem to be set same as MAXSTORAGE</doc>
+		<bitfield name="STRMDECINSTRCNT" low="22" high="26" type="uint"/>
+		<bitfield name="STRMFETCHINSTRCNT" low="27" high="31" type="uint"/>
+	</reg32>
+
+	<bitset name="a3xx_regid" inline="yes">
+		<bitfield name="NUM" low="2" high="7" type="uint"/>
+		<bitfield name="COMP" low="0" high="1" type="uint"/>
+	</bitset>
+
+	<reg32 offset="0x2241" name="VFD_CONTROL_1">
+		<doc>MAXSTORAGE could be # of attributes/vbo's</doc>
+		<bitfield name="MAXSTORAGE" low="0" high="15" type="uint"/>
+		<!--
+			always seem to be 252 except when entire register is zero'd,
+			but in these cases it is overwritten with non-zero value
+			before the next DRAW_INDX
+		 -->
+		<bitfield name="REGID4VTX" low="16" high="23" type="a3xx_regid"/>
+		<bitfield name="REGID4INST" low="24" high="31" type="a3xx_regid"/>
+	</reg32>
+
 	<reg32 offset="0x2242" name="VFD_INDEX_MIN"/>
 	<reg32 offset="0x2243" name="VFD_INDEX_MAX"/>
 	<reg32 offset="0x2244" name="VFD_INSTANCEID_OFFSET"/>
@@ -181,8 +207,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x2266" name="VFD_DECODE_INSTR_0"/>
 	<reg32 offset="0x227e" name="VFD_VS_THREADING_THRESHOLD"/>
-	<reg32 offset="0x2280" name="VPC_ATTR"/>
-	<reg32 offset="0x2281" name="VPC_PACK"/>
+
+	<reg32 offset="0x2280" name="VPC_ATTR">
+		<bitfield name="TOTALATTR" low="0" high="11" type="uint"/>
+		<bitfield name="THRDASSIGN" low="12" high="27" type="uint"/>
+		<bitfield name="LMSIZE" low="28" high="31" type="uint"/>
+	</reg32>
+
+	<reg32 offset="0x2281" name="VPC_PACK">
+		<!-- these are always be set to same as TOTALATTR -->
+		<bitfield name="NUMFPNONPOSVAR" low="8" high="15" type="uint"/>
+		<bitfield name="NUMNONPOSVSVAR" low="16" high="23" type="uint"/>
+	</reg32>
+
 	<reg32 offset="0x2282" name="VPC_VARYING_INTERUPT_MODE_0"/>
 	<reg32 offset="0x2283" name="VPC_VARYING_INTERUPT_MODE_1"/>
 	<reg32 offset="0x2284" name="VPC_VARYING_INTERUPT_MODE_2"/>
@@ -237,15 +274,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a3xx_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1" type="a3xx_vs_fs_ctrl_reg1"/>
-	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG"/>
-	<reg32 offset="0x22c7" name="SP_VS_OUT_REG_0"/>
-	<reg32 offset="0x22c8" name="SP_VS_OUT_REG_1"/>
-	<reg32 offset="0x22c9" name="SP_VS_OUT_REG_2"/>
-	<reg32 offset="0x22ca" name="SP_VS_OUT_REG_3"/>
-	<reg32 offset="0x22cb" name="SP_VS_OUT_REG_4"/>
-	<reg32 offset="0x22cc" name="SP_VS_OUT_REG_5"/>
-	<reg32 offset="0x22cd" name="SP_VS_OUT_REG_6"/>
-	<reg32 offset="0x22ce" name="SP_VS_OUT_REG_7"/>
+
+	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG">
+		<bitfield name="POSREGID" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="PSIZEREGID" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="TOTALVSOUTVAR" low="20" high="31" type="uint"/>
+	</reg32>
+
+	<bitset name="a3xx_varying_info" inline="yes">
+		<bitfield name="REGID" low="0" high="8" type="a3xx_regid"/>
+		<!-- I guess 4 bits.. -->
+		<bitfield name="COMPMASK" low="9" high="12" type="hex"/>
+	</bitset>
+
+	<bitset name="a3xx_sp_vs_out_reg" inline="yes">
+		<bitfield name="A" low="0" high="15" type="a3xx_varying_info"/>
+		<bitfield name="B" low="16" high="31" type="a3xx_varying_info"/>
+	</bitset>
+
+	<reg32 offset="0x22c7" name="SP_VS_OUT_REG_0" type="a3xx_sp_vs_out_reg"/>
+	<reg32 offset="0x22c8" name="SP_VS_OUT_REG_1" type="a3xx_sp_vs_out_reg"/>
+	<reg32 offset="0x22c9" name="SP_VS_OUT_REG_2" type="a3xx_sp_vs_out_reg"/>
+	<reg32 offset="0x22ca" name="SP_VS_OUT_REG_3" type="a3xx_sp_vs_out_reg"/>
+	<reg32 offset="0x22cb" name="SP_VS_OUT_REG_4" type="a3xx_sp_vs_out_reg"/>
+	<reg32 offset="0x22cc" name="SP_VS_OUT_REG_5" type="a3xx_sp_vs_out_reg"/>
+	<reg32 offset="0x22cd" name="SP_VS_OUT_REG_6" type="a3xx_sp_vs_out_reg"/>
+	<reg32 offset="0x22ce" name="SP_VS_OUT_REG_7" type="a3xx_sp_vs_out_reg"/>
 	<reg32 offset="0x22d0" name="SP_VS_VPC_DST_REG_0"/>
 	<reg32 offset="0x22d1" name="SP_VS_VPC_DST_REG_1"/>
 	<reg32 offset="0x22d2" name="SP_VS_VPC_DST_REG_2"/>
@@ -265,7 +319,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0"/>
 	<reg32 offset="0x22e9" name="SP_FS_FLAT_SHAD_MODE_REG_1"/>
 	<reg32 offset="0x22ec" name="SP_FS_OUTPUT_REG"/>
-	<reg32 offset="0x22f0" name="SP_FS_MRT_REG_0"/>
+
+	<reg32 offset="0x22f0" name="SP_FS_MRT_REG_0">
+		<!-- not really sure about these sizes -->
+		<bitfield name="REGID" low="0" high="7" type="uint"/>
+		<bitfield name="PRECISION" pos="8" type="uint"/>
+	</reg32>
+
 	<reg32 offset="0x22f1" name="SP_FS_MRT_REG_1"/>
 	<reg32 offset="0x22f2" name="SP_FS_MRT_REG_2"/>
 	<reg32 offset="0x22f3" name="SP_FS_MRT_REG_3"/>
