@@ -4,6 +4,57 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="copyright.xml"/>
 
+<enum name="a3xx_render_mode" inline="yes">
+	<value name="RB_RENDERING_PASS" value="0"/>
+	<value name="RB_RESOLVE_PASS" value="2"/>
+</enum>
+
+<enum name="a3xx_resolve_clear_mode" inline="yes">
+	<value name="RESOLVE" value="1"/>
+</enum>
+
+<enum name="a3xx_tile_mode" inline="yes">
+	<value name="LINEAR" value="0"/>
+	<value name="TILE_32X32" value="2"/>
+</enum>
+
+<enum name="a3xx_color_format" inline="yes">
+	<value name="RB_R8G8B8A8_UNORM" value="8"/>
+</enum>
+
+<!-- guessing that this matches a2xx -->
+<enum name="a3xx_surface_endian">
+	<value name="ENDIAN_NONE" value="0"/>
+	<value name="ENDIAN_8IN16" value="1"/>
+	<value name="ENDIAN_8IN32" value="2"/>
+	<value name="ENDIAN_16IN32" value="3"/>
+	<value name="ENDIAN_8IN64" value="4"/>
+	<value name="ENDIAN_8IN128" value="5"/>
+</enum>
+
+<!-- I assume these values match a2xx (which matches GL, r6xx, etc, etc -->
+<enum name="a3xx_compare_func" inline="yes">
+	<value name="FUNC_NEVER" value="0"/>
+	<value name="FUNC_LESS" value="1"/>
+	<value name="FUNC_EQUAL" value="2"/>
+	<value name="FUNC_LEQUAL" value="3"/>
+	<value name="FUNC_GREATER" value="4"/>
+	<value name="FUNC_NOTEQUAL" value="5"/>
+	<value name="FUNC_GEQUAL" value="6"/>
+	<value name="FUNC_ALWAYS" value="7"/>
+</enum>
+
+<enum name="a3xx_stencil_op" inline="yes">
+	<value name="STENCIL_KEEP" value="0"/>
+	<value name="STENCIL_ZERO" value="1"/>
+	<value name="STENCIL_REPLACE" value="2"/>
+	<value name="STENCIL_INCR_CLAMP" value="3"/>
+	<value name="STENCIL_DECR_CLAMP" value="4"/>
+	<value name="STENCIL_INVERT" value="5"/>
+	<value name="STENCIL_INCR_WRAP" value="6"/>
+	<value name="STENCIL_DECR_WRAP" value="7"/>
+</enum>
+
 <enum name="a3xx_threadmode" inline="yes">
 	<value value="0" name="MULTI"/>
 	<value value="1" name="SINGLE?"/>
@@ -17,6 +68,59 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a3xx_threadsize" inline="yes">
 	<value value="0" name="TWO_QUADS"/>
 	<value value="1" name="FOUR_QUADS"/>
+</enum>
+
+<!-- I guess this is probably same as a2xx enum pa_su_sc_draw: -->
+<enum name="a3xx_pc_draw">
+	<value name="PC_DRAW_POINTS" value="0"/>
+	<value name="PC_DRAW_LINES" value="1"/>
+	<value name="PC_DRAW_TRIANGLES" value="2"/>
+</enum>
+
+<enum name="a3xx_fmt" inline="yes">
+	<value name="FMT_FLOAT_32" value="0x0"/>
+	<value name="FMT_FLOAT_32_32" value="0x1"/>
+	<value name="FMT_FLOAT_32_32_32" value="0x2"/>
+	<value name="FMT_FLOAT_32_32_32_32" value="0x3"/>
+
+	<value name="FMT_FIXED_32" value="0x8"/>
+	<value name="FMT_FIXED_32_32" value="0x9"/>
+	<value name="FMT_FIXED_32_32_32" value="0xa"/>
+	<value name="FMT_FIXED_32_32_32_32" value="0xb"/>
+
+	<value name="FMT_SHORT_16" value="0x10"/>
+	<value name="FMT_SHORT_16_16" value="0x11"/>
+	<value name="FMT_SHORT_16_16_16" value="0x12"/>
+	<value name="FMT_SHORT_16_16_16_16" value="0x13"/>
+	<value name="FMT_USHORT_16" value="0x14"/>
+	<value name="FMT_USHORT_16_16" value="0x15"/>
+	<value name="FMT_USHORT_16_16_16" value="0x16"/>
+	<value name="FMT_USHORT_16_16_16_16" value="0x17"/>
+	<value name="FMT_NORM_SHORT_16" value="0x18"/>
+	<value name="FMT_NORM_SHORT_16_16" value="0x19"/>
+	<value name="FMT_NORM_SHORT_16_16_16" value="0x1a"/>
+	<value name="FMT_NORM_SHORT_16_16_16_16" value="0x1b"/>
+	<value name="FMT_NORM_USHORT_16" value="0x1c"/>
+	<value name="FMT_NORM_USHORT_16_16" value="0x1d"/>
+	<value name="FMT_NORM_USHORT_16_16_16" value="0x1e"/>
+	<value name="FMT_NORM_USHORT_16_16_16_16" value="0x1f"/>
+
+	<value name="FMT_UBYTE_8" value="0x28"/>
+	<value name="FMT_UBYTE_8_8" value="0x29"/>
+	<value name="FMT_UBYTE_8_8_8" value="0x2a"/>
+	<value name="FMT_UBYTE_8_8_8_8" value="0x2b"/>
+	<value name="FMT_NORM_UBYTE_8" value="0x2c"/>
+	<value name="FMT_NORM_UBYTE_8_8" value="0x2d"/>
+	<value name="FMT_NORM_UBYTE_8_8_8" value="0x2e"/>
+	<value name="FMT_NORM_UBYTE_8_8_8_8" value="0x2f"/>
+	<value name="FMT_BYTE_8" value="0x30"/>
+	<value name="FMT_BYTE_8_8" value="0x31"/>
+	<value name="FMT_BYTE_8_8_8" value="0x32"/>
+	<value name="FMT_BYTE_8_8_8_8" value="0x33"/>
+	<value name="FMT_NORM_BYTE_8" value="0x34"/>
+	<value name="FMT_NORM_BYTE_8_8" value="0x35"/>
+	<value name="FMT_NORM_BYTE_8_8_8" value="0x36"/>
+	<value name="FMT_NORM_BYTE_8_8_8_8" value="0x37"/>
 </enum>
 
 <domain name="A3XX" width="32">
@@ -41,6 +145,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x100" name="RBBM_RBBM_CTL"/>
 	<reg32 offset="0x111" name="RBBM_DEBUG_BUS_CTL"/>
 	<reg32 offset="0x112" name="RBBM_DEBUG_BUS_DATA_STATUS"/>
+
 	<reg32 offset="0x1c9" name="CP_PFP_UCODE_ADDR"/>
 	<reg32 offset="0x1ca" name="CP_PFP_UCODE_DATA"/>
 	<reg32 offset="0x1cc" name="CP_ROQ_ADDR"/>
@@ -50,6 +155,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x1d3" name="CP_MERCIU_DATA2"/>
 	<reg32 offset="0x1da" name="CP_MEQ_ADDR"/>
 	<reg32 offset="0x1db" name="CP_MEQ_DATA"/>
+
 	<reg32 offset="0x2040" name="GRAS_CL_CLIP_CNTL"/>
 	<reg32 offset="0x2044" name="GRAS_CL_GB_CLIP_ADJ"/>
 	<reg32 offset="0x2048" name="GRAS_CL_VPORT_XOFFSET" type="float"/>
@@ -62,8 +168,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2069" name="GRAS_SU_POINT_SIZE"/>
 	<reg32 offset="0x206c" name="GRAS_SU_POLY_OFFSET_SCALE"/>
 	<reg32 offset="0x206d" name="GRAS_SU_POLY_OFFSET_OFFSET"/>
-	<reg32 offset="0x2070" name="GRAS_SU_MODE_CONTROL"/>
-	<reg32 offset="0x2072" name="GRAS_SC_CONTROL"/>
+	<reg32 offset="0x2070" name="GRAS_SU_MODE_CONTROL">
+		<!-- guessing on size -->
+		<bitfield name="LINEHALFWIDTH" low="2" high="15" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2072" name="GRAS_SC_CONTROL">
+		<!-- complete wild-ass-guess for sizes of these bitfields.. -->
+		<bitfield name="RENDER_MODE" low="4" high="8"/>
+		<bitfield name="RASTER_MODE" low="12" high="16"/>
+	</reg32>
 
 	<bitset name="a3xx_reg_xy_wstl" inline="yes">
 		<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>  <!-- I assume it is same as a2xx -->
@@ -80,9 +193,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2079" name="GRAS_SC_WINDOW_SCISSOR_TL" type="a3xx_reg_xy_wstl"/>
 	<reg32 offset="0x207a" name="GRAS_SC_WINDOW_SCISSOR_BR" type="a3xx_reg_xy"/>
 
-	<reg32 offset="0x20c0" name="RB_MODE_CONTROL"/>
-	<reg32 offset="0x20c1" name="RB_RENDER_CONTROL"/>
-	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL"/>
+	<reg32 offset="0x20c0" name="RB_MODE_CONTROL">
+		<!-- guess on the # of bits here.. -->
+		<bitfield name="RENDER_MODE" low="8" high="10" type="a3xx_render_mode"/>
+		<bitfield name="MARB_CACHE_SPLIT_MODE" pos="15" type="boolean"/>
+		<bitfield name="PACKER_TIMER_ENABLE" pos="16" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x20c1" name="RB_RENDER_CONTROL">
+		<bitfield name="BIN_WIDTH" low="4" high="11" shr="5" type="uint"/>
+		<bitfield name="DISABLE_COLOR_PIPE" pos="12" type="boolean"/>
+		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="a3xx_compare_func"/>
+	</reg32>
+	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL">
+		<bitfield name="MSAA_DISABLE" pos="10" type="boolean"/>
+		<bitfield name="SAMPLE_MASK" low="16" high="31" type="hex"/>
+	</reg32>
 	<reg32 offset="0x20c4" name="RB_MRT_CONTROL0"/>
 	<reg32 offset="0x20c5" name="RB_MRT_BUF_INFO0"/>
 	<reg32 offset="0x20c6" name="RB_MRT_BUF_BASE0"/>
@@ -100,19 +225,85 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20d2" name="RB_MRT_BUF_BASE3"/>
 	<reg32 offset="0x20d3" name="RB_MRT_BLEND_CONTROL3"/>
 	<reg32 offset="0x20e4" name="RB_BLEND_RED"/>
-	<reg32 offset="0x20ec" name="RB_COPY_CONTROL"/>
-	<reg32 offset="0x20ed" name="RB_COPY_DEST_BASE"/>
-	<reg32 offset="0x20ee" name="RB_COPY_DEST_PITCH"/>
-	<reg32 offset="0x20ef" name="RB_COPY_DEST_INFO"/>
-	<reg32 offset="0x2100" name="RB_DEPTH_CONTROL"/>
-	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL"/>
+	<reg32 offset="0x20e5" name="RB_BLEND_GREEN"/>
+	<reg32 offset="0x20e6" name="RB_BLEND_BLUE"/>
+	<!--
+		seems to be set to either 0x3c0000ff or 0x00000000.. maybe upper
+		bits are some field or bitmask??  Or maybe we have different bit-
+		fields for each MRT?
+	 -->
+	<reg32 offset="0x20e7" name="RB_BLEND_ALPHA"/>
+	<reg32 offset="0x20ec" name="RB_COPY_CONTROL">
+		<!-- not sure # of bits -->
+		<bitfield name="MODE" low="4" high="5" type="a3xx_resolve_clear_mode"/>
+		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
+	</reg32>
+	<reg32 offset="0x20ed" name="RB_COPY_DEST_BASE">
+		<bitfield name="BASE" low="4" high="31" shr="5" type="hex"/>
+	</reg32>
+	<reg32 offset="0x20ee" name="RB_COPY_DEST_PITCH">
+		<doc>actually, appears to be pitch in bytes, so really is a stride</doc>
+		<!-- not actually sure about max pitch... -->
+		<bitfield name="PITCH" low="0" high="31" shr="5" type="uint"/>
+	</reg32>
+	<reg32 offset="0x20ef" name="RB_COPY_DEST_INFO">
+		<bitfield name="TILE" low="0" high="1" type="a3xx_tile_mode"/>
+		<!-- not actually sure # of bits yet: -->
+		<bitfield name="FORMAT" low="2" high="7" type="a3xx_color_format"/>
+		<bitfield name="COMPONENT_ENABLE" low="14" high="17" type="hex"/>
+		<bitfield name="ENDIAN" low="18" high="20" type="a3xx_surface_endian"/>
+	</reg32>
+	<reg32 offset="0x2100" name="RB_DEPTH_CONTROL">
+		<!--
+			guessing that this matches a2xx with the stencil fields
+			moved out into RB_STENCIL_CONTROL?
+		 -->
+		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
+		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
+		<bitfield name="EARLY_Z_ENABLE" pos="3" type="boolean"/>
+		<bitfield name="ZFUNC" low="4" high="6" type="a3xx_compare_func"/>
+		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
+		<bitfield name="FUNC" low="8" high="10" type="a3xx_compare_func"/>
+		<bitfield name="FAIL" low="11" high="13" type="a3xx_stencil_op"/>
+		<bitfield name="ZPASS" low="14" high="16" type="a3xx_stencil_op"/>
+		<bitfield name="ZFAIL" low="17" high="19" type="a3xx_stencil_op"/>
+		<bitfield name="FUNC_BF" low="20" high="22" type="a3xx_compare_func"/>
+		<bitfield name="FAIL_BF" low="23" high="25" type="a3xx_stencil_op"/>
+		<bitfield name="ZPASS_BF" low="26" high="28" type="a3xx_stencil_op"/>
+		<bitfield name="ZFAIL_BF" low="29" high="31" type="a3xx_stencil_op"/>
+	</reg32>
+
 	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL"/>
 	<reg32 offset="0x21ea" name="PC_VERTEX_REUSE_BLOCK_CNTL"/>
-	<reg32 offset="0x21ec" name="PC_PRIM_VTX_CNTL"/>
+	<reg32 offset="0x21ec" name="PC_PRIM_VTX_CNTL">
+		<bitfield name="STRIDE_IN_VPC" low="0" high="4" type="uint"/>
+		<bitfield name="POLYMODE_FRONT_PTYPE" low="5" high="7" type="a3xx_pc_draw"/>
+		<bitfield name="POLYMODE_BACK_PTYPE" low="8" high="10" type="a3xx_pc_draw"/>
+		<bitfield name="PROVOKING_VTX_LAST" pos="25" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x21ed" name="PC_RESTART_INDEX"/>
-	<reg32 offset="0x2200" name="HLSQ_CONTROL_0_REG"/>
-	<reg32 offset="0x2201" name="HLSQ_CONTROL_1_REG"/>
-	<reg32 offset="0x2202" name="HLSQ_CONTROL_2_REG"/>
+	<reg32 offset="0x2200" name="HLSQ_CONTROL_0_REG">
+		<bitfield name="FSTHREADSIZE" pos="4" type="a3xx_threadsize"/>
+		<bitfield name="FSSUPERTHREADENABLE" pos="6" type="boolean"/>
+		<bitfield name="SPSHADERRESTART" pos="9" type="boolean"/>
+		<bitfield name="RESERVED2" pos="10" type="boolean"/>
+		<bitfield name="CHUNKDISABLE" pos="26" type="boolean"/>
+		<bitfield name="CONSTSWITCHMODE" pos="27" type="boolean"/>
+		<bitfield name="LAZYUPDATEDISABLE" pos="28" type="boolean"/>
+		<bitfield name="SPCONSTFULLUPDATE" pos="29" type="boolean"/>
+		<bitfield name="TPFULLUPDATE" pos="30" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x2201" name="HLSQ_CONTROL_1_REG">
+		<bitfield name="VSTHREADSIZE" pos="6" type="a3xx_threadsize"/>
+		<bitfield name="VSSUPERTHREADENABLE" pos="8" type="boolean"/>
+		<bitfield name="RESERVED1" pos="9" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x2202" name="HLSQ_CONTROL_2_REG">
+		<bitfield name="PRIMALLOCTHRESHOLD" low="26" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x2203" name="HLSQ_CONTROL_3_REG"/>
 
 	<bitset name="a3xx_hlsq_vs_fs_control_reg" inline="yes">
@@ -123,8 +314,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x2204" name="HLSQ_VS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
 	<reg32 offset="0x2205" name="HLSQ_FS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
-	<reg32 offset="0x2206" name="HLSQ_CONST_VSPRESV_RANGE_REG"/>
-	<reg32 offset="0x2207" name="HLSQ_CONST_FSPRESV_RANGE_REG"/>
+
+	<bitset name="a3xx_hlsq_const_vs_fs_presv_range_reg" inline="yes">
+		<!-- are these a3xx_regid?? -->
+		<bitfield name="STARTENTRY" low="0" high="15"/>
+		<bitfield name="ENDENTRY" low="16" high="31"/>
+	</bitset>
+
+	<reg32 offset="0x2206" name="HLSQ_CONST_VSPRESV_RANGE_REG" type="a3xx_hlsq_const_vs_fs_presv_range_reg"/>
+	<reg32 offset="0x2207" name="HLSQ_CONST_FSPRESV_RANGE_REG" type="a3xx_hlsq_const_vs_fs_presv_range_reg"/>
 	<reg32 offset="0x220a" name="HLSQ_CL_NDRANGE_0_REG"/>
 	<reg32 offset="0x220c" name="HLSQ_CL_NDRANGE_2_REG"/>
 	<reg32 offset="0x2211" name="HLSQ_CL_CONTROL_0_REG"/>
@@ -162,7 +360,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitset name="a3xx_vfd_fetch_instr_0_x" inline="yes">
 		<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
 		<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
-		<bitfield name="SWITCHNEXT" pos="17" type="uint"/>
+		<bitfield name="SWITCHNEXT" pos="17" type="boolean"/>
 		<bitfield name="INDEXCODE" low="18" high="23" type="uint"/>
 		<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
 	</bitset>
@@ -200,7 +398,35 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2264" name="VFD_FETCH_INSTR_0_F" type="a3xx_vfd_fetch_instr_0_x"/>
 	<reg32 offset="0x2265" name="VFD_FETCH_INSTR_1_F"/>
 
-	<reg32 offset="0x2266" name="VFD_DECODE_INSTR_0"/>
+	<bitset name="a3xx_vfd_decode_instr" inline="yes">
+		<bitfield name="WRITEMASK" low="0" high="3" type="hex"/>
+		<!-- not sure if this is a bit flag and another flag above it, or?? -->
+		<bitfield name="CONSTFILL" pos="4" type="boolean"/>
+		<bitfield name="FORMAT" low="6" high="11" type="a3xx_fmt"/>
+		<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
+		<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
+		<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
+		<bitfield name="LASTCOMPVALID" pos="29" type="boolean"/>
+		<bitfield name="SWITCHNEXT" pos="30" type="boolean"/>
+	</bitset>
+
+	<reg32 offset="0x2266" name="VFD_DECODE_INSTR_0" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2267" name="VFD_DECODE_INSTR_1" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2268" name="VFD_DECODE_INSTR_2" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2269" name="VFD_DECODE_INSTR_3" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x226a" name="VFD_DECODE_INSTR_4" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x226b" name="VFD_DECODE_INSTR_5" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x226c" name="VFD_DECODE_INSTR_6" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x226d" name="VFD_DECODE_INSTR_7" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x226e" name="VFD_DECODE_INSTR_8" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x226f" name="VFD_DECODE_INSTR_9" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2270" name="VFD_DECODE_INSTR_A" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2271" name="VFD_DECODE_INSTR_B" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2272" name="VFD_DECODE_INSTR_C" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2273" name="VFD_DECODE_INSTR_D" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2274" name="VFD_DECODE_INSTR_E" type="a3xx_vfd_decode_instr"/>
+	<reg32 offset="0x2275" name="VFD_DECODE_INSTR_F" type="a3xx_vfd_decode_instr"/>
+
 	<reg32 offset="0x227e" name="VFD_VS_THREADING_THRESHOLD"/>
 
 	<reg32 offset="0x2280" name="VPC_ATTR">
@@ -210,21 +436,35 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 
 	<reg32 offset="0x2281" name="VPC_PACK">
-		<!-- these are always be set to same as TOTALATTR -->
+		<!-- these are always seem to be set to same as TOTALATTR -->
 		<bitfield name="NUMFPNONPOSVAR" low="8" high="15" type="uint"/>
 		<bitfield name="NUMNONPOSVSVAR" low="16" high="23" type="uint"/>
 	</reg32>
 
-	<reg32 offset="0x2282" name="VPC_VARYING_INTERUPT_MODE_0"/>
-	<reg32 offset="0x2283" name="VPC_VARYING_INTERUPT_MODE_1"/>
-	<reg32 offset="0x2284" name="VPC_VARYING_INTERUPT_MODE_2"/>
-	<reg32 offset="0x2285" name="VPC_VARYING_INTERUPT_MODE_3"/>
+	<!--
+		interpolate or interrupt?  former makes sense, but kernel calls
+		it both "VARRYING_INTERUPT_MODE_n (sic) and VARYING_INTERP_MODE_n
+		(and few other misspell variations..)
+	 -->
+	<reg32 offset="0x2282" name="VPC_VARYING_INTERP_MODE_0"/>
+	<reg32 offset="0x2283" name="VPC_VARYING_INTERP_MODE_1"/>
+	<reg32 offset="0x2284" name="VPC_VARYING_INTERP_MODE_2"/>
+	<reg32 offset="0x2285" name="VPC_VARYING_INTERP_MODE_3"/>
 	<reg32 offset="0x2286" name="VPC_VARYING_PS_REPL_MODE_0"/>
 	<reg32 offset="0x2287" name="VPC_VARYING_PS_REPL_MODE_1"/>
 	<reg32 offset="0x2288" name="VPC_VARYING_PS_REPL_MODE_2"/>
 	<reg32 offset="0x2289" name="VPC_VARYING_PS_REPL_MODE_3"/>
+	<reg32 offset="0x228a" name="VPC_VARY_CYLWRAP_ENABLE_0"/>
 	<reg32 offset="0x228b" name="VPC_VARY_CYLWRAP_ENABLE_1"/>
-	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG"/>
+	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
+		<!--
+			guessing that these are two bits each.. but possibly could
+			be just a flag with some other flags in between..
+		-->
+		<bitfield name="CONSTMODE" low="18" high="19" type="uint"/>
+		<bitfield name="SLEEPMODE" low="20" high="21" type="uint"/>
+		<bitfield name="LOMODE" low="22" high="23" type="uint"/>
+	</reg32>
 
 	<bitset name="a3xx_vs_fs_length_reg" inline="yes">
 		<bitfield name="SHADERLENGTH" low="0" high="31" type="uint"/>
@@ -267,6 +507,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="HALFPRECVAROFFSET" low="24" high="29" type="uint"/>
 	</bitset>
 
+	<bitset name="sp_vs_fs_obj_offset_reg" inline="yes">
+		<doc>
+			From register spec:
+			SP_FS_OBJ_OFFSET_REG.CONSTOBJECTSTARTOFFSET [16:24]: Constant object
+			start offset in on chip RAM,
+			128bit aligned
+		</doc>
+		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
+	</bitset>
+
 	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a3xx_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1" type="a3xx_vs_fs_ctrl_reg1"/>
 
@@ -299,31 +550,42 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22d1" name="SP_VS_VPC_DST_REG_1"/>
 	<reg32 offset="0x22d2" name="SP_VS_VPC_DST_REG_2"/>
 	<reg32 offset="0x22d3" name="SP_VS_VPC_DST_REG_3"/>
-	<reg32 offset="0x22d4" name="SP_VS_OBJ_OFFSET_REG"/>
+	<reg32 offset="0x22d4" name="SP_VS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
 	<reg32 offset="0x22d5" name="SP_VS_OBJ_START_REG"/>
+	<!--
+		SP_VS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl.. and
+		unused for opencl
+	 -->
+	<reg32 offset="0x22d6" name="SP_VS_PVT_MEM_CTRL_REG"/>
 	<reg32 offset="0x22d7" name="SP_VS_PVT_MEM_ADDR_REG"/>
 	<reg32 offset="0x22d8" name="SP_VS_PVT_MEM_SIZE_REG"/>
 
 	<reg32 offset="0x22df" name="SP_VS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
 	<reg32 offset="0x22e0" name="SP_FS_CTRL_REG0" type="a3xx_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22e1" name="SP_FS_CTRL_REG1" type="a3xx_vs_fs_ctrl_reg1"/>
-	<reg32 offset="0x22e2" name="SP_FS_OBJ_OFFSET_REG"/>
+	<reg32 offset="0x22e2" name="SP_FS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
 	<reg32 offset="0x22e3" name="SP_FS_OBJ_START_REG"/>
+	<!--
+		SP_FS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl..  so
+		probably only matters for opencl
+	 -->
+	<reg32 offset="0x22e4" name="SP_FS_PVT_MEM_CTRL_REG"/>
 	<reg32 offset="0x22e5" name="SP_FS_PVT_MEM_ADDR_REG"/>
 	<reg32 offset="0x22e6" name="SP_FS_PVT_MEM_SIZE_REG"/>
 	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0"/>
 	<reg32 offset="0x22e9" name="SP_FS_FLAT_SHAD_MODE_REG_1"/>
 	<reg32 offset="0x22ec" name="SP_FS_OUTPUT_REG"/>
 
-	<reg32 offset="0x22f0" name="SP_FS_MRT_REG_0">
-		<!-- not really sure about these sizes -->
-		<bitfield name="REGID" low="0" high="7" type="uint"/>
+	<bitset name="a3xx_sp_fs_mrt_reg">
+		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
+		<!-- not really sure about this: size -->
 		<bitfield name="PRECISION" pos="8" type="uint"/>
-	</reg32>
+	</bitset>
 
-	<reg32 offset="0x22f1" name="SP_FS_MRT_REG_1"/>
-	<reg32 offset="0x22f2" name="SP_FS_MRT_REG_2"/>
-	<reg32 offset="0x22f3" name="SP_FS_MRT_REG_3"/>
+	<reg32 offset="0x22f0" name="SP_FS_MRT_REG_0" type="a3xx_sp_fs_mrt_reg"/>
+	<reg32 offset="0x22f1" name="SP_FS_MRT_REG_1" type="a3xx_sp_fs_mrt_reg"/>
+	<reg32 offset="0x22f2" name="SP_FS_MRT_REG_2" type="a3xx_sp_fs_mrt_reg"/>
+	<reg32 offset="0x22f3" name="SP_FS_MRT_REG_3" type="a3xx_sp_fs_mrt_reg"/>
 	<reg32 offset="0x22f4" name="SP_FS_IMAGE_OUTPUT_REG_0"/>
 	<reg32 offset="0x22f5" name="SP_FS_IMAGE_OUTPUT_REG_1"/>
 	<reg32 offset="0x22f6" name="SP_FS_IMAGE_OUTPUT_REG_2"/>
