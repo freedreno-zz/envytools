@@ -212,7 +212,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x057b" name="CP_SCRATCH_REG3"/>
 
 	<!-- GRAS registers -->
-	<reg32 offset="0x2040" name="GRAS_CL_CLIP_CNTL"/>
+	<reg32 offset="0x2040" name="GRAS_CL_CLIP_CNTL">
+		<bitfield name="IJ_PERSP_CENTER" pos="12" type="boolean"/> <!-- is it more bits? -->
+		<bitfield name="CLIP_DISABLE" pos="16" type="boolean"/>
+		<bitfield name="ZFAR_CLIP_DISABLE" pos="17" type="boolean"/>
+		<bitfield name="VP_CLIP_CODE_IGNORE" pos="19" type="boolean"/>
+		<bitfield name="VP_XFORM_DISABLE" pos="20" type="boolean"/>
+		<bitfield name="PERSP_DIVISION_DISABLE" pos="21" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x2044" name="GRAS_CL_GB_CLIP_ADJ"/>
 	<reg32 offset="0x2048" name="GRAS_CL_VPORT_XOFFSET" type="float"/>
 	<reg32 offset="0x2049" name="GRAS_CL_VPORT_XSCALE" type="float"/>
@@ -394,6 +401,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2206" name="HLSQ_CONST_VSPRESV_RANGE_REG" type="a3xx_hlsq_const_vs_fs_presv_range_reg"/>
 	<reg32 offset="0x2207" name="HLSQ_CONST_FSPRESV_RANGE_REG" type="a3xx_hlsq_const_vs_fs_presv_range_reg"/>
 	<reg32 offset="0x220a" name="HLSQ_CL_NDRANGE_0_REG"/>
+	<reg32 offset="0x220b" name="HLSQ_CL_NDRANGE_1_REG"/>
 	<reg32 offset="0x220c" name="HLSQ_CL_NDRANGE_2_REG"/>
 	<reg32 offset="0x2211" name="HLSQ_CL_CONTROL_0_REG"/>
 	<reg32 offset="0x2212" name="HLSQ_CL_CONTROL_1_REG"/>
@@ -556,11 +564,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="B" low="16" high="31" type="a3xx_varying_info"/>
 		</reg32>
 	</array>
-	<!-- I assume this is actually an array: -->
-	<reg32 offset="0x22d0" name="SP_VS_VPC_DST_REG_0"/>
-	<reg32 offset="0x22d1" name="SP_VS_VPC_DST_REG_1"/>
-	<reg32 offset="0x22d2" name="SP_VS_VPC_DST_REG_2"/>
-	<reg32 offset="0x22d3" name="SP_VS_VPC_DST_REG_3"/>
+	<array offset="0x22d0" name="SP_VS_VPC_DST" stride="1" length="4">
+		<reg32 offset="0x0" name="REG">
+			<doc>
+				These seem to be offsets for storage of the varyings (within
+				SP_VS_OBJ_START_REG?)  Always seems to start from 8, possibly
+				loc 0 and 4 are for gl_Position and gl_PointSize?
+			</doc>
+			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
+			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
+			<bitfield name="OUTLOC2" low="16" high="23" type="uint"/>
+			<bitfield name="OUTLOC3" low="24" high="31" type="uint"/>
+		</reg32>
+	</array>
 	<reg32 offset="0x22d4" name="SP_VS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
 	<reg32 offset="0x22d5" name="SP_VS_OBJ_START_REG"/>
 	<!--
@@ -593,13 +609,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 	</array>
 	<array offset="0x22f4" name="SP_FS_IMAGE_OUTPUT" stride="1" length="4">
-		<reg32 offset="0x0" name="REG"/>
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="MRTFORMAT" low="0" high="5" type="a3xx_color_format"/>
+		</reg32>
 	</array>
 	<reg32 offset="0x22ff" name="SP_FS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
 
 	<!-- TPL1 registers -->
-	<reg32 offset="0x2340" name="TPL1_TP_VS_TEX_OFFSET"/>
-	<reg32 offset="0x2342" name="TPL1_TP_FS_TEX_OFFSET"/>
+	<!-- assume VS/FS_TEX_OFFSET is same -->
+	<bitset name="a3xx_tpl1_tp_vs_fs_tex_offset">
+		<bitfield name="SAMPLEROFFSET" low="0" high="7" type="uint"/>
+		<bitfield name="MEMOBJOFFSET" low="8" high="15" type="uint"/>
+		<!-- not sure the size of this: -->
+		<bitfield name="BASETABLEPTR" low="16" high="31" type="uint"/>
+	</bitset>
+	<reg32 offset="0x2340" name="TPL1_TP_VS_TEX_OFFSET" type="a3xx_tpl1_tp_vs_fs_tex_offset"/>
+	<reg32 offset="0x2342" name="TPL1_TP_FS_TEX_OFFSET" type="a3xx_tpl1_tp_vs_fs_tex_offset"/>
 	<reg32 offset="0x2343" name="TPL1_TP_FS_BORDER_COLOR_BASE_ADDR"/>
 
 	<!-- VBIF registers -->
@@ -643,7 +668,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e61" name="VPC_VPC_DEBUG_RAM_SEL"/>
 	<reg32 offset="0x0e62" name="VPC_VPC_DEBUG_RAM_READ"/>
 	<reg32 offset="0x0e82" name="UCHE_CACHE_MODE_CONTROL_REG"/>
-	<reg32 offset="0x0ea0" name="UCHE_CACHE_INVALIDATE0_REG"/>
+	<reg32 offset="0x0ea0" name="UCHE_CACHE_INVALIDATE0_REG">
+		<!-- might be shifted right by 5, assuming 32byte cache line size.. -->
+		<bitfield name="ADDR" low="0" high="27" type="hex"/>
+	</reg32>
+	<reg32 offset="0x0ea1" name="UCHE_CACHE_INVALIDATE1_REG">
+		<!-- might be shifted right by 5, assuming 32byte cache line size.. -->
+		<bitfield name="ADDR" low="0" high="27" type="hex"/>
+		<!-- I'd assume 2 bits, for FLUSH/INVALIDATE/CLEAN? -->
+		<bitfield name="OPCODE" low="28" high="29" type="enum">
+			<value name="INVALIDATE" value="1"/>
+		</bitfield>
+		<bitfield name="ENTIRE_CACHE" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0ecb" name="SP_PERFCOUNTER7_SELECT"/>
 </domain>
 
