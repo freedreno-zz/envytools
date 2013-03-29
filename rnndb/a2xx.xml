@@ -73,30 +73,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x057a" name="SCRATCH_REG2"/>
 	<reg32 offset="0x05d0" name="RBBM_STATUS"/>
 	<reg32 offset="0x0c01" name="A220_VSC_BIN_SIZE"/>
-	<reg32 offset="0x0c06" name="VSC_PIPE_CONFIG_0"/>
-	<reg32 offset="0x0c07" name="VSC_PIPE_DATA_ADDRESS_0"/>
-	<reg32 offset="0x0c08" name="VSC_PIPE_DATA_LENGTH_0"/>
-	<reg32 offset="0x0c09" name="VSC_PIPE_CONFIG_1"/>
-	<reg32 offset="0x0c0a" name="VSC_PIPE_DATA_ADDRESS_1"/>
-	<reg32 offset="0x0c0b" name="VSC_PIPE_DATA_LENGTH_1"/>
-	<reg32 offset="0x0c0c" name="VSC_PIPE_CONFIG_2"/>
-	<reg32 offset="0x0c0d" name="VSC_PIPE_DATA_ADDRESS_2"/>
-	<reg32 offset="0x0c0e" name="VSC_PIPE_DATA_LENGTH_2"/>
-	<reg32 offset="0x0c0f" name="VSC_PIPE_CONFIG_3"/>
-	<reg32 offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS_3"/>
-	<reg32 offset="0x0c11" name="VSC_PIPE_DATA_LENGTH_3"/>
-	<reg32 offset="0x0c12" name="VSC_PIPE_CONFIG_4"/>
-	<reg32 offset="0x0c13" name="VSC_PIPE_DATA_ADDRESS_4"/>
-	<reg32 offset="0x0c14" name="VSC_PIPE_DATA_LENGTH_4"/>
-	<reg32 offset="0x0c15" name="VSC_PIPE_CONFIG_5"/>
-	<reg32 offset="0x0c16" name="VSC_PIPE_DATA_ADDRESS_5"/>
-	<reg32 offset="0x0c17" name="VSC_PIPE_DATA_LENGTH_5"/>
-	<reg32 offset="0x0c18" name="VSC_PIPE_CONFIG_6"/>
-	<reg32 offset="0x0c19" name="VSC_PIPE_DATA_ADDRESS_6"/>
-	<reg32 offset="0x0c1a" name="VSC_PIPE_DATA_LENGTH_6"/>
-	<reg32 offset="0x0c1b" name="VSC_PIPE_CONFIG_7"/>
-	<reg32 offset="0x0c1c" name="VSC_PIPE_DATA_ADDRESS_7"/>
-	<reg32 offset="0x0c1d" name="VSC_PIPE_DATA_LENGTH_7"/>
+	<array offset="0x0c06" name="VSC_PIPE" stride="3" length="8">
+		<reg32 offset="0x0" name="CONFIG"/>
+		<reg32 offset="0x1" name="DATA_ADDRESS"/>
+		<reg32 offset="0x2" name="DATA_LENGTH"/>
+	</array>
 	<reg32 offset="0x0c38" name="PC_DEBUG_CNTL"/>
 	<reg32 offset="0x0c39" name="PC_DEBUG_DATA"/>
 	<reg32 offset="0x0c44" name="PA_SC_VIZ_QUERY_STATUS"/>

@@ -204,22 +204,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x045c" name="CP_HW_FAULT"/>
 	<reg32 offset="0x045e" name="CP_PROTECT_CTRL"/>
 	<reg32 offset="0x045f" name="CP_PROTECT_STATUS"/>
-	<reg32 offset="0x0460" name="CP_PROTECT_REG_0"/>
-	<reg32 offset="0x0461" name="CP_PROTECT_REG_1"/>
-	<reg32 offset="0x0462" name="CP_PROTECT_REG_2"/>
-	<reg32 offset="0x0463" name="CP_PROTECT_REG_3"/>
-	<reg32 offset="0x0464" name="CP_PROTECT_REG_4"/>
-	<reg32 offset="0x0465" name="CP_PROTECT_REG_5"/>
-	<reg32 offset="0x0466" name="CP_PROTECT_REG_6"/>
-	<reg32 offset="0x0467" name="CP_PROTECT_REG_7"/>
-	<reg32 offset="0x0468" name="CP_PROTECT_REG_8"/>
-	<reg32 offset="0x0469" name="CP_PROTECT_REG_9"/>
-	<reg32 offset="0x046a" name="CP_PROTECT_REG_A"/>
-	<reg32 offset="0x046b" name="CP_PROTECT_REG_B"/>
-	<reg32 offset="0x046c" name="CP_PROTECT_REG_C"/>
-	<reg32 offset="0x046d" name="CP_PROTECT_REG_D"/>
-	<reg32 offset="0x046e" name="CP_PROTECT_REG_E"/>
-	<reg32 offset="0x046f" name="CP_PROTECT_REG_F"/>
+	<array offset="0x0460" name="CP_PROTECT" stride="1" length="16">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
 	<reg32 offset="0x054d" name="CP_AHB_FAULT"/>
 	<reg32 offset="0x057a" name="CP_SCRATCH_REG2"/>
 	<reg32 offset="0x057b" name="CP_SCRATCH_REG3"/>
@@ -247,19 +234,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="RASTER_MODE" low="12" high="16"/>
 	</reg32>
 
-	<bitset name="a3xx_reg_xy_wstl" inline="yes">
-		<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>  <!-- I assume it is same as a2xx -->
-		<bitfield name="X" low="0" high="14" type="uint"/>
-		<bitfield name="Y" low="16" high="30" type="uint"/>
-	</bitset>
 	<bitset name="a3xx_reg_xy" inline="yes">
+		<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>  <!-- I assume it is same as a2xx -->
 		<bitfield name="X" low="0" high="14" type="uint"/>
 		<bitfield name="Y" low="16" high="30" type="uint"/>
 	</bitset>
 
 	<reg32 offset="0x2074" name="GRAS_SC_SCREEN_SCISSOR_TL" type="a3xx_reg_xy"/>
 	<reg32 offset="0x2075" name="GRAS_SC_SCREEN_SCISSOR_BR" type="a3xx_reg_xy"/>
-	<reg32 offset="0x2079" name="GRAS_SC_WINDOW_SCISSOR_TL" type="a3xx_reg_xy_wstl"/>
+	<reg32 offset="0x2079" name="GRAS_SC_WINDOW_SCISSOR_TL" type="a3xx_reg_xy"/>
 	<reg32 offset="0x207a" name="GRAS_SC_WINDOW_SCISSOR_BR" type="a3xx_reg_xy"/>
 
 	<!-- RB registers -->
@@ -420,25 +403,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x221a" name="HLSQ_CL_WG_OFFSET_REG"/>
 
 	<!-- VFD registers -->
-	<bitset name="a3xx_vfd_fetch_instr_0_x" inline="yes">
-		<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
-		<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
-		<bitfield name="SWITCHNEXT" pos="17" type="boolean"/>
-		<bitfield name="INDEXCODE" low="18" high="23" type="uint"/>
-		<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
-	</bitset>
-	<bitset name="a3xx_vfd_decode_instr" inline="yes">
-		<bitfield name="WRITEMASK" low="0" high="3" type="hex"/>
-		<!-- not sure if this is a bit flag and another flag above it, or?? -->
-		<bitfield name="CONSTFILL" pos="4" type="boolean"/>
-		<bitfield name="FORMAT" low="6" high="11" type="a3xx_fmt"/>
-		<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
-		<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
-		<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
-		<bitfield name="LASTCOMPVALID" pos="29" type="boolean"/>
-		<bitfield name="SWITCHNEXT" pos="30" type="boolean"/>
-	</bitset>
-
 	<reg32 offset="0x2240" name="VFD_CONTROL_0">
 		<bitfield name="TOTALATTRTOVS" low="0" high="17" type="uint"/>
 		<bitfield name="PACKETSIZE" low="18" high="21" type="uint"/>
@@ -457,59 +421,38 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="REGID4VTX" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="REGID4INST" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
-	<reg32 offset="0x2242" name="VFD_INDEX_MIN"/>
-	<reg32 offset="0x2243" name="VFD_INDEX_MAX"/>
-	<reg32 offset="0x2244" name="VFD_INSTANCEID_OFFSET"/>
-	<reg32 offset="0x2245" name="VFD_INDEX_OFFSET"/>
-	<reg32 offset="0x2246" name="VFD_FETCH_INSTR_0_0" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2247" name="VFD_FETCH_INSTR_1_0"/>
-	<reg32 offset="0x2248" name="VFD_FETCH_INSTR_0_1" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2249" name="VFD_FETCH_INSTR_1_1"/>
-	<reg32 offset="0x224a" name="VFD_FETCH_INSTR_0_2" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x224b" name="VFD_FETCH_INSTR_1_2"/>
-	<reg32 offset="0x224c" name="VFD_FETCH_INSTR_0_3" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x224d" name="VFD_FETCH_INSTR_1_3"/>
-	<reg32 offset="0x224e" name="VFD_FETCH_INSTR_0_4" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x224f" name="VFD_FETCH_INSTR_1_4"/>
-	<reg32 offset="0x2250" name="VFD_FETCH_INSTR_0_5" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2251" name="VFD_FETCH_INSTR_1_5"/>
-	<reg32 offset="0x2252" name="VFD_FETCH_INSTR_0_6" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2253" name="VFD_FETCH_INSTR_1_6"/>
-	<reg32 offset="0x2254" name="VFD_FETCH_INSTR_0_7" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2255" name="VFD_FETCH_INSTR_1_7"/>
-	<reg32 offset="0x2256" name="VFD_FETCH_INSTR_0_8" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2257" name="VFD_FETCH_INSTR_1_8"/>
-	<reg32 offset="0x2258" name="VFD_FETCH_INSTR_0_9" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2259" name="VFD_FETCH_INSTR_1_9"/>
-	<reg32 offset="0x225a" name="VFD_FETCH_INSTR_0_A" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x225b" name="VFD_FETCH_INSTR_1_A"/>
-	<reg32 offset="0x225c" name="VFD_FETCH_INSTR_0_B" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x225d" name="VFD_FETCH_INSTR_1_B"/>
-	<reg32 offset="0x225e" name="VFD_FETCH_INSTR_0_C" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x225f" name="VFD_FETCH_INSTR_1_C"/>
-	<reg32 offset="0x2260" name="VFD_FETCH_INSTR_0_D" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2261" name="VFD_FETCH_INSTR_1_D"/>
-	<reg32 offset="0x2262" name="VFD_FETCH_INSTR_0_E" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2263" name="VFD_FETCH_INSTR_1_E"/>
-	<reg32 offset="0x2264" name="VFD_FETCH_INSTR_0_F" type="a3xx_vfd_fetch_instr_0_x"/>
-	<reg32 offset="0x2265" name="VFD_FETCH_INSTR_1_F"/>
-	<reg32 offset="0x2266" name="VFD_DECODE_INSTR_0" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2267" name="VFD_DECODE_INSTR_1" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2268" name="VFD_DECODE_INSTR_2" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2269" name="VFD_DECODE_INSTR_3" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x226a" name="VFD_DECODE_INSTR_4" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x226b" name="VFD_DECODE_INSTR_5" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x226c" name="VFD_DECODE_INSTR_6" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x226d" name="VFD_DECODE_INSTR_7" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x226e" name="VFD_DECODE_INSTR_8" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x226f" name="VFD_DECODE_INSTR_9" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2270" name="VFD_DECODE_INSTR_A" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2271" name="VFD_DECODE_INSTR_B" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2272" name="VFD_DECODE_INSTR_C" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2273" name="VFD_DECODE_INSTR_D" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2274" name="VFD_DECODE_INSTR_E" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x2275" name="VFD_DECODE_INSTR_F" type="a3xx_vfd_decode_instr"/>
-	<reg32 offset="0x227e" name="VFD_VS_THREADING_THRESHOLD"/>
+	<reg32 offset="0x2242" name="VFD_INDEX_MIN" type="uint"/>
+	<reg32 offset="0x2243" name="VFD_INDEX_MAX" type="uint"/>
+	<reg32 offset="0x2244" name="VFD_INSTANCEID_OFFSET" type="uint"/>
+	<reg32 offset="0x2245" name="VFD_INDEX_OFFSET" type="uint"/>
+	<array offset="0x2246" name="VFD_FETCH" stride="2" length="16">
+		<reg32 offset="0x0" name="INSTR_0">
+			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
+			<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
+			<bitfield name="SWITCHNEXT" pos="17" type="boolean"/>
+			<bitfield name="INDEXCODE" low="18" high="23" type="uint"/>
+			<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x1" name="INSTR_1"/>
+	</array>
+	<array offset="0x2266" name="VFD_DECODE" stride="1" length="16">
+		<reg32 offset="0x0" name="INSTR">
+			<bitfield name="WRITEMASK" low="0" high="3" type="hex"/>
+			<!-- not sure if this is a bit flag and another flag above it, or?? -->
+			<bitfield name="CONSTFILL" pos="4" type="boolean"/>
+			<bitfield name="FORMAT" low="6" high="11" type="a3xx_fmt"/>
+			<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
+			<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
+			<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
+			<bitfield name="LASTCOMPVALID" pos="29" type="boolean"/>
+			<bitfield name="SWITCHNEXT" pos="30" type="boolean"/>
+		</reg32>
+	</array>
+	<reg32 offset="0x227e" name="VFD_VS_THREADING_THRESHOLD">
+		<bitfield name="REGID_THRESHOLD" low="0" high="3" type="uint"/>
+		<!-- <bitfield name="RESERVED6" low="4" high="7" type="uint"/> -->
+		<bitfield name="REGID_VTXCNT" low="8" high="15" type="a3xx_regid"/>
+	</reg32>
 
 	<!-- VPC registers -->
 	<reg32 offset="0x2280" name="VPC_ATTR">
@@ -527,14 +470,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		it both "VARRYING_INTERUPT_MODE_n (sic) and VARYING_INTERP_MODE_n
 		(and few other misspell variations..)
 	 -->
-	<reg32 offset="0x2282" name="VPC_VARYING_INTERP_MODE_0"/>
-	<reg32 offset="0x2283" name="VPC_VARYING_INTERP_MODE_1"/>
-	<reg32 offset="0x2284" name="VPC_VARYING_INTERP_MODE_2"/>
-	<reg32 offset="0x2285" name="VPC_VARYING_INTERP_MODE_3"/>
-	<reg32 offset="0x2286" name="VPC_VARYING_PS_REPL_MODE_0"/>
-	<reg32 offset="0x2287" name="VPC_VARYING_PS_REPL_MODE_1"/>
-	<reg32 offset="0x2288" name="VPC_VARYING_PS_REPL_MODE_2"/>
-	<reg32 offset="0x2289" name="VPC_VARYING_PS_REPL_MODE_3"/>
+	<array offset="0x2282" name="VPC_VARYING_INTERP" stride="1" length="4">
+		<reg32 offset="0x0" name="MODE"/>
+	</array>
+	<array offset="0x2286" name="VPC_VARYING_PS_REPL" stride="1" length="4">
+		<reg32 offset="0x0" name="MODE"/>
+	</array>
 	<reg32 offset="0x228a" name="VPC_VARY_CYLWRAP_ENABLE_0"/>
 	<reg32 offset="0x228b" name="VPC_VARY_CYLWRAP_ENABLE_1"/>
 
@@ -592,15 +533,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- I guess 4 bits.. -->
 		<bitfield name="COMPMASK" low="9" high="12" type="hex"/>
 	</bitset>
-	<bitset name="a3xx_sp_vs_out_reg" inline="yes">
-		<bitfield name="A" low="0" high="15" type="a3xx_varying_info"/>
-		<bitfield name="B" low="16" high="31" type="a3xx_varying_info"/>
-	</bitset>
-	<bitset name="a3xx_sp_fs_mrt_reg">
-		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
-		<!-- not really sure about this: size -->
-		<bitfield name="PRECISION" pos="8" type="uint"/>
-	</bitset>
 
 	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
 		<!--
@@ -618,14 +550,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="PSIZEREGID" low="8" high="15" type="a3xx_regid"/>
 		<bitfield name="TOTALVSOUTVAR" low="20" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x22c7" name="SP_VS_OUT_REG_0" type="a3xx_sp_vs_out_reg"/>
-	<reg32 offset="0x22c8" name="SP_VS_OUT_REG_1" type="a3xx_sp_vs_out_reg"/>
-	<reg32 offset="0x22c9" name="SP_VS_OUT_REG_2" type="a3xx_sp_vs_out_reg"/>
-	<reg32 offset="0x22ca" name="SP_VS_OUT_REG_3" type="a3xx_sp_vs_out_reg"/>
-	<reg32 offset="0x22cb" name="SP_VS_OUT_REG_4" type="a3xx_sp_vs_out_reg"/>
-	<reg32 offset="0x22cc" name="SP_VS_OUT_REG_5" type="a3xx_sp_vs_out_reg"/>
-	<reg32 offset="0x22cd" name="SP_VS_OUT_REG_6" type="a3xx_sp_vs_out_reg"/>
-	<reg32 offset="0x22ce" name="SP_VS_OUT_REG_7" type="a3xx_sp_vs_out_reg"/>
+	<array offset="0x22c7" name="SP_VS_OUT" stride="1" length="8">
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="A" low="0" high="15" type="a3xx_varying_info"/>
+			<bitfield name="B" low="16" high="31" type="a3xx_varying_info"/>
+		</reg32>
+	</array>
+	<!-- I assume this is actually an array: -->
 	<reg32 offset="0x22d0" name="SP_VS_VPC_DST_REG_0"/>
 	<reg32 offset="0x22d1" name="SP_VS_VPC_DST_REG_1"/>
 	<reg32 offset="0x22d2" name="SP_VS_VPC_DST_REG_2"/>
@@ -654,14 +585,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0"/>
 	<reg32 offset="0x22e9" name="SP_FS_FLAT_SHAD_MODE_REG_1"/>
 	<reg32 offset="0x22ec" name="SP_FS_OUTPUT_REG"/>
-	<reg32 offset="0x22f0" name="SP_FS_MRT_REG_0" type="a3xx_sp_fs_mrt_reg"/>
-	<reg32 offset="0x22f1" name="SP_FS_MRT_REG_1" type="a3xx_sp_fs_mrt_reg"/>
-	<reg32 offset="0x22f2" name="SP_FS_MRT_REG_2" type="a3xx_sp_fs_mrt_reg"/>
-	<reg32 offset="0x22f3" name="SP_FS_MRT_REG_3" type="a3xx_sp_fs_mrt_reg"/>
-	<reg32 offset="0x22f4" name="SP_FS_IMAGE_OUTPUT_REG_0"/>
-	<reg32 offset="0x22f5" name="SP_FS_IMAGE_OUTPUT_REG_1"/>
-	<reg32 offset="0x22f6" name="SP_FS_IMAGE_OUTPUT_REG_2"/>
-	<reg32 offset="0x22f7" name="SP_FS_IMAGE_OUTPUT_REG_3"/>
+	<array offset="0x22f0" name="SP_FS_MRT" stride="1" length="4">
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
+			<!-- not really sure about this: size -->
+			<bitfield name="PRECISION" pos="8" type="uint"/>
+		</reg32>
+	</array>
+	<array offset="0x22f4" name="SP_FS_IMAGE_OUTPUT" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
 	<reg32 offset="0x22ff" name="SP_FS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
 
 	<!-- TPL1 registers -->
@@ -694,54 +627,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x0c01" name="VSC_BIN_SIZE"/>
 	<reg32 offset="0x0c02" name="VSC_SIZE_ADDRESS"/>
-	<reg32 offset="0x0c06" name="VSC_PIPE_CONFIG_0"/>
-	<reg32 offset="0x0c07" name="VSC_PIPE_DATA_ADDRESS_0"/>
-	<reg32 offset="0x0c08" name="VSC_PIPE_DATA_LENGTH_0"/>
-	<reg32 offset="0x0c09" name="VSC_PIPE_CONFIG_1"/>
-	<reg32 offset="0x0c0a" name="VSC_PIPE_DATA_ADDRESS_1"/>
-	<reg32 offset="0x0c0b" name="VSC_PIPE_DATA_LENGTH_1"/>
-	<reg32 offset="0x0c0c" name="VSC_PIPE_CONFIG_2"/>
-	<reg32 offset="0x0c0d" name="VSC_PIPE_DATA_ADDRESS_2"/>
-	<reg32 offset="0x0c0e" name="VSC_PIPE_DATA_LENGTH_2"/>
-	<reg32 offset="0x0c0f" name="VSC_PIPE_CONFIG_3"/>
-	<reg32 offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS_3"/>
-	<reg32 offset="0x0c11" name="VSC_PIPE_DATA_LENGTH_3"/>
-	<reg32 offset="0x0c12" name="VSC_PIPE_CONFIG_4"/>
-	<reg32 offset="0x0c13" name="VSC_PIPE_DATA_ADDRESS_4"/>
-	<reg32 offset="0x0c14" name="VSC_PIPE_DATA_LENGTH_4"/>
-	<reg32 offset="0x0c15" name="VSC_PIPE_CONFIG_5"/>
-	<reg32 offset="0x0c16" name="VSC_PIPE_DATA_ADDRESS_5"/>
-	<reg32 offset="0x0c17" name="VSC_PIPE_DATA_LENGTH_5"/>
-	<reg32 offset="0x0c18" name="VSC_PIPE_CONFIG_6"/>
-	<reg32 offset="0x0c19" name="VSC_PIPE_DATA_ADDRESS_6"/>
-	<reg32 offset="0x0c1a" name="VSC_PIPE_DATA_LENGTH_6"/>
-	<reg32 offset="0x0c1b" name="VSC_PIPE_CONFIG_7"/>
-	<reg32 offset="0x0c1c" name="VSC_PIPE_DATA_ADDRESS_7"/>
-	<reg32 offset="0x0c1d" name="VSC_PIPE_DATA_LENGTH_7"/>
-	<reg32 offset="0x0ca0" name="GRAS_CL_USER_PLANE_X0"/>
-	<reg32 offset="0x0ca1" name="GRAS_CL_USER_PLANE_Y0"/>
-	<reg32 offset="0x0ca2" name="GRAS_CL_USER_PLANE_Z0"/>
-	<reg32 offset="0x0ca3" name="GRAS_CL_USER_PLANE_W0"/>
-	<reg32 offset="0x0ca4" name="GRAS_CL_USER_PLANE_X1"/>
-	<reg32 offset="0x0ca5" name="GRAS_CL_USER_PLANE_Y1"/>
-	<reg32 offset="0x0ca6" name="GRAS_CL_USER_PLANE_Z1"/>
-	<reg32 offset="0x0ca7" name="GRAS_CL_USER_PLANE_W1"/>
-	<reg32 offset="0x0ca8" name="GRAS_CL_USER_PLANE_X2"/>
-	<reg32 offset="0x0ca9" name="GRAS_CL_USER_PLANE_Y2"/>
-	<reg32 offset="0x0caa" name="GRAS_CL_USER_PLANE_Z2"/>
-	<reg32 offset="0x0cab" name="GRAS_CL_USER_PLANE_W2"/>
-	<reg32 offset="0x0cac" name="GRAS_CL_USER_PLANE_X3"/>
-	<reg32 offset="0x0cad" name="GRAS_CL_USER_PLANE_Y3"/>
-	<reg32 offset="0x0cae" name="GRAS_CL_USER_PLANE_Z3"/>
-	<reg32 offset="0x0caf" name="GRAS_CL_USER_PLANE_W3"/>
-	<reg32 offset="0x0cb0" name="GRAS_CL_USER_PLANE_X4"/>
-	<reg32 offset="0x0cb1" name="GRAS_CL_USER_PLANE_Y4"/>
-	<reg32 offset="0x0cb2" name="GRAS_CL_USER_PLANE_Z4"/>
-	<reg32 offset="0x0cb3" name="GRAS_CL_USER_PLANE_W4"/>
-	<reg32 offset="0x0cb4" name="GRAS_CL_USER_PLANE_X5"/>
-	<reg32 offset="0x0cb5" name="GRAS_CL_USER_PLANE_Y5"/>
-	<reg32 offset="0x0cb6" name="GRAS_CL_USER_PLANE_Z5"/>
-	<reg32 offset="0x0cb7" name="GRAS_CL_USER_PLANE_W5"/>
+	<array offset="0x0c06" name="VSC_PIPE" stride="3" length="8">
+		<reg32 offset="0x0" name="CONFIG"/>
+		<reg32 offset="0x1" name="DATA_ADDRESS"/>
+		<reg32 offset="0x2" name="DATA_LENGTH"/>
+	</array>
+	<array offset="0x0ca0" name="GRAS_CL_USER_PLANE" stride="4" length="6">
+		<reg32 offset="0x0" name="X"/>
+		<reg32 offset="0x1" name="Y"/>
+		<reg32 offset="0x2" name="Z"/>
+		<reg32 offset="0x3" name="W"/>
+	</array>
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
 	<reg32 offset="0x0e44" name="VFD_PERFCOUNTER0_SELECT"/>
 	<reg32 offset="0x0e61" name="VPC_VPC_DEBUG_RAM_SEL"/>
