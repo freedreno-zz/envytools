@@ -55,6 +55,40 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="STENCIL_DECR_WRAP" value="7"/>
 </enum>
 
+<enum name="a3xx_blend_factor" inline="yes">
+	<value name="FACTOR_ZERO" value="0"/>
+	<value name="FACTOR_ONE" value="1"/>
+	<value name="FACTOR_SRC_COLOR" value="4"/>
+	<value name="FACTOR_ONE_MINUS_SRC_COLOR" value="5"/>
+	<value name="FACTOR_SRC_ALPHA" value="6"/>
+	<value name="FACTOR_ONE_MINUS_SRC_ALPHA" value="7"/>
+	<value name="FACTOR_DST_COLOR" value="8"/>
+	<value name="FACTOR_ONE_MINUS_DST_COLOR" value="9"/>
+	<value name="FACTOR_DST_ALPHA" value="10"/>
+	<value name="FACTOR_ONE_MINUS_DST_ALPHA" value="11"/>
+	<value name="FACTOR_CONSTANT_COLOR" value="12"/>
+	<value name="FACTOR_ONE_MINUS_CONSTANT_COLOR" value="13"/>
+	<value name="FACTOR_CONSTANT_ALPHA" value="14"/>
+	<value name="FACTOR_ONE_MINUS_CONSTANT_ALPHA" value="15"/>
+	<value name="FACTOR_SRC_ALPHA_SATURATE" value="16"/>
+</enum>
+
+<enum name="a3xx_blend_opcode" inline="yes">
+	<value name="BLEND_DST_PLUS_SRC" value="0"/>
+	<value name="BLEND_SRC_MINUS_DST" value="1"/>
+	<value name="BLEND_MIN_DST_SRC" value="2"/>
+	<value name="BLEND_MAX_DST_SRC" value="3"/>
+	<value name="BLEND_DST_MINUS_SRC" value="4"/>
+	<value name="BLEND_DST_PLUS_SRC_BIAS" value="5"/>
+</enum>
+
+<!-- assume this is similar to a2xx.. -->
+<enum name="a3xx_dither_mode" inline="yes">
+	<value name="DITHER_DISABLE" value="0"/>
+	<value name="DITHER_ALWAYS" value="1"/>
+	<value name="DITHER_IF_ALPHA_OFF" value="2"/>
+</enum>
+
 <enum name="a3xx_threadmode" inline="yes">
 	<value value="0" name="MULTI"/>
 	<value value="1" name="SINGLE?"/>
@@ -244,22 +278,40 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="MSAA_DISABLE" pos="10" type="boolean"/>
 		<bitfield name="SAMPLE_MASK" low="16" high="31" type="hex"/>
 	</reg32>
-	<reg32 offset="0x20c4" name="RB_MRT_CONTROL0"/>
-	<reg32 offset="0x20c5" name="RB_MRT_BUF_INFO0"/>
-	<reg32 offset="0x20c6" name="RB_MRT_BUF_BASE0"/>
-	<reg32 offset="0x20c7" name="RB_MRT_BLEND_CONTROL0"/>
-	<reg32 offset="0x20c8" name="RB_MRT_CONTROL1"/>
-	<reg32 offset="0x20c9" name="RB_MRT_BUF_INFO1"/>
-	<reg32 offset="0x20ca" name="RB_MRT_BUF_BASE1"/>
-	<reg32 offset="0x20cb" name="RB_MRT_BLEND_CONTROL1"/>
-	<reg32 offset="0x20cc" name="RB_MRT_CONTROL2"/>
-	<reg32 offset="0x20cd" name="RB_MRT_BUF_INFO2"/>
-	<reg32 offset="0x20ce" name="RB_MRT_BUF_BASE2"/>
-	<reg32 offset="0x20cf" name="RB_MRT_BLEND_CONTROL2"/>
-	<reg32 offset="0x20d0" name="RB_MRT_CONTROL3"/>
-	<reg32 offset="0x20d1" name="RB_MRT_BUF_INFO3"/>
-	<reg32 offset="0x20d2" name="RB_MRT_BUF_BASE3"/>
-	<reg32 offset="0x20d3" name="RB_MRT_BLEND_CONTROL3"/>
+
+	<array offset="0x20c4" name="RB_MRT" stride="4" length="4">
+		<reg32 offset="0x0" name="CONTROL">
+			<bitfield name="READ_DEST_ENABLE" pos="3" type="boolean"/>
+			<bitfield name="ROP_CODE" low="8" high="11" type="uint"/>
+			<bitfield name="DITHER_MODE" low="12" high="13" type="a3xx_dither_mode"/>
+			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
+		</reg32>
+		<reg32 offset="0x1" name="BUF_INFO">
+			<bitfield name="COLOR_FORMAT" low="0" high="5" type="a3xx_color_format"/>
+			<bitfield name="COLOR_TILE_MODE" low="6" high="7" type="a3xx_tile_mode"/>
+			<doc>actually, appears to be pitch in bytes, so really is a stride</doc>
+			<bitfield name="COLOR_BUF_PITCH" low="17" high="31" shr="5" type="uint"/>
+		</reg32>
+		<reg32 offset="0x2" name="BUF_BASE">
+			<!--
+				XXX maybe this is offsets into GMEM.. we seem to get 0x20000
+				when depth buffer is enabled.. not sure if that means on
+				that the color buffer comes *after* the depth/stencil buffer
+				or that there are some high bits in here that are the offset
+				of the depth/stencil buffer like on a2xx
+			 -->
+			<bitfield name="COLOR_BUF_BASE" low="4" high="31" shr="5" type="hex"/>
+		</reg32>
+		<reg32 offset="0x3" name="BLEND_CONTROL">
+			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="a3xx_blend_factor"/>
+			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="a3xx_blend_opcode"/>
+			<bitfield name="RGB_DEST_FACTOR" low="8" high="12" type="a3xx_blend_factor"/>
+			<bitfield name="ALPHA_SRC_FACTOR" low="16" high="20" type="a3xx_blend_factor"/>
+			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="a3xx_blend_opcode"/>
+			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="a3xx_blend_factor"/>
+			<bitfield name="CLAMP_ENABLE" pos="29" type="boolean"/>
+		</reg32>
+	</array>
 	<reg32 offset="0x20e4" name="RB_BLEND_RED"/>
 	<reg32 offset="0x20e5" name="RB_BLEND_GREEN"/>
 	<reg32 offset="0x20e6" name="RB_BLEND_BLUE"/>
@@ -284,7 +336,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x20ef" name="RB_COPY_DEST_INFO">
 		<bitfield name="TILE" low="0" high="1" type="a3xx_tile_mode"/>
-		<!-- not actually sure # of bits yet: -->
 		<bitfield name="FORMAT" low="2" high="7" type="a3xx_color_format"/>
 		<bitfield name="COMPONENT_ENABLE" low="14" high="17" type="hex"/>
 		<bitfield name="ENDIAN" low="18" high="20" type="a3xx_surface_endian"/>
