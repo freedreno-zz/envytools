@@ -2,7 +2,7 @@
 <database xmlns="http://nouveau.freedesktop.org/"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
-<import file="copyright.xml"/>
+<import file="freedreno_copyright.xml"/>
 
 <enum name="a3xx_render_mode" inline="yes">
 	<value name="RB_RENDERING_PASS" value="0"/>
@@ -229,11 +229,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x204d" name="GRAS_CL_VPORT_ZSCALE" type="float"/>
 	<reg32 offset="0x2068" name="GRAS_SU_POINT_MINMAX"/>
 	<reg32 offset="0x2069" name="GRAS_SU_POINT_SIZE"/>
-	<reg32 offset="0x206c" name="GRAS_SU_POLY_OFFSET_SCALE"/>
-	<reg32 offset="0x206d" name="GRAS_SU_POLY_OFFSET_OFFSET"/>
+	<reg32 offset="0x206c" name="GRAS_SU_POLY_OFFSET_SCALE">
+		<bitfield name="VAL" low="0" high="23" type="fixed" radix="20"/>
+		<doc>range of -8.0 to 8.0</doc>
+	</reg32>
+	<reg32 offset="0x206d" name="GRAS_SU_POLY_OFFSET_OFFSET" radix="22" type="fixed">
+		<doc>range of -512.0 to 512.0</doc>
+	</reg32>
 	<reg32 offset="0x2070" name="GRAS_SU_MODE_CONTROL">
+		<bitfield name="CULL_FRONT" pos="0" type="boolean"/>
+		<bitfield name="CULL_BACK" pos="1" type="boolean"/>
 		<!-- guessing on size -->
-		<bitfield name="LINEHALFWIDTH" low="2" high="15" type="uint"/>
+		<bitfield name="LINEHALFWIDTH" low="2" high="10" type="uint"/>
+		<bitfield name="POLY_OFFSET" pos="11" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2072" name="GRAS_SC_CONTROL">
 		<!-- complete wild-ass-guess for sizes of these bitfields.. -->
@@ -272,6 +280,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<array offset="0x20c4" name="RB_MRT" stride="4" length="4">
 		<reg32 offset="0x0" name="CONTROL">
 			<bitfield name="READ_DEST_ENABLE" pos="3" type="boolean"/>
+			<!-- both these bits seem to get set when enabling GL_BLEND.. -->
+			<bitfield name="BLENDA?" pos="4" type="boolean"/>
+			<bitfield name="BLENDB?" pos="5" type="boolean"/>
 			<bitfield name="ROP_CODE" low="8" high="11" type="uint"/>
 			<bitfield name="DITHER_MODE" low="12" high="13" type="a3xx_dither_mode"/>
 			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
@@ -341,6 +352,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="EARLY_Z_ENABLE" pos="3" type="boolean"/>
 		<bitfield name="ZFUNC" low="4" high="6" type="a3xx_compare_func"/>
 		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
+		<!-- this also seems to be set when depth enabled.. maybe one is hiz? -->
+		<bitfield name="Z_ENABLE2?" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
 		<bitfield name="FUNC" low="8" high="10" type="a3xx_compare_func"/>
@@ -351,6 +364,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FAIL_BF" low="23" high="25" type="a3xx_stencil_op"/>
 		<bitfield name="ZPASS_BF" low="26" high="28" type="a3xx_stencil_op"/>
 		<bitfield name="ZFAIL_BF" low="29" high="31" type="a3xx_stencil_op"/>
+	</reg32>
+	<!--
+		Possibly 0x2109 is same thing, with 16 bits each for each of the MRT?
+		I need to do some tests w/ multiple render targets and glClearBuffer().
+
+		For clearing depth, driver seems to set DEPTHn to 0xff and use
+		VPORT_ZSCALE to set the desired clear value, but not really sure how
+		that could work with MRT..
+	 -->
+	<reg32 offset="0x2108" name="RB_CLEAR_CONTROL">
+		<bitfield name="STENCIL0" low="0" high="7" type="hex"/>
+		<bitfield name="STENCIL1" low="8" high="15" type="hex"/>
+		<bitfield name="DEPTH0" low="16" high="23" type="hex"/>
+		<bitfield name="DEPTH1" low="24" high="31" type="hex"/>
 	</reg32>
 
 	<!-- PC registers -->
@@ -664,6 +691,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x3" name="W"/>
 	</array>
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
+	<reg32 offset="0x0ce0" name="RB_WINDOW_SIZE">
+		<bitfield name="WIDTH" low="0" high="13" type="uint"/>
+		<bitfield name="HEIGHT" low="14" high="27" type="uint"/>
+	</reg32>
 	<reg32 offset="0x0e44" name="VFD_PERFCOUNTER0_SELECT"/>
 	<reg32 offset="0x0e61" name="VPC_VPC_DEBUG_RAM_SEL"/>
 	<reg32 offset="0x0e62" name="VPC_VPC_DEBUG_RAM_READ"/>
