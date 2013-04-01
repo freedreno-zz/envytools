@@ -157,6 +157,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FMT_NORM_BYTE_8_8_8_8" value="0x37"/>
 </enum>
 
+<enum name="a3xx_msaa_samples" inline="yes">
+	<value name="MSAA_ONE" value="0"/>
+	<value name="MSAA_TWO" value="1"/>
+	<value name="MSAA_FOUR" value="2"/>
+</enum>
+
 <domain name="A3XX" width="32">
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
@@ -220,7 +226,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="VP_XFORM_DISABLE" pos="20" type="boolean"/>
 		<bitfield name="PERSP_DIVISION_DISABLE" pos="21" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x2044" name="GRAS_CL_GB_CLIP_ADJ"/>
+	<reg32 offset="0x2044" name="GRAS_CL_GB_CLIP_ADJ">
+		<bitfield name="HORZ" low="0" high="9" type="uint"/>
+		<bitfield name="VERT" low="10" high="19" type="uint"/>
+	</reg32>
 	<reg32 offset="0x2048" name="GRAS_CL_VPORT_XOFFSET" type="float"/>
 	<reg32 offset="0x2049" name="GRAS_CL_VPORT_XSCALE" type="float"/>
 	<reg32 offset="0x204a" name="GRAS_CL_VPORT_YOFFSET" type="float"/>
@@ -245,8 +254,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2072" name="GRAS_SC_CONTROL">
 		<!-- complete wild-ass-guess for sizes of these bitfields.. -->
-		<bitfield name="RENDER_MODE" low="4" high="8"/>
-		<bitfield name="RASTER_MODE" low="12" high="16"/>
+		<bitfield name="RENDER_MODE" low="4" high="7"/>
+		<bitfield name="MSAA_SAMPLES" low="8" high="11" type="a3xx_msaa_samples"/>
+		<bitfield name="RASTER_MODE" low="12" high="15"/>
 	</reg32>
 
 	<bitset name="a3xx_reg_xy" inline="yes">
@@ -261,6 +271,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x207a" name="GRAS_SC_WINDOW_SCISSOR_BR" type="a3xx_reg_xy"/>
 
 	<!-- RB registers -->
+	<bitset name="a3xx_rb_stencilrefmask" inline="yes">
+		<bitfield name="STENCILREF" low="0" high="7" type="hex"/>
+		<bitfield name="STENCILMASK" low="8" high="15" type="hex"/>
+		<bitfield name="STENCILWRITEMASK" low="16" high="23" type="hex"/>
+	</bitset>
+
 	<reg32 offset="0x20c0" name="RB_MODE_CONTROL">
 		<!-- guess on the # of bits here.. -->
 		<bitfield name="RENDER_MODE" low="8" high="10" type="a3xx_render_mode"/>
@@ -273,7 +289,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="a3xx_compare_func"/>
 	</reg32>
 	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL">
-		<bitfield name="MSAA_DISABLE" pos="10" type="boolean"/>
+		<bitfield name="DISABLE" pos="10" type="boolean"/>
+		<bitfield name="SAMPLES" low="12" high="15" type="a3xx_msaa_samples"/>
 		<bitfield name="SAMPLE_MASK" low="16" high="31" type="hex"/>
 	</reg32>
 
@@ -346,16 +363,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			guessing that this matches a2xx with the stencil fields
 			moved out into RB_STENCIL_CONTROL?
 		 -->
-		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
 		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
 		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
 		<bitfield name="EARLY_Z_ENABLE" pos="3" type="boolean"/>
 		<bitfield name="ZFUNC" low="4" high="6" type="a3xx_compare_func"/>
 		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
-		<!-- this also seems to be set when depth enabled.. maybe one is hiz? -->
-		<bitfield name="Z_ENABLE2?" pos="31" type="boolean"/>
+		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
+		<bitfield name="Z_TEST_ENABLE" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
+		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
+		<doc>
+			STENCIL_ENABLE2 seems to be also set whenever is stencil is
+			enabled.. maybe front/back face can be enabled independently?
+			a2xx didn't have that (it was more similar to radeon for
+			stencil related registers)
+		</doc>
+		<bitfield name="STENCIL_ENABLE2" pos="2" type="boolean"/>
 		<bitfield name="FUNC" low="8" high="10" type="a3xx_compare_func"/>
 		<bitfield name="FAIL" low="11" high="13" type="a3xx_stencil_op"/>
 		<bitfield name="ZPASS" low="14" high="16" type="a3xx_stencil_op"/>
@@ -365,20 +389,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ZPASS_BF" low="26" high="28" type="a3xx_stencil_op"/>
 		<bitfield name="ZFAIL_BF" low="29" high="31" type="a3xx_stencil_op"/>
 	</reg32>
-	<!--
-		Possibly 0x2109 is same thing, with 16 bits each for each of the MRT?
-		I need to do some tests w/ multiple render targets and glClearBuffer().
-
-		For clearing depth, driver seems to set DEPTHn to 0xff and use
-		VPORT_ZSCALE to set the desired clear value, but not really sure how
-		that could work with MRT..
-	 -->
-	<reg32 offset="0x2108" name="RB_CLEAR_CONTROL">
-		<bitfield name="STENCIL0" low="0" high="7" type="hex"/>
-		<bitfield name="STENCIL1" low="8" high="15" type="hex"/>
-		<bitfield name="DEPTH0" low="16" high="23" type="hex"/>
-		<bitfield name="DEPTH1" low="24" high="31" type="hex"/>
-	</reg32>
+	<reg32 offset="0x2108" name="RB_STENCILREFMASK" type="a3xx_rb_stencilrefmask"/>
+	<reg32 offset="0x2109" name="RB_STENCILREFMASK_BF" type="a3xx_rb_stencilrefmask"/>
 
 	<!-- PC registers -->
 	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL"/>
