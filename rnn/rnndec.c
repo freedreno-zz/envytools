@@ -172,7 +172,7 @@ char *rnndec_decodeval(struct rnndeccontext *ctx, struct rnntypeinfo *ti, uint64
 			/* fallthrough */
 		case RNN_TTYPE_UFIXED:
 			asprintf (&res, "%s%lf%s", ctx->colors->num,
-					((double)value) / ((double)(1 << ti->radix)),
+					((double)value) / ((double)(1LL << ti->radix)),
 					ctx->colors->reset);
 			return res;
 		case RNN_TTYPE_A3XX_REGID:
