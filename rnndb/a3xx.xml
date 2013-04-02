@@ -9,10 +9,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_RESOLVE_PASS" value="2"/>
 </enum>
 
-<enum name="a3xx_resolve_clear_mode" inline="yes">
-	<value name="RESOLVE" value="1"/>
-</enum>
-
 <enum name="a3xx_tile_mode" inline="yes">
 	<value name="LINEAR" value="0"/>
 	<value name="TILE_32X32" value="2"/>
@@ -279,6 +275,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x20c0" name="RB_MODE_CONTROL">
 		<!-- guess on the # of bits here.. -->
+		<doc>
+			RENDER_MODE is RB_RESOLVE_PASS for gmem->mem, otherwise RB_RENDER_PASS
+		</doc>
 		<bitfield name="RENDER_MODE" low="8" high="10" type="a3xx_render_mode"/>
 		<bitfield name="MARB_CACHE_SPLIT_MODE" pos="15" type="boolean"/>
 		<bitfield name="PACKER_TIMER_ENABLE" pos="16" type="boolean"/>
@@ -307,7 +306,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x1" name="BUF_INFO">
 			<bitfield name="COLOR_FORMAT" low="0" high="5" type="a3xx_color_format"/>
 			<bitfield name="COLOR_TILE_MODE" low="6" high="7" type="a3xx_tile_mode"/>
-			<doc>actually, appears to be pitch in bytes, so really is a stride</doc>
+			<doc>
+				Pitch (actually, appears to be pitch in bytes, so really is a stride)
+				in GMEM, so pitch of the current tile.
+			</doc>
 			<bitfield name="COLOR_BUF_PITCH" low="17" high="31" shr="5" type="uint"/>
 		</reg32>
 		<reg32 offset="0x2" name="BUF_BASE">
@@ -341,7 +343,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20e7" name="RB_BLEND_ALPHA"/>
 	<reg32 offset="0x20ec" name="RB_COPY_CONTROL">
 		<!-- not sure # of bits -->
-		<bitfield name="MODE" low="4" high="5" type="a3xx_resolve_clear_mode"/>
+		<bitfield name="MSAA_RESOLVE" low="0" high="1" type="a3xx_msaa_samples"/>
+		<bitfield name="MODE" low="4" high="6" type="enum">
+			<value name="RESOLVE" value="1"/>
+			<value name="DEPTH_STENCIL" value="5"/>  <!-- not sure if this is part of MODE or another bitfield?? -->
+		</bitfield>
 		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
 	</reg32>
 	<reg32 offset="0x20ed" name="RB_COPY_DEST_BASE">
@@ -371,6 +377,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
 		<bitfield name="Z_TEST_ENABLE" pos="31" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x2102" name="RB_DEPTH_INFO">
+		<bitfield name="DEPTH_FORMAT" pos="0" type="enum">
+			<value name="DEPTHX_16" value="0"/>
+			<value name="DEPTHX_24_8" value="1"/>
+		</bitfield>
+		<doc>
+			DEPTH_BASE is offset in GMEM to depth/stencil buffer, ie
+			bin_w * bin_h / 1024 (possible rounded up to multiple of
+			something??  ie. 39 becomes 40, 78 becomes 80.. 75 becomes
+			80.. so maybe it needs to be multiple of 8??
+		</doc>
+		<bitfield name="DEPTH_BASE" low="11" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2103" name="RB_DEPTH_PITCH" shr="4" type="uint">
+		<doc>pitch of depth/stencil buffer</doc>
+	</reg32>
 	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
 		<doc>
@@ -391,6 +413,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2108" name="RB_STENCILREFMASK" type="a3xx_rb_stencilrefmask"/>
 	<reg32 offset="0x2109" name="RB_STENCILREFMASK_BF" type="a3xx_rb_stencilrefmask"/>
+	<reg32 offset="0x210e" name="PC_BIN_OFFSET">
+		<doc>X/Y offset of current bin</doc>
+		<bitfield name="X" low="0" high="15" type="uint"/>
+		<bitfield name="Y" low="16" high="31" type="uint"/>
+	</reg32>
 
 	<!-- PC registers -->
 	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL"/>
