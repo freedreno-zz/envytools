@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database xmlns="http://nouveau.freedesktop.org/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
+
+<enum name="adreno_pa_su_sc_draw">
+	<value name="PC_DRAW_POINTS" value="0"/>
+	<value name="PC_DRAW_LINES" value="1"/>
+	<value name="PC_DRAW_TRIANGLES" value="2"/>
+</enum>
+
+<enum name="adreno_compare_func">
+	<value name="FUNC_NEVER" value="0"/>
+	<value name="FUNC_LESS" value="1"/>
+	<value name="FUNC_EQUAL" value="2"/>
+	<value name="FUNC_LEQUAL" value="3"/>
+	<value name="FUNC_GREATER" value="4"/>
+	<value name="FUNC_NOTEQUAL" value="5"/>
+	<value name="FUNC_GEQUAL" value="6"/>
+	<value name="FUNC_ALWAYS" value="7"/>
+</enum>
+
+<enum name="adreno_stencil_op">
+	<value name="STENCIL_KEEP" value="0"/>
+	<value name="STENCIL_ZERO" value="1"/>
+	<value name="STENCIL_REPLACE" value="2"/>
+	<value name="STENCIL_INCR_CLAMP" value="3"/>
+	<value name="STENCIL_DECR_CLAMP" value="4"/>
+	<value name="STENCIL_INVERT" value="5"/>
+	<value name="STENCIL_INCR_WRAP" value="6"/>
+	<value name="STENCIL_DECR_WRAP" value="7"/>
+</enum>
+
+<enum name="adreno_rb_blend_factor">
+	<value name="FACTOR_ZERO" value="0"/>
+	<value name="FACTOR_ONE" value="1"/>
+	<value name="FACTOR_SRC_COLOR" value="4"/>
+	<value name="FACTOR_ONE_MINUS_SRC_COLOR" value="5"/>
+	<value name="FACTOR_SRC_ALPHA" value="6"/>
+	<value name="FACTOR_ONE_MINUS_SRC_ALPHA" value="7"/>
+	<value name="FACTOR_DST_COLOR" value="8"/>
+	<value name="FACTOR_ONE_MINUS_DST_COLOR" value="9"/>
+	<value name="FACTOR_DST_ALPHA" value="10"/>
+	<value name="FACTOR_ONE_MINUS_DST_ALPHA" value="11"/>
+	<value name="FACTOR_CONSTANT_COLOR" value="12"/>
+	<value name="FACTOR_ONE_MINUS_CONSTANT_COLOR" value="13"/>
+	<value name="FACTOR_CONSTANT_ALPHA" value="14"/>
+	<value name="FACTOR_ONE_MINUS_CONSTANT_ALPHA" value="15"/>
+	<value name="FACTOR_SRC_ALPHA_SATURATE" value="16"/>
+</enum>
+
+<enum name="adreno_rb_blend_opcode">
+	<value name="BLEND_DST_PLUS_SRC" value="0"/>
+	<value name="BLEND_SRC_MINUS_DST" value="1"/>
+	<value name="BLEND_MIN_DST_SRC" value="2"/>
+	<value name="BLEND_MAX_DST_SRC" value="3"/>
+	<value name="BLEND_DST_MINUS_SRC" value="4"/>
+	<value name="BLEND_DST_PLUS_SRC_BIAS" value="5"/>
+</enum>
+
+<bitset name="adreno_rb_stencilrefmask" inline="yes">
+	<bitfield name="STENCILREF" low="0" high="7" type="hex"/>
+	<bitfield name="STENCILMASK" low="8" high="15" type="hex"/>
+	<bitfield name="STENCILWRITEMASK" low="16" high="23" type="hex"/>
+</bitset>
+
+</database>
+
