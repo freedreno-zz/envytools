@@ -3,18 +3,19 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
+<import file="adreno_common.xml"/>
 
-<enum name="a3xx_render_mode" inline="yes">
+<enum name="a3xx_render_mode">
 	<value name="RB_RENDERING_PASS" value="0"/>
 	<value name="RB_RESOLVE_PASS" value="2"/>
 </enum>
 
-<enum name="a3xx_tile_mode" inline="yes">
+<enum name="a3xx_tile_mode">
 	<value name="LINEAR" value="0"/>
 	<value name="TILE_32X32" value="2"/>
 </enum>
 
-<enum name="a3xx_color_format" inline="yes">
+<enum name="a3xx_color_format">
 	<value name="RB_R8G8B8A8_UNORM" value="8"/>
 </enum>
 
@@ -28,86 +29,29 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="ENDIAN_8IN128" value="5"/>
 </enum>
 
-<!-- I assume these values match a2xx (which matches GL, r6xx, etc, etc -->
-<enum name="a3xx_compare_func" inline="yes">
-	<value name="FUNC_NEVER" value="0"/>
-	<value name="FUNC_LESS" value="1"/>
-	<value name="FUNC_EQUAL" value="2"/>
-	<value name="FUNC_LEQUAL" value="3"/>
-	<value name="FUNC_GREATER" value="4"/>
-	<value name="FUNC_NOTEQUAL" value="5"/>
-	<value name="FUNC_GEQUAL" value="6"/>
-	<value name="FUNC_ALWAYS" value="7"/>
-</enum>
-
-<enum name="a3xx_stencil_op" inline="yes">
-	<value name="STENCIL_KEEP" value="0"/>
-	<value name="STENCIL_ZERO" value="1"/>
-	<value name="STENCIL_REPLACE" value="2"/>
-	<value name="STENCIL_INCR_CLAMP" value="3"/>
-	<value name="STENCIL_DECR_CLAMP" value="4"/>
-	<value name="STENCIL_INVERT" value="5"/>
-	<value name="STENCIL_INCR_WRAP" value="6"/>
-	<value name="STENCIL_DECR_WRAP" value="7"/>
-</enum>
-
-<enum name="a3xx_blend_factor" inline="yes">
-	<value name="FACTOR_ZERO" value="0"/>
-	<value name="FACTOR_ONE" value="1"/>
-	<value name="FACTOR_SRC_COLOR" value="4"/>
-	<value name="FACTOR_ONE_MINUS_SRC_COLOR" value="5"/>
-	<value name="FACTOR_SRC_ALPHA" value="6"/>
-	<value name="FACTOR_ONE_MINUS_SRC_ALPHA" value="7"/>
-	<value name="FACTOR_DST_COLOR" value="8"/>
-	<value name="FACTOR_ONE_MINUS_DST_COLOR" value="9"/>
-	<value name="FACTOR_DST_ALPHA" value="10"/>
-	<value name="FACTOR_ONE_MINUS_DST_ALPHA" value="11"/>
-	<value name="FACTOR_CONSTANT_COLOR" value="12"/>
-	<value name="FACTOR_ONE_MINUS_CONSTANT_COLOR" value="13"/>
-	<value name="FACTOR_CONSTANT_ALPHA" value="14"/>
-	<value name="FACTOR_ONE_MINUS_CONSTANT_ALPHA" value="15"/>
-	<value name="FACTOR_SRC_ALPHA_SATURATE" value="16"/>
-</enum>
-
-<enum name="a3xx_blend_opcode" inline="yes">
-	<value name="BLEND_DST_PLUS_SRC" value="0"/>
-	<value name="BLEND_SRC_MINUS_DST" value="1"/>
-	<value name="BLEND_MIN_DST_SRC" value="2"/>
-	<value name="BLEND_MAX_DST_SRC" value="3"/>
-	<value name="BLEND_DST_MINUS_SRC" value="4"/>
-	<value name="BLEND_DST_PLUS_SRC_BIAS" value="5"/>
-</enum>
-
 <!-- assume this is similar to a2xx.. -->
-<enum name="a3xx_dither_mode" inline="yes">
+<enum name="a3xx_dither_mode">
 	<value name="DITHER_DISABLE" value="0"/>
 	<value name="DITHER_ALWAYS" value="1"/>
 	<value name="DITHER_IF_ALPHA_OFF" value="2"/>
 </enum>
 
-<enum name="a3xx_threadmode" inline="yes">
+<enum name="a3xx_threadmode">
 	<value value="0" name="MULTI"/>
 	<value value="1" name="SINGLE?"/>
 </enum>
 
-<enum name="a3xx_instrbuffermode" inline="yes">
+<enum name="a3xx_instrbuffermode">
 	<value value="0" name="NO_BUFFER?"/>
 	<value value="1" name="BUFFER"/>
 </enum>
 
-<enum name="a3xx_threadsize" inline="yes">
+<enum name="a3xx_threadsize">
 	<value value="0" name="TWO_QUADS"/>
 	<value value="1" name="FOUR_QUADS"/>
 </enum>
 
-<!-- I guess this is probably same as a2xx enum pa_su_sc_draw: -->
-<enum name="a3xx_pc_draw">
-	<value name="PC_DRAW_POINTS" value="0"/>
-	<value name="PC_DRAW_LINES" value="1"/>
-	<value name="PC_DRAW_TRIANGLES" value="2"/>
-</enum>
-
-<enum name="a3xx_fmt" inline="yes">
+<enum name="a3xx_fmt">
 	<value name="FMT_FLOAT_32" value="0x0"/>
 	<value name="FMT_FLOAT_32_32" value="0x1"/>
 	<value name="FMT_FLOAT_32_32_32" value="0x2"/>
@@ -153,7 +97,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FMT_NORM_BYTE_8_8_8_8" value="0x37"/>
 </enum>
 
-<enum name="a3xx_msaa_samples" inline="yes">
+<enum name="a3xx_msaa_samples">
 	<value name="MSAA_ONE" value="0"/>
 	<value name="MSAA_TWO" value="1"/>
 	<value name="MSAA_FOUR" value="2"/>
@@ -267,12 +211,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x207a" name="GRAS_SC_WINDOW_SCISSOR_BR" type="a3xx_reg_xy"/>
 
 	<!-- RB registers -->
-	<bitset name="a3xx_rb_stencilrefmask" inline="yes">
-		<bitfield name="STENCILREF" low="0" high="7" type="hex"/>
-		<bitfield name="STENCILMASK" low="8" high="15" type="hex"/>
-		<bitfield name="STENCILWRITEMASK" low="16" high="23" type="hex"/>
-	</bitset>
-
 	<reg32 offset="0x20c0" name="RB_MODE_CONTROL">
 		<!-- guess on the # of bits here.. -->
 		<doc>
@@ -285,7 +223,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20c1" name="RB_RENDER_CONTROL">
 		<bitfield name="BIN_WIDTH" low="4" high="11" shr="5" type="uint"/>
 		<bitfield name="DISABLE_COLOR_PIPE" pos="12" type="boolean"/>
-		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="a3xx_compare_func"/>
+		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="adreno_compare_func"/>
 	</reg32>
 	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL">
 		<bitfield name="DISABLE" pos="10" type="boolean"/>
@@ -323,12 +261,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="COLOR_BUF_BASE" low="4" high="31" shr="5" type="hex"/>
 		</reg32>
 		<reg32 offset="0x3" name="BLEND_CONTROL">
-			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="a3xx_blend_factor"/>
-			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="a3xx_blend_opcode"/>
-			<bitfield name="RGB_DEST_FACTOR" low="8" high="12" type="a3xx_blend_factor"/>
-			<bitfield name="ALPHA_SRC_FACTOR" low="16" high="20" type="a3xx_blend_factor"/>
-			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="a3xx_blend_opcode"/>
-			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="a3xx_blend_factor"/>
+			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="adreno_rb_blend_factor"/>
+			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="adreno_rb_blend_opcode"/>
+			<bitfield name="RGB_DEST_FACTOR" low="8" high="12" type="adreno_rb_blend_factor"/>
+			<bitfield name="ALPHA_SRC_FACTOR" low="16" high="20" type="adreno_rb_blend_factor"/>
+			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="adreno_rb_blend_opcode"/>
+			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="adreno_rb_blend_factor"/>
 			<bitfield name="CLAMP_ENABLE" pos="29" type="boolean"/>
 		</reg32>
 	</array>
@@ -372,7 +310,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
 		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
 		<bitfield name="EARLY_Z_ENABLE" pos="3" type="boolean"/>
-		<bitfield name="ZFUNC" low="4" high="6" type="a3xx_compare_func"/>
+		<bitfield name="ZFUNC" low="4" high="6" type="adreno_compare_func"/>
 		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
 		<bitfield name="Z_TEST_ENABLE" pos="31" type="boolean"/>
@@ -402,18 +340,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			stencil related registers)
 		</doc>
 		<bitfield name="STENCIL_ENABLE2" pos="2" type="boolean"/>
-		<bitfield name="FUNC" low="8" high="10" type="a3xx_compare_func"/>
-		<bitfield name="FAIL" low="11" high="13" type="a3xx_stencil_op"/>
-		<bitfield name="ZPASS" low="14" high="16" type="a3xx_stencil_op"/>
-		<bitfield name="ZFAIL" low="17" high="19" type="a3xx_stencil_op"/>
-		<bitfield name="FUNC_BF" low="20" high="22" type="a3xx_compare_func"/>
-		<bitfield name="FAIL_BF" low="23" high="25" type="a3xx_stencil_op"/>
-		<bitfield name="ZPASS_BF" low="26" high="28" type="a3xx_stencil_op"/>
-		<bitfield name="ZFAIL_BF" low="29" high="31" type="a3xx_stencil_op"/>
+		<bitfield name="FUNC" low="8" high="10" type="adreno_compare_func"/>
+		<bitfield name="FAIL" low="11" high="13" type="adreno_stencil_op"/>
+		<bitfield name="ZPASS" low="14" high="16" type="adreno_stencil_op"/>
+		<bitfield name="ZFAIL" low="17" high="19" type="adreno_stencil_op"/>
+		<bitfield name="FUNC_BF" low="20" high="22" type="adreno_compare_func"/>
+		<bitfield name="FAIL_BF" low="23" high="25" type="adreno_stencil_op"/>
+		<bitfield name="ZPASS_BF" low="26" high="28" type="adreno_stencil_op"/>
+		<bitfield name="ZFAIL_BF" low="29" high="31" type="adreno_stencil_op"/>
 	</reg32>
-	<reg32 offset="0x2108" name="RB_STENCILREFMASK" type="a3xx_rb_stencilrefmask"/>
-	<reg32 offset="0x2109" name="RB_STENCILREFMASK_BF" type="a3xx_rb_stencilrefmask"/>
-	<reg32 offset="0x210e" name="PC_BIN_OFFSET">
+	<reg32 offset="0x2108" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
+	<reg32 offset="0x2109" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
+	<reg32 offset="0x210e" name="PA_SC_WINDOW_OFFSET">
 		<doc>X/Y offset of current bin</doc>
 		<bitfield name="X" low="0" high="15" type="uint"/>
 		<bitfield name="Y" low="16" high="31" type="uint"/>
@@ -424,8 +362,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x21ea" name="PC_VERTEX_REUSE_BLOCK_CNTL"/>
 	<reg32 offset="0x21ec" name="PC_PRIM_VTX_CNTL">
 		<bitfield name="STRIDE_IN_VPC" low="0" high="4" type="uint"/>
-		<bitfield name="POLYMODE_FRONT_PTYPE" low="5" high="7" type="a3xx_pc_draw"/>
-		<bitfield name="POLYMODE_BACK_PTYPE" low="8" high="10" type="a3xx_pc_draw"/>
+		<bitfield name="POLYMODE_FRONT_PTYPE" low="5" high="7" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="POLYMODE_BACK_PTYPE" low="8" high="10" type="adreno_pa_su_sc_draw"/>
 		<bitfield name="PROVOKING_VTX_LAST" pos="25" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x21ed" name="PC_RESTART_INDEX"/>
@@ -671,6 +609,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 			<!-- not really sure about this: size -->
+			<!--
+				guessing that this indicates half vs full precision output
+				register.. need to come up with some tests to confirm this.
+				I'd assume we need something similar for VS outputs too..
+			 -->
 			<bitfield name="PRECISION" pos="8" type="uint"/>
 		</reg32>
 	</array>
@@ -683,7 +626,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- TPL1 registers -->
 	<!-- assume VS/FS_TEX_OFFSET is same -->
-	<bitset name="a3xx_tpl1_tp_vs_fs_tex_offset">
+	<bitset name="a3xx_tpl1_tp_vs_fs_tex_offset" inline="yes">
 		<bitfield name="SAMPLEROFFSET" low="0" high="7" type="uint"/>
 		<bitfield name="MEMOBJOFFSET" low="8" high="15" type="uint"/>
 		<!-- not sure the size of this: -->
