@@ -4,15 +4,110 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
-<!--
-<enum name="index_mode" inline="yes">
-	<value value="0" name="NONE" />
-	<value value="1" name="UINT8" />
-	<value value="2" name="UINT16" />
+<!-- possibly same as a3xx -->
+<enum name="a2xx_pa_su_sc_draw">
+	<value name="PC_DRAW_POINTS" value="0"/>
+	<value name="PC_DRAW_LINES" value="1"/>
+	<value name="PC_DRAW_TRIANGLES" value="2"/>
 </enum>
--->
+
+<!-- possibly same as a3xx -->
+<enum name="a2xx_compare_func" inline="yes">
+	<value name="FUNC_NEVER" value="0"/>
+	<value name="FUNC_LESS" value="1"/>
+	<value name="FUNC_EQUAL" value="2"/>
+	<value name="FUNC_LEQUAL" value="3"/>
+	<value name="FUNC_GREATER" value="4"/>
+	<value name="FUNC_NOTEQUAL" value="5"/>
+	<value name="FUNC_GEQUAL" value="6"/>
+	<value name="FUNC_ALWAYS" value="7"/>
+</enum>
+
+<!-- same as a3xx?? -->
+<enum name="a2xx_stencil_op" inline="yes">
+	<value name="STENCIL_KEEP" value="0"/>
+	<value name="STENCIL_ZERO" value="1"/>
+	<value name="STENCIL_REPLACE" value="2"/>
+	<value name="STENCIL_INCR_CLAMP" value="3"/>
+	<value name="STENCIL_DECR_CLAMP" value="4"/>
+	<value name="STENCIL_INVERT" value="5"/>
+	<value name="STENCIL_INCR_WRAP" value="6"/>
+	<value name="STENCIL_DECR_WRAP" value="7"/>
+</enum>
+
+<enum name="a2xx_rb_dither_mode" inline="yes">
+	<value name="DISABLE" value="0"/>
+	<value name="ALWAYS" value="1"/>
+	<value name="IF_ALPHA_OFF" value="2"/>
+</enum>
+
+<enum name="a2xx_rb_dither_type" inline="yes">
+	<value name="PIXEL" value="0"/>
+	<value name="SUBPIXEL" value="1"/>
+</enum>
+
+<!-- same as a3xx -->
+<enum name="a2xx_rb_blend_factor" inline="yes">
+	<value name="FACTOR_ZERO" value="0"/>
+	<value name="FACTOR_ONE" value="1"/>
+	<value name="FACTOR_SRC_COLOR" value="4"/>
+	<value name="FACTOR_ONE_MINUS_SRC_COLOR" value="5"/>
+	<value name="FACTOR_SRC_ALPHA" value="6"/>
+	<value name="FACTOR_ONE_MINUS_SRC_ALPHA" value="7"/>
+	<value name="FACTOR_DST_COLOR" value="8"/>
+	<value name="FACTOR_ONE_MINUS_DST_COLOR" value="9"/>
+	<value name="FACTOR_DST_ALPHA" value="10"/>
+	<value name="FACTOR_ONE_MINUS_DST_ALPHA" value="11"/>
+	<value name="FACTOR_CONSTANT_COLOR" value="12"/>
+	<value name="FACTOR_ONE_MINUS_CONSTANT_COLOR" value="13"/>
+	<value name="FACTOR_CONSTANT_ALPHA" value="14"/>
+	<value name="FACTOR_ONE_MINUS_CONSTANT_ALPHA" value="15"/>
+	<value name="FACTOR_SRC_ALPHA_SATURATE" value="16"/>
+</enum>
+
+<!-- same as a3xx -->
+<enum name="a2xx_rb_blend_opcode" inline="yes">
+	<value name="BLEND_DST_PLUS_SRC" value="0"/>
+	<value name="BLEND_SRC_MINUS_DST" value="1"/>
+	<value name="BLEND_MIN_DST_SRC" value="2"/>
+	<value name="BLEND_MAX_DST_SRC" value="3"/>
+	<value name="BLEND_DST_MINUS_SRC" value="4"/>
+	<value name="BLEND_DST_PLUS_SRC_BIAS" value="5"/>
+</enum>
+
+<enum name="a2xx_colorformatx" inline="yes">
+	<value name="COLORX_4_4_4_4" value="0"/>
+	<value name="COLORX_1_5_5_5" value="1"/>
+	<value name="COLORX_5_6_5" value="2"/>
+	<value name="COLORX_8" value="3"/>
+	<value name="COLORX_8_8" value="4"/>
+	<value name="COLORX_8_8_8_8" value="5"/>
+	<value name="COLORX_S8_8_8_8" value="6"/>
+	<value name="COLORX_16_FLOAT" value="7"/>
+	<value name="COLORX_16_16_FLOAT" value="8"/>
+	<value name="COLORX_16_16_16_16_FLOAT" value="9"/>
+	<value name="COLORX_32_FLOAT" value="10"/>
+	<value name="COLORX_32_32_FLOAT" value="11"/>
+	<value name="COLORX_32_32_32_32_FLOAT" value="12"/>
+	<value name="COLORX_2_3_3" value="13"/>
+	<value name="COLORX_8_8_8" value="14"/>
+</enum>
 
 <domain name="A2XX" width="32">
+
+	<bitset name="a2xx_reg_xy" inline="yes">
+		<!-- possibly in common with a3xx -->
+		<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>
+		<bitfield name="X" low="0" high="14" type="uint"/>
+		<bitfield name="Y" low="16" high="30" type="uint"/>
+	</bitset>
+
+	<bitset name="a2xx_vgt_current_bin_id_min_max" inline="yes">
+		<bitfield name="COLUMN" low="0" high="2" type="uint"/>
+		<bitfield name="ROW" low="3" high="5" type="uint"/>
+		<bitfield name="GUARD_BAND_MASK" low="6" high="8" type="uint"/>
+	</bitset>
+
 	<reg32 offset="0x0001" name="RBBM_PATCH_RELEASE"/>
 	<reg32 offset="0x003b" name="RBBM_CNTL"/>
 	<reg32 offset="0x003c" name="RBBM_SOFT_RESET"/>
@@ -72,7 +167,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0578" name="SCRATCH_REG0"/>
 	<reg32 offset="0x057a" name="SCRATCH_REG2"/>
 	<reg32 offset="0x05d0" name="RBBM_STATUS"/>
-	<reg32 offset="0x0c01" name="A220_VSC_BIN_SIZE"/>
+	<reg32 offset="0x0c01" name="A220_VSC_BIN_SIZE">
+		<bitfield name="WIDTH" low="0" high="4" shr="5" type="uint"/>
+		<bitfield name="HEIGHT" low="5" high="9" shr="5" type="uint"/>
+	</reg32>
 	<array offset="0x0c06" name="VSC_PIPE" stride="3" length="8">
 		<reg32 offset="0x0" name="CONFIG"/>
 		<reg32 offset="0x1" name="DATA_ADDRESS"/>
@@ -115,20 +213,56 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0dc1" name="SQ_DEBUG_PIX_TB_STATE_MEM"/>
 	<reg32 offset="0x0e00" name="TC_CNTL_STATUS"/>
 	<reg32 offset="0x0e1e" name="TP0_CHICKEN"/>
-	<reg32 offset="0x0f01" name="RB_BC_CONTROL"/>
+	<reg32 offset="0x0f01" name="RB_BC_CONTROL">
+		<bitfield name="ACCUM_LINEAR_MODE_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="ACCUM_TIMEOUT_SELECT" low="1" high="2" type="uint"/>
+		<bitfield name="DISABLE_EDRAM_CAM" pos="3" type="boolean"/>
+		<bitfield name="DISABLE_EZ_FAST_CONTEXT_SWITCH" pos="4" type="boolean"/>
+		<bitfield name="DISABLE_EZ_NULL_ZCMD_DROP" pos="5" type="boolean"/>
+		<bitfield name="DISABLE_LZ_NULL_ZCMD_DROP" pos="6" type="boolean"/>
+		<bitfield name="ENABLE_AZ_THROTTLE" pos="7" type="boolean"/>
+		<bitfield name="AZ_THROTTLE_COUNT" low="8" high="12" type="uint"/>
+		<bitfield name="ENABLE_CRC_UPDATE" pos="14" type="boolean"/>
+		<bitfield name="CRC_MODE" pos="15" type="boolean"/>
+		<bitfield name="DISABLE_SAMPLE_COUNTERS" pos="16" type="boolean"/>
+		<bitfield name="DISABLE_ACCUM" pos="17" type="boolean"/>
+		<bitfield name="ACCUM_ALLOC_MASK" low="18" high="21" type="uint"/>
+		<bitfield name="LINEAR_PERFORMANCE_ENABLE" pos="22" type="boolean"/>
+		<bitfield name="ACCUM_DATA_FIFO_LIMIT" low="23" high="26" type="uint"/>
+		<bitfield name="MEM_EXPORT_TIMEOUT_SELECT" low="27" high="28" type="uint"/>
+		<bitfield name="MEM_EXPORT_LINEAR_MODE_ENABLE" pos="29" type="boolean"/>
+		<bitfield name="CRC_SYSTEM" pos="30" type="boolean"/>
+		<bitfield name="RESERVED6" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0f02" name="RB_EDRAM_INFO"/>
 	<reg32 offset="0x0f26" name="RB_DEBUG_CNTL"/>
 	<reg32 offset="0x0f27" name="RB_DEBUG_DATA"/>
-	<reg32 offset="0x2000" name="RB_SURFACE_INFO"/>
-	<reg32 offset="0x2001" name="RB_COLOR_INFO"/>
-	<reg32 offset="0x2002" name="RB_DEPTH_INFO"/>
+	<reg32 offset="0x2000" name="RB_SURFACE_INFO" type="uint"/>
+	<reg32 offset="0x2001" name="RB_COLOR_INFO">
+		<bitfield name="FORMAT" low="0" high="3" type="a2xx_colorformatx"/>
+		<bitfield name="ROUND_MODE" low="4" high="5" type="uint"/>
+		<bitfield name="LINEAR" pos="6" type="boolean"/>
+		<bitfield name="ENDIAN" low="7" high="8" type="uint"/>
+		<bitfield name="SWAP" low="9" high="10" type="uint"/>
+		<bitfield name="BASE" low="12" high="31" shr="10"/>
+	</reg32>
+	<reg32 offset="0x2002" name="RB_DEPTH_INFO">
+		<bitfield name="DEPTH_FORMAT" pos="0" type="enum">
+			<value name="DEPTHX_16" value="0"/>
+			<value name="DEPTHX_24_8" value="1"/>
+		</bitfield>
+		<bitfield name="BASE" low="12" high="31" type="uint" shr="10"/>
+	</reg32>
 	<reg32 offset="0x2005" name="A225_RB_COLOR_INFO3"/>
 	<reg32 offset="0x2006" name="COHER_DEST_BASE_0"/>
-	<reg32 offset="0x200e" name="PA_SC_SCREEN_SCISSOR_TL"/>
-	<reg32 offset="0x200f" name="PA_SC_SCREEN_SCISSOR_BR"/>
-	<reg32 offset="0x2080" name="PA_SC_WINDOW_OFFSET"/>
-	<reg32 offset="0x2081" name="PA_SC_WINDOW_SCISSOR_TL"/>
-	<reg32 offset="0x2082" name="PA_SC_WINDOW_SCISSOR_BR"/>
+	<reg32 offset="0x200e" name="PA_SC_SCREEN_SCISSOR_TL" type="a2xx_reg_xy"/>
+	<reg32 offset="0x200f" name="PA_SC_SCREEN_SCISSOR_BR" type="a2xx_reg_xy"/>
+	<reg32 offset="0x2080" name="PA_SC_WINDOW_OFFSET">
+		<bitfield name="X" low="0" high="15" type="uint"/>
+		<bitfield name="Y" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2081" name="PA_SC_WINDOW_SCISSOR_TL" type="a2xx_reg_xy"/>
+	<reg32 offset="0x2082" name="PA_SC_WINDOW_SCISSOR_BR" type="a2xx_reg_xy"/>
 	<reg32 offset="0x2100" name="VGT_MAX_VTX_INDX"/>
 	<reg32 offset="0x2101" name="VGT_MIN_VTX_INDX"/>
 	<reg32 offset="0x2102" name="VGT_INDX_OFFSET"/>
@@ -142,31 +276,125 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x210c" name="RB_STENCILREFMASK_BF"/>
 	<reg32 offset="0x210d" name="RB_STENCILREFMASK"/>
 	<reg32 offset="0x210e" name="RB_ALPHA_REF"/>
-	<reg32 offset="0x210f" name="PA_CL_VPORT_XSCALE"/>
-	<reg32 offset="0x2110" name="PA_CL_VPORT_XOFFSET"/>
-	<reg32 offset="0x2111" name="PA_CL_VPORT_YSCALE"/>
-	<reg32 offset="0x2112" name="PA_CL_VPORT_YOFFSET"/>
-	<reg32 offset="0x2113" name="PA_CL_VPORT_ZSCALE"/>
-	<reg32 offset="0x2114" name="PA_CL_VPORT_ZOFFSET"/>
-	<reg32 offset="0x2180" name="SQ_PROGRAM_CNTL"/>
+	<reg32 offset="0x210f" name="PA_CL_VPORT_XSCALE" type="float"/>
+	<reg32 offset="0x2110" name="PA_CL_VPORT_XOFFSET" type="float"/>
+	<reg32 offset="0x2111" name="PA_CL_VPORT_YSCALE" type="float"/>
+	<reg32 offset="0x2112" name="PA_CL_VPORT_YOFFSET" type="float"/>
+	<reg32 offset="0x2113" name="PA_CL_VPORT_ZSCALE" type="float"/>
+	<reg32 offset="0x2114" name="PA_CL_VPORT_ZOFFSET" type="float"/>
+	<reg32 offset="0x2180" name="SQ_PROGRAM_CNTL">
+		<doc>
+			note: only 0x3f worth of valid register values for VS_REGS and
+			PS_REGS, but high bit is set to indicate '0 registers used':
+		</doc>
+		<bitfield name="VS_REGS" low="0" high="7" type="uint"/>
+		<bitfield name="PS_REGS" low="8" high="15" type="uint"/>
+		<bitfield name="VS_RESOURCE" pos="16" type="boolean"/>
+		<bitfield name="PS_RESOURCE" pos="17" type="boolean"/>
+		<bitfield name="PARAM_GEN" pos="18" type="boolean"/>
+		<bitfield name="GEN_INDEX_PIX" pos="19" type="boolean"/>
+		<bitfield name="VS_EXPORT_COUNT" low="20" high="23" type="uint"/>
+		<bitfield name="VS_EXPORT_MODE" low="24" high="26" type="enum">
+			<value name="POSITION_1_VECTOR" value="0"/>
+			<value name="POSITION_2_VECTORS_UNUSED" value="1"/>
+			<value name="POSITION_2_VECTORS_SPRITE" value="2"/>
+			<value name="POSITION_2_VECTORS_EDGE" value="3"/>
+			<value name="POSITION_2_VECTORS_KILL" value="4"/>
+			<value name="POSITION_2_VECTORS_SPRITE_KILL" value="5"/>
+			<value name="POSITION_2_VECTORS_EDGE_KILL" value="6"/>
+			<value name="MULTIPASS" value="7"/>
+		</bitfield>
+		<bitfield name="PS_EXPORT_MODE" low="27" high="30" type="uint"/>
+		<bitfield name="GEN_INDEX_VTX" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x2181" name="SQ_CONTEXT_MISC"/>
 	<reg32 offset="0x2182" name="SQ_INTERPOLATOR_CNTL"/>
 	<reg32 offset="0x2183" name="SQ_WRAPPING_0"/>
 	<reg32 offset="0x2184" name="SQ_WRAPPING_1"/>
 	<reg32 offset="0x21f6" name="SQ_PS_PROGRAM"/>
 	<reg32 offset="0x21f7" name="SQ_VS_PROGRAM"/>
-	<reg32 offset="0x2200" name="RB_DEPTHCONTROL"/>
-	<reg32 offset="0x2201" name="RB_BLEND_CONTROL"/>
-	<reg32 offset="0x2202" name="RB_COLORCONTROL"/>
-	<reg32 offset="0x2203" name="VGT_CURRENT_BIN_ID_MAX"/>
+	<reg32 offset="0x2200" name="RB_DEPTHCONTROL">
+		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
+		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
+		<bitfield name="EARLY_Z_ENABLE" pos="3" type="boolean"/>
+		<bitfield name="ZFUNC" low="4" high="6" type="a2xx_compare_func"/>
+		<bitfield name="BACKFACE_ENABLE" pos="7" type="boolean"/>
+		<bitfield name="STENCILFUNC" low="8" high="10" type="a2xx_compare_func"/>
+		<bitfield name="STENCILFAIL" low="11" high="13" type="a2xx_stencil_op"/>
+		<bitfield name="STENCILZPASS" low="14" high="16" type="a2xx_stencil_op"/>
+		<bitfield name="STENCILZFAIL" low="17" high="19" type="a2xx_stencil_op"/>
+		<bitfield name="STENCILFUNC_BF" low="20" high="22" type="a2xx_compare_func"/>
+		<bitfield name="STENCILFAIL_BF" low="23" high="25" type="a2xx_stencil_op"/>
+		<bitfield name="STENCILZPASS_BF" low="26" high="28" type="a2xx_stencil_op"/>
+		<bitfield name="STENCILZFAIL_BF" low="29" high="31" type="a2xx_stencil_op"/>
+	</reg32>
+	<reg32 offset="0x2201" name="RB_BLEND_CONTROL">
+		<bitfield name="COLOR_SRCBLEND" low="0" high="4" type="a2xx_rb_blend_factor"/>
+		<bitfield name="COLOR_COMB_FCN" low="5" high="7" type="a2xx_rb_blend_opcode"/>
+		<bitfield name="COLOR_DESTBLEND" low="8" high="12" type="a2xx_rb_blend_factor"/>
+		<bitfield name="ALPHA_SRCBLEND" low="16" high="20" type="a2xx_rb_blend_factor"/>
+		<bitfield name="ALPHA_COMB_FCN" low="21" high="23" type="a2xx_rb_blend_opcode"/>
+		<bitfield name="ALPHA_DESTBLEND" low="24" high="28" type="a2xx_rb_blend_factor"/>
+		<bitfield name="BLEND_FORCE_ENABLE" pos="29" type="boolean"/>
+		<bitfield name="BLEND_FORCE" pos="30" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x2202" name="RB_COLORCONTROL">
+		<bitfield name="ALPHA_FUNC" low="0" high="2" type="a2xx_compare_func"/>
+		<bitfield name="ALPHA_TEST_ENABLE" pos="3" type="boolean"/>
+		<bitfield name="ALPHA_TO_MASK_ENABLE" pos="4" type="boolean"/>
+		<bitfield name="BLEND_DISABLE" pos="5" type="boolean"/>
+		<bitfield name="VOB_ENABLE" pos="6" type="boolean"/>
+		<bitfield name="VS_EXPORTS_FOG" pos="7" type="boolean"/>
+		<bitfield name="ROP_CODE" low="8" high="11" type="uint"/>
+		<bitfield name="DITHER_MODE" low="12" high="13" type="a2xx_rb_dither_mode"/>
+		<bitfield name="DITHER_TYPE" low="14" high="15" type="a2xx_rb_dither_type"/>
+		<bitfield name="PIXEL_FOG" pos="16" type="boolean"/>
+		<bitfield name="ALPHA_TO_MASK_OFFSET0" low="24" high="25" type="uint"/>
+		<bitfield name="ALPHA_TO_MASK_OFFSET1" low="26" high="27" type="uint"/>
+		<bitfield name="ALPHA_TO_MASK_OFFSET2" low="28" high="29" type="uint"/>
+		<bitfield name="ALPHA_TO_MASK_OFFSET3" low="30" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2203" name="VGT_CURRENT_BIN_ID_MAX" type="a2xx_vgt_current_bin_id_min_max"/>
 	<reg32 offset="0x2204" name="PA_CL_CLIP_CNTL"/>
-	<reg32 offset="0x2205" name="PA_SU_SC_MODE_CNTL"/>
+	<reg32 offset="0x2205" name="PA_SU_SC_MODE_CNTL">
+		<bitfield name="CULL_FRONT" pos="0" type="boolean"/>
+		<bitfield name="CULL_BACK" pos="1" type="boolean"/>
+		<bitfield name="FACE" pos="2" type="boolean"/>
+		<bitfield name="POLYMODE" low="3" high="4" type="enum">
+			<value name="DISABLED" value="0"/>
+			<value name="DUALMODE" value="1"/>
+		</bitfield>
+		<bitfield name="FRONT_PTYPE" low="5" high="7" type="a2xx_pa_su_sc_draw"/>
+		<bitfield name="BACK_PTYPE" low="8" high="10" type="a2xx_pa_su_sc_draw"/>
+		<bitfield name="POLY_OFFSET_FRONT_ENABLE" pos="11" type="boolean"/>
+		<bitfield name="POLY_OFFSET_BACK_ENABLE" pos="12" type="boolean"/>
+		<bitfield name="POLY_OFFSET_PARA_ENABLE" pos="13" type="boolean"/>
+		<bitfield name="MSAA_ENABLE" pos="15" type="boolean"/>
+		<bitfield name="VTX_WINDOW_OFFSET_ENABLE" pos="16" type="boolean"/>
+		<bitfield name="LINE_STIPPLE_ENABLE" pos="18" type="boolean"/>
+		<bitfield name="PROVOKING_VTX_LAST" pos="19" type="boolean"/>
+		<bitfield name="PERSP_CORR_DIS" pos="20" type="boolean"/>
+		<bitfield name="MULTI_PRIM_IB_ENA" pos="21" type="boolean"/>
+		<bitfield name="QUAD_ORDER_ENABLE" pos="23" type="boolean"/>
+		<bitfield name="WAIT_RB_IDLE_ALL_TRI" pos="25" type="boolean"/>
+		<bitfield name="WAIT_RB_IDLE_FIRST_TRI_NEW_STATE" pos="26" type="boolean"/>
+		<bitfield name="CLAMPED_FACENESS" pos="28" type="boolean"/>
+		<bitfield name="ZERO_AREA_FACENESS" pos="29" type="boolean"/>
+		<bitfield name="FACE_KILL_ENABLE" pos="30" type="boolean"/>
+		<bitfield name="FACE_WRITE_ENABLE" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x2206" name="PA_CL_VTE_CNTL"/>
-	<reg32 offset="0x2207" name="VGT_CURRENT_BIN_ID_MIN"/>
+	<reg32 offset="0x2207" name="VGT_CURRENT_BIN_ID_MIN" type="a2xx_vgt_current_bin_id_min_max"/>
 	<reg32 offset="0x2208" name="RB_MODECONTROL"/>
 	<reg32 offset="0x2209" name="A220_RB_LRZ_VSC_CONTROL"/>
 	<reg32 offset="0x220a" name="RB_SAMPLE_POS"/>
-	<reg32 offset="0x220b" name="CLEAR_COLOR"/>
+	<reg32 offset="0x220b" name="CLEAR_COLOR">
+		<bitfield name="RED" low="0" high="7"/>
+		<bitfield name="GREEN" low="8" high="15"/>
+		<bitfield name="BLUE" low="16" high="23"/>
+		<bitfield name="ALPHA" low="24" high="31"/>
+	</reg32>
 	<reg32 offset="0x2210" name="A220_GRAS_CONTROL"/>
 	<reg32 offset="0x2280" name="PA_SU_POINT_SIZE"/>
 	<reg32 offset="0x2281" name="PA_SU_POINT_MINMAX"/>
@@ -177,10 +405,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2300" name="PA_SC_LINE_CNTL"/>
 	<reg32 offset="0x2301" name="PA_SC_AA_CONFIG"/>
 	<reg32 offset="0x2302" name="PA_SU_VTX_CNTL"/>
-	<reg32 offset="0x2303" name="PA_CL_GB_VERT_CLIP_ADJ"/>
-	<reg32 offset="0x2304" name="PA_CL_GB_VERT_DISC_ADJ"/>
-	<reg32 offset="0x2305" name="PA_CL_GB_HORZ_CLIP_ADJ"/>
-	<reg32 offset="0x2306" name="PA_CL_GB_HORZ_DISC_ADJ"/>
+	<reg32 offset="0x2303" name="PA_CL_GB_VERT_CLIP_ADJ" type="float"/>
+	<reg32 offset="0x2304" name="PA_CL_GB_VERT_DISC_ADJ" type="float"/>
+	<reg32 offset="0x2305" name="PA_CL_GB_HORZ_CLIP_ADJ" type="float"/>
+	<reg32 offset="0x2306" name="PA_CL_GB_HORZ_DISC_ADJ" type="float"/>
 	<reg32 offset="0x2307" name="SQ_VS_CONST"/>
 	<reg32 offset="0x2308" name="SQ_PS_CONST"/>
 	<reg32 offset="0x2309" name="SQ_DEBUG_MISC_0"/>
@@ -190,9 +418,27 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2317" name="VGT_OUT_DEALLOC_CNTL"/>
 	<reg32 offset="0x2318" name="RB_COPY_CONTROL"/>
 	<reg32 offset="0x2319" name="RB_COPY_DEST_BASE"/>
-	<reg32 offset="0x231a" name="RB_COPY_DEST_PITCH"/>
-	<reg32 offset="0x231b" name="RB_COPY_DEST_INFO"/>
-	<reg32 offset="0x231c" name="RB_COPY_DEST_OFFSET"/>
+	<reg32 offset="0x231a" name="RB_COPY_DEST_PITCH" shr="5" type="uint"/>
+	<reg32 offset="0x231b" name="RB_COPY_DEST_INFO">
+		<bitfield name="DEST_ENDIAN" low="0" high="2" type="enum">
+			<value name="ENDIAN_NONE" value="0"/>
+			<value name="ENDIAN_8IN16" value="1"/>
+			<value name="ENDIAN_8IN32" value="2"/>
+			<value name="ENDIAN_16IN32" value="3"/>
+			<value name="ENDIAN_8IN64" value="4"/>
+			<value name="ENDIAN_8IN128" value="5"/>
+		</bitfield>
+		<bitfield name="LINEAR" pos="3" type="boolean"/>
+		<bitfield name="FORMAT" low="4" high="7" type="a2xx_colorformatx"/>
+		<bitfield name="SWAP" low="8" high="9" type="uint"/>
+		<bitfield name="DITHER_MODE" low="10" high="11" type="a2xx_rb_dither_mode"/>
+		<bitfield name="DITHER_TYPE" low="12" high="13" type="a2xx_rb_dither_type"/>
+		<bitfield name="WRITE_RED" pos="14" type="boolean"/>
+		<bitfield name="WRITE_GREEN" pos="15" type="boolean"/>
+		<bitfield name="WRITE_BLUE" pos="16" type="boolean"/>
+		<bitfield name="WRITE_ALPHA" pos="17" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x231c" name="RB_COPY_DEST_OFFSET" type="a2xx_reg_xy"/>
 	<reg32 offset="0x231d" name="RB_DEPTH_CLEAR"/>
 	<reg32 offset="0x2324" name="RB_SAMPLE_COUNT_CTL"/>
 	<reg32 offset="0x2326" name="RB_COLOR_DEST_MASK"/>
