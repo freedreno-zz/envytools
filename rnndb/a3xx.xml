@@ -230,7 +230,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SAMPLES" low="12" high="15" type="a3xx_msaa_samples"/>
 		<bitfield name="SAMPLE_MASK" low="16" high="31" type="hex"/>
 	</reg32>
-
+	<reg32 offset="0x20c3" name="UNKNOWN_20C3">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
 	<array offset="0x20c4" name="RB_MRT" stride="4" length="4">
 		<reg32 offset="0x0" name="CONTROL">
 			<bitfield name="READ_DEST_ENABLE" pos="3" type="boolean"/>
@@ -279,6 +281,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		fields for each MRT?
 	 -->
 	<reg32 offset="0x20e7" name="RB_BLEND_ALPHA"/>
+
+	<reg32 offset="0x20e8" name="UNKNOWN_20E8">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
+	<reg32 offset="0x20e9" name="UNKNOWN_20E9">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
+	<reg32 offset="0x20ea" name="UNKNOWN_20EA">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
+	<reg32 offset="0x20eb" name="UNKNOWN_20EB">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
 	<reg32 offset="0x20ec" name="RB_COPY_CONTROL">
 		<!-- not sure # of bits -->
 		<bitfield name="MSAA_RESOLVE" low="0" high="1" type="a3xx_msaa_samples"/>
@@ -315,6 +330,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
 		<bitfield name="Z_TEST_ENABLE" pos="31" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x2101" name="UNKNOWN_2101">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
 	<reg32 offset="0x2102" name="RB_DEPTH_INFO">
 		<bitfield name="DEPTH_FORMAT" pos="0" type="enum">
 			<value name="DEPTHX_16" value="0"/>
@@ -348,6 +366,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FAIL_BF" low="23" high="25" type="adreno_stencil_op"/>
 		<bitfield name="ZPASS_BF" low="26" high="28" type="adreno_stencil_op"/>
 		<bitfield name="ZFAIL_BF" low="29" high="31" type="adreno_stencil_op"/>
+	</reg32>
+	<reg32 offset="0x2105" name="UNKNOWN_2105">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
+	<reg32 offset="0x2106" name="UNKNOWN_2106">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
+	<reg32 offset="0x2107" name="UNKNOWN_2107">
+		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
 	<reg32 offset="0x2108" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x2109" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
@@ -633,6 +660,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="BASETABLEPTR" low="16" high="31" type="uint"/>
 	</bitset>
 	<reg32 offset="0x2340" name="TPL1_TP_VS_TEX_OFFSET" type="a3xx_tpl1_tp_vs_fs_tex_offset"/>
+	<reg32 offset="0x2341" name="UNKNOWN_2341">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
 	<reg32 offset="0x2342" name="TPL1_TP_FS_TEX_OFFSET" type="a3xx_tpl1_tp_vs_fs_tex_offset"/>
 	<reg32 offset="0x2343" name="TPL1_TP_FS_BORDER_COLOR_BASE_ADDR"/>
 
@@ -666,6 +696,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x1" name="DATA_ADDRESS"/>
 		<reg32 offset="0x2" name="DATA_LENGTH"/>
 	</array>
+	<reg32 offset="0x0c3d" name="UNKNOWN_0C3D">
+		<doc>seems to be always set to 0x00000001</doc>
+	</reg32>
+	<reg32 offset="0x0c81" name="UNKNOWN_0C81">
+		<doc>seems to be always set to 0x00000001</doc>
+	</reg32>
 	<array offset="0x0ca0" name="GRAS_CL_USER_PLANE" stride="4" length="6">
 		<reg32 offset="0x0" name="X"/>
 		<reg32 offset="0x1" name="Y"/>
@@ -676,6 +712,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0ce0" name="RB_WINDOW_SIZE">
 		<bitfield name="WIDTH" low="0" high="13" type="uint"/>
 		<bitfield name="HEIGHT" low="14" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x0e00" name="UNKNOWN_0E00">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
+	<reg32 offset="0x0e43" name="UNKNOWN_0E43">
+		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
 	<reg32 offset="0x0e44" name="VFD_PERFCOUNTER0_SELECT"/>
 	<reg32 offset="0x0e61" name="VPC_VPC_DEBUG_RAM_SEL"/>
@@ -694,7 +736,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</bitfield>
 		<bitfield name="ENTIRE_CACHE" pos="31" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x0ec4" name="UNKNOWN_0EC4">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
+	<reg32 offset="0x0ec8" name="UNKNOWN_0EC8">
+		<doc>seems to be always set to 0x00000000</doc>
+	</reg32>
 	<reg32 offset="0x0ecb" name="SP_PERFCOUNTER7_SELECT"/>
+	<reg32 offset="0x0ee0" name="UNKNOWN_0EE0">
+		<doc>seems to be always set to 0x00000003</doc>
+	</reg32>
+	<reg32 offset="0x0f03" name="UNKNOWN_0f03">
+		<doc>seems to be always set to 0x00000001</doc>
+	</reg32>
 </domain>
 
 </database>
