@@ -124,6 +124,7 @@ void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 	FILE *dst = findfout(file);
 	enum rnnttype intype = ti->type;
 	char *typename = NULL;
+	uint32_t mask = bf ? bf->mask : 0xffffffff;
 
 	/* for fixed point, input type (arg to fxn) is float: */
 	if ((ti->type == RNN_TTYPE_FIXED) || (ti->type == RNN_TTYPE_UFIXED))
@@ -153,12 +154,13 @@ void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 
 	/* for boolean, just generate a #define flag.. rather than inline fxn */
 	if (intype == RNN_TTYPE_BOOLEAN) {
-		printdef (bf->fullname, 0, 0, bf->mask, bf->file);
+		printdef(bf->fullname, 0, 0, mask, file);
 		return;
 	}
 
 	if (typename) {
-		uint32_t mask;
+		printdef(prefix, "MASK", 0, mask, file);
+		printdef(prefix, "SHIFT", 1, shift, file);
 
 		fprintf(dst, "static inline uint32_t %s(%s val)\n", prefix, typename);
 		fprintf(dst, "{\n");
@@ -183,15 +185,10 @@ void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 		else
 			fprintf(dst, "val");
 
-		if (bf)
-			mask = bf->mask;
-		else
-			mask = 0xffffffff;
-
 		if (ti->shr)
 			fprintf(dst, " >> %d", ti->shr);
 
-		fprintf(dst, ") << %d) & 0x%x;\n", shift, mask);
+		fprintf(dst, ") << %s__SHIFT) & %s__MASK;\n", prefix, prefix);
 		fprintf(dst, "}\n");
 
 		if (intype == RNN_TTYPE_ENUM)
