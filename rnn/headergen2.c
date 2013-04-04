@@ -378,8 +378,12 @@ int main(int argc, char **argv) {
 				dst = findfout(db->enums[i]->vals[j]->file);
 				fprintf(dst, "enum %s {\n", db->enums[i]->name);
 			}
-			fprintf(dst, "\t%s = %lu,\n", db->enums[i]->vals[j]->name,
-					db->enums[i]->vals[j]->value);
+			if (0xffff0000 & db->enums[i]->vals[j]->value)
+				fprintf(dst, "\t%s = 0x%08lx,\n", db->enums[i]->vals[j]->name,
+						db->enums[i]->vals[j]->value);
+			else
+				fprintf(dst, "\t%s = %lu,\n", db->enums[i]->vals[j]->name,
+						db->enums[i]->vals[j]->value);
 		}
 		if (dst) {
 			fprintf(dst, "};\n\n");
