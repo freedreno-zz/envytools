@@ -152,8 +152,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a2xx_pa_pixcenter">
-	<value name="D3D" value="0"/>
-	<value name="OGL" value="1"/>
+	<value name="PIXCENTER_D3D" value="0"/>
+	<value name="PIXCENTER_OGL" value="1"/>
 </enum>
 
 <enum name="a2xx_pa_roundmode">
@@ -299,7 +299,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0dbf" name="SQ_DEBUG_PIX_TB_STATUS_REG_2"/>
 	<reg32 offset="0x0dc0" name="SQ_DEBUG_PIX_TB_STATUS_REG_3"/>
 	<reg32 offset="0x0dc1" name="SQ_DEBUG_PIX_TB_STATE_MEM"/>
-	<reg32 offset="0x0e00" name="TC_CNTL_STATUS"/>
+	<reg32 offset="0x0e00" name="TC_CNTL_STATUS">
+		<bitfield name="L2_INVALIDATE" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0e1e" name="TP0_CHICKEN"/>
 	<reg32 offset="0x0f01" name="RB_BC_CONTROL">
 		<bitfield name="ACCUM_LINEAR_MODE_ENABLE" pos="0" type="boolean"/>
@@ -336,7 +338,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2002" name="RB_DEPTH_INFO">
 		<bitfield name="DEPTH_FORMAT" pos="0" type="a2xx_rb_depth_format"/>
-		<bitfield name="BASE" low="12" high="31" type="uint" shr="10"/>
+		<bitfield name="DEPTH_BASE" low="12" high="31" type="uint" shr="10"/>
 	</reg32>
 	<reg32 offset="0x2005" name="A225_RB_COLOR_INFO3"/>
 	<reg32 offset="0x2006" name="COHER_DEST_BASE_0"/>
@@ -349,6 +351,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2081" name="PA_SC_WINDOW_SCISSOR_TL" type="a2xx_reg_xy"/>
 	<reg32 offset="0x2082" name="PA_SC_WINDOW_SCISSOR_BR" type="a2xx_reg_xy"/>
+	<reg32 offset="0x2010" name="UNKNOWN_2010"/>
 	<reg32 offset="0x2100" name="VGT_MAX_VTX_INDX"/>
 	<reg32 offset="0x2101" name="VGT_MIN_VTX_INDX"/>
 	<reg32 offset="0x2102" name="VGT_INDX_OFFSET"/>
@@ -588,6 +591,54 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xa29" name="COHER_SIZE_PM4"/>
 	<reg32 offset="0xa2a" name="COHER_BASE_PM4"/>
 	<reg32 offset="0xa2b" name="COHER_STATUS_PM4"/>
+</domain>
+
+<domain name="A2XX_SQ_TEX" width="32">
+	<doc>Texture state dwords</doc>
+	<enum name="sq_tex_clamp">
+		<value name="SQ_TEX_WRAP" value="0"/>
+		<value name="SQ_TEX_MIRROR" value="1"/>
+		<value name="SQ_TEX_CLAMP_LAST_TEXEL" value="2"/>
+		<value name="SQ_TEX_MIRROR_ONCE_LAST_TEXEL" value="3"/>
+		<value name="SQ_TEX_CLAMP_HALF_BORDER" value="4"/>
+		<value name="SQ_TEX_MIRROR_ONCE_HALF_BORDER" value="5"/>
+		<value name="SQ_TEX_CLAMP_BORDER" value="6"/>
+		<value name="SQ_TEX_MIRROR_ONCE_BORDER" value="7"/>
+	</enum>
+	<enum name="sq_tex_swiz">
+		<value name="SQ_TEX_X" value="0"/>
+		<value name="SQ_TEX_Y" value="1"/>
+		<value name="SQ_TEX_Z" value="2"/>
+		<value name="SQ_TEX_W" value="3"/>
+		<value name="SQ_TEX_ZERO" value="4"/>
+		<value name="SQ_TEX_ONE" value="5"/>
+	</enum>
+	<enum name="sq_tex_filter">
+		<value name="SQ_TEX_FILTER_POINT" value="0"/>
+		<value name="SQ_TEX_FILTER_BILINEAR" value="1"/>
+		<value name="SQ_TEX_FILTER_BICUBIC" value="2"/>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="CLAMP_X" low="10" high="12" type="sq_tex_clamp"/>
+		<bitfield name="CLAMP_Y" low="13" high="15" type="sq_tex_clamp"/>"
+		<bitfield name="CLAMP_Z" low="16" high="18" type="sq_tex_clamp"/>"
+		<bitfield name="PITCH" low="22" high="31" shr="5" type="uint"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<doc>texture address + fmt</doc>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="WIDTH" low="0" high="12" type="uint"/>
+		<bitfield name="HEIGHT" low="13" high="25" type="uint"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<bitfield name="SWIZ_X" low="1" high="3" type="sq_tex_swiz"/>
+		<bitfield name="SWIZ_Y" low="4" high="6" type="sq_tex_swiz"/>
+		<bitfield name="SWIZ_Z" low="7" high="9" type="sq_tex_swiz"/>
+		<bitfield name="SWIZ_W" low="10" high="12" type="sq_tex_swiz"/>
+		<bitfield name="XY_MAG_FILTER" low="19" high="20" type="sq_tex_filter"/>
+		<bitfield name="XY_MIN_FILTER" low="21" high="22" type="sq_tex_filter"/>
+	</reg32>
 </domain>
 
 </database>

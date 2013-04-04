@@ -66,6 +66,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="IGNORE_VISIBILITY" value="0"/>
 </enum>
 
+<enum name="adreno_pm4_packet_type">
+	<value name="CP_TYPE0_PKT" value="0x00000000"/>
+	<value name="CP_TYPE1_PKT" value="0x40000000"/>
+	<value name="CP_TYPE2_PKT" value="0x80000000"/>
+	<value name="CP_TYPE3_PKT" value="0xc0000000"/>
+</enum>
+
 <enum name="adreno_pm4_type3_packets">
 	<doc>initialize CP's micro-engine</doc>
 	<value name="CP_ME_INIT" value="0x48"/>
