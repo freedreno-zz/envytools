@@ -575,7 +575,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WRITE_BLUE" pos="16" type="boolean"/>
 		<bitfield name="WRITE_ALPHA" pos="17" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x231c" name="RB_COPY_DEST_OFFSET" type="a2xx_reg_xy"/>
+	<reg32 offset="0x231c" name="RB_COPY_DEST_OFFSET">
+		<bitfield name="X" low="0" high="12" type="uint"/>
+		<bitfield name="Y" low="13" high="25" type="uint"/>
+	</reg32>
 	<reg32 offset="0x231d" name="RB_DEPTH_CLEAR"/>
 	<reg32 offset="0x2324" name="RB_SAMPLE_COUNT_CTL"/>
 	<reg32 offset="0x2326" name="RB_COLOR_DEST_MASK"/>
