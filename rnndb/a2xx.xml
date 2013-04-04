@@ -181,15 +181,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="SAMPLE_0123" value="6"/>
 </enum>
 
-<enum name="a2xx_rb_surface_endian">
-	<value name="ENDIAN_NONE" value="0"/>
-	<value name="ENDIAN_8IN16" value="1"/>
-	<value name="ENDIAN_8IN32" value="2"/>
-	<value name="ENDIAN_16IN32" value="3"/>
-	<value name="ENDIAN_8IN64" value="4"/>
-	<value name="ENDIAN_8IN128" value="5"/>
-</enum>
-
 <domain name="A2XX" width="32">
 
 	<bitset name="a2xx_reg_xy" inline="yes">
@@ -570,7 +561,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2319" name="RB_COPY_DEST_BASE"/>
 	<reg32 offset="0x231a" name="RB_COPY_DEST_PITCH" shr="5" type="uint"/>
 	<reg32 offset="0x231b" name="RB_COPY_DEST_INFO">
-		<bitfield name="DEST_ENDIAN" low="0" high="2" type="a2xx_rb_surface_endian"/>
+		<bitfield name="DEST_ENDIAN" low="0" high="2" type="adreno_rb_surface_endian"/>
 		<bitfield name="LINEAR" pos="3" type="boolean"/>
 		<bitfield name="FORMAT" low="4" high="7" type="a2xx_colorformatx"/>
 		<bitfield name="SWAP" low="8" high="9" type="uint"/>

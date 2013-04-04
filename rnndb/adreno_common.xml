@@ -64,5 +64,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitfield name="STENCILWRITEMASK" low="16" high="23" type="hex"/>
 </bitset>
 
+<enum name="adreno_rb_surface_endian">
+	<value name="ENDIAN_NONE" value="0"/>
+	<value name="ENDIAN_8IN16" value="1"/>
+	<value name="ENDIAN_8IN32" value="2"/>
+	<value name="ENDIAN_16IN32" value="3"/>
+	<value name="ENDIAN_8IN64" value="4"/>
+	<value name="ENDIAN_8IN128" value="5"/>
+</enum>
+
 </database>
 
