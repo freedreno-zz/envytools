@@ -8,14 +8,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 
 <enum name="a2xx_rb_dither_mode">
-	<value name="DISABLE" value="0"/>
-	<value name="ALWAYS" value="1"/>
-	<value name="IF_ALPHA_OFF" value="2"/>
+	<value name="DITHER_DISABLE" value="0"/>
+	<value name="DITHER_ALWAYS" value="1"/>
+	<value name="DITHER_IF_ALPHA_OFF" value="2"/>
 </enum>
 
 <enum name="a2xx_rb_dither_type">
-	<value name="PIXEL" value="0"/>
-	<value name="SUBPIXEL" value="1"/>
+	<value name="DITHER_PIXEL" value="0"/>
+	<value name="DITHER_SUBPIXEL" value="1"/>
 </enum>
 
 <enum name="a2xx_colorformatx">
@@ -34,6 +34,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="COLORX_32_32_32_32_FLOAT" value="12"/>
 	<value name="COLORX_2_3_3" value="13"/>
 	<value name="COLORX_8_8_8" value="14"/>
+	<value name="COLORX_INVALID" value="15"/>
 </enum>
 
 <enum name="a2xx_sq_surfaceformat">
@@ -104,6 +105,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a2xx_rb_depth_format">
 	<value name="DEPTHX_16" value="0"/>
 	<value name="DEPTHX_24_8" value="1"/>
+	<value name="DEPTHX_INVALID" value="2"/>
 </enum>
 
 <enum name="a2xx_sq_ps_vtx_mode">
@@ -129,8 +131,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a2xx_pa_su_sc_polymode">
-	<value name="DISABLED" value="0"/>
-	<value name="DUALMODE" value="1"/>
+	<value name="POLY_DISABLED" value="0"/>
+	<value name="POLY_DUALMODE" value="1"/>
 </enum>
 
 <enum name="a2xx_rb_edram_mode">
