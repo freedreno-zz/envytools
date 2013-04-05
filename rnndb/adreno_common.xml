@@ -73,5 +73,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="ENDIAN_8IN128" value="5"/>
 </enum>
 
+<enum name="adreno_rb_dither_mode">
+	<value name="DITHER_DISABLE" value="0"/>
+	<value name="DITHER_ALWAYS" value="1"/>
+	<value name="DITHER_IF_ALPHA_OFF" value="2"/>
+</enum>
+
 </database>
 

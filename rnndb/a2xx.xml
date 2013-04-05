@@ -7,12 +7,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno_pm4.xml"/>
 
 
-<enum name="a2xx_rb_dither_mode">
-	<value name="DITHER_DISABLE" value="0"/>
-	<value name="DITHER_ALWAYS" value="1"/>
-	<value name="DITHER_IF_ALPHA_OFF" value="2"/>
-</enum>
-
 <enum name="a2xx_rb_dither_type">
 	<value name="DITHER_PIXEL" value="0"/>
 	<value name="DITHER_SUBPIXEL" value="1"/>
@@ -442,7 +436,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="VOB_ENABLE" pos="6" type="boolean"/>
 		<bitfield name="VS_EXPORTS_FOG" pos="7" type="boolean"/>
 		<bitfield name="ROP_CODE" low="8" high="11" type="uint"/>
-		<bitfield name="DITHER_MODE" low="12" high="13" type="a2xx_rb_dither_mode"/>
+		<bitfield name="DITHER_MODE" low="12" high="13" type="adreno_rb_dither_mode"/>
 		<bitfield name="DITHER_TYPE" low="14" high="15" type="a2xx_rb_dither_type"/>
 		<bitfield name="PIXEL_FOG" pos="16" type="boolean"/>
 		<bitfield name="ALPHA_TO_MASK_OFFSET0" low="24" high="25" type="uint"/>
@@ -570,7 +564,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="LINEAR" pos="3" type="boolean"/>
 		<bitfield name="FORMAT" low="4" high="7" type="a2xx_colorformatx"/>
 		<bitfield name="SWAP" low="8" high="9" type="uint"/>
-		<bitfield name="DITHER_MODE" low="10" high="11" type="a2xx_rb_dither_mode"/>
+		<bitfield name="DITHER_MODE" low="10" high="11" type="adreno_rb_dither_mode"/>
 		<bitfield name="DITHER_TYPE" low="12" high="13" type="a2xx_rb_dither_type"/>
 		<bitfield name="WRITE_RED" pos="14" type="boolean"/>
 		<bitfield name="WRITE_GREEN" pos="15" type="boolean"/>

@@ -20,13 +20,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_R8G8B8A8_UNORM" value="8"/>
 </enum>
 
-<!-- assume this is similar to a2xx.. -->
-<enum name="a3xx_dither_mode">
-	<value name="DITHER_DISABLE" value="0"/>
-	<value name="DITHER_ALWAYS" value="1"/>
-	<value name="DITHER_IF_ALPHA_OFF" value="2"/>
-</enum>
-
 <enum name="a3xx_threadmode">
 	<value value="0" name="MULTI"/>
 </enum>
@@ -236,7 +229,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="BLEND" pos="4" type="boolean"/>
 			<bitfield name="BLEND2" pos="5" type="boolean"/>
 			<bitfield name="ROP_CODE" low="8" high="11" type="uint"/>
-			<bitfield name="DITHER_MODE" low="12" high="13" type="a3xx_dither_mode"/>
+			<bitfield name="DITHER_MODE" low="12" high="13" type="adreno_rb_dither_mode"/>
 			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
 		</reg32>
 		<reg32 offset="0x1" name="BUF_INFO">
