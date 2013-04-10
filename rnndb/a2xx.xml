@@ -96,12 +96,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FMT_INVALID" value="62"/>
 </enum>
 
-<enum name="a2xx_rb_depth_format">
-	<value name="DEPTHX_16" value="0"/>
-	<value name="DEPTHX_24_8" value="1"/>
-	<value name="DEPTHX_INVALID" value="2"/>
-</enum>
-
 <enum name="a2xx_sq_ps_vtx_mode">
 	<value name="POSITION_1_VECTOR" value="0"/>
 	<value name="POSITION_2_VECTORS_UNUSED" value="1"/>
@@ -333,7 +327,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="BASE" low="12" high="31" shr="10"/>
 	</reg32>
 	<reg32 offset="0x2002" name="RB_DEPTH_INFO">
-		<bitfield name="DEPTH_FORMAT" pos="0" type="a2xx_rb_depth_format"/>
+		<bitfield name="DEPTH_FORMAT" pos="0" type="adreno_rb_depth_format"/>
 		<bitfield name="DEPTH_BASE" low="12" high="31" type="uint" shr="10"/>
 	</reg32>
 	<reg32 offset="0x2005" name="A225_RB_COLOR_INFO3"/>

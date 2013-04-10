@@ -40,6 +40,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="HLSQ_BLOCK_ID_SP_FS" value="6"/>
 </enum>
 
+<enum name="a3xx_cache_opcode">
+	<value name="INVALIDATE" value="1"/>
+</enum>
+
 <enum name="a3xx_fmt">
 	<value name="FMT_FLOAT_32" value="0x0"/>
 	<value name="FMT_FLOAT_32_32" value="0x1"/>
@@ -183,7 +187,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2072" name="GRAS_SC_CONTROL">
 		<!-- complete wild-ass-guess for sizes of these bitfields.. -->
-		<bitfield name="RENDER_MODE" low="4" high="7"/>
+		<bitfield name="RENDER_MODE" low="4" high="7" type="a3xx_render_mode"/>
 		<bitfield name="MSAA_SAMPLES" low="8" high="11" type="a3xx_msaa_samples"/>
 		<bitfield name="RASTER_MODE" low="12" high="15"/>
 	</reg32>
@@ -323,17 +327,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
 	<reg32 offset="0x2102" name="RB_DEPTH_INFO">
-		<bitfield name="DEPTH_FORMAT" pos="0" type="enum">
-			<value name="DEPTHX_16" value="0"/>
-			<value name="DEPTHX_24_8" value="1"/>
-		</bitfield>
+		<bitfield name="DEPTH_FORMAT" pos="0" type="adreno_rb_depth_format"/>
 		<doc>
 			DEPTH_BASE is offset in GMEM to depth/stencil buffer, ie
 			bin_w * bin_h / 1024 (possible rounded up to multiple of
 			something??  ie. 39 becomes 40, 78 becomes 80.. 75 becomes
 			80.. so maybe it needs to be multiple of 8??
 		</doc>
-		<bitfield name="DEPTH_BASE" low="11" high="31" type="uint"/>
+		<bitfield name="DEPTH_BASE" low="11" high="31" shr="10" type="uint"/>
 	</reg32>
 	<reg32 offset="0x2103" name="RB_DEPTH_PITCH" shr="4" type="uint">
 		<doc>pitch of depth/stencil buffer</doc>
@@ -432,6 +433,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- VFD registers -->
 	<reg32 offset="0x2240" name="VFD_CONTROL_0">
+		<doc>
+			TOTALATTRTOVS is # of attributes to vertex shader, in register
+			slots (ie. vec4+vec3 -> 7)
+		</doc>
 		<bitfield name="TOTALATTRTOVS" low="0" high="17" type="uint"/>
 		<bitfield name="PACKETSIZE" low="18" high="21" type="uint"/>
 		<doc>STRMDECINSTRCNT and STRMFETCHINSTRCNT seem to be set same as MAXSTORAGE</doc>
@@ -723,9 +728,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- might be shifted right by 5, assuming 32byte cache line size.. -->
 		<bitfield name="ADDR" low="0" high="27" type="hex"/>
 		<!-- I'd assume 2 bits, for FLUSH/INVALIDATE/CLEAN? -->
-		<bitfield name="OPCODE" low="28" high="29" type="enum">
-			<value name="INVALIDATE" value="1"/>
-		</bitfield>
+		<bitfield name="OPCODE" low="28" high="29" type="a3xx_cache_opcode"/>
 		<bitfield name="ENTIRE_CACHE" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x0ec4" name="UNKNOWN_0EC4">
@@ -738,7 +741,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0ee0" name="UNKNOWN_0EE0">
 		<doc>seems to be always set to 0x00000003</doc>
 	</reg32>
-	<reg32 offset="0x0f03" name="UNKNOWN_0f03">
+	<reg32 offset="0x0f03" name="UNKNOWN_0F03">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
 </domain>
