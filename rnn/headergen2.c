@@ -138,6 +138,7 @@ void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 		switch (intype) {
 		case RNN_TTYPE_HEX:
 		case RNN_TTYPE_UINT:
+		case RNN_TTYPE_A3XX_REGID:
 			typename = "uint32_t";
 			break;
 		case RNN_TTYPE_INT:
