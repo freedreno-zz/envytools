@@ -181,5 +181,38 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_INDIRECT_BUFFER_PFE" value="0x3F"/>
 </enum>
 
+
+<domain name="CP_LOAD_STATE" width="32">
+	<doc>Load state, a3xx (and later?)</doc>
+	<enum name="adreno_state_block">
+		<value name="SB_TEXTURE" value="2"/>
+		<value name="SB_MIPMAP" value="3"/>
+		<value name="SB_VERTEX" value="4"/>
+		<value name="SB_FRAGMENT" value="6"/>
+	</enum>
+	<enum name="adreno_state_type">
+		<value name="ST_SHADER" value="0"/>
+		<value name="ST_CONSTANTS" value="1"/>
+	</enum>
+	<enum name="adreno_state_src">
+		<value name="SS_DIRECT" value="0">
+			<doc>inline with the CP_LOAD_STATE packet</doc>
+		</value>
+		<value name="SS_INDIRECT" value="4">
+			<doc>in buffer pointed to by EXT_SRC_ADDR</doc>
+		</value>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="DST_OFF" low="0" high="15" type="uint"/>
+		<bitfield name="STATE_SRC" low="16" high="18" type="adreno_state_src"/>
+		<bitfield name="STATE_BLOCK" low="19" high="21" type="adreno_state_block"/>
+		<bitfield name="NUM_UNIT" low="22" high="30" type="uint"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="STATE_TYPE" low="0" high="1" type="adreno_state_type"/>
+		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
+	</reg32>
+</domain>
+
 </database>
 
