@@ -379,6 +379,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL"/>
 	<reg32 offset="0x21ea" name="PC_VERTEX_REUSE_BLOCK_CNTL"/>
 	<reg32 offset="0x21ec" name="PC_PRIM_VTX_CNTL">
+		<doc>
+			STRIDE_IN_VPC: ALIGN(next_outloc - 8, 4) / 4
+			(but, in cases where you'd expect 1, the blob driver uses
+			2, so possibly 0 (no varying) or minimum of 2)
+		</doc>
 		<bitfield name="STRIDE_IN_VPC" low="0" high="4" type="uint"/>
 		<bitfield name="POLYMODE_FRONT_PTYPE" low="5" high="7" type="adreno_pa_su_sc_draw"/>
 		<bitfield name="POLYMODE_BACK_PTYPE" low="8" high="10" type="adreno_pa_su_sc_draw"/>

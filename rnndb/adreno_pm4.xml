@@ -179,6 +179,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_COND_INDIRECT_BUFFER_PFD" value="0x32"/>
 	<doc>Load a buffer with pre-fetch enabled</doc>
 	<value name="CP_INDIRECT_BUFFER_PFE" value="0x3F"/>
+	<doc>Set bin (?)</doc>
+	<value name="CP_SET_BIN" value="0x4c"/>
 </enum>
 
 
@@ -211,6 +213,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="1" name="1">
 		<bitfield name="STATE_TYPE" low="0" high="1" type="adreno_state_type"/>
 		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
+	</reg32>
+</domain>
+
+<domain name="CP_SET_BIN" width="32">
+	<doc>value at offset 0 always seems to be 0x00000000..</doc>
+	<reg32 offset="1" name="1">
+		<bitfield name="X1" low="0" high="15" type="uint"/>
+		<bitfield name="Y1" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="X2" low="0" high="15" type="uint"/>
+		<bitfield name="Y2" low="16" high="31" type="uint"/>
 	</reg32>
 </domain>
 
