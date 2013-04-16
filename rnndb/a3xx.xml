@@ -8,6 +8,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="a3xx_render_mode">
 	<value name="RB_RENDERING_PASS" value="0"/>
+	<value name="RB_TILING_PASS" value="1"/>
 	<value name="RB_RESOLVE_PASS" value="2"/>
 </enum>
 
@@ -523,6 +524,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SHADERLENGTH" low="0" high="31" type="uint"/>
 	</bitset>
 	<bitset name="a3xx_sp_vs_fs_ctrl_reg0" inline="yes">
+		<!--
+			NOTE that SP_{VS,FS}_CTRL_REG1 are different, but so far REG0
+			appears to be the same..
+		-->
 		<bitfield name="THREADMODE" pos="0" type="a3xx_threadmode"/>
 		<bitfield name="INSTRBUFFERMODE" pos="1" type="a3xx_instrbuffermode"/>
 		<!-- maybe CACHEINVALID is two bits?? -->
@@ -550,12 +555,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			or any long shader.
 		</doc>
 		<bitfield name="LENGTH" low="24" high="31" type="uint"/>
-	</bitset>
-	<bitset name="a3xx_sp_vs_fs_ctrl_reg1" inline="yes">
-		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
-		<bitfield name="INITIALOUTSTANDING" low="20" high="23" type="uint"/>
-		<!-- probably HALFPRECVAROFFSET goes to bit 31?? -->
-		<bitfield name="HALFPRECVAROFFSET" low="24" high="29" type="uint"/>
 	</bitset>
 	<bitset name="sp_vs_fs_obj_offset_reg" inline="yes">
 		<doc>
@@ -585,7 +584,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="LOMODE" low="22" high="23" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a3xx_sp_vs_fs_ctrl_reg0"/>
-	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1" type="a3xx_sp_vs_fs_ctrl_reg1"/>
+	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1">
+		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
+		<!--
+			not sure about full vs half const.. I can't get blob generate
+			something with a mediump/lowp uniform.
+		 -->
+		<bitfield name="CONSTFOOTPRINT" low="10" high="19" type="uint"/>
+		<bitfield name="INITIALOUTSTANDING" low="24" high="29" type="uint"/>
+	</reg32>
 	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG">
 		<bitfield name="POSREGID" low="0" high="7" type="a3xx_regid"/>
 		<bitfield name="PSIZEREGID" low="8" high="15" type="a3xx_regid"/>
@@ -621,7 +628,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22d8" name="SP_VS_PVT_MEM_SIZE_REG"/>
 	<reg32 offset="0x22df" name="SP_VS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
 	<reg32 offset="0x22e0" name="SP_FS_CTRL_REG0" type="a3xx_sp_vs_fs_ctrl_reg0"/>
-	<reg32 offset="0x22e1" name="SP_FS_CTRL_REG1" type="a3xx_sp_vs_fs_ctrl_reg1"/>
+	<reg32 offset="0x22e1" name="SP_FS_CTRL_REG1">
+		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
+		<bitfield name="INITIALOUTSTANDING" low="20" high="23" type="uint"/>
+		<!-- probably HALFPRECVAROFFSET goes to bit 31?? -->
+		<bitfield name="HALFPRECVAROFFSET" low="24" high="29" type="uint"/>
+	</reg32>
 	<reg32 offset="0x22e2" name="SP_FS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
 	<reg32 offset="0x22e3" name="SP_FS_OBJ_START_REG"/>
 	<!--
