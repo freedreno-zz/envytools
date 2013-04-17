@@ -779,4 +779,39 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 </domain>
 
+
+<domain name="A3XX_TEX_SAMP" width="32">
+	<doc>Texture sampler dwords</doc>
+	<enum name="a3xx_tex_filter">
+		<value name="A3XX_TEX_NEAREST" value="0"/>
+		<value name="A3XX_TEX_LINEAR" value="1"/>
+	</enum>
+	<enum name="a3xx_tex_clamp">
+		<value name="A3XX_TEX_REPEAT" value="0"/>
+		<value name="A3XX_TEX_CLAMP_TO_EDGE" value="1"/>
+		<value name="A3XX_TEX_MIRROR_REPEAT" value="2"/>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="XY_MAG" low="2" high="3" type="a3xx_tex_filter"/>
+		<bitfield name="XY_MIN" low="4" high="5" type="a3xx_tex_filter"/>
+		<bitfield name="WRAP_S" low="6" high="8" type="a3xx_tex_clamp"/>
+		<bitfield name="WRAP_T" low="9" high="11" type="a3xx_tex_clamp"/>
+		<bitfield name="WRAP_R" low="12" high="14" type="a3xx_tex_clamp"/>
+	</reg32>
+	<reg32 offset="1" name="1"/>
+</domain>
+
+<domain name="A3XX_TEX_CONST" width="32">
+	<doc>Texture constant dwords</doc>
+	<reg32 offset="0" name="0"/>
+	<reg32 offset="1" name="1">
+		<bitfield name="HEIGHT" low="0" high="13" type="uint"/>
+		<bitfield name="WIDTH" low="14" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="PITCH" low="9" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="3" name="3"/>
+</domain>
+
 </database>

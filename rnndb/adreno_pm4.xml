@@ -218,6 +218,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <domain name="CP_SET_BIN" width="32">
 	<doc>value at offset 0 always seems to be 0x00000000..</doc>
+	<reg32 offset="0" name="0"/>
 	<reg32 offset="1" name="1">
 		<bitfield name="X1" low="0" high="15" type="uint"/>
 		<bitfield name="Y1" low="16" high="31" type="uint"/>
