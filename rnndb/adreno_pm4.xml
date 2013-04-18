@@ -187,10 +187,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <domain name="CP_LOAD_STATE" width="32">
 	<doc>Load state, a3xx (and later?)</doc>
 	<enum name="adreno_state_block">
-		<value name="SB_TEXTURE" value="2"/>
-		<value name="SB_MIPMAP" value="3"/>
-		<value name="SB_VERTEX" value="4"/>
-		<value name="SB_FRAGMENT" value="6"/>
+		<value name="SB_VERT_TEX" value="0"/>
+		<value name="SB_VERT_MIPADDR" value="1"/>
+		<value name="SB_FRAG_TEX" value="2"/>
+		<value name="SB_FRAG_MIPADDR" value="3"/>
+		<value name="SB_VERT_SHADER" value="4"/>
+		<value name="SB_FRAG_SHADER" value="6"/>
 	</enum>
 	<enum name="adreno_state_type">
 		<value name="ST_SHADER" value="0"/>
