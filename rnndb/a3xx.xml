@@ -45,7 +45,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="INVALIDATE" value="1"/>
 </enum>
 
-<enum name="a3xx_fmt">
+<enum name="a3xx_vtx_fmt">
 	<value name="FMT_FLOAT_32" value="0x0"/>
 	<value name="FMT_FLOAT_32_32" value="0x1"/>
 	<value name="FMT_FLOAT_32_32_32" value="0x2"/>
@@ -89,6 +89,24 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FMT_NORM_BYTE_8_8" value="0x35"/>
 	<value name="FMT_NORM_BYTE_8_8_8" value="0x36"/>
 	<value name="FMT_NORM_BYTE_8_8_8_8" value="0x37"/>
+</enum>
+
+<enum name="a3xx_tex_fmt">
+	<!--
+		this appears to be different from vtx fmt.. :-(
+		Revisit when we get gles3 blob, or ocl blob supporting
+		more formats.
+	-->
+	<value name="TFMT_NORM_UINT8" value="0x4c"/>
+	<value name="TFMT_NORM_UINT16" value="0x53"/>
+	<value name="TFMT_UINT8" value="0x6e"/>
+	<value name="TFMT_INT8"  value="0x6f"/>
+	<value name="TFMT_UINT16" value="0x71"/>
+	<value name="TFMT_INT16" value="0x72"/>
+	<value name="TFMT_UINT32" value="0x76"/>
+	<value name="TFMT_INT32" value="0x77"/>
+	<value name="TFMT_HALF_FLOAT" value="0x50"/>
+	<value name="TFMT_FLOAT" value="0x75"/>
 </enum>
 
 <enum name="a3xx_msaa_samples">
@@ -480,7 +498,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="WRITEMASK" low="0" high="3" type="hex"/>
 			<!-- not sure if this is a bit flag and another flag above it, or?? -->
 			<bitfield name="CONSTFILL" pos="4" type="boolean"/>
-			<bitfield name="FORMAT" low="6" high="11" type="a3xx_fmt"/>
+			<bitfield name="FORMAT" low="6" high="11" type="a3xx_vtx_fmt"/>
 			<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
 			<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
 			<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
@@ -789,6 +807,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A3XX_TEX_REPEAT" value="0"/>
 		<value name="A3XX_TEX_CLAMP_TO_EDGE" value="1"/>
 		<value name="A3XX_TEX_MIRROR_REPEAT" value="2"/>
+		<value name="A3XX_TEX_CLAMP_NONE" value="3"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="XY_MAG" low="2" high="3" type="a3xx_tex_filter"/>
@@ -814,16 +833,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A3XX_TEX_ONE" value="5"/>
 	</enum>
 	<reg32 offset="0" name="0">
+		<bitfield name="TILED" pos="0" type="boolean"/>
 		<bitfield name="SWIZ_X" low="4" high="6" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_Y" low="7" high="9" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a3xx_tex_swiz"/>
+		<bitfield name="FMT" low="24" high="31" type="a3xx_tex_fmt"/>
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="HEIGHT" low="0" high="13" type="uint"/>
 		<bitfield name="WIDTH" low="14" high="27" type="uint"/>
 	</reg32>
 	<reg32 offset="2" name="2">
+		<!-- INDX is index of texture address(es) in MIPMAP state block -->
+		<bitfield name="INDX" low="0" high="7" type="uint"/>
 		<bitfield name="PITCH" low="12" high="29" type="uint"/>
 		<!-- SWAP bit is set for BGRA instead of RGBA -->
 		<bitfield name="SWAP" pos="30" type="boolean"/>
