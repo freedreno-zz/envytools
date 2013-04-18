@@ -779,7 +779,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 </domain>
 
-
 <domain name="A3XX_TEX_SAMP" width="32">
 	<doc>Texture sampler dwords</doc>
 	<enum name="a3xx_tex_filter">
@@ -797,19 +796,37 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WRAP_S" low="6" high="8" type="a3xx_tex_clamp"/>
 		<bitfield name="WRAP_T" low="9" high="11" type="a3xx_tex_clamp"/>
 		<bitfield name="WRAP_R" low="12" high="14" type="a3xx_tex_clamp"/>
+		<!-- UNNORM_COORDS == CLK_NORMALIZED_COORDS_FALSE -->
+		<bitfield name="UNNORM_COORDS" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="1" name="1"/>
 </domain>
 
 <domain name="A3XX_TEX_CONST" width="32">
 	<doc>Texture constant dwords</doc>
-	<reg32 offset="0" name="0"/>
+	<enum name="a3xx_tex_swiz">
+		<!-- same as a2xx? -->
+		<value name="A3XX_TEX_X" value="0"/>
+		<value name="A3XX_TEX_Y" value="1"/>
+		<value name="A3XX_TEX_Z" value="2"/>
+		<value name="A3XX_TEX_W" value="3"/>
+		<value name="A3XX_TEX_ZERO" value="4"/>
+		<value name="A3XX_TEX_ONE" value="5"/>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="SWIZ_X" low="4" high="6" type="a3xx_tex_swiz"/>
+		<bitfield name="SWIZ_Y" low="7" high="9" type="a3xx_tex_swiz"/>
+		<bitfield name="SWIZ_Z" low="10" high="12" type="a3xx_tex_swiz"/>
+		<bitfield name="SWIZ_W" low="13" high="15" type="a3xx_tex_swiz"/>
+	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="HEIGHT" low="0" high="13" type="uint"/>
 		<bitfield name="WIDTH" low="14" high="27" type="uint"/>
 	</reg32>
 	<reg32 offset="2" name="2">
-		<bitfield name="PITCH" low="9" high="31" type="uint"/>
+		<bitfield name="PITCH" low="12" high="29" type="uint"/>
+		<!-- SWAP bit is set for BGRA instead of RGBA -->
+		<bitfield name="SWAP" pos="30" type="boolean"/>
 	</reg32>
 	<reg32 offset="3" name="3"/>
 </domain>
