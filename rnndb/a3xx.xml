@@ -584,11 +584,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
 	</bitset>
-	<bitset name="a3xx_varying_info" inline="yes">
-		<bitfield name="REGID" low="0" high="8" type="a3xx_regid"/>
-		<!-- I guess 4 bits.. -->
-		<bitfield name="COMPMASK" low="9" high="12" type="hex"/>
-	</bitset>
 
 	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
 		<!-- this bit is set during resolve pass: -->
@@ -618,8 +613,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<array offset="0x22c7" name="SP_VS_OUT" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
-			<bitfield name="A" low="0" high="15" type="a3xx_varying_info"/>
-			<bitfield name="B" low="16" high="31" type="a3xx_varying_info"/>
+			<bitfield name="A_REGID" low="0" high="8" type="a3xx_regid"/>
+			<bitfield name="A_COMPMASK" low="9" high="12" type="hex"/>
+			<bitfield name="B_REGID" low="16" high="24" type="a3xx_regid"/>
+			<bitfield name="B_COMPMASK" low="25" high="28" type="hex"/>
 		</reg32>
 	</array>
 	<array offset="0x22d0" name="SP_VS_VPC_DST" stride="1" length="4">
