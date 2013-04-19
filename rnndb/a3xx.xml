@@ -645,6 +645,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e0" name="SP_FS_CTRL_REG0" type="a3xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22e1" name="SP_FS_CTRL_REG1">
 		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
+		<bitfield name="CONSTFOOTPRINT" low="10" high="19" type="uint"/>
 		<bitfield name="INITIALOUTSTANDING" low="20" high="23" type="uint"/>
 		<!-- probably HALFPRECVAROFFSET goes to bit 31?? -->
 		<bitfield name="HALFPRECVAROFFSET" low="24" high="29" type="uint"/>
