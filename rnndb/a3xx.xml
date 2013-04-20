@@ -361,13 +361,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
-		<doc>
-			STENCIL_ENABLE2 seems to be also set whenever is stencil is
-			enabled.. maybe front/back face can be enabled independently?
-			a2xx didn't have that (it was more similar to radeon for
-			stencil related registers)
-		</doc>
-		<bitfield name="STENCIL_ENABLE2" pos="2" type="boolean"/>
+		<bitfield name="STENCIL_ENABLE_BF" pos="2" type="boolean"/>
 		<bitfield name="FUNC" low="8" high="10" type="adreno_compare_func"/>
 		<bitfield name="FAIL" low="11" high="13" type="adreno_stencil_op"/>
 		<bitfield name="ZPASS" low="14" high="16" type="adreno_stencil_op"/>
@@ -464,8 +458,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</doc>
 		<bitfield name="TOTALATTRTOVS" low="0" high="17" type="uint"/>
 		<bitfield name="PACKETSIZE" low="18" high="21" type="uint"/>
-		<doc>STRMDECINSTRCNT and STRMFETCHINSTRCNT seem to be set same as MAXSTORAGE</doc>
+		<doc>STRMDECINSTRCNT is # of VFD_DECODE_INSTR registers valid</doc>
 		<bitfield name="STRMDECINSTRCNT" low="22" high="26" type="uint"/>
+		<doc>STRMFETCHINSTRCNT is # of VFD_FETCH_INSTR registers valid</doc>
 		<bitfield name="STRMFETCHINSTRCNT" low="27" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x2241" name="VFD_CONTROL_1">
