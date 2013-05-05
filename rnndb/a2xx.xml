@@ -28,7 +28,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="COLORX_32_32_32_32_FLOAT" value="12"/>
 	<value name="COLORX_2_3_3" value="13"/>
 	<value name="COLORX_8_8_8" value="14"/>
-	<value name="COLORX_INVALID" value="15"/>
 </enum>
 
 <enum name="a2xx_sq_surfaceformat">
@@ -93,7 +92,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FMT_DXT5A" value="59"/>
 	<value name="FMT_CTX1" value="60"/>
 	<value name="FMT_DXT3A_AS_1_1_1_1" value="61"/>
-	<value name="FMT_INVALID" value="62"/>
 </enum>
 
 <enum name="a2xx_sq_ps_vtx_mode">
@@ -335,8 +333,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x200e" name="PA_SC_SCREEN_SCISSOR_TL" type="a2xx_reg_xy"/>
 	<reg32 offset="0x200f" name="PA_SC_SCREEN_SCISSOR_BR" type="a2xx_reg_xy"/>
 	<reg32 offset="0x2080" name="PA_SC_WINDOW_OFFSET">
-		<bitfield name="X" low="0" high="14" type="uint"/>
-		<bitfield name="Y" low="16" high="30" type="uint"/>
+		<bitfield name="X" low="0" high="14" type="int"/>
+		<bitfield name="Y" low="16" high="30" type="int"/>
 		<bitfield name="DISABLE" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2081" name="PA_SC_WINDOW_SCISSOR_TL" type="a2xx_reg_xy"/>

@@ -838,10 +838,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WIDTH" low="14" high="27" type="uint"/>
 	</reg32>
 	<reg32 offset="2" name="2">
-		<!-- INDX is index of texture address(es) in MIPMAP state block -->
+		<doc>INDX is index of texture address(es) in MIPMAP state block</doc>
 		<bitfield name="INDX" low="0" high="7" type="uint"/>
+		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="12" high="29" type="uint"/>
-		<!-- SWAP bit is set for BGRA instead of RGBA -->
+		<doc>SWAP bit is set for BGRA instead of RGBA</doc>
 		<bitfield name="SWAP" pos="30" type="boolean"/>
 	</reg32>
 	<reg32 offset="3" name="3"/>

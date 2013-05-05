@@ -119,6 +119,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_EVENT_WRITE_CFL" value="0x59"/>
 	<doc>generate a z_pass done event</doc>
 	<value name="CP_EVENT_WRITE_ZPD" value="0x5b"/>
+	<doc>
+		not sure the real name, but this seems to be what is used for
+		opencl, instead of CP_DRAW_INDX..
+	</doc>
+	<value name="CP_RUN_OPENCL" value="0x31"/>
 	<doc>initiate fetch of index buffer and draw</doc>
 	<value name="CP_DRAW_INDX" value="0x22"/>
 	<doc>draw using supplied indices in packet</doc>

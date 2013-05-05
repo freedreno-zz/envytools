@@ -82,7 +82,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="adreno_rb_depth_format">
 	<value name="DEPTHX_16" value="0"/>
 	<value name="DEPTHX_24_8" value="1"/>
-	<value name="DEPTHX_INVALID" value="2"/>
 </enum>
 
 </database>
