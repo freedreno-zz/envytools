@@ -19,6 +19,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="a3xx_color_format">
 	<value name="RB_R8G8B8A8_UNORM" value="8"/>
+	<value name="RB_Z16_UNORM" value="12"/>
 </enum>
 
 <enum name="a3xx_threadmode">
@@ -356,7 +357,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</doc>
 		<bitfield name="DEPTH_BASE" low="11" high="31" shr="10" type="uint"/>
 	</reg32>
-	<reg32 offset="0x2103" name="RB_DEPTH_PITCH" shr="4" type="uint">
+	<reg32 offset="0x2103" name="RB_DEPTH_PITCH" shr="3" type="uint">
 		<doc>pitch of depth/stencil buffer</doc>
 	</reg32>
 	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
@@ -660,13 +661,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<array offset="0x22f0" name="SP_FS_MRT" stride="1" length="4">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
-			<!-- not really sure about this: size -->
-			<!--
-				guessing that this indicates half vs full precision output
-				register.. need to come up with some tests to confirm this.
-				I'd assume we need something similar for VS outputs too..
-			 -->
-			<bitfield name="PRECISION" pos="8" type="uint"/>
+			<bitfield name="HALF_PRECISION" pos="8" type="boolean"/>
 		</reg32>
 	</array>
 	<array offset="0x22f4" name="SP_FS_IMAGE_OUTPUT" stride="1" length="4">
