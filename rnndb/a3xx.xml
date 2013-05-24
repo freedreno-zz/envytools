@@ -20,10 +20,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a3xx_color_format">
 	<value name="RB_R8G8B8A8_UNORM" value="8"/>
 	<value name="RB_Z16_UNORM" value="12"/>
+	<value name="RB_A8_UNORM" value="20"/>
 </enum>
 
 <enum name="a3xx_threadmode">
 	<value value="0" name="MULTI"/>
+	<value value="1" name="SINGLE"/>
 </enum>
 
 <enum name="a3xx_instrbuffermode">
@@ -100,6 +102,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	-->
 	<value name="TFMT_NORM_UINT8" value="0x4c"/>
 	<value name="TFMT_NORM_UINT16" value="0x53"/>
+	<value name="TFMT_NORM_UINT_X8Z24" value="0x62"/>
 	<value name="TFMT_UINT8" value="0x6e"/>
 	<value name="TFMT_INT8"  value="0x6f"/>
 	<value name="TFMT_UINT16" value="0x71"/>
@@ -114,6 +117,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="MSAA_ONE" value="0"/>
 	<value name="MSAA_TWO" value="1"/>
 	<value name="MSAA_FOUR" value="2"/>
+</enum>
+
+<enum name="a3xx_sp_perfcounter_select">
+	<value name="SP_FS_CFLOW_INSTRUCTIONS" value="0x0c"/>
+	<value name="SP_FS_FULL_ALU_INSTRUCTIONS" value="0x0e"/>
+	<value name="SP0_ICL1_MISSES" value="0x1a"/>
+	<value name="SP_ALU_ACTIVE_CYCLES" value="0x1d"/>
 </enum>
 
 <domain name="A3XX" width="32">
@@ -427,6 +437,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="LAZYUPDATEDISABLE" pos="28" type="boolean"/>
 		<bitfield name="SPCONSTFULLUPDATE" pos="29" type="boolean"/>
 		<bitfield name="TPFULLUPDATE" pos="30" type="boolean"/>
+		<bitfield name="SINGLECONTEXT" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2201" name="HLSQ_CONTROL_1_REG">
 		<bitfield name="VSTHREADSIZE" pos="6" type="a3xx_threadsize"/>
@@ -590,6 +601,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		-->
 		<bitfield name="CONSTMODE" low="18" high="19" type="uint"/>
 		<bitfield name="SLEEPMODE" low="20" high="21" type="uint"/>
+		<!-- LOMODE==1 when oxiliForceSpL0ModeBuffer=1 -->
 		<bitfield name="LOMODE" low="22" high="23" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a3xx_sp_vs_fs_ctrl_reg0"/>
@@ -618,9 +630,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<array offset="0x22d0" name="SP_VS_VPC_DST" stride="1" length="4">
 		<reg32 offset="0x0" name="REG">
 			<doc>
-				These seem to be offsets for storage of the varyings (within
-				SP_VS_OBJ_START_REG?)  Always seems to start from 8, possibly
-				loc 0 and 4 are for gl_Position and gl_PointSize?
+				These seem to be offsets for storage of the varyings.
+				Always seems to start from 8, possibly loc 0 and 4
+				are for gl_Position and gl_PointSize?
 			</doc>
 			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
 			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
@@ -629,6 +641,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 	</array>
 	<reg32 offset="0x22d4" name="SP_VS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
+	<doc>
+		SP_VS_OBJ_START_REG contains pointer to the vertex shader program,
+		immediately followed by the binning shader program (although I
+		guess that is probably just re-using the same gpu buffer)
+	</doc>
 	<reg32 offset="0x22d5" name="SP_VS_OBJ_START_REG"/>
 	<!--
 		SP_VS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl.. and
@@ -647,6 +664,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="HALFPRECVAROFFSET" low="24" high="29" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22e2" name="SP_FS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
+	<doc>SP_FS_OBJ_START_REG contains pointer to fragment shader program</doc>
 	<reg32 offset="0x22e3" name="SP_FS_OBJ_START_REG"/>
 	<!--
 		SP_FS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl..  so
@@ -770,13 +788,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="OPCODE" low="28" high="29" type="a3xx_cache_opcode"/>
 		<bitfield name="ENTIRE_CACHE" pos="31" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x0ec4" name="UNKNOWN_0EC4">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
-	<reg32 offset="0x0ec8" name="UNKNOWN_0EC8">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
-	<reg32 offset="0x0ecb" name="SP_PERFCOUNTER7_SELECT"/>
+	<reg32 offset="0x0ec4" name="SP_PERFCOUNTER0_SELECT" type="a3xx_sp_perfcounter_select"/>
+	<reg32 offset="0x0ec5" name="SP_PERFCOUNTER1_SELECT" type="a3xx_sp_perfcounter_select"/>
+	<reg32 offset="0x0ec6" name="SP_PERFCOUNTER2_SELECT" type="a3xx_sp_perfcounter_select"/>
+	<reg32 offset="0x0ec7" name="SP_PERFCOUNTER3_SELECT" type="a3xx_sp_perfcounter_select"/>
+	<reg32 offset="0x0ec8" name="SP_PERFCOUNTER4_SELECT" type="a3xx_sp_perfcounter_select"/>
+	<reg32 offset="0x0ec9" name="SP_PERFCOUNTER5_SELECT" type="a3xx_sp_perfcounter_select"/>
+	<reg32 offset="0x0eca" name="SP_PERFCOUNTER6_SELECT" type="a3xx_sp_perfcounter_select"/>
+	<reg32 offset="0x0ecb" name="SP_PERFCOUNTER7_SELECT" type="a3xx_sp_perfcounter_select"/>
 	<reg32 offset="0x0ee0" name="UNKNOWN_0EE0">
 		<doc>seems to be always set to 0x00000003</doc>
 	</reg32>
