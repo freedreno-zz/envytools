@@ -236,6 +236,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- RB registers -->
 	<reg32 offset="0x20c0" name="RB_MODE_CONTROL">
 		<!-- guess on the # of bits here.. -->
+		<bitfield name="GMEM_BYPASS" pos="7" type="boolean"/>
 		<doc>
 			RENDER_MODE is RB_RESOLVE_PASS for gmem->mem, otherwise RB_RENDER_PASS
 		</doc>
@@ -246,6 +247,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20c1" name="RB_RENDER_CONTROL">
 		<bitfield name="BIN_WIDTH" low="4" high="11" shr="5" type="uint"/>
 		<bitfield name="DISABLE_COLOR_PIPE" pos="12" type="boolean"/>
+		<bitfield name="ENABLE_GMEM" pos="13" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="adreno_compare_func"/>
 	</reg32>
 	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL">
@@ -698,9 +700,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="BASETABLEPTR" low="16" high="31" type="uint"/>
 	</bitset>
 	<reg32 offset="0x2340" name="TPL1_TP_VS_TEX_OFFSET" type="a3xx_tpl1_tp_vs_fs_tex_offset"/>
-	<reg32 offset="0x2341" name="UNKNOWN_2341">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
+	<reg32 offset="0x2341" name="TPL1_TP_VS_BORDER_COLOR_BASE_ADDR"/>
 	<reg32 offset="0x2342" name="TPL1_TP_FS_TEX_OFFSET" type="a3xx_tpl1_tp_vs_fs_tex_offset"/>
 	<reg32 offset="0x2343" name="TPL1_TP_FS_BORDER_COLOR_BASE_ADDR"/>
 

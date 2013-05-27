@@ -11,7 +11,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CACHE_FLUSH_TS" value="4"/>
 	<value name="CONTEXT_DONE" value="5"/>
 	<value name="CACHE_FLUSH" value="6"/>
-	<value name="VIZQUERY_START" value="7"/>
+	<value name="HLSQ_FLUSH" value="7"/> <!-- on a3xx -->
+	<value name="VIZQUERY_START" value="7"/> <!-- on a2xx (??) -->
 	<value name="VIZQUERY_END" value="8"/>
 	<value name="SC_WAIT_WC" value="9"/>
 	<value name="RST_PIX_CNT" value="13"/>
