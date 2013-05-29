@@ -17,12 +17,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TILE_32X32" value="2"/>
 </enum>
 
-<enum name="a3xx_color_format">
-	<value name="RB_R8G8B8A8_UNORM" value="8"/>
-	<value name="RB_Z16_UNORM" value="12"/>
-	<value name="RB_A8_UNORM" value="20"/>
-</enum>
-
 <enum name="a3xx_threadmode">
 	<value value="0" name="MULTI"/>
 	<value value="1" name="SINGLE"/>
@@ -49,68 +43,110 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a3xx_vtx_fmt">
-	<value name="FMT_FLOAT_32" value="0x0"/>
-	<value name="FMT_FLOAT_32_32" value="0x1"/>
-	<value name="FMT_FLOAT_32_32_32" value="0x2"/>
-	<value name="FMT_FLOAT_32_32_32_32" value="0x3"/>
+	<value name="VFMT_FLOAT_32" value="0x0"/>
+	<value name="VFMT_FLOAT_32_32" value="0x1"/>
+	<value name="VFMT_FLOAT_32_32_32" value="0x2"/>
+	<value name="VFMT_FLOAT_32_32_32_32" value="0x3"/>
 
-	<value name="FMT_FIXED_32" value="0x8"/>
-	<value name="FMT_FIXED_32_32" value="0x9"/>
-	<value name="FMT_FIXED_32_32_32" value="0xa"/>
-	<value name="FMT_FIXED_32_32_32_32" value="0xb"/>
+	<value name="VFMT_FLOAT_16" value="0x4"/>
+	<value name="VFMT_FLOAT_16_16" value="0x5"/>
+	<value name="VFMT_FLOAT_16_16_16" value="0x6"/>
+	<value name="VFMT_FLOAT_16_16_16_16" value="0x7"/>
 
-	<value name="FMT_SHORT_16" value="0x10"/>
-	<value name="FMT_SHORT_16_16" value="0x11"/>
-	<value name="FMT_SHORT_16_16_16" value="0x12"/>
-	<value name="FMT_SHORT_16_16_16_16" value="0x13"/>
-	<value name="FMT_USHORT_16" value="0x14"/>
-	<value name="FMT_USHORT_16_16" value="0x15"/>
-	<value name="FMT_USHORT_16_16_16" value="0x16"/>
-	<value name="FMT_USHORT_16_16_16_16" value="0x17"/>
-	<value name="FMT_NORM_SHORT_16" value="0x18"/>
-	<value name="FMT_NORM_SHORT_16_16" value="0x19"/>
-	<value name="FMT_NORM_SHORT_16_16_16" value="0x1a"/>
-	<value name="FMT_NORM_SHORT_16_16_16_16" value="0x1b"/>
-	<value name="FMT_NORM_USHORT_16" value="0x1c"/>
-	<value name="FMT_NORM_USHORT_16_16" value="0x1d"/>
-	<value name="FMT_NORM_USHORT_16_16_16" value="0x1e"/>
-	<value name="FMT_NORM_USHORT_16_16_16_16" value="0x1f"/>
+	<value name="VFMT_FIXED_32" value="0x8"/>
+	<value name="VFMT_FIXED_32_32" value="0x9"/>
+	<value name="VFMT_FIXED_32_32_32" value="0xa"/>
+	<value name="VFMT_FIXED_32_32_32_32" value="0xb"/>
 
-	<value name="FMT_UBYTE_8" value="0x28"/>
-	<value name="FMT_UBYTE_8_8" value="0x29"/>
-	<value name="FMT_UBYTE_8_8_8" value="0x2a"/>
-	<value name="FMT_UBYTE_8_8_8_8" value="0x2b"/>
-	<value name="FMT_NORM_UBYTE_8" value="0x2c"/>
-	<value name="FMT_NORM_UBYTE_8_8" value="0x2d"/>
-	<value name="FMT_NORM_UBYTE_8_8_8" value="0x2e"/>
-	<value name="FMT_NORM_UBYTE_8_8_8_8" value="0x2f"/>
-	<value name="FMT_BYTE_8" value="0x30"/>
-	<value name="FMT_BYTE_8_8" value="0x31"/>
-	<value name="FMT_BYTE_8_8_8" value="0x32"/>
-	<value name="FMT_BYTE_8_8_8_8" value="0x33"/>
-	<value name="FMT_NORM_BYTE_8" value="0x34"/>
-	<value name="FMT_NORM_BYTE_8_8" value="0x35"/>
-	<value name="FMT_NORM_BYTE_8_8_8" value="0x36"/>
-	<value name="FMT_NORM_BYTE_8_8_8_8" value="0x37"/>
+	<value name="VFMT_SHORT_16" value="0x10"/>
+	<value name="VFMT_SHORT_16_16" value="0x11"/>
+	<value name="VFMT_SHORT_16_16_16" value="0x12"/>
+	<value name="VFMT_SHORT_16_16_16_16" value="0x13"/>
+	<value name="VFMT_USHORT_16" value="0x14"/>
+	<value name="VFMT_USHORT_16_16" value="0x15"/>
+	<value name="VFMT_USHORT_16_16_16" value="0x16"/>
+	<value name="VFMT_USHORT_16_16_16_16" value="0x17"/>
+	<value name="VFMT_NORM_SHORT_16" value="0x18"/>
+	<value name="VFMT_NORM_SHORT_16_16" value="0x19"/>
+	<value name="VFMT_NORM_SHORT_16_16_16" value="0x1a"/>
+	<value name="VFMT_NORM_SHORT_16_16_16_16" value="0x1b"/>
+	<value name="VFMT_NORM_USHORT_16" value="0x1c"/>
+	<value name="VFMT_NORM_USHORT_16_16" value="0x1d"/>
+	<value name="VFMT_NORM_USHORT_16_16_16" value="0x1e"/>
+	<value name="VFMT_NORM_USHORT_16_16_16_16" value="0x1f"/>
+
+	<value name="VFMT_UBYTE_8" value="0x28"/>
+	<value name="VFMT_UBYTE_8_8" value="0x29"/>
+	<value name="VFMT_UBYTE_8_8_8" value="0x2a"/>
+	<value name="VFMT_UBYTE_8_8_8_8" value="0x2b"/>
+	<value name="VFMT_NORM_UBYTE_8" value="0x2c"/>
+	<value name="VFMT_NORM_UBYTE_8_8" value="0x2d"/>
+	<value name="VFMT_NORM_UBYTE_8_8_8" value="0x2e"/>
+	<value name="VFMT_NORM_UBYTE_8_8_8_8" value="0x2f"/>
+	<value name="VFMT_BYTE_8" value="0x30"/>
+	<value name="VFMT_BYTE_8_8" value="0x31"/>
+	<value name="VFMT_BYTE_8_8_8" value="0x32"/>
+	<value name="VFMT_BYTE_8_8_8_8" value="0x33"/>
+	<value name="VFMT_NORM_BYTE_8" value="0x34"/>
+	<value name="VFMT_NORM_BYTE_8_8" value="0x35"/>
+	<value name="VFMT_NORM_BYTE_8_8_8" value="0x36"/>
+	<value name="VFMT_NORM_BYTE_8_8_8_8" value="0x37"/>
+
+	<!-- note: these also have bit 22 set in VFD_DECODE -->
+	<value name="VFMT_UINT_10_10_10_2" value="0x3c"/>
+	<value name="VFMT_NORM_UINT_10_10_10_2" value="0x3d"/>
+	<value name="VFMT_INT_10_10_10_2" value="0x3e"/>
+	<value name="VFMT_NORM_INT_10_10_10_2" value="0x3f"/>
 </enum>
 
 <enum name="a3xx_tex_fmt">
+	<value name="TFMT_NORM_USHORT_565" value="0x4"/>
+	<value name="TFMT_NORM_USHORT_5551" value="0x6"/>
+	<value name="TFMT_NORM_USHORT_4444" value="0x7"/>
+	<value name="TFMT_NORM_UINT_X8Z24" value="0xa"/>
+
+	<value name="TFMT_NORM_UINT_2_10_10_10" value="0x29"/>
+	<value name="TFMT_NORM_UINT_A8" value="0x2c"/>    <!-- GL_ALPHA -->
+	<value name="TFMT_NORM_UINT_L8_A8" value="0x2f"/> <!-- GL_LUMINANCE_ALPHA -->
+
 	<!--
-		this appears to be different from vtx fmt.. :-(
-		Revisit when we get gles3 blob, or ocl blob supporting
-		more formats.
-	-->
-	<value name="TFMT_NORM_UINT8" value="0x4c"/>
-	<value name="TFMT_NORM_UINT16" value="0x53"/>
-	<value name="TFMT_NORM_UINT_X8Z24" value="0x62"/>
-	<value name="TFMT_UINT8" value="0x6e"/>
-	<value name="TFMT_INT8"  value="0x6f"/>
-	<value name="TFMT_UINT16" value="0x71"/>
-	<value name="TFMT_INT16" value="0x72"/>
-	<value name="TFMT_UINT32" value="0x76"/>
-	<value name="TFMT_INT32" value="0x77"/>
-	<value name="TFMT_HALF_FLOAT" value="0x50"/>
-	<value name="TFMT_FLOAT" value="0x75"/>
+		NOTE: GL_ALPHA and GL_LUMINANCE_ALPHA aren't handled in a similar way
+		to float16, float32.. but they seem to use non-standard swizzle too..
+		perhaps we can ditch that if the pattern follows of 0xn0, 0xn1, 0xn2,
+		0xn3 for 1, 2, 3, 4 components respectively..
+
+		Only formats filled in below are the ones that have been observed by
+		the blob or tested.. you can guess what the missing ones are..
+	 -->
+
+	<value name="TFMT_NORM_UINT_8" value="0x30"/>     <!-- GL_LUMINANCE -->
+	<!-- TFMT_NORM_UINT_8_8 -->
+	<value name="TFMT_NORM_UINT_8_8_8" value="0x32"/>
+	<value name="TFMT_NORM_UINT_8_8_8_8" value="0x33"/>
+
+	<value name="TFMT_FLOAT_16" value="0x40"/>
+	<value name="TFMT_FLOAT_16_16" value="0x41"/>
+	<!-- TFMT_FLOAT_16_16_16 -->
+	<value name="TFMT_FLOAT_16_16_16_16" value="0x43"/>
+
+	<value name="TFMT_FLOAT_32" value="0x54"/>
+	<value name="TFMT_FLOAT_32_32" value="0x55"/>
+	<!-- TFMT_FLOAT_32_32_32 -->
+	<value name="TFMT_FLOAT_32_32_32_32" value="0x57"/>
+</enum>
+
+<enum name="a3xx_color_fmt">
+	<value name="RB_R8G8B8_UNORM" value="4"/>
+	<value name="RB_R8G8B8A8_UNORM" value="8"/>
+	<value name="RB_Z16_UNORM" value="12"/>
+	<value name="RB_A8_UNORM" value="20"/>
+</enum>
+
+<enum name="a3xx_color_swap">
+	<value name="WZYX" value="0"/>
+	<value name="WXYZ" value="1"/>
+	<value name="ZYXW" value="2"/>
+	<value name="XYZW" value="3"/>
 </enum>
 
 <enum name="a3xx_msaa_samples">
@@ -269,8 +305,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
 		</reg32>
 		<reg32 offset="0x1" name="BUF_INFO">
-			<bitfield name="COLOR_FORMAT" low="0" high="5" type="a3xx_color_format"/>
+			<bitfield name="COLOR_FORMAT" low="0" high="5" type="a3xx_color_fmt"/>
 			<bitfield name="COLOR_TILE_MODE" low="6" high="7" type="a3xx_tile_mode"/>
+			<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
 			<doc>
 				Pitch (actually, appears to be pitch in bytes, so really is a stride)
 				in GMEM, so pitch of the current tile.
@@ -339,7 +376,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x20ef" name="RB_COPY_DEST_INFO">
 		<bitfield name="TILE" low="0" high="1" type="a3xx_tile_mode"/>
-		<bitfield name="FORMAT" low="2" high="7" type="a3xx_color_format"/>
+		<bitfield name="FORMAT" low="2" high="7" type="a3xx_color_fmt"/>
+		<bitfield name="SWAP" low="8" high="9" type="a3xx_color_swap"/>
 		<bitfield name="COMPONENT_ENABLE" low="14" high="17" type="hex"/>
 		<bitfield name="ENDIAN" low="18" high="20" type="adreno_rb_surface_endian"/>
 	</reg32>
@@ -686,7 +724,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</array>
 	<array offset="0x22f4" name="SP_FS_IMAGE_OUTPUT" stride="1" length="4">
 		<reg32 offset="0x0" name="REG">
-			<bitfield name="MRTFORMAT" low="0" high="5" type="a3xx_color_format"/>
+			<bitfield name="MRTFORMAT" low="0" high="5" type="a3xx_color_fmt"/>
 		</reg32>
 	</array>
 	<reg32 offset="0x22ff" name="SP_FS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
@@ -845,7 +883,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWIZ_Y" low="7" high="9" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a3xx_tex_swiz"/>
-		<bitfield name="FMT" low="24" high="31" type="a3xx_tex_fmt"/>
+		<bitfield name="FMT" low="22" high="28" type="a3xx_tex_fmt"/>
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="HEIGHT" low="0" high="13" type="uint"/>
@@ -857,7 +895,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="12" high="29" type="uint"/>
 		<doc>SWAP bit is set for BGRA instead of RGBA</doc>
-		<bitfield name="SWAP" pos="30" type="boolean"/>
+		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
 	<reg32 offset="3" name="3"/>
 </domain>
