@@ -296,6 +296,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20c1" name="RB_RENDER_CONTROL">
 		<bitfield name="BIN_WIDTH" low="4" high="11" shr="5" type="uint"/>
 		<bitfield name="DISABLE_COLOR_PIPE" pos="12" type="boolean"/>
+		<!--
+			ENABLE_GMEM not set on mem2gmem..  so possibly it is actually
+			controlling blend or readback from GMEM??
+		 -->
 		<bitfield name="ENABLE_GMEM" pos="13" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="adreno_compare_func"/>
 	</reg32>
@@ -377,7 +381,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- not sure # of bits -->
 		<bitfield name="MSAA_RESOLVE" low="0" high="1" type="a3xx_msaa_samples"/>
 		<bitfield name="MODE" low="4" high="6" type="adreno_rb_copy_control_mode"/>
-		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
+		<bitfield name="GMEM_BASE" low="10" high="31" shr="10" type="hex"/>
 	</reg32>
 	<reg32 offset="0x20ed" name="RB_COPY_DEST_BASE">
 		<bitfield name="BASE" low="4" high="31" shr="5" type="hex"/>
