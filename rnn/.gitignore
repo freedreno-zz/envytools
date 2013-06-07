@@ -3,6 +3,7 @@ headergen2
 lookup
 expand
 demmio
+demsm
 dedma
 rnncheck
 librnn.a
