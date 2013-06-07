@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database xmlns="http://nouveau.freedesktop.org/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
+<import file="freedreno_copyright.xml"/>
+
+<domain name="DSI" width="32">
+	<bitset name="DSI_IRQ">
+		<bitfield name="CMD_DMA_DONE" pos="0" type="boolean"/>
+		<bitfield name="MASK_CMD_DMA_DONE" pos="1" type="boolean"/>
+		<bitfield name="CMD_MDP_DONE" pos="8" type="boolean"/>
+		<bitfield name="MASK_CMD_MDP_DONE" pos="9" type="boolean"/>
+		<bitfield name="VIDEO_DONE" pos="16" type="boolean"/>
+		<bitfield name="MASK_VIDEO_DONE" pos="17" type="boolean"/>
+		<bitfield name="ERROR" pos="24" type="boolean"/>
+		<bitfield name="MASK_ERROR" pos="25" type="boolean"/>
+	</bitset>
+
+	<reg32 offset="0x00000" name="CNTL">
+		<bitfield name="ENABLE" pos="0" type="boolean"/>
+		<bitfield name="VID_MODE_EN" pos="1" type="boolean"/>
+		<bitfield name="CMD_MODE_EN" pos="2" type="boolean"/>
+	</reg32>
+
+	<reg32 offset="0x00004" name="STATUS0">
+		<bitfield name="CMD_MODE_DMA_BUSY" pos="1" type="boolean"/>
+		<bitfield name="VIDEO_MODE_ENGINE_BUSY" pos="3" type="boolean"/>
+		<bitfield name="DSI_BUSY" pos="4" type="boolean"/>  <!-- see mipi_dsi_cmd_bta_sw_trigger() -->
+	</reg32>
+
+	<reg32 offset="0x00008" name="FIFO_STATUS"/>
+	<reg32 offset="0x0000c" name="VID_CFG0"/>
+	<reg32 offset="0x0001c" name="VID_CFG1"/>
+	<reg32 offset="0x00038" name="CMD_DMA_CTRL"/>
+	<reg32 offset="0x0003c" name="CMD_CFG0"/>
+	<reg32 offset="0x00040" name="CMD_CFG1"/>
+	<reg32 offset="0x00044" name="DMA_BASE"/>
+	<reg32 offset="0x00048" name="DMA_LEN"/>
+	<reg32 offset="0x00064" name="ACK_ERR_STATUS"/>
+	<array offset="0x00068" name="RDBK" length="4" stride="4">
+		<reg32 offset="0x0" name="DATA"/>
+	</array>
+	<reg32 offset="0x00080" name="TRIG_CTRL"/>
+	<reg32 offset="0x0008c" name="TRIG_DMA"/>
+	<reg32 offset="0x000b0" name="DLN0_PHY_ERR"/>
+	<reg32 offset="0x000bc" name="TIMEOUT_STATUS"/>
+	<reg32 offset="0x000c0" name="CLKOUT_TIMING_CTRL"/>
+	<reg32 offset="0x000c8" name="EOT_PACKET_CTRL"/>
+	<reg32 offset="0x000ac" name="LAN_SWAP_CTRL"/>
+	<reg32 offset="0x00108" name="ERR_INT_MASK0"/>
+	<reg32 offset="0x0010c" name="INTR_CTRL" type="DSI_IRQ"/>
+	<reg32 offset="0x00114" name="RESET"/>
+	<reg32 offset="0x00118" name="CLK_CTRL"/>
+	<reg32 offset="0x00128" name="PHY_RESET"/>
+
+	<reg32 offset="0x00200" name="PHY_PLL_CTRL_0"/>
+	<reg32 offset="0x00204" name="PHY_PLL_CTRL_1"/>
+	<reg32 offset="0x00208" name="PHY_PLL_CTRL_2"/>
+	<reg32 offset="0x0020c" name="PHY_PLL_CTRL_3"/>
+	<reg32 offset="0x00210" name="PHY_PLL_CTRL_4"/>
+	<reg32 offset="0x00214" name="PHY_PLL_CTRL_5"/>
+	<reg32 offset="0x00218" name="PHY_PLL_CTRL_6"/>
+	<reg32 offset="0x0021c" name="PHY_PLL_CTRL_7"/>
+	<reg32 offset="0x00220" name="PHY_PLL_CTRL_8"/>
+	<reg32 offset="0x00224" name="PHY_PLL_CTRL_9"/>
+	<reg32 offset="0x00228" name="PHY_PLL_CTRL_10"/>
+	<reg32 offset="0x0022c" name="PHY_PLL_CTRL_11"/>
+	<reg32 offset="0x00230" name="PHY_PLL_CTRL_12"/>
+	<reg32 offset="0x00234" name="PHY_PLL_CTRL_13"/>
+	<reg32 offset="0x00238" name="PHY_PLL_CTRL_14"/>
+	<reg32 offset="0x0023c" name="PHY_PLL_CTRL_15"/>
+	<reg32 offset="0x00240" name="PHY_PLL_CTRL_16"/>
+	<reg32 offset="0x00244" name="PHY_PLL_CTRL_17"/>
+	<reg32 offset="0x00248" name="PHY_PLL_CTRL_18"/>
+	<reg32 offset="0x0024c" name="PHY_PLL_CTRL_19"/>
+
+	<reg32 offset="0x00280" name="PHY_PLL_STATUS">
+		<bitfield name="PLL_BUSY" pos="0" type="boolean"/>
+	</reg32>
+
+	<array offset="0x00300" name="LN" length="4" stride="0x40">
+		<reg32 offset="0x00" name="CFG_0"/>
+		<reg32 offset="0x04" name="CFG_1"/>
+		<reg32 offset="0x08" name="CFG_2"/>
+		<reg32 offset="0x0c" name="TEST_DATAPATH"/>
+		<reg32 offset="0x14" name="TEST_STR_0"/>
+		<reg32 offset="0x18" name="TEST_STR_1"/>
+	</array>
+
+	<reg32 offset="0x00400" name="PHY_LNCK_CFG_0"/>
+	<reg32 offset="0x00404" name="PHY_LNCK_CFG_1"/>
+	<reg32 offset="0x00408" name="PHY_LNCK_CFG_2"/>
+
+	<reg32 offset="0x0040c" name="PHY_LNCK_TEST_DATAPATH"/>
+	<reg32 offset="0x00414" name="PHY_LNCK_TEST_STR0"/>
+	<reg32 offset="0x00418" name="PHY_LNCK_TEST_STR1"/>
+
+	<reg32 offset="0x00440" name="PHY_TIMING_CTRL_0"/>
+	<reg32 offset="0x00444" name="PHY_TIMING_CTRL_1"/>
+	<reg32 offset="0x00448" name="PHY_TIMING_CTRL_2"/>
+	<reg32 offset="0x0044c" name="PHY_TIMING_CTRL_3"/>
+	<reg32 offset="0x00450" name="PHY_TIMING_CTRL_4"/>
+	<reg32 offset="0x00454" name="PHY_TIMING_CTRL_5"/>
+	<reg32 offset="0x00458" name="PHY_TIMING_CTRL_6"/>
+	<reg32 offset="0x0045c" name="PHY_TIMING_CTRL_7"/>
+	<reg32 offset="0x00460" name="PHY_TIMING_CTRL_8"/>
+	<reg32 offset="0x00464" name="PHY_TIMING_CTRL_9"/>
+	<reg32 offset="0x00468" name="PHY_TIMING_CTRL_10"/>
+	<reg32 offset="0x0046c" name="PHY_TIMING_CTRL_11"/>
+
+	<reg32 offset="0x00470" name="PHY_CTRL_0"/>
+	<reg32 offset="0x00474" name="PHY_CTRL_1"/>
+	<reg32 offset="0x00478" name="PHY_CTRL_2"/>
+	<reg32 offset="0x0047c" name="PHY_CTRL_3"/>
+
+	<reg32 offset="0x00480" name="PHY_STRENGTH_0"/>
+	<reg32 offset="0x00484" name="PHY_STRENGTH_1"/>
+	<reg32 offset="0x00488" name="PHY_STRENGTH_2"/>
+
+	<reg32 offset="0x0048c" name="PHY_BIST_CTRL_0"/>
+	<reg32 offset="0x00490" name="PHY_BIST_CTRL_1"/>
+	<reg32 offset="0x00494" name="PHY_BIST_CTRL_2"/>
+	<reg32 offset="0x00498" name="PHY_BIST_CTRL_3"/>
+	<reg32 offset="0x0049c" name="PHY_BIST_CTRL_4"/>
+
+	<reg32 offset="0x004b0" name="PHY_LDO_CNTL"/>
+
+	<reg32 offset="0x00500" name="PHY_REGULATOR_CTRL_0"/>
+	<reg32 offset="0x00504" name="PHY_REGULATOR_CTRL_1"/>
+	<reg32 offset="0x00508" name="PHY_REGULATOR_CTRL_2"/>
+	<reg32 offset="0x0050c" name="PHY_REGULATOR_CTRL_3"/>
+	<reg32 offset="0x00510" name="PHY_REGULATOR_CTRL_4"/>
+
+	<reg32 offset="0x00518" name="PHY_REGULATOR_CAL_PWR_CFG"/>
+	<reg32 offset="0x00528" name="PHY_CAL_HW_TRIGGER"/>
+	<reg32 offset="0x0052c" name="PHY_CAL_SW_CFG_0"/>
+	<reg32 offset="0x00530" name="PHY_CAL_SW_CFG_1"/>
+	<reg32 offset="0x00534" name="PHY_CAL_SW_CFG_2"/>
+	<reg32 offset="0x00538" name="PHY_CAL_HW_CFG_0"/>
+	<reg32 offset="0x0053c" name="PHY_CAL_HW_CFG_1"/>
+	<reg32 offset="0x00540" name="PHY_CAL_HW_CFG_2"/>
+	<reg32 offset="0x00544" name="PHY_CAL_HW_CFG_3"/>
+	<reg32 offset="0x00548" name="PHY_CAL_HW_CFG_4"/>
+	<reg32 offset="0x00550" name="PHY_CAL_STATUS">
+		<bitfield name="CAL_BUSY" pos="4" type="boolean"/>
+	</reg32>
+</domain>
+
+</database>
