@@ -351,15 +351,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="CLAMP_ENABLE" pos="29" type="boolean"/>
 		</reg32>
 	</array>
-	<reg32 offset="0x20e4" name="RB_BLEND_RED"/>
-	<reg32 offset="0x20e5" name="RB_BLEND_GREEN"/>
-	<reg32 offset="0x20e6" name="RB_BLEND_BLUE"/>
-	<!--
-		seems to be set to either 0x3c0000ff or 0x00000000.. maybe upper
-		bits are some field or bitmask??  Or maybe we have different bit-
-		fields for each MRT?
-	 -->
-	<reg32 offset="0x20e7" name="RB_BLEND_ALPHA"/>
+
+	<reg32 offset="0x20e4" name="RB_BLEND_RED">
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
+	<reg32 offset="0x20e5" name="RB_BLEND_GREEN">
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
+	<reg32 offset="0x20e6" name="RB_BLEND_BLUE">
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
+	<reg32 offset="0x20e7" name="RB_BLEND_ALPHA">
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
 
 	<reg32 offset="0x20e8" name="UNKNOWN_20E8">
 		<doc>seems to be always set to 0x00000000</doc>
