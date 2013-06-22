@@ -41,6 +41,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <assert.h>
 
 uint64_t *strides = 0;
 int stridesnum = 0;
@@ -125,6 +126,7 @@ void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 	enum rnnttype intype = ti->type;
 	char *typename = NULL;
 	uint32_t mask = bf ? bf->mask : 0xffffffff;
+	uint32_t width = bf ? (1 + bf->high - bf->low) : 32;
 
 	/* for fixed point, input type (arg to fxn) is float: */
 	if ((ti->type == RNN_TTYPE_FIXED) || (ti->type == RNN_TTYPE_UFIXED))
@@ -179,12 +181,18 @@ void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 
 		fprintf(dst, "\treturn ((");
 
-		if ((ti->type == RNN_TTYPE_FIXED) || (ti->type == RNN_TTYPE_UFIXED))
+		if ((ti->type == RNN_TTYPE_FIXED) || (ti->type == RNN_TTYPE_UFIXED)) {
 			fprintf(dst, "((uint32_t)(val * %d.0))", 2 * ti->radix);
-		else if (ti->type == RNN_TTYPE_FLOAT)
-			fprintf(dst, "fui(val)");
-		else
+		} else if (ti->type == RNN_TTYPE_FLOAT) {
+			if (width == 32)
+				fprintf(dst, "fui(val)");
+			else if (width == 16)
+				fprintf(dst, "util_float_to_half(val)");
+			else
+				assert(!"invalid float size");
+		} else {
 			fprintf(dst, "val");
+		}
 
 		if (ti->shr)
 			fprintf(dst, " >> %d", ti->shr);
