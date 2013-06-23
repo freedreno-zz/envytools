@@ -5,6 +5,274 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
 <domain name="HDMI" width="32">
+	<enum name="hdmi_hdcp_key_state">
+		<value name="NO_KEYS" value="0"/>
+		<value name="NOT_CHECKED" value="1"/>
+		<value name="CHECKING" value="2"/>
+		<value name="KEYS_VALID" value="3"/>
+		<value name="AKSV_INVALID" value="4"/>
+		<value name="CHECKSUM_MISMATCH" value="5"/>
+	</enum>
+	<enum name="hdmi_ddc_read_write">
+		<value name="WRITE" value="0"/>
+		<value name="READ" value="1"/>
+	</enum>
+
+	<reg32 offset="0x00000" name="CTRL">
+		<bitfield name="ENABLE" pos="0" type="boolean"/>
+		<bitfield name="HDMI" pos="1" type="boolean"/>
+		<bitfield name="ENCRYPTED" pos="2" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00020" name="AUDIO_PKT_CTRL1">
+		<bitfield name="AUDIO_SAMPLE_SEND" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00024" name="ACR_PKT_CTRL">
+		<!--
+			Guessing on order of bitfields from these comments:
+				/* AUDIO_PRIORITY | SOURCE */
+				acr_pck_ctrl_reg |= 0x80000100;
+				/* N_MULTIPLE(multiplier) */
+				acr_pck_ctrl_reg |= (multiplier & 7) << 16;
+				/* SEND | CONT */
+				acr_pck_ctrl_reg |= 0x00000003;
+		 -->
+		<bitfield name="CONT" pos="0" type="boolean"/>
+		<bitfield name="SEND" pos="1" type="boolean"/>
+		<bitfield name="SOURCE" pos="8" type="boolean"/>
+		<bitfield name="N_MULTIPLIER" low="16" high="18" type="uint"/>
+		<bitfield name="AUDIO_PRIORITY" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x0002c" name="INFOFRAME_CTRL0">
+		<!--
+			Guessing on the order of these flags, from this comment:
+				/* Set these flags */
+				/* AUDIO_INFO_UPDATE | AUDIO_INFO_SOURCE | AUDIO_INFO_CONT
+				 | AUDIO_INFO_SEND */
+				audio_info_ctrl_reg |= 0x000000F0;
+		 -->
+		<bitfield name="AUDIO_INFO_UPDATE" pos="7" type="boolean"/>
+		<bitfield name="AUDIO_INFO_SOURCE" pos="6" type="boolean"/>
+		<bitfield name="AUDIO_INFO_CONT" pos="5" type="boolean"/>
+		<bitfield name="AUDIO_INFO_SEND" pos="4" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00044" name="AUDIO_PKT_CTRL2">
+		<bitfield name="OVERRIDE" pos="0" type="boolean"/>
+		<bitfield name="LAYOUT" pos="1"/> <!-- 1 for >2 channels -->
+	</reg32>
+	<reg32 offset="0x000e4" name="AUDIO_INFO0">
+		<bitfield name="CHECKSUM" low="0" high="7"/>
+		<bitfield name="CC" low="8" high="10" type="uint"/> <!-- channel count -->
+	</reg32>
+	<reg32 offset="0x000e8" name="AUDIO_INFO1">
+		<bitfield name="CA" low="0" high="7"/>        <!-- Channel Allocation -->
+		<bitfield name="LSV" low="11" high="14"/>     <!-- Level Shift -->
+		<bitfield name="DM_INH" pos="15" type="boolean"/>  <!-- down-mix inhibit flag -->
+	</reg32>
+	<reg32 offset="0x00110" name="HDCP_CTRL">
+		<bitfield name="ENABLE" pos="0" type="boolean"/>
+		<bitfield name="ENCRYPTION_ENABLE" pos="8" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00118" name="HDCP_INT_CTRL"/>
+	<reg32 offset="0x0011c" name="HDCP_LINK0_STATUS">
+		<bitfield name="AN_0_READY" pos="8" type="boolean"/>
+		<bitfield name="AN_1_READY" pos="9" type="boolean"/>
+		<bitfield name="KEY_STATE" low="28" high="30" type="hdmi_hdcp_key_state"/>
+	</reg32>
+	<reg32 offset="0x00130" name="HDCP_RESET">
+		<bitfield name="LINK0_DEAUTHENTICATE" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x001d0" name="AUDIO_CFG">
+		<bitfield name="ENGINE_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="FIFO_WATERMARK" low="4" high="7" type="uint"/>
+	</reg32>
+
+	<reg32 offset="0x00208" name="USEC_REFTIMER"/>
+	<reg32 offset="0x0020c" name="DDC_CTRL">
+		<!--
+			 0x020C HDMI_DDC_CTRL
+			[21:20] TRANSACTION_CNT
+				Number of transactions to be done in current transfer.
+				* 0x0: transaction0 only
+				* 0x1: transaction0, transaction1
+				* 0x2: transaction0, transaction1, transaction2
+				* 0x3: transaction0, transaction1, transaction2, transaction3
+			[3] SW_STATUS_RESET
+				Write 1 to reset HDMI_DDC_SW_STATUS flags, will reset SW_DONE,
+				ABORTED, TIMEOUT, SW_INTERRUPTED, BUFFER_OVERFLOW,
+				STOPPED_ON_NACK, NACK0, NACK1, NACK2, NACK3
+			[2] SEND_RESET Set to 1 to send reset sequence (9 clocks with no
+				data) at start of transfer.  This sequence is sent after GO is
+				written to 1, before the first transaction only.
+			[1] SOFT_RESET Write 1 to reset DDC controller
+			[0] GO WRITE ONLY. Write 1 to start DDC transfer.
+		 -->
+		<bitfield name="GO" pos="0" type="boolean"/>
+		<bitfield name="SOFT_RESET" pos="1" type="boolean"/>
+		<bitfield name="SEND_RESET" pos="2" type="boolean"/>
+		<bitfield name="SW_STATUS_RESET" pos="3" type="boolean"/>
+		<bitfield name="TRANSACTION_CNT" low="20" high="21" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00214" name="DDC_INT_CTRL">
+		<!--
+			HDMI_DDC_INT_CTRL[0x0214]
+			   [2] SW_DONE_MK Mask bit for SW_DONE_INT. Set to 1 to enable
+			       interrupt.
+			   [1] SW_DONE_ACK WRITE ONLY. Acknowledge bit for SW_DONE_INT.
+			       Write 1 to clear interrupt.
+			   [0] SW_DONE_INT READ ONLY. SW_DONE interrupt status */
+		 -->
+		<bitfield name="SW_DONE_INT" pos="0" type="boolean"/>
+		<bitfield name="SW_DONE_ACK" pos="1" type="boolean"/>
+		<bitfield name="SW_DONE_MASK" pos="2" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00218" name="DDC_SW_STATUS">
+		<bitfield name="NACK0" pos="12" type="boolean"/>
+		<bitfield name="NACK1" pos="13" type="boolean"/>
+		<bitfield name="NACK2" pos="14" type="boolean"/>
+		<bitfield name="NACK3" pos="15" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00220" name="DDC_SPEED">
+		<!--
+		   0x0220 HDMI_DDC_SPEED
+		   [31:16] PRESCALE prescale = (m * xtal_frequency) /
+			(desired_i2c_speed), where m is multiply
+			factor, default: m = 1
+		   [1:0]   THRESHOLD Select threshold to use to determine whether value
+			sampled on SDA is a 1 or 0. Specified in terms of the ratio
+			between the number of sampled ones and the total number of times
+			SDA is sampled.
+			* 0x0: >0
+			* 0x1: 1/4 of total samples
+			* 0x2: 1/2 of total samples
+			* 0x3: 3/4 of total samples */
+		 -->
+		<bitfield name="THRESHOLD" low="0" high="1" type="uint"/>
+		<bitfield name="PRESCALE" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00224" name="DDC_SETUP">
+		<!--
+			 * 0x0224 HDMI_DDC_SETUP
+			 * Setting 31:24 bits : Time units to wait before timeout
+			 * when clock is being stalled by external sink device
+		 -->
+		<bitfield name="TIMEOUT" low="24" high="31" type="uint"/>
+	</reg32>
+	<!-- Guessing length is 4, as elsewhere the are references to trans0 thru trans3 -->
+	<array offset="0x00228" name="I2C_TRANSACTION" length="4" stride="4">
+		<reg32 offset="0" name="REG">
+			<!--
+				0x0228 HDMI_DDC_TRANS0
+				[23:16] CNT0 Byte count for first transaction (excluding the first
+					byte, which is usually the address).
+				[13] STOP0 Determines whether a stop bit will be sent after the first
+					transaction
+					* 0: NO STOP
+					* 1: STOP
+				[12] START0 Determines whether a start bit will be sent before the
+					first transaction
+					* 0: NO START
+					* 1: START
+				[8] STOP_ON_NACK0 Determines whether the current transfer will stop
+					if a NACK is received during the first transaction (current
+					transaction always stops).
+					* 0: STOP CURRENT TRANSACTION, GO TO NEXT TRANSACTION
+					* 1: STOP ALL TRANSACTIONS, SEND STOP BIT
+				[0] RW0 Read/write indicator for first transaction - set to 0 for
+					write, 1 for read. This bit only controls HDMI_DDC behaviour -
+					the R/W bit in the transaction is programmed into the DDC buffer
+					as the LSB of the address byte.
+					* 0: WRITE
+					* 1: READ
+			 -->
+			<bitfield name="RW" pos="0" type="hdmi_ddc_read_write"/>
+			<bitfield name="STOP_ON_NACK" pos="8" type="boolean"/>
+			<bitfield name="START" pos="12" type="boolean"/>
+			<bitfield name="STOP" pos="13" type="boolean"/>
+			<bitfield name="CNT" low="16" high="23" type="uint"/>
+		</reg32>
+	</array>
+	<reg32 offset="0x00238" name="DDC_DATA">
+		<!--
+			0x0238 HDMI_DDC_DATA
+			[31] INDEX_WRITE WRITE ONLY. To write index field, set this bit to
+				1 while writing HDMI_DDC_DATA.
+			[23:16] INDEX Use to set index into DDC buffer for next read or
+				current write, or to read index of current read or next write.
+				Writable only when INDEX_WRITE=1.
+			[15:8] DATA Use to fill or read the DDC buffer
+			[0] DATA_RW Select whether buffer access will be a read or write.
+				For writes, address auto-increments on write to HDMI_DDC_DATA.
+				For reads, address autoincrements on reads to HDMI_DDC_DATA.
+				* 0: Write
+				* 1: Read
+		 -->
+		<bitfield name="DATA_RW" pos="0" type="hdmi_ddc_read_write"/>
+		<bitfield name="DATA" low="8" high="15" type="uint"/>
+		<bitfield name="INDEX" low="16" high="23" type="uint"/>
+		<bitfield name="INDEX_WRITE" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00250" name="HPD_INT_STATUS">
+		<bitfield name="CABLE_DETECTED" pos="1"/>
+	</reg32>
+	<reg32 offset="0x00254" name="HPD_INT_CTRL">
+		<bitfield name="ACK" pos="0" type="boolean"/>
+		<!--
+			 Based on this, I think bit 1 indicates to generate an irq on
+			 connect vs disconnect:
+				/* Set up HPD_CTRL to sense HPD event */
+				HDMI_OUTP(0x0254, 4 | (cable_detected ? 0 : 2));
+		 -->
+		<bitfield name="EVENT" pos="1" type="enum">
+			<value name="DISCONNECT" value="0"/>
+			<value name="CONNECT" value="1"/>
+		</bitfield>
+		<bitfield name="ENABLE" pos="2" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00258" name="HPD_CTRL">
+		<bitfield name="TIMEOUT" low="0" high="12" type="uint"/>
+		<bitfield name="ENABLE" pos="28" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x0027c" name="DDC_REF">
+		<!--
+			0x027C HDMI_DDC_REF
+			[16] REFTIMER_ENABLE	Enable the timer
+				* 0: Disable
+				* 1: Enable
+			[15:0] REFTIMER	Value to set the register in order to generate
+				DDC strobe. This register counts on HDCP application clock
+
+			/* Enable reference timer
+			 * 27 micro-seconds */
+			HDMI_OUTP_ND(0x027C, (1 << 16) | (27 << 0));
+		 -->
+		<bitfield name="REFTIMER_ENABLE" pos="16" type="boolean"/>
+		<bitfield name="REFTIMER" low="0" high="15" type="uint"/>
+	</reg32>
+
+	<reg32 offset="0x002b4" name="ACTIVE_HSYNC"/>
+	<reg32 offset="0x002b8" name="ACTIVE_VSYNC"/>
+	<reg32 offset="0x002bc" name="VSYNC_ACTIVE_F2"/>
+	<reg32 offset="0x002c0" name="TOTAL"/>
+	<reg32 offset="0x002c4" name="VSYNC_TOTAL_F2"/>
+	<reg32 offset="0x002c8" name="FRAME_CTRL"/>
+	<reg32 offset="0x002d4" name="PHY_CTRL">
+		<bitfield name="SW_RESET_PLL" pos="0" type="boolean"/>
+		<bitfield name="SW_RESET" pos="2" type="boolean"/>
+	</reg32>
+
+	<reg32 offset="0x00400" name="PHY_REG0"/>
+	<reg32 offset="0x00404" name="PHY_REG1"/>
+	<reg32 offset="0x00408" name="PHY_REG2"/>
+	<reg32 offset="0x0040c" name="PHY_REG3"/>
+	<reg32 offset="0x00410" name="PHY_REG4"/>
+	<reg32 offset="0x00414" name="PHY_REG5"/>
+	<reg32 offset="0x00418" name="PHY_REG6"/>
+	<reg32 offset="0x0041c" name="PHY_REG7"/>
+	<reg32 offset="0x00420" name="PHY_REG8"/>
+	<reg32 offset="0x00424" name="PHY_REG9"/>
+	<reg32 offset="0x00428" name="PHY_REG10"/>
+	<reg32 offset="0x0042c" name="PHY_REG11"/>
+	<reg32 offset="0x00430" name="PHY_REG12"/>
 </domain>
 
 </database>
