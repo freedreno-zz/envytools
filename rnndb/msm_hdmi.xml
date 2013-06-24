@@ -17,6 +17,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="WRITE" value="0"/>
 		<value name="READ" value="1"/>
 	</enum>
+	<enum name="hdmi_acr_cts">
+		<value name="ACR_NONE" value="0"/>
+		<value name="ACR_32" value="1"/>
+		<value name="ACR_44" value="2"/>
+		<value name="ACR_48" value="3"/>
+	</enum>
 
 	<reg32 offset="0x00000" name="CTRL">
 		<bitfield name="ENABLE" pos="0" type="boolean"/>
@@ -38,9 +44,30 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		 -->
 		<bitfield name="CONT" pos="0" type="boolean"/>
 		<bitfield name="SEND" pos="1" type="boolean"/>
+		<bitfield name="SELECT" low="4" high="5" type="hdmi_acr_cts"/>
 		<bitfield name="SOURCE" pos="8" type="boolean"/>
 		<bitfield name="N_MULTIPLIER" low="16" high="18" type="uint"/>
 		<bitfield name="AUDIO_PRIORITY" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x0028" name="VBI_PKT_CTRL">
+		<!--
+			Guessing on the order of bits from:
+				/* GC packet enable (every frame) */
+				/* HDMI_VBI_PKT_CTRL[0x0028] */
+				hdmi_msm_rmw32or(0x0028, 3 << 4);
+				/* HDMI_VBI_PKT_CTRL[0x0028] */
+				/* ISRC Send + Continuous */
+				hdmi_msm_rmw32or(0x0028, 3 << 8);
+				/* HDMI_VBI_PKT_CTRL[0x0028] */
+				/* ACP send, s/w source */
+				hdmi_msm_rmw32or(0x0028, 3 << 12);
+		 -->
+		<bitfield name="GC_ENABLE" pos="4" type="boolean"/>
+		<bitfield name="GC_EVERY_FRAME" pos="5" type="boolean"/>
+		<bitfield name="ISRC_SEND" pos="8" type="boolean"/>
+		<bitfield name="ISRC_CONTINUOUS" pos="9" type="boolean"/>
+		<bitfield name="ACP_SEND" pos="12" type="boolean"/>
+		<bitfield name="ACP_SRC_SW" pos="13" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x0002c" name="INFOFRAME_CTRL0">
 		<!--
@@ -49,16 +76,76 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 				/* AUDIO_INFO_UPDATE | AUDIO_INFO_SOURCE | AUDIO_INFO_CONT
 				 | AUDIO_INFO_SEND */
 				audio_info_ctrl_reg |= 0x000000F0;
+				/* 0x3 for AVI InfFrame enable (every frame) */
+				HDMI_OUTP(0x002C, HDMI_INP(0x002C) | 0x00000003L);
 		 -->
-		<bitfield name="AUDIO_INFO_UPDATE" pos="7" type="boolean"/>
-		<bitfield name="AUDIO_INFO_SOURCE" pos="6" type="boolean"/>
-		<bitfield name="AUDIO_INFO_CONT" pos="5" type="boolean"/>
+		<bitfield name="AVI_SEND" pos="0" type="boolean"/>
+		<bitfield name="AVI_CONT" pos="1" type="boolean"/>           <!-- every frame -->
 		<bitfield name="AUDIO_INFO_SEND" pos="4" type="boolean"/>
+		<bitfield name="AUDIO_INFO_CONT" pos="5" type="boolean"/>    <!-- every frame -->
+		<bitfield name="AUDIO_INFO_SOURCE" pos="6" type="boolean"/>
+		<bitfield name="AUDIO_INFO_UPDATE" pos="7" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00034" name="GEN_PKT_CTRL">
+		<!--
+			0x0034 GEN_PKT_CTRL
+			  GENERIC0_SEND   0      0 = Disable Generic0 Packet Transmission
+			                         1 = Enable Generic0 Packet Transmission
+			  GENERIC0_CONT   1      0 = Send Generic0 Packet on next frame only
+			                         1 = Send Generic0 Packet on every frame
+			  GENERIC0_UPDATE 2      NUM
+			  GENERIC1_SEND   4      0 = Disable Generic1 Packet Transmission
+			                         1 = Enable Generic1 Packet Transmission
+			  GENERIC1_CONT   5      0 = Send Generic1 Packet on next frame only
+			                         1 = Send Generic1 Packet on every frame
+			  GENERIC0_LINE   21:16  NUM
+			  GENERIC1_LINE   29:24  NUM
+			
+			GENERIC0_LINE | GENERIC0_UPDATE | GENERIC0_CONT | GENERIC0_SEND
+			Setup HDMI TX generic packet control
+			Enable this packet to transmit every frame
+			Enable this packet to transmit every frame
+			Enable HDMI TX engine to transmit Generic packet 0
+			  HDMI_OUTP(0x0034, (1 << 16) | (1 << 2) | BIT(1) | BIT(0));
+		 -->
+		<bitfield name="GENERIC0_SEND" pos="0" type="boolean"/>
+		<bitfield name="GENERIC0_CONT" pos="1" type="boolean"/>
+		<bitfield name="GENERIC0_UPDATE" low="2" high="3" type="uint"/> <!-- ??? -->
+		<bitfield name="GENERIC1_SEND" pos="4" type="boolean"/>
+		<bitfield name="GENERIC1_CONT" pos="5" type="boolean"/>
+		<bitfield name="GENERIC0_LINE" low="16" high="21" type="uint"/>
+		<bitfield name="GENERIC1_LINE" low="24" high="29" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00040" name="GC">
+		<bitfield name="MUTE" pos="0"/>
 	</reg32>
 	<reg32 offset="0x00044" name="AUDIO_PKT_CTRL2">
 		<bitfield name="OVERRIDE" pos="0" type="boolean"/>
 		<bitfield name="LAYOUT" pos="1"/> <!-- 1 for >2 channels -->
 	</reg32>
+
+	<!--
+		AVI_INFO appears to be the infoframe in a slightly weird order..
+		starts with PB0 (checksum), and ends with version..
+	-->
+	<reg32 offset="0x0006c" name="AVI_INFO" stride="4" length="4"/>
+
+	<reg32 offset="0x000a4" name="GENERIC1_HDR"/>
+	<reg32 offset="0x000a8" name="GENERIC1" stride="4" length="7"/>  <!-- not sure on length, but we have at least 0..6 -->
+
+	<!--
+		TODO add a way to show symbolic offsets into array: hdmi_acr_cts-1
+	 -->
+	<array offset="0x00c4" name="ACR" length="3" stride="8">
+		<reg32 offset="0" name="0">
+			<bitfield name="CTS" low="12" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="4" name="1">
+			<!-- not sure the actual # of bits.. -->
+			<bitfield name="N" low="0" high="31" type="uint"/>
+		</reg32>
+	</array>
+
 	<reg32 offset="0x000e4" name="AUDIO_INFO0">
 		<bitfield name="CHECKSUM" low="0" high="7"/>
 		<bitfield name="CC" low="8" high="10" type="uint"/> <!-- channel count -->
@@ -215,18 +302,37 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CABLE_DETECTED" pos="1"/>
 	</reg32>
 	<reg32 offset="0x00254" name="HPD_INT_CTRL">
-		<bitfield name="ACK" pos="0" type="boolean"/>
-		<!--
-			 Based on this, I think bit 1 indicates to generate an irq on
-			 connect vs disconnect:
-				/* Set up HPD_CTRL to sense HPD event */
-				HDMI_OUTP(0x0254, 4 | (cable_detected ? 0 : 2));
+		<!-- (this useful comment was removed in df6b645.. git archaeology is fun)
+			HPD_INT_CTRL[0x0254]
+			31:10 Reserved
+			9     RCV_PLUGIN_DET_MASK  receiver plug in interrupt mask.
+			                           When programmed to 1,
+			                           RCV_PLUGIN_DET_INT will toggle
+			                           the interrupt line
+			8:6   Reserved
+			5     RX_INT_EN            Panel RX interrupt enable
+			      0: Disable
+			      1: Enable
+			4     RX_INT_ACK           WRITE ONLY. Panel RX interrupt
+			                           ack
+			3     Reserved
+			2     INT_EN               Panel interrupt control
+			      0: Disable
+			      1: Enable
+			1     INT_POLARITY         Panel interrupt polarity
+			      0: generate interrupt on disconnect
+			      1: generate interrupt on connect
+			0     INT_ACK              WRITE ONLY. Panel interrupt ack
 		 -->
-		<bitfield name="EVENT" pos="1" type="enum">
+		<bitfield name="INT_ACK" pos="0" type="boolean"/>
+		<bitfield name="INT_POLARITY" pos="1" type="enum">
 			<value name="DISCONNECT" value="0"/>
 			<value name="CONNECT" value="1"/>
 		</bitfield>
-		<bitfield name="ENABLE" pos="2" type="boolean"/>
+		<bitfield name="INT_EN" pos="2" type="boolean"/>
+		<bitfield name="RX_INT_ACK" pos="4" type="boolean"/>
+		<bitfield name="RX_INT_EN" pos="5" type="boolean"/>
+		<bitfield name="RCV_PLUGIN_DET_MASK" pos="9" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x00258" name="HPD_CTRL">
 		<bitfield name="TIMEOUT" low="0" high="12" type="uint"/>
@@ -249,15 +355,44 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="REFTIMER" low="0" high="15" type="uint"/>
 	</reg32>
 
-	<reg32 offset="0x002b4" name="ACTIVE_HSYNC"/>
-	<reg32 offset="0x002b8" name="ACTIVE_VSYNC"/>
-	<reg32 offset="0x002bc" name="VSYNC_ACTIVE_F2"/>
-	<reg32 offset="0x002c0" name="TOTAL"/>
-	<reg32 offset="0x002c4" name="VSYNC_TOTAL_F2"/>
+	<reg32 offset="0x002b4" name="ACTIVE_HSYNC">
+		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="END" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x002b8" name="ACTIVE_VSYNC">
+		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="END" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x002bc" name="VSYNC_ACTIVE_F2">
+		<!-- interlaced, frame 2 -->
+		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="END" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x002c0" name="TOTAL">
+		<bitfield name="H_TOTAL" low="0" high="11" type="uint"/>
+		<bitfield name="V_TOTAL" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x002c4" name="VSYNC_TOTAL_F2">
+		<!-- interlaced, frame 2 -->
+		<bitfield name="V_TOTAL" low="0" high="11" type="uint"/>
+	</reg32>
 	<reg32 offset="0x002c8" name="FRAME_CTRL"/>
 	<reg32 offset="0x002d4" name="PHY_CTRL">
 		<bitfield name="SW_RESET_PLL" pos="0" type="boolean"/>
 		<bitfield name="SW_RESET" pos="2" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x002cc" name="AUD_INT">
+		<!--
+			HDMI_AUD_INT[0x02CC]
+			[3] AUD_SAM_DROP_MASK [R/W]
+			[2] AUD_SAM_DROP_ACK [W], AUD_SAM_DROP_INT [R]
+			[1] AUD_FIFO_URUN_MASK [R/W]
+			[0] AUD_FIFO_URUN_ACK [W], AUD_FIFO_URUN_INT [R]
+		 -->
+		<bitfield name="AUD_FIFO_URUN_INT" pos="0" type="boolean"/>  <!-- write to ack irq -->
+		<bitfield name="AUD_FIFO_URAN_MASK" pos="1" type="boolean"/> <!-- r/w, enables irq -->
+		<bitfield name="AUD_SAM_DROP_INT" pos="2" type="boolean"/>   <!-- write to ack irq -->
+		<bitfield name="AUD_SAM_DROP_MASK" pos="3" type="boolean"/>  <!-- r/w, enables irq -->
 	</reg32>
 
 	<reg32 offset="0x00400" name="PHY_REG0"/>
