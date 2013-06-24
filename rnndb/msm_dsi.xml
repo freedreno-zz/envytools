@@ -5,7 +5,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
 <domain name="DSI" width="32">
-	<bitset name="dsi_irqs">
+	<bitset name="DSI_IRQ">
 		<bitfield name="CMD_DMA_DONE" pos="0" type="boolean"/>
 		<bitfield name="MASK_CMD_DMA_DONE" pos="1" type="boolean"/>
 		<bitfield name="CMD_MDP_DONE" pos="8" type="boolean"/>
@@ -48,7 +48,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x000c8" name="EOT_PACKET_CTRL"/>
 	<reg32 offset="0x000ac" name="LAN_SWAP_CTRL"/>
 	<reg32 offset="0x00108" name="ERR_INT_MASK0"/>
-	<reg32 offset="0x0010c" name="INTR_CTRL" type="dsi_irqs"/>
+	<reg32 offset="0x0010c" name="INTR_CTRL" type="DSI_IRQ"/>
 	<reg32 offset="0x00114" name="RESET"/>
 	<reg32 offset="0x00118" name="CLK_CTRL"/>
 	<reg32 offset="0x00128" name="PHY_RESET"/>
