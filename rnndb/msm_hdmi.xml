@@ -4,6 +4,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
+<!--
+	NOTE: also see mdss_hdmi_util.h.. newer devices using MDSS appear
+	to have the same HDMI block (or maybe a newer version?) but for
+	some reason duplicate the code under drivers/video/msm/mdss
+ -->
+
 <domain name="HDMI" width="32">
 	<enum name="hdmi_hdcp_key_state">
 		<value name="NO_KEYS" value="0"/>
@@ -130,8 +136,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	-->
 	<reg32 offset="0x0006c" name="AVI_INFO" stride="4" length="4"/>
 
+	<reg32 offset="0x00088" name="GENERIC1_HDR"/>
+	<reg32 offset="0x0008c" name="GENERIC1" stride="4" length="7"/>
+
 	<reg32 offset="0x000a4" name="GENERIC1_HDR"/>
-	<reg32 offset="0x000a8" name="GENERIC1" stride="4" length="7"/>  <!-- not sure on length, but we have at least 0..6 -->
+	<reg32 offset="0x000a8" name="GENERIC1" stride="4" length="7"/>
 
 	<!--
 		TODO add a way to show symbolic offsets into array: hdmi_acr_cts-1

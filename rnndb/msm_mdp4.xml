@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
-<domain name="MDP4" width="32" prefix="chipset">
+<domain name="MDP4" width="32">
 	<enum name="mpd4_bpc">
 		<brief>bits per component</brief>
 		<value name="BPC1" value="0"/> <!-- 1 bit -->
@@ -53,7 +53,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="STAGE3" value="5"/>   <!-- zorder 3 -->
 	</enum>
 
-	<bitset name="mpd4_layermixer_in_cfg">
+	<bitset name="mpd4_layermixer_in_cfg" inline="yes">
 		<brief>appears to map pipe to mixer stage</brief>
 		<bitfield name="PIPE0" low="0"  high="2"  type="mpd4_mixer_stage_id"/>
 		<bitfield name="PIPE0_MIXER1" pos="3" type="boolean"/>
@@ -73,33 +73,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="PIPE7_MIXER1" pos="31" type="boolean"/>
 	</bitset>
 
-	<bitset name="mpd4_mixer_op">
-		<bitfield name="FG_ALPHA" low="0" high="1" type="mpd4_alpha_type"/>
-		<bitfield name="FG_INV_ALPHA" pos="2" type="boolean"/>
-		<bitfield name="FG_MOD_ALPHA" pos="3" type="boolean"/>
-		<bitfield name="BG_ALPHA" low="4" high="5" type="mpd4_alpha_type"/>
-		<bitfield name="BG_INV_ALPHA" pos="6" type="boolean"/>
-		<bitfield name="BG_MOD_ALPHA" pos="7" type="boolean"/>
-		<bitfield name="FG_TRANSP" pos="8" type="boolean"/>
-		<bitfield name="BG_TRANSP" pos="9" type="boolean"/>
-	</bitset>
-
-	<bitset name="mpd4_format">
-		<bitfield name="G_BPC" low="0" high="1" type="mpd4_bpc"/>
-		<bitfield name="B_BPC" low="2" high="3" type="mpd4_bpc"/>
-		<bitfield name="R_BPC" low="4" high="5" type="mpd4_bpc"/>
-		<bitfield name="A_BPC" low="6" high="7" type="mpd4_bpc"/>
-		<bitfield name="ALPHA_ENABLE" pos="8" type="boolean"/>
-		<bitfield name="CPP" low="9" high="10" type="uint">
-			<brief>8bit characters per pixel minus 1</brief>
-		</bitfield>
-		<bitfield name="ROTATED_90" pos="12" type="boolean"/>
-		<bitfield name="UNPACK_COUNT" low="13" high="14" type="uint"/>
-		<bitfield name="UNPACK_TIGHT" pos="17" type="boolean"/>
-		<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
-		<bitfield name="SOLID_FILL" pos="22" type="boolean"/>
-	</bitset>
-
 	<bitset name="mpd4_unpack_pattern" inline="yes">
 		<bitfield name="ELEM0" low="0"  high="7"/>
 		<bitfield name="ELEM1" low="8"  high="15"/>
@@ -115,20 +88,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitset name="reg_xy" inline="yes">
 		<bitfield name="Y" low="16" high="31" type="uint"/>
 		<bitfield name="X" low="0" high="15" type="uint"/>
-	</bitset>
-
-	<bitset name="mpd4_op_mode" inline="yes">
-		<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
-		<bitfield name="SCALEY_EN" pos="1" type="boolean"/>
-		<bitfield name="SRC_YCBCR" pos="9" type="boolean"/>
-		<bitfield name="DST_YCBCR" pos="10" type="boolean"/>
-		<bitfield name="CSC_EN" pos="11" type="boolean"/>
-		<bitfield name="FLIP_LR" pos="13" type="boolean"/>
-		<bitfield name="FLIP_UD" pos="14" type="boolean"/>
-		<bitfield name="DITHER_EN" pos="15" type="boolean"/>
-		<bitfield name="IGC_LUT_EN" pos="16" type="boolean"/>
-		<bitfield name="DEINT_EN" pos="18" type="boolean"/>
-		<bitfield name="DEINT_ODD_REF" pos="19" type="boolean"/>
 	</bitset>
 
 	<bitset name="MDP4_IRQ">
@@ -199,46 +158,37 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="RGB2" pos="5" type="boolean"/>
 	</reg32>
 
-	<group name="mpd4_overlayproc">
+	<array offsets="0x10000,0x18000,0x88000" name="OVLP" length="3" stride="0x8000">
 		<reg32 offset="0x0004" name="CFG"/>
 		<reg32 offset="0x0008" name="SIZE" type="reg_wh"/>
 		<reg32 offset="0x000c" name="BASE"/>
 		<reg32 offset="0x0010" name="STRIDE" type="uint"/>
 		<reg32 offset="0x0014" name="OPMODE"/>
 
-		<group name="mpd4_mixer_stage">
-			<reg32 offset="0x00" name="OP" type="mpd4_mixer_op"/>
+		<array offsets="0x0104,0x0124,0x0144,0x0160" name="STAGE" length="4" stride="0x1c">
+			<reg32 offset="0x00" name="OP">
+				<bitfield name="FG_ALPHA" low="0" high="1" type="mpd4_alpha_type"/>
+				<bitfield name="FG_INV_ALPHA" pos="2" type="boolean"/>
+				<bitfield name="FG_MOD_ALPHA" pos="3" type="boolean"/>
+				<bitfield name="BG_ALPHA" low="4" high="5" type="mpd4_alpha_type"/>
+				<bitfield name="BG_INV_ALPHA" pos="6" type="boolean"/>
+				<bitfield name="BG_MOD_ALPHA" pos="7" type="boolean"/>
+				<bitfield name="FG_TRANSP" pos="8" type="boolean"/>
+				<bitfield name="BG_TRANSP" pos="9" type="boolean"/>
+			</reg32>
 			<reg32 offset="0x04" name="FG_ALPHA"/>
 			<reg32 offset="0x08" name="BG_ALPHA"/>
 			<reg32 offset="0x0c" name="TRANSP_LOW0"/>
 			<reg32 offset="0x10" name="TRANSP_LOW1"/>
 			<reg32 offset="0x14" name="TRANSP_HIGH0"/>
 			<reg32 offset="0x18" name="TRANSP_HIGH1"/>
-		</group>
-
-		<bitset name="mpd4_co3_sel">
-			<bitfield name="FG_ALPHA" pos="0" type="boolean"/> <!-- otherwise bg alpha -->
-		</bitset>
-
-		<array offset="0x0104" name="STAGE0" length="1" stride="0x1c">
-			<use-group name="mpd4_mixer_stage"/>
 		</array>
-		<reg32 offset="0x1004" name="STAGE0_CO3_SEL" type="mpd4_co3_sel"/>
 
-		<array offset="0x0124" name="STAGE1" length="1" stride="0x1c">
-			<use-group name="mpd4_mixer_stage"/>
+		<array offsets="0x1004,0x1404,0x1804,0x1b84" name="STAGE_CO3" length="4" stride="4">
+			<reg32 offset="0" name="SEL">
+				<bitfield name="FG_ALPHA" pos="0" type="boolean"/> <!-- otherwise bg alpha -->
+			</reg32>
 		</array>
-		<reg32 offset="0x1404" name="STAGE1_CO3_SEL" type="mpd4_co3_sel"/>
-
-		<array offset="0x0144" name="STAGE2" length="1" stride="0x1c">
-			<use-group name="mpd4_mixer_stage"/>
-		</array>
-		<reg32 offset="0x1804" name="STAGE2_CO3_SEL" type="mpd4_co3_sel"/>
-
-		<array offset="0x0160" name="STAGE3" length="1" stride="0x1c">
-			<use-group name="mpd4_mixer_stage"/>
-		</array>
-		<reg32 offset="0x1b84" name="STAGE3_CO3_SEL" type="mpd4_co3_sel"/>
 
 		<reg32 offset="0x0180" name="TRANSP_LOW0"/>
 		<reg32 offset="0x0184" name="TRANSP_LOW1"/>
@@ -250,27 +200,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<array offset="0x2000" name="CSC" length="1" stride="0x700">
 			<use-group name="mpd4_csc"/>
 		</array>
-	</group>
-
-	<!--
-		TODO it would be nice to have some way to make this look like an
-		array even though the base addresses are in funny places not
-		regularly spaced.
-	 -->
-	<array offset="0x10000" name="OVLP0" length="1" stride="0x8000">
-		<!-- MDP4_OVERLAYPROC0_BASE -->
-		<use-group name="mpd4_overlayproc"/>
-	</array>
-	<array offset="0x18000" name="OVLP1" length="1" stride="0x8000">
-		<!-- MDP4_OVERLAYPROC1_BASE -->
-		<use-group name="mpd4_overlayproc"/>
-	</array>
-	<array offset="0x88000" name="OVLP2" length="1" stride="0x8000">
-		<!-- MDP4_OVERLAYPROC2_BASE -->
-		<use-group name="mpd4_overlayproc"/>
 	</array>
 
-	<group name="mpd4_dma">
+	<enum name="mdp4_dma">
+		<value name="DMA_P" value="0"/>
+		<value name="DMA_S" value="1"/>
+		<value name="DMA_E" value="2"/>
+	</enum>
+	<array offsets="0x90000,0xa0000,0xb0000" name="DMA" length="3" stride="0x10000" index="mdp4_dma">
 		<reg32 offset="0x0000" name="CONFIG">
 			<bitfield name="G_BPC" low="0" high="1" type="mpd4_dma_bpc"/>
 			<bitfield name="B_BPC" low="2" high="3" type="mpd4_dma_bpc"/>
@@ -291,24 +228,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<array offset="0x3000" name="CSC" length="1" stride="0x700">
 			<use-group name="mpd4_csc"/>
 		</array>
-	</group>
-
-	<array offset="0x90000" name="DMA_P" length="1" stride="0x10000">
-		<use-group name="mpd4_dma"/>
-	</array>
-
-	<array offset="0xa0000" name="DMA_S" length="1" stride="0x10000">
-		<use-group name="mpd4_dma"/>
-	</array>
-
-	<array offset="0xb0000" name="DMA_E" length="1" stride="0x10000">
-		<use-group name="mpd4_dma"/>
 	</array>
 
 	<!--
-		TODO enhance rnndec so that it could show use the symbolic name
-		(enum mpd4_pipe) as array index
-
 		TODO length should be 7, but that would collide w/ OVLP2..!?!
 		this register map is a bit strange..
 	 -->
@@ -329,9 +251,35 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="P3" low="16" high="31" type="uint"/>
 		</reg32>
 		<reg32 offset="0x0048" name="FRAME_SIZE" type="reg_wh"/>
-		<reg32 offset="0x0050" name="SRC_FORMAT" type="mpd4_format"/>
+		<reg32 offset="0x0050" name="SRC_FORMAT">
+			<bitfield name="G_BPC" low="0" high="1" type="mpd4_bpc"/>
+			<bitfield name="B_BPC" low="2" high="3" type="mpd4_bpc"/>
+			<bitfield name="R_BPC" low="4" high="5" type="mpd4_bpc"/>
+			<bitfield name="A_BPC" low="6" high="7" type="mpd4_bpc"/>
+			<bitfield name="ALPHA_ENABLE" pos="8" type="boolean"/>
+			<bitfield name="CPP" low="9" high="10" type="uint">
+				<brief>8bit characters per pixel minus 1</brief>
+			</bitfield>
+			<bitfield name="ROTATED_90" pos="12" type="boolean"/>
+			<bitfield name="UNPACK_COUNT" low="13" high="14" type="uint"/>
+			<bitfield name="UNPACK_TIGHT" pos="17" type="boolean"/>
+			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
+			<bitfield name="SOLID_FILL" pos="22" type="boolean"/>
+		</reg32>
 		<reg32 offset="0x0054" name="SRC_UNPACK" type="mpd4_unpack_pattern"/>
-		<reg32 offset="0x0058" name="OP_MODE" type="mpd4_op_mode"/>
+		<reg32 offset="0x0058" name="OP_MODE">
+			<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
+			<bitfield name="SCALEY_EN" pos="1" type="boolean"/>
+			<bitfield name="SRC_YCBCR" pos="9" type="boolean"/>
+			<bitfield name="DST_YCBCR" pos="10" type="boolean"/>
+			<bitfield name="CSC_EN" pos="11" type="boolean"/>
+			<bitfield name="FLIP_LR" pos="13" type="boolean"/>
+			<bitfield name="FLIP_UD" pos="14" type="boolean"/>
+			<bitfield name="DITHER_EN" pos="15" type="boolean"/>
+			<bitfield name="IGC_LUT_EN" pos="16" type="boolean"/>
+			<bitfield name="DEINT_EN" pos="18" type="boolean"/>
+			<bitfield name="DEINT_ODD_REF" pos="19" type="boolean"/>
+		</reg32>
 		<reg32 offset="0x005c" name="PHASEX_STEP"/>
 		<reg32 offset="0x0060" name="PHASEY_STEP"/>
 		<reg32 offset="0x1004" name="FETCH_CONFIG"/>
@@ -347,30 +295,30 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			LCDC and DSI seem the same, DTV is just slightly different..
 	 -->
 
-	<bitset name="mpd4_ctrl_polarity">
+	<bitset name="mpd4_ctrl_polarity" inline="yes">
 		<!-- not entirely sure if these bits mean hi or low.. -->
 		<bitfield name="HSYNC_HI" pos="0" type="boolean"/>
 		<bitfield name="VSYNC_HI" pos="1" type="boolean"/>
 		<bitfield name="DATA_EN_HI" pos="2" type="boolean"/>
 	</bitset>
 
-	<bitset name="mpd4_active_hctl">
+	<bitset name="mpd4_active_hctl" inline="yes">
 		<bitfield name="START" low="0" high="14" type="uint"/>
 		<bitfield name="END" low="16" high="30" type="uint"/>
 		<bitfield name="ACTIVE_START_X" pos="31" type="boolean"/>
 	</bitset>
 
-	<bitset name="mpd4_display_hctl">
+	<bitset name="mpd4_display_hctl" inline="yes">
 		<bitfield name="START" low="0" high="15" type="uint"/>
 		<bitfield name="END" low="16" high="31" type="uint"/>
 	</bitset>
 
-	<bitset name="mpd4_hsync_ctrl">
+	<bitset name="mpd4_hsync_ctrl" inline="yes">
 		<bitfield name="PULSEW" low="0" high="15" type="uint"/>
 		<bitfield name="PERIOD" low="16" high="31" type="uint"/>
 	</bitset>
 
-	<bitset name="mpd4_underflow_clr">
+	<bitset name="mpd4_underflow_clr" inline="yes">
 		<bitfield name="COLOR" low="0" high="23"/>
 		<bitfield name="ENABLE_RECOVERY" pos="31" type="boolean"/>
 	</bitset>
