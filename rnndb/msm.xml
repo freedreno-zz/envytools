@@ -13,7 +13,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="MDP40"/>
 </enum>
 
-<import file="msm_mdp.xml"/>
+<import file="msm_mdp4.xml"/>
 <import file="msm_dsi.xml"/>
 <import file="msm_sfpb.xml"/>
 <import file="msm_mmss_cc.xml"/>
