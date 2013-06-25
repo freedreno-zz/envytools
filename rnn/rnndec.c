@@ -277,6 +277,34 @@ static char *appendidx (struct rnndeccontext *ctx, char *name, uint64_t idx, str
 	return res;
 }
 
+/* This could probably be made to work for stripes too.. */
+static int get_array_idx_offset(struct rnndelem *elem, uint64_t addr, uint64_t *idx, uint64_t *offset)
+{
+	if (elem->offsets) {
+		int i;
+		for (i = 0; i < elem->offsetsnum; i++) {
+			uint64_t o = elem->offsets[i];
+			if ((o <= addr) && (addr < (o + elem->stride))) {
+				*idx = i;
+				*offset = addr - o;
+				return 0;
+			}
+		}
+		return -1;
+	} else {
+		if (addr < elem->offset)
+			return -1;
+
+		*idx = (addr - elem->offset) / elem->stride;
+		*offset = (addr - elem->offset) % elem->stride;
+
+		if (elem->length && (*idx >= elem->length))
+			return -1;
+
+		return 0;
+	}
+}
+
 static struct rnndecaddrinfo *trymatch (struct rnndeccontext *ctx, struct rnndelem **elems, int elemsnum, uint64_t addr, int write, int dwidth, uint64_t *indices, int indicesnum) {
 	struct rnndecaddrinfo *res;
 	int i, j;
@@ -346,11 +374,7 @@ static struct rnndecaddrinfo *trymatch (struct rnndeccontext *ctx, struct rnndel
 				}
 				break;
 			case RNN_ETYPE_ARRAY:
-				if (addr < elems[i]->offset)
-					break;
-				idx = (addr-elems[i]->offset)/elems[i]->stride;
-				offset = (addr-elems[i]->offset)%elems[i]->stride;
-				if (elems[i]->length && idx >= elems[i]->length)
+				if (get_array_idx_offset(elems[i], addr, &idx, &offset))
 					break;
 				asprintf (&name, "%s%s%s", ctx->colors->rname, elems[i]->name, ctx->colors->reset);
 				for (j = 0; j < indicesnum; j++)
