@@ -500,6 +500,13 @@ static struct rnndelem *trydelem(struct rnndb *db, char *file, xmlNode *node) {
 				res->varinfo.varsetstr = strdup(getattrib(db, file, node->line, attr));
 			} else if (!strcmp(attr->name, "variants")) {
 				res->varinfo.variantsstr = strdup(getattrib(db, file, node->line, attr));
+			} else if (!strcmp(attr->name, "index")) {
+				const char *enumname = getattrib(db, file, node->line, attr);
+				res->index = rnn_findenum(db, enumname);
+				if (!res->index) {
+					fprintf(stderr, "%s:%d: invalid enum name \"%s\"\n", file, node->line, enumname);
+					db->estatus = 1;
+				}
 			} else {
 				fprintf (stderr, "%s:%d: wrong attribute \"%s\" for %s\n", file, node->line, attr->name, node->name);
 				db->estatus = 1;

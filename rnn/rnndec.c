@@ -107,6 +107,17 @@ static float float16(uint16_t val)
 	return u.f;
 }
 
+static const char *rnndec_decode_enum(struct rnndeccontext *ctx,
+		struct rnnvalue **vals, int valsnum, uint64_t value)
+{
+	int i;
+	for (i = 0; i < valsnum; i++)
+		if (rnndec_varmatch(ctx, &vals[i]->varinfo) &&
+				vals[i]->valvalid && vals[i]->value == value)
+			return vals[i]->name;
+	return NULL;
+}
+
 char *rnndec_decodeval(struct rnndeccontext *ctx, struct rnntypeinfo *ti, uint64_t value, int width) {
 	char *res = 0;
 	int i;
@@ -129,11 +140,11 @@ char *rnndec_decodeval(struct rnndeccontext *ctx, struct rnntypeinfo *ti, uint64
 			valsnum = ti->valsnum;
 			goto doenum;
 		doenum:
-			for (i = 0; i < valsnum; i++)
-				if (rnndec_varmatch(ctx, &vals[i]->varinfo) && vals[i]->valvalid && vals[i]->value == value) {
-					asprintf (&res, "%s%s%s", ctx->colors->eval, vals[i]->name, ctx->colors->reset);
-					return res;
-				}
+			tmp = rnndec_decode_enum(ctx, vals, valsnum, value);
+			if (tmp) {
+				asprintf (&res, "%s%s%s", ctx->colors->eval, tmp, ctx->colors->reset);
+				return res;
+			}
 			goto failhex;
 		case RNN_TTYPE_BITSET:
 			bitfields = ti->ebitset->bitfields;
@@ -251,9 +262,17 @@ char *rnndec_decodeval(struct rnndeccontext *ctx, struct rnntypeinfo *ti, uint64
 	}
 }
 
-static char *appendidx (struct rnndeccontext *ctx, char *name, uint64_t idx) {
-	char *res;
-	asprintf (&res, "%s[%s%#"PRIx64"%s]", name, ctx->colors->num, idx, ctx->colors->reset);
+static char *appendidx (struct rnndeccontext *ctx, char *name, uint64_t idx, struct rnnenum *index) {
+	char *res, *index_name = NULL;
+
+	if (index)
+		index_name = rnndec_decode_enum(ctx, index->vals, index->valsnum, idx);
+
+	if (index_name)
+		asprintf (&res, "%s[%s%s%s]", name, ctx->colors->eval, index_name, ctx->colors->reset);
+	else
+		asprintf (&res, "%s[%s%#"PRIx64"%s]", name, ctx->colors->num, idx, ctx->colors->reset);
+
 	free (name);
 	return res;
 }
@@ -286,9 +305,9 @@ static struct rnndecaddrinfo *trymatch (struct rnndeccontext *ctx, struct rnndel
 				res->width = elems[i]->width;
 				asprintf (&res->name, "%s%s%s", ctx->colors->rname, elems[i]->name, ctx->colors->reset);
 				for (j = 0; j < indicesnum; j++)
-					res->name = appendidx(ctx, res->name, indices[j]);
+					res->name = appendidx(ctx, res->name, indices[j], NULL);
 				if (elems[i]->length != 1)
-					res->name = appendidx(ctx, res->name, idx);
+					res->name = appendidx(ctx, res->name, idx, elems[i]->index);
 				if (offset) {
 					asprintf (&tmp, "%s+%s%#"PRIx64"%s", res->name, ctx->colors->err, offset, ctx->colors->reset);
 					free(res->name);
@@ -316,9 +335,9 @@ static struct rnndecaddrinfo *trymatch (struct rnndeccontext *ctx, struct rnndel
 						return res;
 					asprintf (&name, "%s%s%s", ctx->colors->rname, elems[i]->name, ctx->colors->reset);
 					for (j = 0; j < indicesnum; j++)
-						name = appendidx(ctx, name, indices[j]);
+						name = appendidx(ctx, name, indices[j], NULL);
 					if (elems[i]->length != 1)
-						name = appendidx(ctx, name, idx);
+						name = appendidx(ctx, name, idx, elems[i]->index);
 					asprintf (&tmp, "%s.%s", name, res->name);
 					free(name);
 					free(res->name);
@@ -335,9 +354,9 @@ static struct rnndecaddrinfo *trymatch (struct rnndeccontext *ctx, struct rnndel
 					break;
 				asprintf (&name, "%s%s%s", ctx->colors->rname, elems[i]->name, ctx->colors->reset);
 				for (j = 0; j < indicesnum; j++)
-					name = appendidx(ctx, name, indices[j]);
+					name = appendidx(ctx, name, indices[j], NULL);
 				if (elems[i]->length != 1)
-					name = appendidx(ctx, name, idx);
+					name = appendidx(ctx, name, idx, elems[i]->index);
 				if ((res = trymatch (ctx, elems[i]->subelems, elems[i]->subelemsnum, offset, write, dwidth, 0, 0))) {
 					asprintf (&tmp, "%s.%s", name, res->name);
 					free(name);

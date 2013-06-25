@@ -205,6 +205,7 @@ struct rnndelem {
 	int subelemsmax;
 	struct rnnvarinfo varinfo;
 	struct rnntypeinfo typeinfo;
+	struct rnnenum *index;   /* for arrays, for symbolic idx values */
 	char *fullname;
 	char *file;
 };
