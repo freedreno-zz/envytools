@@ -198,6 +198,9 @@ struct rnndelem {
 		RNN_ACCESS_RW,
 	} access;
 	uint64_t offset;
+	uint64_t *offsets;       /* for "array" with irregular offsets */
+	int offsetsnum;
+	int offsetsmax;
 	uint64_t length;
 	uint64_t stride;
 	struct rnndelem **subelems;

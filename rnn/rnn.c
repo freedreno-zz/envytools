@@ -118,8 +118,8 @@ static int getboolattrib (struct rnndb *db, char *file, int line, xmlAttr *attr)
 	return 0;
 }
 
-static uint64_t getnumattrib (struct rnndb *db, char *file, int line, xmlAttr *attr) {
-	char *c = getattrib(db, file, line, attr);
+static uint64_t getnum(struct rnndb *db, char *file, int line, xmlAttr *attr, char *c)
+{
 	char *cc;
 	uint64_t res;
 	if (strchr(c, 'x') || strchr(c, 'X'))
@@ -131,6 +131,11 @@ static uint64_t getnumattrib (struct rnndb *db, char *file, int line, xmlAttr *a
 		db->estatus = 1;
 	}
 	return res;
+}
+
+static uint64_t getnumattrib (struct rnndb *db, char *file, int line, xmlAttr *attr) {
+	char *c = getattrib(db, file, line, attr);
+	return getnum(db, file, line, attr, c);
 }
 
 static int trytop (struct rnndb *db, char *file, xmlNode *node);
@@ -490,6 +495,17 @@ static struct rnndelem *trydelem(struct rnndb *db, char *file, xmlNode *node) {
 				res->name = strdup(getattrib(db, file, node->line, attr));
 			} else if (!strcmp(attr->name, "offset")) {
 				res->offset = getnumattrib(db, file, node->line, attr);
+			} else if (!strcmp(attr->name, "offsets")) {
+				char *str = strdup(getattrib(db, file, node->line, attr));
+				char *tok, *save, *tmp = str;
+				while ((tok = strtok_r(str, ",", &save))) {
+					uint64_t offset = getnum(db, file, node->line, attr, tok);
+					ADDARRAY(res->offsets, offset);
+					str = NULL;
+				}
+				if (str)
+					fprintf(stderr, "%s:%d: invalid offsets: %s\n", file, node->line, str);
+				free(tmp);
 			} else if (!strcmp(attr->name, "length")) {
 				res->length = getnumattrib(db, file, node->line, attr);
 			} else if (!strcmp(attr->name, "stride")) {
@@ -940,6 +956,8 @@ static struct rnndelem *copydelem (struct rnndelem *elem, char *file) {
 	int i;
 	for (i = 0; i < elem->subelemsnum; i++)
 		ADDARRAY(res->subelems, copydelem(elem->subelems[i], file));
+	for (i = 0; i < elem->offsetsnum; i++)
+		ADDARRAY(res->offsets, elem->offsets[i]);
 	return res;
 }
 
