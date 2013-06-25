@@ -47,6 +47,10 @@ uint64_t *strides = 0;
 int stridesnum = 0;
 int stridesmax = 0;
 
+struct rnnenum **indexes = NULL;
+int indexesnum = 0;
+int indexesmax = 0;
+
 int startcol = 64;
 
 struct fout {
@@ -223,31 +227,32 @@ void printbitfield (struct rnnbitfield *bf, int shift) {
 void printdelem (struct rnndelem *elem, uint64_t offset) {
 	if (elem->varinfo.dead)
 		return;
-	if (elem->length != 1)
+	if (elem->length != 1) {
 		ADDARRAY(strides, elem->stride);
+		ADDARRAY(indexes, elem->index);
+	}
 	if (elem->name) {
 		char *regname;
 		asprintf(&regname, "REG_%s", elem->fullname);
 		if (stridesnum) {
-			int len, total;
+			int len;
 			FILE *dst = findfout(elem->file);
-			fprintf (dst, "#define %s(%n", regname, &total);
+			fprintf (dst, "static inline uint32_t %s(", regname);
 			int i;
 			for (i = 0; i < stridesnum; i++) {
-				if (i) {
+				if (i)
 					fprintf(dst, ", ");
-					total += 2;
-				}
+				if (indexes[i])
+					fprintf(dst, "enum %s ", indexes[i]->name);
+				else
+					fprintf(dst, "uint32_t ");
 				fprintf (dst, "i%d%n", i, &len);
-				total += len;
 			}
-			fprintf (dst, ")");
-			total++;
-			seekcol (dst, total, startcol-1);
-			fprintf (dst, "(0x%08"PRIx64"", offset + elem->offset);
+			fprintf (dst, ") { return ");
+			fprintf (dst, "0x%08"PRIx64"", offset + elem->offset);
 			for (i = 0; i < stridesnum; i++)
-				fprintf (dst, " + %#" PRIx64 "*(i%d)", strides[i], i);
-			fprintf (dst, ")\n");
+				fprintf (dst, " + %#" PRIx64 "*i%d", strides[i], i);
+			fprintf (dst, "; }\n");
 		} else
 			printdef (regname, 0, 0, offset + elem->offset, elem->file);
 
@@ -265,7 +270,10 @@ void printdelem (struct rnndelem *elem, uint64_t offset) {
 	for (j = 0; j < elem->subelemsnum; j++) {
 		printdelem(elem->subelems[j], offset + elem->offset);
 	}
-	if (elem->length != 1) stridesnum--;
+	if (elem->length != 1) {
+		stridesnum--;
+		indexesnum--;
+	}
 }
 
 void print_file_info_(FILE *dst, struct stat* sb, struct tm* tm)
