@@ -43,13 +43,9 @@
 #include <sys/wait.h>
 #include <assert.h>
 
-uint64_t *strides = 0;
-int stridesnum = 0;
-int stridesmax = 0;
-
-struct rnnenum **indexes = NULL;
-int indexesnum = 0;
-int indexesmax = 0;
+struct rnndelem **elems = NULL;
+int elemsnum = 0;
+int elemsmax = 0;
 
 int startcol = 64;
 
@@ -227,31 +223,65 @@ void printbitfield (struct rnnbitfield *bf, int shift) {
 void printdelem (struct rnndelem *elem, uint64_t offset) {
 	if (elem->varinfo.dead)
 		return;
-	if (elem->length != 1) {
-		ADDARRAY(strides, elem->stride);
-		ADDARRAY(indexes, elem->index);
-	}
+	if (elem->length != 1)
+		ADDARRAY(elems, elem);
 	if (elem->name) {
 		char *regname;
 		asprintf(&regname, "REG_%s", elem->fullname);
-		if (stridesnum) {
+		if (elemsnum) {
 			int len;
 			FILE *dst = findfout(elem->file);
-			fprintf (dst, "static inline uint32_t %s(", regname);
 			int i;
-			for (i = 0; i < stridesnum; i++) {
+			if (elem->offsets) {
+				fprintf(dst, "static inline uint32_t __offset_%s(", elem->name);
+				if (elem->index)
+					fprintf(dst, "enum %s", elem->index->name);
+				else
+					fprintf(dst, "uint32_t");
+				fprintf(dst, " idx)\n");
+				fprintf(dst, "{\n");
+				fprintf(dst, "\tswitch (idx) {\n");
+				for (i = 0; i < elem->offsetsnum; i++) {
+					struct rnnvalue *val = NULL;
+					fprintf(dst, "\t\tcase ");
+					if (elem->index) {
+						int j;
+						for (j = 0; j < elem->index->valsnum; j++) {
+							if (elem->index->vals[j]->value == i) {
+								val = elem->index->vals[j];
+								break;
+							}
+						}
+					}
+					if (val) {
+						fprintf(dst, "%s", val->name);
+					} else {
+						fprintf(dst, "%d", i);
+					}
+					fprintf(dst, ": return 0x%08lx;\n", elem->offsets[i]);
+				}
+				fprintf(dst, "\t\tdefault: return INVALID_IDX(idx);\n");
+				fprintf(dst, "\t}\n");
+				fprintf(dst, "}\n");
+			}
+			fprintf (dst, "static inline uint32_t %s(", regname);
+			for (i = 0; i < elemsnum; i++) {
 				if (i)
 					fprintf(dst, ", ");
-				if (indexes[i])
-					fprintf(dst, "enum %s ", indexes[i]->name);
+				if (elems[i]->index)
+					fprintf(dst, "enum %s ", elems[i]->index->name);
 				else
 					fprintf(dst, "uint32_t ");
 				fprintf (dst, "i%d%n", i, &len);
 			}
 			fprintf (dst, ") { return ");
 			fprintf (dst, "0x%08"PRIx64"", offset + elem->offset);
-			for (i = 0; i < stridesnum; i++)
-				fprintf (dst, " + %#" PRIx64 "*i%d", strides[i], i);
+			for (i = 0; i < elemsnum; i++) {
+				if (elems[i]->offsets)
+					fprintf(dst, " + __offset_%s(i%d)", elems[i]->name, i);
+				else
+					fprintf (dst, " + %#" PRIx64 "*i%d", elems[i]->stride, i);
+			}
 			fprintf (dst, "; }\n");
 		} else
 			printdef (regname, 0, 0, offset + elem->offset, elem->file);
@@ -270,10 +300,7 @@ void printdelem (struct rnndelem *elem, uint64_t offset) {
 	for (j = 0; j < elem->subelemsnum; j++) {
 		printdelem(elem->subelems[j], offset + elem->offset);
 	}
-	if (elem->length != 1) {
-		stridesnum--;
-		indexesnum--;
-	}
+	if (elem->length != 1) elemsnum--;
 }
 
 void print_file_info_(FILE *dst, struct stat* sb, struct tm* tm)
