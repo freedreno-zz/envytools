@@ -105,6 +105,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_NORM_USHORT_4444" value="0x7"/>
 	<value name="TFMT_NORM_UINT_X8Z24" value="0xa"/>
 
+	<!--
+		YUV formats.. the different Y plane formats (ie. NV12 vs I420)
+		should really be the same thing.  Ie. it is just a bunch of Y
+		values in both cases.  But I guess the different values tell
+		the hw what to do with the next 2 texture samplers, since the
+		blob driver appears to setup 3 texture samplers for I420, NV12,
+		and NV21
+	 -->
+	<value name="TFMT_NORM_UINT_NV12_UV_TILED" value="0x11"/>
+	<value name="TFMT_NORM_UINT_NV12_Y_TILED" value="0x13"/>
+	<value name="TFMT_NORM_UINT_NV12_UV" value="0x15"/>
+	<value name="TFMT_NORM_UINT_NV12_Y" value="0x17"/>
+	<value name="TFMT_NORM_UINT_I420_Y" value="0x18"/>
+	<value name="TFMT_NORM_UINT_I420_U" value="0x1a"/>
+	<value name="TFMT_NORM_UINT_I420_V" value="0x1b"/>
+
 	<value name="TFMT_NORM_UINT_2_10_10_10" value="0x29"/>
 	<value name="TFMT_NORM_UINT_A8" value="0x2c"/>    <!-- GL_ALPHA -->
 	<value name="TFMT_NORM_UINT_L8_A8" value="0x2f"/> <!-- GL_LUMINANCE_ALPHA -->
@@ -902,6 +918,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A3XX_TEX_ZERO" value="4"/>
 		<value name="A3XX_TEX_ONE" value="5"/>
 	</enum>
+	<enum name="a3xx_tex_type">
+		<value name="A3XX_TEX_1D" value="0"/>
+		<value name="A3XX_TEX_2D" value="1"/>
+		<value name="A3XX_TEX_CUBE" value="2"/>
+		<value name="A3XX_TEX_3D" value="3"/>
+	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="TILED" pos="0" type="boolean"/>
 		<bitfield name="SWIZ_X" low="4" high="6" type="a3xx_tex_swiz"/>
@@ -909,6 +931,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a3xx_tex_swiz"/>
 		<bitfield name="FMT" low="22" high="28" type="a3xx_tex_fmt"/>
+		<bitfield name="TYPE" low="30" high="31" type="a3xx_tex_type"/>
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="HEIGHT" low="0" high="13" type="uint"/>
