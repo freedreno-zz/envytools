@@ -6,18 +6,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <domain name="MDP4" width="32">
 	<enum name="mpd4_bpc">
-		<brief>bits per component</brief>
+		<brief>bits per component (non-alpha channel)</brief>
 		<value name="BPC1" value="0"/> <!-- 1 bit -->
-		<value name="BPC2" value="1"/> <!-- 2 bits -->
+		<value name="BPC5" value="1"/> <!-- 2 bits -->
 		<value name="BPC6" value="2"/> <!-- 6 bits -->
 		<value name="BPC8" value="3"/> <!-- 8 bits -->
 	</enum>
 
-	<enum name="mpd4_dma_bpc">
-		<brief>bits per component for dmae cnfg</brief>
-		<value name="DBPC5" value="1"/> <!-- 5 bits -->
-		<value name="DBPC6" value="2"/> <!-- 6 bits -->
-		<value name="DBPC8" value="3"/> <!-- 8 bits -->
+	<enum name="mpd4_bpc_alpha">
+		<brief>bits per component (alpha channel)</brief>
+		<value name="BPC1A" value="0"/> <!-- 1 bit -->
+		<value name="BPC4A" value="1"/> <!-- 2 bits -->
+		<value name="BPC6A" value="2"/> <!-- 6 bits -->
+		<value name="BPC8A" value="3"/> <!-- 8 bits -->
 	</enum>
 
 	<enum name="mpd4_alpha_type">
@@ -256,9 +257,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xb0070" name="DMA_E_QUANT" length="3" stride="4"/>
 	<array offsets="0x90000,0xa0000,0xb0000" name="DMA" length="3" stride="0x10000" index="mdp4_dma">
 		<reg32 offset="0x0000" name="CONFIG">
-			<bitfield name="G_BPC" low="0" high="1" type="mpd4_dma_bpc"/>
-			<bitfield name="B_BPC" low="2" high="3" type="mpd4_dma_bpc"/>
-			<bitfield name="R_BPC" low="4" high="5" type="mpd4_dma_bpc"/>
+			<bitfield name="G_BPC" low="0" high="1" type="mpd4_bpc"/>
+			<bitfield name="B_BPC" low="2" high="3" type="mpd4_bpc"/>
+			<bitfield name="R_BPC" low="4" high="5" type="mpd4_bpc"/>
 			<bitfield name="PACK_ALIGN_MSB" pos="7" type="boolean"/>
 			<bitfield name="PACK" low="8" high="15"/>
 			<!-- bit 24 is DITHER_EN on DMA_P, DEFLKR_EN on DMA_E -->
@@ -300,7 +301,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="G_BPC" low="0" high="1" type="mpd4_bpc"/>
 			<bitfield name="B_BPC" low="2" high="3" type="mpd4_bpc"/>
 			<bitfield name="R_BPC" low="4" high="5" type="mpd4_bpc"/>
-			<bitfield name="A_BPC" low="6" high="7" type="mpd4_bpc"/>
+			<bitfield name="A_BPC" low="6" high="7" type="mpd4_bpc_alpha"/>
 			<bitfield name="ALPHA_ENABLE" pos="8" type="boolean"/>
 			<bitfield name="CPP" low="9" high="10" type="uint">
 				<brief>8bit characters per pixel minus 1</brief>
