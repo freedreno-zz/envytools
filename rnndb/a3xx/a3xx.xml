@@ -204,16 +204,66 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0022" name="RBBM_AHB_CMD"/>
 	<reg32 offset="0x0027" name="RBBM_AHB_ERROR_STATUS"/>
 	<reg32 offset="0x002e" name="RBBM_GPR0_CTL"/>
-	<reg32 offset="0x0030" name="RBBM_STATUS"/>
+	<reg32 offset="0x0030" name="RBBM_STATUS">
+		<bitfield name="HI_BUSY" pos="0" type="boolean"/>
+		<bitfield name="CP_ME_BUSY" pos="1" type="boolean"/>
+		<bitfield name="CP_PFP_BUSY" pos="2" type="boolean"/>
+		<bitfield name="CP_NRT_BUSY" pos="14" type="boolean"/>
+		<bitfield name="VBIF_BUSY" pos="15" type="boolean"/>
+		<bitfield name="TSE_BUSY" pos="16" type="boolean"/>
+		<bitfield name="RAS_BUSY" pos="17" type="boolean"/>
+		<bitfield name="RB_BUSY" pos="18" type="boolean"/>
+		<bitfield name="PC_DCALL_BUSY" pos="19" type="boolean"/>
+		<bitfield name="PC_VSD_BUSY" pos="20" type="boolean"/>
+		<bitfield name="VFD_BUSY" pos="21" type="boolean"/>
+		<bitfield name="VPC_BUSY" pos="22" type="boolean"/>
+		<bitfield name="UCHE_BUSY" pos="23" type="boolean"/>
+		<bitfield name="SP_BUSY" pos="24" type="boolean"/>
+		<bitfield name="TPL1_BUSY" pos="25" type="boolean"/>
+		<bitfield name="MARB_BUSY" pos="26" type="boolean"/>
+		<bitfield name="VSC_BUSY" pos="27" type="boolean"/>
+		<bitfield name="ARB_BUSY" pos="28" type="boolean"/>
+		<bitfield name="HLSQ_BUSY" pos="29" type="boolean"/>
+		<bitfield name="GPU_BUSY_NOHC" pos="30" type="boolean"/>
+		<bitfield name="GPU_BUSY" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0033" name="RBBM_WAIT_IDLE_CLOCKS_CTL"/>
 	<reg32 offset="0x0050" name="RBBM_INTERFACE_HANG_INT_CTL"/>
 	<reg32 offset="0x0051" name="RBBM_INTERFACE_HANG_MASK_CTL0"/>
 	<reg32 offset="0x0054" name="RBBM_INTERFACE_HANG_MASK_CTL1"/>
 	<reg32 offset="0x0057" name="RBBM_INTERFACE_HANG_MASK_CTL2"/>
 	<reg32 offset="0x005a" name="RBBM_INTERFACE_HANG_MASK_CTL3"/>
-	<reg32 offset="0x0061" name="RBBM_INT_CLEAR_CMD"/>
-	<reg32 offset="0x0063" name="RBBM_INT_0_MASK"/>
-	<reg32 offset="0x0064" name="RBBM_INT_0_STATUS"/>
+
+	<bitset name="A3XX_INT0">
+		<bitfield name="RBBM_GPU_IDLE" pos="0"/>
+		<bitfield name="RBBM_AHB_ERROR" pos="1"/>
+		<bitfield name="RBBM_REG_TIMEOUT" pos="2"/>
+		<bitfield name="RBBM_ME_MS_TIMEOUT" pos="3"/>
+		<bitfield name="RBBM_PFP_MS_TIMEOUT" pos="4"/>
+		<bitfield name="RBBM_ATB_BUS_OVERFLOW" pos="5"/>
+		<bitfield name="VFD_ERROR" pos="6"/>
+		<bitfield name="CP_SW_INT" pos="7"/>
+		<bitfield name="CP_T0_PACKET_IN_IB" pos="8"/>
+		<bitfield name="CP_OPCODE_ERROR" pos="9"/>
+		<bitfield name="CP_RESERVED_BIT_ERROR" pos="10"/>
+		<bitfield name="CP_HW_FAULT" pos="11"/>
+		<bitfield name="CP_DMA" pos="12"/>
+		<bitfield name="CP_IB2_INT" pos="13"/>
+		<bitfield name="CP_IB1_INT" pos="14"/>
+		<bitfield name="CP_RB_INT" pos="15"/>
+		<bitfield name="CP_REG_PROTECT_FAULT" pos="16"/>
+		<bitfield name="CP_RB_DONE_TS" pos="17"/>
+		<bitfield name="CP_VS_DONE_TS" pos="18"/>
+		<bitfield name="CP_PS_DONE_TS" pos="19"/>
+		<bitfield name="CACHE_FLUSH_TS" pos="20"/>
+		<bitfield name="CP_AHB_ERROR_HALT" pos="21"/>
+		<bitfield name="MISC_HANG_DETECT" pos="24"/>
+		<bitfield name="UCHE_OOB_ACCESS" pos="25"/>
+	</bitset>
+
+	<reg32 offset="0x0061" name="RBBM_INT_CLEAR_CMD" type="A3XX_INT0"/>
+	<reg32 offset="0x0063" name="RBBM_INT_0_MASK" type="A3XX_INT0"/>
+	<reg32 offset="0x0064" name="RBBM_INT_0_STATUS" type="A3XX_INT0"/>
 	<reg32 offset="0x0080" name="RBBM_PERFCTR_CTL"/>
 	<reg32 offset="0x0088" name="RBBM_GPU_BUSY_MASKED"/>
 	<reg32 offset="0x00e0" name="RBBM_PERFCTR_SP_7_LO"/>

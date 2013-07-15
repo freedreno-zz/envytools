@@ -189,31 +189,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x003c" name="RBBM_SOFT_RESET"/>
 	<reg32 offset="0x00c0" name="CP_PFP_UCODE_ADDR"/>
 	<reg32 offset="0x00c1" name="CP_PFP_UCODE_DATA"/>
-	<reg32 offset="0x01c0" name="CP_RB_BASE"/>
-	<reg32 offset="0x01c1" name="CP_RB_CNTL"/>
-	<reg32 offset="0x01c3" name="CP_RB_RPTR_ADDR"/>
-	<reg32 offset="0x01c4" name="CP_RB_RPTR"/>
-	<reg32 offset="0x01c5" name="CP_RB_WPTR"/>
-	<reg32 offset="0x01c6" name="CP_RB_WPTR_DELAY"/>
-	<reg32 offset="0x01c7" name="CP_RB_RPTR_WR"/>
-	<reg32 offset="0x01c8" name="CP_RB_WPTR_BASE"/>
-	<reg32 offset="0x01d5" name="CP_QUEUE_THRESHOLDS"/>
-	<reg32 offset="0x01dc" name="SCRATCH_UMSK"/>
-	<reg32 offset="0x01dd" name="SCRATCH_ADDR"/>
-	<reg32 offset="0x01ec" name="CP_STATE_DEBUG_INDEX"/>
-	<reg32 offset="0x01ed" name="CP_STATE_DEBUG_DATA"/>
-	<reg32 offset="0x01f2" name="CP_INT_CNTL"/>
-	<reg32 offset="0x01f3" name="CP_INT_STATUS"/>
-	<reg32 offset="0x01f4" name="CP_INT_ACK"/>
-	<reg32 offset="0x01f6" name="CP_ME_CNTL"/>
-	<reg32 offset="0x01f7" name="CP_ME_STATUS"/>
-	<reg32 offset="0x01f8" name="CP_ME_RAM_WADDR"/>
-	<reg32 offset="0x01f9" name="CP_ME_RAM_RADDR"/>
-	<reg32 offset="0x01fa" name="CP_ME_RAM_DATA"/>
-	<reg32 offset="0x01fc" name="CP_DEBUG"/>
-	<reg32 offset="0x01fd" name="CP_CSQ_RB_STAT"/>
-	<reg32 offset="0x01fe" name="CP_CSQ_IB1_STAT"/>
-	<reg32 offset="0x01ff" name="CP_CSQ_IB2_STAT"/>
+
 	<reg32 offset="0x0395" name="RBBM_PERFCOUNTER1_SELECT"/>
 	<reg32 offset="0x0397" name="RBBM_PERFCOUNTER1_LO"/>
 	<reg32 offset="0x0398" name="RBBM_PERFCOUNTER1_HI"/>
@@ -242,7 +218,28 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x047f" name="CP_STAT"/>
 	<reg32 offset="0x0578" name="SCRATCH_REG0"/>
 	<reg32 offset="0x057a" name="SCRATCH_REG2"/>
-	<reg32 offset="0x05d0" name="RBBM_STATUS"/>
+	<reg32 offset="0x05d0" name="RBBM_STATUS">
+		<bitfield name="CMDFIFO_AVAIL" low="0" high="4" type="uint"/>
+		<bitfield name="TC_BUSY" pos="5" type="boolean"/>
+		<bitfield name="HIRQ_PENDING" pos="8" type="boolean"/>
+		<bitfield name="CPRQ_PENDING" pos="9" type="boolean"/>
+		<bitfield name="CFRQ_PENDING" pos="10" type="boolean"/>
+		<bitfield name="PFRQ_PENDING" pos="11" type="boolean"/>
+		<bitfield name="VGT_BUSY_NO_DMA" pos="12" type="boolean"/>
+		<bitfield name="RBBM_WU_BUSY" pos="14" type="boolean"/>
+		<bitfield name="CP_NRT_BUSY" pos="16" type="boolean"/>
+		<bitfield name="MH_BUSY" pos="18" type="boolean"/>
+		<bitfield name="MH_COHERENCY_BUSY" pos="19" type="boolean"/>
+		<bitfield name="SX_BUSY" pos="21" type="boolean"/>
+		<bitfield name="TPC_BUSY" pos="22" type="boolean"/>
+		<bitfield name="SC_CNTX_BUSY" pos="24" type="boolean"/>
+		<bitfield name="PA_BUSY" pos="25" type="boolean"/>
+		<bitfield name="VGT_BUSY" pos="26" type="boolean"/>
+		<bitfield name="SQ_CNTX17_BUSY" pos="27" type="boolean"/>
+		<bitfield name="SQ_CNTX0_BUSY" pos="28" type="boolean"/>
+		<bitfield name="RB_CNTX_BUSY" pos="30" type="boolean"/>
+		<bitfield name="GUI_ACTIVE" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0c01" name="A220_VSC_BIN_SIZE">
 		<bitfield name="WIDTH" low="0" high="4" shr="5" type="uint"/>
 		<bitfield name="HEIGHT" low="5" high="9" shr="5" type="uint"/>
