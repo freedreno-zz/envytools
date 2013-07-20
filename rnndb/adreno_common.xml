@@ -164,9 +164,27 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SIMPLE_ME_FLOW_CONTROL" pos="30" type="boolean"/>
 		<bitfield name="MIU_WRITE_PACK_DISABLE" pos="31" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x01fd" name="CP_CSQ_RB_STAT"/>
-	<reg32 offset="0x01fe" name="CP_CSQ_IB1_STAT"/>
-	<reg32 offset="0x01ff" name="CP_CSQ_IB2_STAT"/>
+	<reg32 offset="0x01fd" name="CP_CSQ_RB_STAT">
+		<bitfield name="RPTR" low="0" high="6" type="uint"/>
+		<bitfield name="WPTR" low="16" high="22" type="uint"/>
+	</reg32>
+	<reg32 offset="0x01fe" name="CP_CSQ_IB1_STAT">
+		<bitfield name="RPTR" low="0" high="6" type="uint"/>
+		<bitfield name="WPTR" low="16" high="22" type="uint"/>
+	</reg32>
+	<reg32 offset="0x01ff" name="CP_CSQ_IB2_STAT">
+		<bitfield name="RPTR" low="0" high="6" type="uint"/>
+		<bitfield name="WPTR" low="16" high="22" type="uint"/>
+	</reg32>
+
+	<reg32 offset="0x0578" name="CP_SCRATCH_REG0"/>
+	<reg32 offset="0x0579" name="CP_SCRATCH_REG1"/>
+	<reg32 offset="0x057a" name="CP_SCRATCH_REG2"/>
+	<reg32 offset="0x057b" name="CP_SCRATCH_REG3"/>
+	<reg32 offset="0x057c" name="CP_SCRATCH_REG4"/>
+	<reg32 offset="0x057d" name="CP_SCRATCH_REG5"/>
+	<reg32 offset="0x057e" name="CP_SCRATCH_REG6"/>
+	<reg32 offset="0x057f" name="CP_SCRATCH_REG7"/>
 </domain>
 
 </database>

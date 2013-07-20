@@ -216,8 +216,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x045a" name="CP_IB2_BASE"/>
 	<reg32 offset="0x045b" name="CP_IB2_BUFSZ"/>
 	<reg32 offset="0x047f" name="CP_STAT"/>
-	<reg32 offset="0x0578" name="SCRATCH_REG0"/>
-	<reg32 offset="0x057a" name="SCRATCH_REG2"/>
 	<reg32 offset="0x05d0" name="RBBM_STATUS">
 		<bitfield name="CMDFIFO_AVAIL" low="0" high="4" type="uint"/>
 		<bitfield name="TC_BUSY" pos="5" type="boolean"/>

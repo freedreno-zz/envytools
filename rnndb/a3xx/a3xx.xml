@@ -292,8 +292,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
 	<reg32 offset="0x054d" name="CP_AHB_FAULT"/>
-	<reg32 offset="0x057a" name="CP_SCRATCH_REG2"/>
-	<reg32 offset="0x057b" name="CP_SCRATCH_REG3"/>
 
 	<!-- GRAS registers -->
 	<reg32 offset="0x2040" name="GRAS_CL_CLIP_CNTL">
