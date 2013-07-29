@@ -129,8 +129,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWAP" low="0" high="1" type="uint"/>
 		<bitfield name="ADDR" low="2" high="31" shr="2"/>
 	</reg32>
-	<reg32 offset="0x01c4" name="CP_RB_RPTR"/>
-	<reg32 offset="0x01c5" name="CP_RB_WPTR"/>
+	<reg32 offset="0x01c4" name="CP_RB_RPTR" type="uint"/>
+	<reg32 offset="0x01c5" name="CP_RB_WPTR" type="uint"/>
 	<reg32 offset="0x01c6" name="CP_RB_WPTR_DELAY"/>
 	<reg32 offset="0x01c7" name="CP_RB_RPTR_WR"/>
 	<reg32 offset="0x01c8" name="CP_RB_WPTR_BASE"/>
@@ -139,11 +139,25 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CSQ_IB2_START" low="8" high="11" type="uint"/>
 		<bitfield name="CSQ_ST_START" low="16" high="19" type="uint"/>
 	</reg32>
+	<reg32 offset="0x01d6" name="CP_MEQ_THRESHOLDS"/>
+	<reg32 offset="0x01d7" name="CP_CSQ_AVAIL">
+		<bitfield name="RING" low="0" high="6" type="uint"/>
+		<bitfield name="IB1" low="8" high="14" type="uint"/>
+		<bitfield name="IB2" low="16" high="22" type="uint"/>
+	</reg32>
+	<reg32 offset="0x01d8" name="CP_STQ_AVAIL">
+		<bitfield name="ST" low="0" high="6" type="uint"/>
+	</reg32>
+	<reg32 offset="0x01d9" name="CP_MEQ_AVAIL">
+		<bitfield name="MEQ" low="0" high="4" type="uint"/>
+	</reg32>
 	<reg32 offset="0x01dc" name="SCRATCH_UMSK">
 		<bitfield name="UMSK" low="0" high="7" type="uint"/>
 		<bitfield name="SWAP" low="16" high="17" type="uint"/>
 	</reg32>
 	<reg32 offset="0x01dd" name="SCRATCH_ADDR"/>
+	<reg32 offset="0x01ea" name="CP_ME_RDADDR"/>
+
 	<reg32 offset="0x01ec" name="CP_STATE_DEBUG_INDEX"/>
 	<reg32 offset="0x01ed" name="CP_STATE_DEBUG_DATA"/>
 	<reg32 offset="0x01f2" name="CP_INT_CNTL"/>
@@ -177,14 +191,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WPTR" low="16" high="22" type="uint"/>
 	</reg32>
 
-	<reg32 offset="0x0578" name="CP_SCRATCH_REG0"/>
-	<reg32 offset="0x0579" name="CP_SCRATCH_REG1"/>
-	<reg32 offset="0x057a" name="CP_SCRATCH_REG2"/>
-	<reg32 offset="0x057b" name="CP_SCRATCH_REG3"/>
-	<reg32 offset="0x057c" name="CP_SCRATCH_REG4"/>
-	<reg32 offset="0x057d" name="CP_SCRATCH_REG5"/>
-	<reg32 offset="0x057e" name="CP_SCRATCH_REG6"/>
-	<reg32 offset="0x057f" name="CP_SCRATCH_REG7"/>
+	<reg32 offset="0x0578" name="CP_SCRATCH_REG0" type="uint"/>
+	<reg32 offset="0x0579" name="CP_SCRATCH_REG1" type="uint"/>
+	<reg32 offset="0x057a" name="CP_SCRATCH_REG2" type="uint"/>
+	<reg32 offset="0x057b" name="CP_SCRATCH_REG3" type="uint"/>
+	<reg32 offset="0x057c" name="CP_SCRATCH_REG4" type="uint"/>
+	<reg32 offset="0x057d" name="CP_SCRATCH_REG5" type="uint"/>
+	<reg32 offset="0x057e" name="CP_SCRATCH_REG6" type="uint"/>
+	<reg32 offset="0x057f" name="CP_SCRATCH_REG7" type="uint"/>
+
+	<reg32 offset="0x060a" name="CP_ME_CF_EVENT_SRC"/>
+	<reg32 offset="0x060b" name="CP_ME_CF_EVENT_ADDR"/>
+	<reg32 offset="0x060c" name="CP_ME_CF_EVENT_DATA" type="uint"/>
+	<reg32 offset="0x060d" name="CP_ME_NRT_ADDR"/>
+	<reg32 offset="0x060e" name="CP_ME_NRT_DATA"/>
+
 </domain>
 
 </database>
