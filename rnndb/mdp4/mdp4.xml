@@ -76,6 +76,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="INTF_DSI_CMD" value="2"/>
 		<value name="INTF_EBI2_TV" value="3"/>   <!-- EBI2 or TV (external) -->
 	</enum>
+	<enum name="mdp4_cursor_format">
+		<value name="CURSOR_ARGB" value="1"/>
+		<value name="CURSOR_XRGB" value="2"/>
+	</enum>
 
 	<bitset name="mpd4_layermixer_in_cfg" inline="yes">
 		<brief>appears to map pipe to mixer stage</brief>
@@ -270,6 +274,26 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0008" name="SRC_BASE"/>
 		<reg32 offset="0x000c" name="SRC_STRIDE" type="uint"/>
 		<reg32 offset="0x0010" name="DST_SIZE" type="reg_wh"/>
+
+		<reg32 offset="0x0044" name="CURSOR_SIZE">
+			<!-- seems the limit is 64x64: -->
+			<bitfield name="WIDTH" low="0" high="6" type="uint"/>
+			<bitfield name="HEIGHT" low="16" high="22" type="uint"/>
+		</reg32>
+		<reg32 offset="0x0048" name="CURSOR_BASE"/>
+		<reg32 offset="0x004c" name="CURSOR_POS">
+			<bitfield name="X" low="0" high="15" type="uint"/>
+			<bitfield name="Y" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x0060" name="CURSOR_BLEND_CONFIG">
+			<bitfield name="CURSOR_EN" pos="0" type="boolean"/>
+			<bitfield name="FORMAT" low="1" high="2" type="mdp4_cursor_format"/>
+			<bitfield name="TRANSP_EN" pos="3" type="boolean"/>
+		</reg32>
+		<reg32 offset="0x0064" name="CURSOR_BLEND_PARAM"/>
+		<reg32 offset="0x0068" name="BLEND_TRANS_LOW"/>
+		<reg32 offset="0x006c" name="BLEND_TRANS_HIGH"/>
+
 		<reg32 offset="0x1004" name="FETCH_CONFIG"/>
 		<array offset="0x3000" name="CSC" length="1" stride="0x700">
 			<use-group name="mpd4_csc"/>
