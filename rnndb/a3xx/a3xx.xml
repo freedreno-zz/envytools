@@ -265,12 +265,103 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0063" name="RBBM_INT_0_MASK" type="A3XX_INT0"/>
 	<reg32 offset="0x0064" name="RBBM_INT_0_STATUS" type="A3XX_INT0"/>
 	<reg32 offset="0x0080" name="RBBM_PERFCTR_CTL"/>
+	<reg32 offset="0x0081" name="RBBM_PERFCTR_LOAD_CMD0"/>
+	<reg32 offset="0x0082" name="RBBM_PERFCTR_LOAD_CMD1"/>
+	<reg32 offset="0x0084" name="RBBM_PERFCTR_LOAD_VALUE_LO"/>
+	<reg32 offset="0x0085" name="RBBM_PERFCTR_LOAD_VALUE_HI"/>
+	<reg32 offset="0x0086" name="RBBM_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0087" name="RBBM_PERFCOUNTER1_SELECT"/>
 	<reg32 offset="0x0088" name="RBBM_GPU_BUSY_MASKED"/>
+	<reg32 offset="0x0090" name="RBBM_PERFCTR_CP_0_LO"/>
+	<reg32 offset="0x0091" name="RBBM_PERFCTR_CP_0_HI"/>
+	<reg32 offset="0x0092" name="RBBM_PERFCTR_RBBM_0_LO"/>
+	<reg32 offset="0x0093" name="RBBM_PERFCTR_RBBM_0_HI"/>
+	<reg32 offset="0x0094" name="RBBM_PERFCTR_RBBM_1_LO"/>
+	<reg32 offset="0x0095" name="RBBM_PERFCTR_RBBM_1_HI"/>
+	<reg32 offset="0x0096" name="RBBM_PERFCTR_PC_0_LO"/>
+	<reg32 offset="0x0097" name="RBBM_PERFCTR_PC_0_HI"/>
+	<reg32 offset="0x0098" name="RBBM_PERFCTR_PC_1_LO"/>
+	<reg32 offset="0x0099" name="RBBM_PERFCTR_PC_1_HI"/>
+	<reg32 offset="0x009a" name="RBBM_PERFCTR_PC_2_LO"/>
+	<reg32 offset="0x009b" name="RBBM_PERFCTR_PC_2_HI"/>
+	<reg32 offset="0x009c" name="RBBM_PERFCTR_PC_3_LO"/>
+	<reg32 offset="0x009d" name="RBBM_PERFCTR_PC_3_HI"/>
+	<reg32 offset="0x009e" name="RBBM_PERFCTR_VFD_0_LO"/>
+	<reg32 offset="0x009f" name="RBBM_PERFCTR_VFD_0_HI"/>
+	<reg32 offset="0x00a0" name="RBBM_PERFCTR_VFD_1_LO"/>
+	<reg32 offset="0x00a1" name="RBBM_PERFCTR_VFD_1_HI"/>
+	<reg32 offset="0x00a2" name="RBBM_PERFCTR_HLSQ_0_LO"/>
+	<reg32 offset="0x00a3" name="RBBM_PERFCTR_HLSQ_0_HI"/>
+	<reg32 offset="0x00a4" name="RBBM_PERFCTR_HLSQ_1_LO"/>
+	<reg32 offset="0x00a5" name="RBBM_PERFCTR_HLSQ_1_HI"/>
+	<reg32 offset="0x00a6" name="RBBM_PERFCTR_HLSQ_2_LO"/>
+	<reg32 offset="0x00a7" name="RBBM_PERFCTR_HLSQ_2_HI"/>
+	<reg32 offset="0x00a8" name="RBBM_PERFCTR_HLSQ_3_LO"/>
+	<reg32 offset="0x00a9" name="RBBM_PERFCTR_HLSQ_3_HI"/>
+	<reg32 offset="0x00aa" name="RBBM_PERFCTR_HLSQ_4_LO"/>
+	<reg32 offset="0x00ab" name="RBBM_PERFCTR_HLSQ_4_HI"/>
+	<reg32 offset="0x00ac" name="RBBM_PERFCTR_HLSQ_5_LO"/>
+	<reg32 offset="0x00ad" name="RBBM_PERFCTR_HLSQ_5_HI"/>
+	<reg32 offset="0x00ae" name="RBBM_PERFCTR_VPC_0_LO"/>
+	<reg32 offset="0x00af" name="RBBM_PERFCTR_VPC_0_HI"/>
+	<reg32 offset="0x00b0" name="RBBM_PERFCTR_VPC_1_LO"/>
+	<reg32 offset="0x00b1" name="RBBM_PERFCTR_VPC_1_HI"/>
+	<reg32 offset="0x00b2" name="RBBM_PERFCTR_TSE_0_LO"/>
+	<reg32 offset="0x00b3" name="RBBM_PERFCTR_TSE_0_HI"/>
+	<reg32 offset="0x00b4" name="RBBM_PERFCTR_TSE_1_LO"/>
+	<reg32 offset="0x00b5" name="RBBM_PERFCTR_TSE_1_HI"/>
+	<reg32 offset="0x00b6" name="RBBM_PERFCTR_RAS_0_LO"/>
+	<reg32 offset="0x00b7" name="RBBM_PERFCTR_RAS_0_HI"/>
+	<reg32 offset="0x00b8" name="RBBM_PERFCTR_RAS_1_LO"/>
+	<reg32 offset="0x00b9" name="RBBM_PERFCTR_RAS_1_HI"/>
+	<reg32 offset="0x00ba" name="RBBM_PERFCTR_UCHE_0_LO"/>
+	<reg32 offset="0x00bb" name="RBBM_PERFCTR_UCHE_0_HI"/>
+	<reg32 offset="0x00bc" name="RBBM_PERFCTR_UCHE_1_LO"/>
+	<reg32 offset="0x00bd" name="RBBM_PERFCTR_UCHE_1_HI"/>
+	<reg32 offset="0x00be" name="RBBM_PERFCTR_UCHE_2_LO"/>
+	<reg32 offset="0x00bf" name="RBBM_PERFCTR_UCHE_2_HI"/>
+	<reg32 offset="0x00c0" name="RBBM_PERFCTR_UCHE_3_LO"/>
+	<reg32 offset="0x00c1" name="RBBM_PERFCTR_UCHE_3_HI"/>
+	<reg32 offset="0x00c2" name="RBBM_PERFCTR_UCHE_4_LO"/>
+	<reg32 offset="0x00c3" name="RBBM_PERFCTR_UCHE_4_HI"/>
+	<reg32 offset="0x00c4" name="RBBM_PERFCTR_UCHE_5_LO"/>
+	<reg32 offset="0x00c5" name="RBBM_PERFCTR_UCHE_5_HI"/>
+	<reg32 offset="0x00c6" name="RBBM_PERFCTR_TP_0_LO"/>
+	<reg32 offset="0x00c7" name="RBBM_PERFCTR_TP_0_HI"/>
+	<reg32 offset="0x00c8" name="RBBM_PERFCTR_TP_1_LO"/>
+	<reg32 offset="0x00c9" name="RBBM_PERFCTR_TP_1_HI"/>
+	<reg32 offset="0x00ca" name="RBBM_PERFCTR_TP_2_LO"/>
+	<reg32 offset="0x00cb" name="RBBM_PERFCTR_TP_2_HI"/>
+	<reg32 offset="0x00cc" name="RBBM_PERFCTR_TP_3_LO"/>
+	<reg32 offset="0x00cd" name="RBBM_PERFCTR_TP_3_HI"/>
+	<reg32 offset="0x00ce" name="RBBM_PERFCTR_TP_4_LO"/>
+	<reg32 offset="0x00cf" name="RBBM_PERFCTR_TP_4_HI"/>
+	<reg32 offset="0x00d0" name="RBBM_PERFCTR_TP_5_LO"/>
+	<reg32 offset="0x00d1" name="RBBM_PERFCTR_TP_5_HI"/>
+	<reg32 offset="0x00d2" name="RBBM_PERFCTR_SP_0_LO"/>
+	<reg32 offset="0x00d3" name="RBBM_PERFCTR_SP_0_HI"/>
+	<reg32 offset="0x00d4" name="RBBM_PERFCTR_SP_1_LO"/>
+	<reg32 offset="0x00d5" name="RBBM_PERFCTR_SP_1_HI"/>
+	<reg32 offset="0x00d6" name="RBBM_PERFCTR_SP_2_LO"/>
+	<reg32 offset="0x00d7" name="RBBM_PERFCTR_SP_2_HI"/>
+	<reg32 offset="0x00d8" name="RBBM_PERFCTR_SP_3_LO"/>
+	<reg32 offset="0x00d9" name="RBBM_PERFCTR_SP_3_HI"/>
+	<reg32 offset="0x00da" name="RBBM_PERFCTR_SP_4_LO"/>
+	<reg32 offset="0x00db" name="RBBM_PERFCTR_SP_4_HI"/>
+	<reg32 offset="0x00dc" name="RBBM_PERFCTR_SP_5_LO"/>
+	<reg32 offset="0x00dd" name="RBBM_PERFCTR_SP_5_HI"/>
+	<reg32 offset="0x00de" name="RBBM_PERFCTR_SP_6_LO"/>
+	<reg32 offset="0x00df" name="RBBM_PERFCTR_SP_6_HI"/>
 	<reg32 offset="0x00e0" name="RBBM_PERFCTR_SP_7_LO"/>
 	<reg32 offset="0x00e1" name="RBBM_PERFCTR_SP_7_HI"/>
+	<reg32 offset="0x00e2" name="RBBM_PERFCTR_RB_0_LO"/>
+	<reg32 offset="0x00e3" name="RBBM_PERFCTR_RB_0_HI"/>
+	<reg32 offset="0x00e4" name="RBBM_PERFCTR_RB_1_LO"/>
+	<reg32 offset="0x00e5" name="RBBM_PERFCTR_RB_1_HI"/>
+	<reg32 offset="0x00ea" name="RBBM_PERFCTR_PWR_0_LO"/>
+	<reg32 offset="0x00eb" name="RBBM_PERFCTR_PWR_0_HI"/>
 	<reg32 offset="0x00ec" name="RBBM_PERFCTR_PWR_1_LO"/>
 	<reg32 offset="0x00ed" name="RBBM_PERFCTR_PWR_1_HI"/>
-	<reg32 offset="0x0100" name="RBBM_RBBM_CTL"/>
 	<reg32 offset="0x0100" name="RBBM_RBBM_CTL"/>
 	<reg32 offset="0x0111" name="RBBM_DEBUG_BUS_CTL"/>
 	<reg32 offset="0x0112" name="RBBM_DEBUG_BUS_DATA_STATUS"/>
@@ -285,6 +376,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x01d3" name="CP_MERCIU_DATA2"/>
 	<reg32 offset="0x01da" name="CP_MEQ_ADDR"/>
 	<reg32 offset="0x01db" name="CP_MEQ_DATA"/>
+	<reg32 offset="0x0445" name="CP_PERFCOUNTER_SELECT"/>
 	<reg32 offset="0x045c" name="CP_HW_FAULT"/>
 	<reg32 offset="0x045e" name="CP_PROTECT_CTRL"/>
 	<reg32 offset="0x045f" name="CP_PROTECT_STATUS"/>
@@ -880,9 +972,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0c3d" name="UNKNOWN_0C3D">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
+	<reg32 offset="0x0c48" name="PC_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0c49" name="PC_PERFCOUNTER1_SELECT"/>
+	<reg32 offset="0x0c4a" name="PC_PERFCOUNTER2_SELECT"/>
+	<reg32 offset="0x0c4b" name="PC_PERFCOUNTER3_SELECT"/>
 	<reg32 offset="0x0c81" name="UNKNOWN_0C81">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
+	<reg32 offset="0x0c88" name="GRAS_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0c89" name="GRAS_PERFCOUNTER1_SELECT"/>
+	<reg32 offset="0x0c8a" name="GRAS_PERFCOUNTER2_SELECT"/>
+	<reg32 offset="0x0c8b" name="GRAS_PERFCOUNTER3_SELECT"/>
 	<array offset="0x0ca0" name="GRAS_CL_USER_PLANE" stride="4" length="6">
 		<reg32 offset="0x0" name="X"/>
 		<reg32 offset="0x1" name="Y"/>
@@ -890,20 +990,34 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x3" name="W"/>
 	</array>
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
+	<reg32 offset="0x0cc6" name="RB_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0cc7" name="RB_PERFCOUNTER1_SELECT"/>
 	<reg32 offset="0x0ce0" name="RB_WINDOW_SIZE">
 		<bitfield name="WIDTH" low="0" high="13" type="uint"/>
 		<bitfield name="HEIGHT" low="14" high="27" type="uint"/>
 	</reg32>
-	<reg32 offset="0x0e00" name="UNKNOWN_0E00">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
+	<reg32 offset="0x0e00" name="HLSQ_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0e01" name="HLSQ_PERFCOUNTER1_SELECT"/>
+	<reg32 offset="0x0e02" name="HLSQ_PERFCOUNTER2_SELECT"/>
+	<reg32 offset="0x0e03" name="HLSQ_PERFCOUNTER3_SELECT"/>
+	<reg32 offset="0x0e04" name="HLSQ_PERFCOUNTER4_SELECT"/>
+	<reg32 offset="0x0e05" name="HLSQ_PERFCOUNTER5_SELECT"/>
 	<reg32 offset="0x0e43" name="UNKNOWN_0E43">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
 	<reg32 offset="0x0e44" name="VFD_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0e45" name="VFD_PERFCOUNTER1_SELECT"/>
 	<reg32 offset="0x0e61" name="VPC_VPC_DEBUG_RAM_SEL"/>
 	<reg32 offset="0x0e62" name="VPC_VPC_DEBUG_RAM_READ"/>
+	<reg32 offset="0x0e64" name="VPC_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0e65" name="VPC_PERFCOUNTER1_SELECT"/>
 	<reg32 offset="0x0e82" name="UCHE_CACHE_MODE_CONTROL_REG"/>
+	<reg32 offset="0x0e84" name="UCHE_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0e85" name="UCHE_PERFCOUNTER1_SELECT"/>
+	<reg32 offset="0x0e86" name="UCHE_PERFCOUNTER2_SELECT"/>
+	<reg32 offset="0x0e87" name="UCHE_PERFCOUNTER3_SELECT"/>
+	<reg32 offset="0x0e88" name="UCHE_PERFCOUNTER4_SELECT"/>
+	<reg32 offset="0x0e89" name="UCHE_PERFCOUNTER5_SELECT"/>
 	<reg32 offset="0x0ea0" name="UCHE_CACHE_INVALIDATE0_REG">
 		<!-- might be shifted right by 5, assuming 32byte cache line size.. -->
 		<bitfield name="ADDR" low="0" high="27" type="hex"/>
@@ -929,6 +1043,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0f03" name="UNKNOWN_0F03">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
+	<reg32 offset="0x0f04" name="TP_PERFCOUNTER0_SELECT"/>
+	<reg32 offset="0x0f05" name="TP_PERFCOUNTER1_SELECT"/>
+	<reg32 offset="0x0f06" name="TP_PERFCOUNTER2_SELECT"/>
+	<reg32 offset="0x0f07" name="TP_PERFCOUNTER3_SELECT"/>
+	<reg32 offset="0x0f08" name="TP_PERFCOUNTER4_SELECT"/>
+	<reg32 offset="0x0f09" name="TP_PERFCOUNTER5_SELECT"/>
 </domain>
 
 <domain name="A3XX_TEX_SAMP" width="32">
