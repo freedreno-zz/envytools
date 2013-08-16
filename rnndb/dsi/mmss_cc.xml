@@ -12,12 +12,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x0008" name="AHB"/>
 
+	<enum name="mmss_cc_clk">
+		<value name="CLK" value="0"/>
+		<value name="PCLK" value="1"/>
+	</enum>
+
 	<!--
 		possibly these sequences of registers are same, except pre_div_func
 		is shifted by 12 in pclk and 14 in clk..  I'm going to guess that
 		the register is same and they just multiply value by 4..
 	 -->
-	<group name="mmss_cc_clk_ctrl">
+	<array offsets="0x004c,0x0130" name="CLK" length="2" stride="0x10" index="mmss_cc_clk">
 		<reg32 offset="0x00" name="CC">
 			<bitfield name="CLK_EN" pos="0" type="boolean"/>
 			<bitfield name="ROOT_EN" pos="2" type="boolean"/>
@@ -34,13 +39,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="PRE_DIV_FUNC" low="12" high="23"/>
 			<bitfield name="VAL" low="24" high="31"></bitfield>
 		</reg32>
-	</group>
-
-	<array offset="0x004c" name="DSI_CLK_CTRL" length="1" stride="12">
-		<use-group name="mmss_cc_clk_ctrl"/>
-	</array>
-	<array offset="0x0130" name="DSI_PCLK_CTRL" length="1" stride="12">
-		<use-group name="mmss_cc_clk_ctrl"/>
 	</array>
 </domain>
 

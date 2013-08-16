@@ -257,7 +257,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="DMA_E" value="2"/>
 	</enum>
 	<reg32 offset="0x90070" name="DMA_P_OP_MODE"/>
+	<array offset="0x94800" name="LUTN" length="2" stride="0x400">
+		<array offset="0" name="LUT" length="0x100" stride="4">
+			<reg32 offset="0" name="VAL"/>
+		</array>
+	</array>
 	<reg32 offset="0xa0028" name="DMA_S_OP_MODE"/>
+	<!-- I guess if DMA_S has an OP_MODE, it must have a LUT too.. -->
 	<reg32 offset="0xb0070" name="DMA_E_QUANT" length="3" stride="4"/>
 	<array offsets="0x90000,0xa0000,0xb0000" name="DMA" length="3" stride="0x10000" index="mdp4_dma">
 		<reg32 offset="0x0000" name="CONFIG">
@@ -407,7 +413,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0024" name="ACTIVE_VEND" type="uint"/>
 		<reg32 offset="0x0028" name="BORDER_CLR"/>
 		<reg32 offset="0x002c" name="UNDERFLOW_CLR" type="mpd4_underflow_clr"/>
-		<reg32 offset="0x0030" name="HSYNC_SKEP"/>
+		<reg32 offset="0x0030" name="HSYNC_SKEW"/>
 		<reg32 offset="0x0034" name="TEST_CNTL"/>
 		<reg32 offset="0x0038" name="CTRL_POLARITY" type="mpd4_ctrl_polarity"/>
 	</array>
@@ -443,7 +449,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0024" name="ACTIVE_VEND" type="uint"/>
 		<reg32 offset="0x0028" name="BORDER_CLR"/>
 		<reg32 offset="0x002c" name="UNDERFLOW_CLR" type="mpd4_underflow_clr"/>
-		<reg32 offset="0x0030" name="HSYNC_SKEP"/>
+		<reg32 offset="0x0030" name="HSYNC_SKEW"/>
+		<reg32 offset="0x0034" name="TEST_CNTL"/>
 		<reg32 offset="0x0038" name="CTRL_POLARITY" type="mpd4_ctrl_polarity"/>
 	</array>
 </domain>

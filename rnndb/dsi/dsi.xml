@@ -5,6 +5,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
 <domain name="DSI" width="32">
+	<enum name="dsi_traffic_mode">
+		<value name="NON_BURST_SYNCH_PULSE" value="0"/>
+		<value name="NON_BURST_SYNCH_EVENT" value="1"/>
+		<value name="BURST_MODE" value="2"/>
+	</enum>
+	<enum name="dsi_dst_format">
+		<value name="DST_FORMAT_RGB565" value="0"/>
+		<value name="DST_FORMAT_RGB666" value="1"/>
+		<value name="DST_FORMAT_RGB666_LOOSE" value="2"/>
+		<value name="DST_FORMAT_RGB888" value="3"/>
+	</enum>
+	<enum name="dsi_rgb_swap">
+		<value name="SWAP_RGB" value="0"/>
+		<value name="SWAP_RBG" value="1"/>
+		<value name="SWAP_BGR" value="2"/>
+		<value name="SWAP_BRG" value="3"/>
+		<value name="SWAP_GRB" value="4"/>
+		<value name="SWAP_GBR" value="5"/>
+	</enum>
+	<enum name="dsi_cmd_trigger">
+		<value name="TRIGGER_NONE" value="0"/>
+		<value name="TRIGGER_TE" value="2"/>
+		<value name="TRIGGER_SW" value="4"/>
+		<value name="TRIGGER_SW_SEOF" value="5"/>
+		<value name="TRIGGER_SW_TE" value="6"/>
+	</enum>
 	<bitset name="DSI_IRQ">
 		<bitfield name="CMD_DMA_DONE" pos="0" type="boolean"/>
 		<bitfield name="MASK_CMD_DMA_DONE" pos="1" type="boolean"/>
@@ -16,10 +42,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="MASK_ERROR" pos="25" type="boolean"/>
 	</bitset>
 
-	<reg32 offset="0x00000" name="CNTL">
+	<reg32 offset="0x00000" name="CTRL">
 		<bitfield name="ENABLE" pos="0" type="boolean"/>
 		<bitfield name="VID_MODE_EN" pos="1" type="boolean"/>
 		<bitfield name="CMD_MODE_EN" pos="2" type="boolean"/>
+		<bitfield name="LANE0" pos="4" type="boolean"/>
+		<bitfield name="LANE1" pos="5" type="boolean"/>
+		<bitfield name="LANE2" pos="6" type="boolean"/>
+		<bitfield name="LANE3" pos="7" type="boolean"/>
+		<bitfield name="CLK_EN" pos="8" type="boolean"/>
+		<bitfield name="ECC_CHECK" pos="20" type="boolean"/>
+		<bitfield name="CRC_CHECK" pos="24" type="boolean"/>
 	</reg32>
 
 	<reg32 offset="0x00004" name="STATUS0">
@@ -29,9 +62,49 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 
 	<reg32 offset="0x00008" name="FIFO_STATUS"/>
-	<reg32 offset="0x0000c" name="VID_CFG0"/>
-	<reg32 offset="0x0001c" name="VID_CFG1"/>
-	<reg32 offset="0x00038" name="CMD_DMA_CTRL"/>
+	<reg32 offset="0x0000c" name="VID_CFG0">
+		<bitfield name="VIRT_CHANNEL" low="0" high="1" type="uint"/>  <!-- always zero? -->
+		<bitfield name="DST_FORMAT" low="4" high="5" type="dsi_dst_format"/>
+		<bitfield name="TRAFFIC_MODE" low="8" high="9" type="dsi_traffic_mode"/>
+		<bitfield name="BLLP_POWER_STOP" pos="12" type="boolean"/>
+		<bitfield name="EOF_BLLP_POWER_STOP" pos="15" type="boolean"/>
+		<bitfield name="HSA_POWER_STOP" pos="16" type="boolean"/>
+		<bitfield name="HBP_POWER_STOP" pos="20" type="boolean"/>
+		<bitfield name="HFP_POWER_STOP" pos="24" type="boolean"/>
+		<bitfield name="PULSE_MODE_HSA_HE" pos="28" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x0001c" name="VID_CFG1">
+		<bitfield name="R_SEL" pos="4" type="boolean"/>
+		<bitfield name="G_SEL" pos="8" type="boolean"/>
+		<bitfield name="B_SEL" pos="12" type="boolean"/>
+		<bitfield name="RGB_SWAP" low="16" high="18" type="dsi_rgb_swap"/>
+		<bitfield name="INTERLEAVE_MAX" low="20" high="23" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00020" name="ACTIVE_H">
+		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="END" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00024" name="ACTIVE_V">
+		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="END" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00028" name="TOTAL">
+		<bitfield name="H_TOTAL" low="0" high="11" type="uint"/>
+		<bitfield name="V_TOTAL" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x0002c" name="ACTIVE_HSYNC">
+		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="END" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00034" name="ACTIVE_VSYNC">
+		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="END" low="16" high="27" type="uint"/>
+	</reg32>
+
+	<reg32 offset="0x00038" name="CMD_DMA_CTRL">
+		<bitfield name="FROM_FRAME_BUFFER" pos="28" type="boolean"/>
+		<bitfield name="LOW_POWER" pos="26" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0003c" name="CMD_CFG0"/>
 	<reg32 offset="0x00040" name="CMD_CFG1"/>
 	<reg32 offset="0x00044" name="DMA_BASE"/>
@@ -40,20 +113,33 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<array offset="0x00068" name="RDBK" length="4" stride="4">
 		<reg32 offset="0x0" name="DATA"/>
 	</array>
-	<reg32 offset="0x00080" name="TRIG_CTRL"/>
+	<reg32 offset="0x00080" name="TRIG_CTRL">
+		<bitfield name="DMA_TRIGGER" low="0" high="3" type="dsi_cmd_trigger"/>
+		<bitfield name="MDP_TRIGGER" low="4" high="7" type="dsi_cmd_trigger"/>
+		<bitfield name="STREAM" pos="8" type="boolean"/>
+		<bitfield name="TE" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0008c" name="TRIG_DMA"/>
 	<reg32 offset="0x000b0" name="DLN0_PHY_ERR"/>
 	<reg32 offset="0x000bc" name="TIMEOUT_STATUS"/>
-	<reg32 offset="0x000c0" name="CLKOUT_TIMING_CTRL"/>
-	<reg32 offset="0x000c8" name="EOT_PACKET_CTRL"/>
-	<reg32 offset="0x000ac" name="LAN_SWAP_CTRL"/>
+	<reg32 offset="0x000c0" name="CLKOUT_TIMING_CTRL">
+		<bitfield name="T_CLK_PRE" low="0" high="5" type="uint"/>
+		<bitfield name="T_CLK_POST" low="8" high="13" type="uint"/>
+	</reg32>
+	<reg32 offset="0x000c8" name="EOT_PACKET_CTRL">
+		<bitfield name="TX_EOT_APPEND" pos="0" type="boolean"/>
+		<bitfield name="RX_EOT_IGNORE" pos="4" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x000ac" name="LANE_SWAP_CTRL"/>
 	<reg32 offset="0x00108" name="ERR_INT_MASK0"/>
 	<reg32 offset="0x0010c" name="INTR_CTRL" type="DSI_IRQ"/>
 	<reg32 offset="0x00114" name="RESET"/>
 	<reg32 offset="0x00118" name="CLK_CTRL"/>
 	<reg32 offset="0x00128" name="PHY_RESET"/>
 
-	<reg32 offset="0x00200" name="PHY_PLL_CTRL_0"/>
+	<reg32 offset="0x00200" name="PHY_PLL_CTRL_0">
+		<bitfield name="ENABLE" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x00204" name="PHY_PLL_CTRL_1"/>
 	<reg32 offset="0x00208" name="PHY_PLL_CTRL_2"/>
 	<reg32 offset="0x0020c" name="PHY_PLL_CTRL_3"/>
@@ -77,6 +163,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00280" name="PHY_PLL_STATUS">
 		<bitfield name="PLL_BUSY" pos="0" type="boolean"/>
 	</reg32>
+</domain>
+
+<domain name="DSI_8x60" width="32">
+</domain>
+
+<domain name="DSI_8960" width="32">
 
 	<array offset="0x00300" name="LN" length="4" stride="0x40">
 		<reg32 offset="0x00" name="CFG_0"/>
@@ -123,7 +215,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00498" name="PHY_BIST_CTRL_3"/>
 	<reg32 offset="0x0049c" name="PHY_BIST_CTRL_4"/>
 
-	<reg32 offset="0x004b0" name="PHY_LDO_CNTL"/>
+	<reg32 offset="0x004b0" name="PHY_LDO_CTRL"/>
 
 	<reg32 offset="0x00500" name="PHY_REGULATOR_CTRL_0"/>
 	<reg32 offset="0x00504" name="PHY_REGULATOR_CTRL_1"/>
