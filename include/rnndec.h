@@ -51,6 +51,7 @@ struct rnndeccontext *rnndec_newcontext(struct rnndb *db);
 int rnndec_varadd(struct rnndeccontext *ctx, char *varset, char *variant);
 int rnndec_varmatch(struct rnndeccontext *ctx, struct rnnvarinfo *vi);
 char *rnndec_decodeval(struct rnndeccontext *ctx, struct rnntypeinfo *ti, uint64_t value, int width);
+int rnndec_checkaddr(struct rnndeccontext *ctx, struct rnndomain *domain, uint64_t addr, int write);
 struct rnndecaddrinfo *rnndec_decodeaddr(struct rnndeccontext *ctx, struct rnndomain *domain, uint64_t addr, int write);
 
 #endif
