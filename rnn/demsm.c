@@ -44,9 +44,27 @@ struct domain {
 static struct domain domains[16];
 static int domains_count = 0;
 
-static struct domain *find_domain(struct rnndeccontext *ctx, uint32_t addr)
+
+static int is_a2xx(const char *name)
+{
+	return !strcmp("A225", name) ||
+			!strcmp("A220", name) ||
+			!strcmp("A205", name) ||
+			!strcmp("A2XX", name);
+}
+
+static int is_a3xx(const char *name)
+{
+	return !strcmp("A330", name) ||
+			!strcmp("A320", name) ||
+			!strcmp("A305", name) ||
+			!strcmp("A3XX", name);
+}
+
+static struct domain *find_domain(struct rnndeccontext *ctx, uint32_t *addrp)
 {
 	struct domain *first_domain = NULL; /* if no exact match, pick first closest match */
+	uint32_t addr = *addrp;
 	int i;
 	for (i = 0; i < domains_count; i++) {
 		struct domain *d = &domains[i];
@@ -57,6 +75,14 @@ static struct domain *find_domain(struct rnndeccontext *ctx, uint32_t addr)
 			if (rnndec_checkaddr(ctx, d->dom, (addr - d->base) >> d->shift, 0)) {
 				return d;
 			}
+		}
+	}
+	if (is_a3xx(first_domain->name)) {
+		/* we appear to have some banked registers: */
+		uint32_t off = addr - first_domain->base;
+		if ((0x9000 <= off) && (off < 0x10000)) {
+			*addrp -= 0x1000;
+			return find_domain(ctx, addrp);
 		}
 	}
 	return first_domain;
@@ -103,32 +129,23 @@ static int find_reg(const char *buf, int *n, int *m,
 	return sscanf(buf, "%*x %*x %n%d %x %x%n", n, op, addr, val, m) == 3;
 }
 
-static int is_a2xx(const char *name)
-{
-	return !strcmp("A225", name) ||
-			!strcmp("A220", name) ||
-			!strcmp("A205", name);
-}
-
-static int is_a3xx(const char *name)
-{
-	return !strcmp("A330", name) ||
-			!strcmp("A320", name) ||
-			!strcmp("A305", name);
-}
-
 const char *domain_suffixes[] = {
 		"8960", "8x60", NULL
 };
 
 static void printval(struct rnndeccontext *ctx, uint32_t addr, uint32_t val, uint32_t op)
 {
-	struct domain *d = find_domain(ctx, addr);
+	uint32_t origaddr = addr;
+	struct domain *d = find_domain(ctx, &addr);
 	if (d && d->dom) {
 		uint32_t off = addr - d->base;
 		struct rnndecaddrinfo *ai = rnndec_decodeaddr(ctx, d->dom, off >> d->shift, op);
 		char *decoded_val = rnndec_decodeval(ctx, ai->typeinfo, val, ai->width);
-		printf("%10s:%-30s %s", d->dom->name, ai->name, decoded_val);
+		if (origaddr != addr) {
+			printf("!%9s:%-30s %s", d->dom->name, ai->name, decoded_val);
+		} else {
+			printf("%10s:%-30s %s", d->dom->name, ai->name, decoded_val);
+		}
 		free(ai->name);
 		free(ai);
 		free(decoded_val);
