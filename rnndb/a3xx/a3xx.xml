@@ -457,15 +457,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			controlling blend or readback from GMEM??
 		 -->
 		<bitfield name="ENABLE_GMEM" pos="13" type="boolean"/>
+		<bitfield name="ALPHA_TEST" pos="22" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="adreno_compare_func"/>
+
+
 	</reg32>
 	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL">
 		<bitfield name="DISABLE" pos="10" type="boolean"/>
 		<bitfield name="SAMPLES" low="12" high="15" type="a3xx_msaa_samples"/>
 		<bitfield name="SAMPLE_MASK" low="16" high="31" type="hex"/>
 	</reg32>
-	<reg32 offset="0x20c3" name="UNKNOWN_20C3">
-		<doc>seems to be always set to 0x00000000</doc>
+	<reg32 offset="0x20c3" name="RB_ALPHA_REF">
+		<bitfield name="UINT" low="8" high="15" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
 	</reg32>
 	<array offset="0x20c4" name="RB_MRT" stride="4" length="4">
 		<reg32 offset="0x0" name="CONTROL">
@@ -569,7 +573,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		 -->
 		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
 		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
-		<bitfield name="EARLY_Z_ENABLE" pos="3" type="boolean"/>
+		<bitfield name="EARLY_Z_DISABLE" pos="3" type="boolean"/>
 		<bitfield name="ZFUNC" low="4" high="6" type="adreno_compare_func"/>
 		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
