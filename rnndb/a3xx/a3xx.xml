@@ -416,8 +416,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2070" name="GRAS_SU_MODE_CONTROL">
 		<bitfield name="CULL_FRONT" pos="0" type="boolean"/>
 		<bitfield name="CULL_BACK" pos="1" type="boolean"/>
-		<!-- guessing on size -->
-		<bitfield name="LINEHALFWIDTH" low="2" high="10" type="uint"/>
+		<bitfield name="FRONT_CW" pos="2" type="boolean"/>
+		<bitfield name="LINEHALFWIDTH" low="3" high="10" radix="2" type="fixed"/>
 		<bitfield name="POLY_OFFSET" pos="11" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2072" name="GRAS_SC_CONTROL">
@@ -597,7 +597,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
-		<bitfield name="STENCIL_ENABLE_BF" pos="2" type="boolean"/>
+		<bitfield name="STENCIL_ENABLE_BF" pos="1" type="boolean"/>
+		<!--
+			set for stencil operations that require read from stencil
+			buffer, but not for example for stencil clear (which does
+			not require read).. so guessing this is analogous to
+			READ_DEST_ENABLE for color buffer..
+		 -->
+		<bitfield name="STENCIL_READ" pos="2" type="boolean"/>
 		<bitfield name="FUNC" low="8" high="10" type="adreno_compare_func"/>
 		<bitfield name="FAIL" low="11" high="13" type="adreno_stencil_op"/>
 		<bitfield name="ZPASS" low="14" high="16" type="adreno_stencil_op"/>
