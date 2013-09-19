@@ -238,6 +238,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="RB_CNTX_BUSY" pos="30" type="boolean"/>
 		<bitfield name="GUI_ACTIVE" pos="31" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x0a40" name="MH_ARBITER_CONFIG">
+		<bitfield name="SAME_PAGE_LIMIT" low="0" high="5" type="uint"/>
+		<bitfield name="SAME_PAGE_GRANULARITY" pos="6" type="boolean"/>
+		<bitfield name="L1_ARB_ENABLE" pos="7" type="boolean"/>
+		<bitfield name="L1_ARB_HOLD_ENABLE" pos="8" type="boolean"/>
+		<bitfield name="L2_ARB_CONTROL" pos="9" type="boolean"/>
+		<bitfield name="PAGE_SIZE" low="10" high="12" type="uint"/>
+		<bitfield name="TC_REORDER_ENABLE" pos="13" type="boolean"/>
+		<bitfield name="TC_ARB_HOLD_ENABLE" pos="14" type="boolean"/>
+		<bitfield name="IN_FLIGHT_LIMIT_ENABLE" pos="15" type="boolean"/>
+		<bitfield name="IN_FLIGHT_LIMIT" low="16" high="21" type="uint"/>
+		<bitfield name="CP_CLNT_ENABLE" pos="22" type="boolean"/>
+		<bitfield name="VGT_CLNT_ENABLE" pos="23" type="boolean"/>
+		<bitfield name="TC_CLNT_ENABLE" pos="24" type="boolean"/>
+		<bitfield name="RB_CLNT_ENABLE" pos="25" type="boolean"/>
+		<bitfield name="PA_CLNT_ENABLE" pos="26" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0c01" name="A220_VSC_BIN_SIZE">
 		<bitfield name="WIDTH" low="0" high="4" shr="5" type="uint"/>
 		<bitfield name="HEIGHT" low="5" high="9" shr="5" type="uint"/>
