@@ -5,7 +5,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
 <domain name="MDP4" width="32">
-	<enum name="mpd4_bpc">
+	<enum name="mdp4_bpc">
 		<brief>bits per component (non-alpha channel)</brief>
 		<value name="BPC1" value="0"/> <!-- 1 bit -->
 		<value name="BPC5" value="1"/> <!-- 2 bits -->
@@ -13,7 +13,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="BPC8" value="3"/> <!-- 8 bits -->
 	</enum>
 
-	<enum name="mpd4_bpc_alpha">
+	<enum name="mdp4_bpc_alpha">
 		<brief>bits per component (alpha channel)</brief>
 		<value name="BPC1A" value="0"/> <!-- 1 bit -->
 		<value name="BPC4A" value="1"/> <!-- 2 bits -->
@@ -21,14 +21,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="BPC8A" value="3"/> <!-- 8 bits -->
 	</enum>
 
-	<enum name="mpd4_alpha_type">
+	<enum name="mdp4_alpha_type">
 		<value name="FG_CONST" value="0"/>
 		<value name="BG_CONST" value="1"/>
 		<value name="FG_PIXEL" value="2"/>
 		<value name="BG_PIXEL" value="3"/>
 	</enum>
 
-	<enum name="mpd4_pipe">
+	<enum name="mdp4_pipe">
 		<brief>pipe names, index into PIPE[]</brief>
 		<value name="VG1" value="0"/>
 		<value name="VG2" value="1"/>
@@ -39,13 +39,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="VG4" value="6"/>
 	</enum>
 
-	<enum name="mpd4_mixer">
+	<enum name="mdp4_mixer">
 		<value name="MIXER0" value="0"/>
 		<value name="MIXER1" value="1"/>
 		<value name="MIXER2" value="2"/>
 	</enum>
 
-	<enum name="mpd4_mixer_stage_id">
+	<enum name="mdp4_mixer_stage_id">
 		<value name="STAGE_UNUSED" value="0"/>
 		<value name="STAGE_BASE" value="1"/>
 		<value name="STAGE0" value="2"/>   <!-- zorder 0 -->
@@ -81,27 +81,27 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="CURSOR_XRGB" value="2"/>
 	</enum>
 
-	<bitset name="mpd4_layermixer_in_cfg" inline="yes">
+	<bitset name="mdp4_layermixer_in_cfg" inline="yes">
 		<brief>appears to map pipe to mixer stage</brief>
-		<bitfield name="PIPE0" low="0"  high="2"  type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE0" low="0"  high="2"  type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE0_MIXER1" pos="3" type="boolean"/>
-		<bitfield name="PIPE1" low="4"  high="6"  type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE1" low="4"  high="6"  type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE1_MIXER1" pos="7" type="boolean"/>
-		<bitfield name="PIPE2" low="8"  high="10" type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE2" low="8"  high="10" type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE2_MIXER1" pos="11" type="boolean"/>
-		<bitfield name="PIPE3" low="12" high="14" type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE3" low="12" high="14" type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE3_MIXER1" pos="15" type="boolean"/>
-		<bitfield name="PIPE4" low="16" high="18" type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE4" low="16" high="18" type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE4_MIXER1" pos="19" type="boolean"/>
-		<bitfield name="PIPE5" low="20" high="22" type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE5" low="20" high="22" type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE5_MIXER1" pos="23" type="boolean"/>
-		<bitfield name="PIPE6" low="24" high="26" type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE6" low="24" high="26" type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE6_MIXER1" pos="27" type="boolean"/>
-		<bitfield name="PIPE7" low="28" high="30" type="mpd4_mixer_stage_id"/>
+		<bitfield name="PIPE7" low="28" high="30" type="mdp4_mixer_stage_id"/>
 		<bitfield name="PIPE7_MIXER1" pos="31" type="boolean"/>
 	</bitset>
 
-	<bitset name="mpd4_unpack_pattern" inline="yes">
+	<bitset name="mdp4_unpack_pattern" inline="yes">
 		<bitfield name="ELEM0" low="0"  high="7"/>
 		<bitfield name="ELEM1" low="8"  high="15"/>
 		<bitfield name="ELEM2" low="16" high="23"/>
@@ -136,7 +136,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="OVERLAY2_DONE" pos="30" type="boolean"/>
 	</bitset>
 
-	<group name="mpd4_csc">
+	<group name="mdp4_csc">
 		<array offset="0x400" name="MV" length="9" stride="4">
 			<reg32 offset="0" name="VAL"/>
 		</array>
@@ -178,7 +178,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="DSI_VIDEO" pos="6" type="boolean"/>
 		<bitfield name="DSI_CMD" pos="7" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x0003c" name="RESET_STATUS"/>  <!-- only mpd4 >v2.1 -->
+	<reg32 offset="0x0003c" name="RESET_STATUS"/>  <!-- only mdp4 >v2.1 -->
 	<reg32 offset="0x0004c" name="READ_CNFG"/>  <!-- something about # of pending requests.. -->
 	<reg32 offset="0x00050" name="INTR_ENABLE" type="MDP4_IRQ"/>
 	<reg32 offset="0x00054" name="INTR_STATUS" type="MDP4_IRQ"/>
@@ -191,9 +191,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x000c0" name="CS_CONTROLLER0"/>
 	<reg32 offset="0x000c4" name="CS_CONTROLLER1"/>
 
-	<reg32 offset="0x100f0" name="LAYERMIXER2_IN_CFG" type="mpd4_layermixer_in_cfg"/>
+	<reg32 offset="0x100f0" name="LAYERMIXER2_IN_CFG" type="mdp4_layermixer_in_cfg"/>
 	<reg32 offset="0x100fc" name="LAYERMIXER_IN_CFG_UPDATE_METHOD"/>
-	<reg32 offset="0x10100" name="LAYERMIXER_IN_CFG" type="mpd4_layermixer_in_cfg"/>
+	<reg32 offset="0x10100" name="LAYERMIXER_IN_CFG" type="mdp4_layermixer_in_cfg"/>
 
 	<reg32 offset="0x30050" name="VG2_SRC_FORMAT"/>
 	<reg32 offset="0x31008" name="VG2_CONST_COLOR"/>
@@ -216,10 +216,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 		<array offsets="0x0104,0x0124,0x0144,0x0160" name="STAGE" length="4" stride="0x1c">
 			<reg32 offset="0x00" name="OP">
-				<bitfield name="FG_ALPHA" low="0" high="1" type="mpd4_alpha_type"/>
+				<bitfield name="FG_ALPHA" low="0" high="1" type="mdp4_alpha_type"/>
 				<bitfield name="FG_INV_ALPHA" pos="2" type="boolean"/>
 				<bitfield name="FG_MOD_ALPHA" pos="3" type="boolean"/>
-				<bitfield name="BG_ALPHA" low="4" high="5" type="mpd4_alpha_type"/>
+				<bitfield name="BG_ALPHA" low="4" high="5" type="mdp4_alpha_type"/>
 				<bitfield name="BG_INV_ALPHA" pos="6" type="boolean"/>
 				<bitfield name="BG_MOD_ALPHA" pos="7" type="boolean"/>
 				<bitfield name="FG_TRANSP" pos="8" type="boolean"/>
@@ -247,7 +247,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0200" name="CSC_CONFIG"/>
 
 		<array offset="0x2000" name="CSC" length="1" stride="0x700">
-			<use-group name="mpd4_csc"/>
+			<use-group name="mdp4_csc"/>
 		</array>
 	</array>
 
@@ -267,9 +267,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xb0070" name="DMA_E_QUANT" length="3" stride="4"/>
 	<array offsets="0x90000,0xa0000,0xb0000" name="DMA" length="3" stride="0x10000" index="mdp4_dma">
 		<reg32 offset="0x0000" name="CONFIG">
-			<bitfield name="G_BPC" low="0" high="1" type="mpd4_bpc"/>
-			<bitfield name="B_BPC" low="2" high="3" type="mpd4_bpc"/>
-			<bitfield name="R_BPC" low="4" high="5" type="mpd4_bpc"/>
+			<bitfield name="G_BPC" low="0" high="1" type="mdp4_bpc"/>
+			<bitfield name="B_BPC" low="2" high="3" type="mdp4_bpc"/>
+			<bitfield name="R_BPC" low="4" high="5" type="mdp4_bpc"/>
 			<bitfield name="PACK_ALIGN_MSB" pos="7" type="boolean"/>
 			<bitfield name="PACK" low="8" high="15"/>
 			<!-- bit 24 is DITHER_EN on DMA_P, DEFLKR_EN on DMA_E -->
@@ -302,7 +302,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 		<reg32 offset="0x1004" name="FETCH_CONFIG"/>
 		<array offset="0x3000" name="CSC" length="1" stride="0x700">
-			<use-group name="mpd4_csc"/>
+			<use-group name="mdp4_csc"/>
 		</array>
 	</array>
 
@@ -310,7 +310,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		TODO length should be 7, but that would collide w/ OVLP2..!?!
 		this register map is a bit strange..
 	 -->
-	<array offset="0x20000" name="PIPE" length="6" stride="0x10000" index="mpd4_pipe">
+	<array offset="0x20000" name="PIPE" length="6" stride="0x10000" index="mdp4_pipe">
 		<reg32 offset="0x0000" name="SRC_SIZE" type="reg_wh"/>
 		<reg32 offset="0x0004" name="SRC_XY" type="reg_xy"/>
 		<reg32 offset="0x0008" name="DST_SIZE" type="reg_wh"/>
@@ -328,10 +328,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 		<reg32 offset="0x0048" name="FRAME_SIZE" type="reg_wh"/>
 		<reg32 offset="0x0050" name="SRC_FORMAT">
-			<bitfield name="G_BPC" low="0" high="1" type="mpd4_bpc"/>
-			<bitfield name="B_BPC" low="2" high="3" type="mpd4_bpc"/>
-			<bitfield name="R_BPC" low="4" high="5" type="mpd4_bpc"/>
-			<bitfield name="A_BPC" low="6" high="7" type="mpd4_bpc_alpha"/>
+			<bitfield name="G_BPC" low="0" high="1" type="mdp4_bpc"/>
+			<bitfield name="B_BPC" low="2" high="3" type="mdp4_bpc"/>
+			<bitfield name="R_BPC" low="4" high="5" type="mdp4_bpc"/>
+			<bitfield name="A_BPC" low="6" high="7" type="mdp4_bpc_alpha"/>
 			<bitfield name="ALPHA_ENABLE" pos="8" type="boolean"/>
 			<bitfield name="CPP" low="9" high="10" type="uint">
 				<brief>8bit characters per pixel minus 1</brief>
@@ -342,7 +342,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
 			<bitfield name="SOLID_FILL" pos="22" type="boolean"/>
 		</reg32>
-		<reg32 offset="0x0054" name="SRC_UNPACK" type="mpd4_unpack_pattern"/>
+		<reg32 offset="0x0054" name="SRC_UNPACK" type="mdp4_unpack_pattern"/>
 		<reg32 offset="0x0058" name="OP_MODE">
 			<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
 			<bitfield name="SCALEY_EN" pos="1" type="boolean"/>
@@ -362,7 +362,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x1008" name="SOLID_COLOR"/>
 
 		<array offset="0x4000" name="CSC" length="1" stride="0x700">
-			<use-group name="mpd4_csc"/>
+			<use-group name="mdp4_csc"/>
 		</array>
 	</array>
 
@@ -371,87 +371,87 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			LCDC and DSI seem the same, DTV is just slightly different..
 	 -->
 
-	<bitset name="mpd4_ctrl_polarity" inline="yes">
+	<bitset name="mdp4_ctrl_polarity" inline="yes">
 		<!-- not entirely sure if these bits mean hi or low.. -->
 		<bitfield name="HSYNC_LOW" pos="0" type="boolean"/>
 		<bitfield name="VSYNC_LOW" pos="1" type="boolean"/>
 		<bitfield name="DATA_EN_LOW" pos="2" type="boolean"/>
 	</bitset>
 
-	<bitset name="mpd4_active_hctl" inline="yes">
+	<bitset name="mdp4_active_hctl" inline="yes">
 		<bitfield name="START" low="0" high="14" type="uint"/>
 		<bitfield name="END" low="16" high="30" type="uint"/>
 		<bitfield name="ACTIVE_START_X" pos="31" type="boolean"/>
 	</bitset>
 
-	<bitset name="mpd4_display_hctl" inline="yes">
+	<bitset name="mdp4_display_hctl" inline="yes">
 		<bitfield name="START" low="0" high="15" type="uint"/>
 		<bitfield name="END" low="16" high="31" type="uint"/>
 	</bitset>
 
-	<bitset name="mpd4_hsync_ctrl" inline="yes">
+	<bitset name="mdp4_hsync_ctrl" inline="yes">
 		<bitfield name="PULSEW" low="0" high="15" type="uint"/>
 		<bitfield name="PERIOD" low="16" high="31" type="uint"/>
 	</bitset>
 
-	<bitset name="mpd4_underflow_clr" inline="yes">
+	<bitset name="mdp4_underflow_clr" inline="yes">
 		<bitfield name="COLOR" low="0" high="23"/>
 		<bitfield name="ENABLE_RECOVERY" pos="31" type="boolean"/>
 	</bitset>
 
-	<!-- offset is 0xe0000 on !mpd4.. -->
+	<!-- offset is 0xe0000 on !mdp4.. -->
 	<array offset="0xc0000" name="LCDC" length="1" stride="0x1000">
 		<reg32 offset="0x0000" name="ENABLE"/>
-		<reg32 offset="0x0004" name="HSYNC_CTRL" type="mpd4_hsync_ctrl"/>
+		<reg32 offset="0x0004" name="HSYNC_CTRL" type="mdp4_hsync_ctrl"/>
 		<reg32 offset="0x0008" name="VSYNC_PERIOD" type="uint"/>
 		<reg32 offset="0x000c" name="VSYNC_LEN" type="uint"/>
-		<reg32 offset="0x0010" name="DISPLAY_HCTRL" type="mpd4_display_hctl"/>
+		<reg32 offset="0x0010" name="DISPLAY_HCTRL" type="mdp4_display_hctl"/>
 		<reg32 offset="0x0014" name="DISPLAY_VSTART" type="uint"/>
 		<reg32 offset="0x0018" name="DISPLAY_VEND" type="uint"/>
-		<reg32 offset="0x001c" name="ACTIVE_HCTL" type="mpd4_active_hctl"/>
+		<reg32 offset="0x001c" name="ACTIVE_HCTL" type="mdp4_active_hctl"/>
 		<reg32 offset="0x0020" name="ACTIVE_VSTART" type="uint"/>
 		<reg32 offset="0x0024" name="ACTIVE_VEND" type="uint"/>
 		<reg32 offset="0x0028" name="BORDER_CLR"/>
-		<reg32 offset="0x002c" name="UNDERFLOW_CLR" type="mpd4_underflow_clr"/>
+		<reg32 offset="0x002c" name="UNDERFLOW_CLR" type="mdp4_underflow_clr"/>
 		<reg32 offset="0x0030" name="HSYNC_SKEW"/>
 		<reg32 offset="0x0034" name="TEST_CNTL"/>
-		<reg32 offset="0x0038" name="CTRL_POLARITY" type="mpd4_ctrl_polarity"/>
+		<reg32 offset="0x0038" name="CTRL_POLARITY" type="mdp4_ctrl_polarity"/>
 	</array>
 
 	<array offset="0xd0000" name="DTV" length="1" stride="0x1000">
 		<reg32 offset="0x0000" name="ENABLE"/>
-		<reg32 offset="0x0004" name="HSYNC_CTRL" type="mpd4_hsync_ctrl"/>
+		<reg32 offset="0x0004" name="HSYNC_CTRL" type="mdp4_hsync_ctrl"/>
 		<reg32 offset="0x0008" name="VSYNC_PERIOD" type="uint"/>
 		<reg32 offset="0x000c" name="VSYNC_LEN" type="uint"/>
-		<reg32 offset="0x0018" name="DISPLAY_HCTRL" type="mpd4_display_hctl"/>
+		<reg32 offset="0x0018" name="DISPLAY_HCTRL" type="mdp4_display_hctl"/>
 		<reg32 offset="0x001c" name="DISPLAY_VSTART" type="uint"/>
 		<reg32 offset="0x0020" name="DISPLAY_VEND" type="uint"/>
-		<reg32 offset="0x002c" name="ACTIVE_HCTL" type="mpd4_active_hctl"/>
+		<reg32 offset="0x002c" name="ACTIVE_HCTL" type="mdp4_active_hctl"/>
 		<reg32 offset="0x0030" name="ACTIVE_VSTART" type="uint"/>
 		<reg32 offset="0x0038" name="ACTIVE_VEND" type="uint"/>
 		<reg32 offset="0x0040" name="BORDER_CLR"/>
-		<reg32 offset="0x0044" name="UNDERFLOW_CLR" type="mpd4_underflow_clr"/>
+		<reg32 offset="0x0044" name="UNDERFLOW_CLR" type="mdp4_underflow_clr"/>
 		<reg32 offset="0x0048" name="HSYNC_SKEW"/>
 		<reg32 offset="0x004c" name="TEST_CNTL"/>
-		<reg32 offset="0x0050" name="CTRL_POLARITY" type="mpd4_ctrl_polarity"/>
+		<reg32 offset="0x0050" name="CTRL_POLARITY" type="mdp4_ctrl_polarity"/>
 	</array>
 
 	<array offset="0xe0000" name="DSI" length="1" stride="0x1000">
 		<reg32 offset="0x0000" name="ENABLE"/>
-		<reg32 offset="0x0004" name="HSYNC_CTRL" type="mpd4_hsync_ctrl"/>
+		<reg32 offset="0x0004" name="HSYNC_CTRL" type="mdp4_hsync_ctrl"/>
 		<reg32 offset="0x0008" name="VSYNC_PERIOD" type="uint"/>
 		<reg32 offset="0x000c" name="VSYNC_LEN" type="uint"/>
-		<reg32 offset="0x0010" name="DISPLAY_HCTRL" type="mpd4_display_hctl"/>
+		<reg32 offset="0x0010" name="DISPLAY_HCTRL" type="mdp4_display_hctl"/>
 		<reg32 offset="0x0014" name="DISPLAY_VSTART" type="uint"/>
 		<reg32 offset="0x0018" name="DISPLAY_VEND" type="uint"/>
-		<reg32 offset="0x001c" name="ACTIVE_HCTL" type="mpd4_active_hctl"/>
+		<reg32 offset="0x001c" name="ACTIVE_HCTL" type="mdp4_active_hctl"/>
 		<reg32 offset="0x0020" name="ACTIVE_VSTART" type="uint"/>
 		<reg32 offset="0x0024" name="ACTIVE_VEND" type="uint"/>
 		<reg32 offset="0x0028" name="BORDER_CLR"/>
-		<reg32 offset="0x002c" name="UNDERFLOW_CLR" type="mpd4_underflow_clr"/>
+		<reg32 offset="0x002c" name="UNDERFLOW_CLR" type="mdp4_underflow_clr"/>
 		<reg32 offset="0x0030" name="HSYNC_SKEW"/>
 		<reg32 offset="0x0034" name="TEST_CNTL"/>
-		<reg32 offset="0x0038" name="CTRL_POLARITY" type="mpd4_ctrl_polarity"/>
+		<reg32 offset="0x0038" name="CTRL_POLARITY" type="mdp4_ctrl_polarity"/>
 	</array>
 </domain>
 
