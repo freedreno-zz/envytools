@@ -139,7 +139,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CSQ_IB2_START" low="8" high="11" type="uint"/>
 		<bitfield name="CSQ_ST_START" low="16" high="19" type="uint"/>
 	</reg32>
-	<reg32 offset="0x01d6" name="CP_MEQ_THRESHOLDS"/>
+	<reg32 offset="0x01d6" name="CP_MEQ_THRESHOLDS">
+		<bitfield name="MEQ_END" low="16" high="20" type="uint"/>
+		<bitfield name="ROQ_END" low="24" high="28" type="uint"/>
+	</reg32>
 	<reg32 offset="0x01d7" name="CP_CSQ_AVAIL">
 		<bitfield name="RING" low="0" high="6" type="uint"/>
 		<bitfield name="IB1" low="8" high="14" type="uint"/>
@@ -191,6 +194,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WPTR" low="16" high="22" type="uint"/>
 	</reg32>
 
+	<reg32 offset="0x0440" name="CP_NON_PREFETCH_CNTRS"/>
+	<reg32 offset="0x0443" name="CP_STQ_ST_STAT"/>
+	<reg32 offset="0x044d" name="CP_ST_BASE"/>
+	<reg32 offset="0x044e" name="CP_ST_BUFSZ"/>
+	<reg32 offset="0x044f" name="CP_MEQ_STAT"/>
+	<reg32 offset="0x0452" name="CP_MIU_TAG_STAT"/>
+	<reg32 offset="0x0454" name="CP_BIN_MASK_LO"/>
+	<reg32 offset="0x0455" name="CP_BIN_MASK_HI"/>
+	<reg32 offset="0x0456" name="CP_BIN_SELECT_LO"/>
+	<reg32 offset="0x0457" name="CP_BIN_SELECT_HI"/>
+	<reg32 offset="0x0458" name="CP_IB1_BASE"/>
+	<reg32 offset="0x0459" name="CP_IB1_BUFSZ"/>
+	<reg32 offset="0x045a" name="CP_IB2_BASE"/>
+	<reg32 offset="0x045b" name="CP_IB2_BUFSZ"/>
+	<reg32 offset="0x047f" name="CP_STAT"/>
 	<reg32 offset="0x0578" name="CP_SCRATCH_REG0" type="uint"/>
 	<reg32 offset="0x0579" name="CP_SCRATCH_REG1" type="uint"/>
 	<reg32 offset="0x057a" name="CP_SCRATCH_REG2" type="uint"/>
@@ -200,11 +218,24 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x057e" name="CP_SCRATCH_REG6" type="uint"/>
 	<reg32 offset="0x057f" name="CP_SCRATCH_REG7" type="uint"/>
 
+	<reg32 offset="0x0600" name="CP_ME_VS_EVENT_SRC"/>
+	<reg32 offset="0x0601" name="CP_ME_VS_EVENT_ADDR"/>
+	<reg32 offset="0x0602" name="CP_ME_VS_EVENT_DATA"/>
+	<reg32 offset="0x0603" name="CP_ME_VS_EVENT_ADDR_SWM"/>
+	<reg32 offset="0x0604" name="CP_ME_VS_EVENT_DATA_SWM"/>
+	<reg32 offset="0x0605" name="CP_ME_PS_EVENT_SRC"/>
+	<reg32 offset="0x0606" name="CP_ME_PS_EVENT_ADDR"/>
+	<reg32 offset="0x0607" name="CP_ME_PS_EVENT_DATA"/>
+	<reg32 offset="0x0608" name="CP_ME_PS_EVENT_ADDR_SWM"/>
+	<reg32 offset="0x0609" name="CP_ME_PS_EVENT_DATA_SWM"/>
 	<reg32 offset="0x060a" name="CP_ME_CF_EVENT_SRC"/>
 	<reg32 offset="0x060b" name="CP_ME_CF_EVENT_ADDR"/>
 	<reg32 offset="0x060c" name="CP_ME_CF_EVENT_DATA" type="uint"/>
 	<reg32 offset="0x060d" name="CP_ME_NRT_ADDR"/>
 	<reg32 offset="0x060e" name="CP_ME_NRT_DATA"/>
+	<reg32 offset="0x0612" name="CP_ME_VS_FETCH_DONE_SRC"/>
+	<reg32 offset="0x0613" name="CP_ME_VS_FETCH_DONE_ADDR"/>
+	<reg32 offset="0x0614" name="CP_ME_VS_FETCH_DONE_DATA"/>
 
 </domain>
 

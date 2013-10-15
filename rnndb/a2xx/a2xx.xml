@@ -209,13 +209,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0445" name="CP_PERFCOUNTER_SELECT"/>
 	<reg32 offset="0x0446" name="CP_PERFCOUNTER_LO"/>
 	<reg32 offset="0x0447" name="CP_PERFCOUNTER_HI"/>
-	<reg32 offset="0x044d" name="CP_ST_BASE"/>
-	<reg32 offset="0x044e" name="CP_ST_BUFSZ"/>
-	<reg32 offset="0x0458" name="CP_IB1_BASE"/>
-	<reg32 offset="0x0459" name="CP_IB1_BUFSZ"/>
-	<reg32 offset="0x045a" name="CP_IB2_BASE"/>
-	<reg32 offset="0x045b" name="CP_IB2_BUFSZ"/>
-	<reg32 offset="0x047f" name="CP_STAT"/>
 	<reg32 offset="0x05d0" name="RBBM_STATUS">
 		<bitfield name="CMDFIFO_AVAIL" low="0" high="4" type="uint"/>
 		<bitfield name="TC_BUSY" pos="5" type="boolean"/>

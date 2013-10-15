@@ -374,6 +374,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x01d1" name="CP_MERCIU_ADDR"/>
 	<reg32 offset="0x01d2" name="CP_MERCIU_DATA"/>
 	<reg32 offset="0x01d3" name="CP_MERCIU_DATA2"/>
+	<!-- see a3xx_snapshot_cp_meq().. looks like the way to dump queue between pfp and pm4 -->
 	<reg32 offset="0x01da" name="CP_MEQ_ADDR"/>
 	<reg32 offset="0x01db" name="CP_MEQ_DATA"/>
 	<reg32 offset="0x0445" name="CP_PERFCOUNTER_SELECT"/>
