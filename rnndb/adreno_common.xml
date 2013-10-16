@@ -87,35 +87,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <domain name="AXXX" width="32">
 	<brief>Registers in common between a2xx and a3xx</brief>
 
-	<enum name="adreno_mmu_clnt_beh">
-		<value name="BEH_NEVR" value="0"/>
-		<value name="BEH_TRAN_RNG" value="1"/>
-		<value name="BEH_TRAN_FLT" value="2"/>
-	</enum>
-
-	<reg32 offset="0x0040" name="MH_MMU_CONFIG">
-		<bitfield name="MMU_ENABLE" pos="0" type="boolean"/>
-		<bitfield name="SPLIT_MODE_ENABLE" pos="1" type="boolean"/>
-		<bitfield name="RB_W_CLNT_BEHAVIOR" low="4" high="5" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="CP_W_CLNT_BEHAVIOR" low="6" high="7" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="CP_R0_CLNT_BEHAVIOR" low="8" high="9" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="CP_R1_CLNT_BEHAVIOR" low="10" high="11" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="CP_R2_CLNT_BEHAVIOR" low="12" high="13" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="CP_R3_CLNT_BEHAVIOR" low="14" high="15" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="CP_R4_CLNT_BEHAVIOR" low="16" high="17" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="VGT_R0_CLNT_BEHAVIOR" low="18" high="19" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="VGT_R1_CLNT_BEHAVIOR" low="20" high="21" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="TC_R_CLNT_BEHAVIOR" low="22" high="23" type="adreno_mmu_clnt_beh"/>
-		<bitfield name="PA_W_CLNT_BEHAVIOR" low="24" high="25" type="adreno_mmu_clnt_beh"/>
-	</reg32>
-	<reg32 offset="0x0041" name="MH_MMU_VA_RANGE"/>
-	<reg32 offset="0x0042" name="MH_MMU_PT_BASE"/>
-	<reg32 offset="0x0043" name="MH_MMU_PAGE_FAULT"/>
-	<reg32 offset="0x0044" name="MH_MMU_TRAN_ERROR"/>
-	<reg32 offset="0x0045" name="MH_MMU_INVALIDATE"/>
-	<reg32 offset="0x0046" name="MH_MMU_MPU_BASE"/>
-	<reg32 offset="0x0047" name="MH_MMU_MPU_END"/>
-
 	<reg32 offset="0x01c0" name="CP_RB_BASE"/>
 	<reg32 offset="0x01c1" name="CP_RB_CNTL">
 		<bitfield name="BUFSZ" low="0" high="5"/>
