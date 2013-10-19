@@ -93,7 +93,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>wait until a register location is equal to a specific value</doc>
 	<value name="CP_WAIT_REG_EQ" value="0x52"/>
 	<doc>wait until a register location is >= a specific value</doc>
-	<value name="CP_WAT_REG_GTE" value="0x53"/>
+	<value name="CP_WAIT_REG_GTE" value="0x53"/>
 	<doc>wait until a read completes</doc>
 	<value name="CP_WAIT_UNTIL_READ" value="0x5c"/>
 	<doc>wait until all base/size writes from an IB_PFD packet have completed</doc>
@@ -148,7 +148,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>selective invalidation of state pointers</doc>
 	<value name="CP_INVALIDATE_STATE" value="0x3b"/>
 	<doc>dynamically changes shader instruction memory partition</doc>
-	<value name="CP_SET_SHADER_BASES" value="0x4A"/>
+	<value name="CP_SET_SHADER_BASES" value="0x4a"/>
 	<doc>sets the 64-bit BIN_MASK register in the PFP</doc>
 	<value name="CP_SET_BIN_MASK" value="0x50"/>
 	<doc>sets the 64-bit BIN_SELECT register in the PFP</doc>
@@ -161,18 +161,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_IM_STORE" value="0x2c"/>
 
 	<!-- For a20x -->
+<!-- TODO handle variants..
 	<doc>
 		Program an offset that will added to the BIN_BASE value of
 		the 3D_DRAW_INDX_BIN packet
 	</doc>
-	<value name="CP_SET_BIN_BASE_OFFSET" value="0x4B"/>
+	<value name="CP_SET_BIN_BASE_OFFSET" value="0x4b"/>
+ -->
 
 	<!-- for a22x -->
 	<doc>
 		sets draw initiator flags register in PFP, gets bitwise-ORed into
 		every draw initiator
 	</doc>
-	<value name="CP_SET_DRAW_INIT_FLAGS" value="0x4B"/>
+	<value name="CP_SET_DRAW_INIT_FLAGS" value="0x4b"/>
 	<doc>sets the register protection mode</doc>
 	<value name="CP_SET_PROTECTED_MODE" value="0x5f"/>
 
@@ -180,13 +182,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>load high level sequencer command</doc>
 	<value name="CP_LOAD_STATE" value="0x30"/>
 	<doc>Conditionally load a IB based on a flag, prefetch enabled</doc>
-	<value name="CP_COND_INDIRECT_BUFFER_PFE" value="0x3A"/>
+	<value name="CP_COND_INDIRECT_BUFFER_PFE" value="0x3a"/>
 	<doc>Conditionally load a IB based on a flag, prefetch disabled</doc>
 	<value name="CP_COND_INDIRECT_BUFFER_PFD" value="0x32"/>
 	<doc>Load a buffer with pre-fetch enabled</doc>
-	<value name="CP_INDIRECT_BUFFER_PFE" value="0x3F"/>
+	<value name="CP_INDIRECT_BUFFER_PFE" value="0x3f"/>
 	<doc>Set bin (?)</doc>
 	<value name="CP_SET_BIN" value="0x4c"/>
+
+	<!-- internal packets: -->
+	<value name="IN_IB_PREFETCH_END" value="0x17"/>
+	<value name="IN_SUBBLK_PREFETCH" value="0x1f"/>
+	<value name="IN_INSTR_PREFETCH" value="0x20"/>
+	<value name="IN_INSTR_MATCH" value="0x47"/>
+	<value name="IN_CONST_PREFETCH" value="0x49"/>
+	<value name="IN_INCR_UPDT_STATE" value="0x55"/>
+	<value name="IN_INCR_UPDT_CONST" value="0x56"/>
+	<value name="IN_INCR_UPDT_INSTR" value="0x57"/>
 </enum>
 
 
