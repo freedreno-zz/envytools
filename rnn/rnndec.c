@@ -107,7 +107,7 @@ static float float16(uint16_t val)
 	return u.f;
 }
 
-static const char *rnndec_decode_enum(struct rnndeccontext *ctx,
+static const char *rnndec_decode_enum_val(struct rnndeccontext *ctx,
 		struct rnnvalue **vals, int valsnum, uint64_t value)
 {
 	int i;
@@ -115,6 +115,18 @@ static const char *rnndec_decode_enum(struct rnndeccontext *ctx,
 		if (rnndec_varmatch(ctx, &vals[i]->varinfo) &&
 				vals[i]->valvalid && vals[i]->value == value)
 			return vals[i]->name;
+	return NULL;
+}
+
+char *rnndec_decode_enum(struct rnndeccontext *ctx, const char *enumname, uint64_t enumval)
+{
+	struct rnnenum *en = rnn_findenum (ctx->db, enumname);
+	if (en) {
+		int i;
+		for (i = 0; i < en->valsnum; i++)
+			if (en->vals[i]->valvalid && en->vals[i]->value == enumval)
+				return en->vals[i]->name;
+	}
 	return NULL;
 }
 
@@ -140,7 +152,7 @@ char *rnndec_decodeval(struct rnndeccontext *ctx, struct rnntypeinfo *ti, uint64
 			valsnum = ti->valsnum;
 			goto doenum;
 		doenum:
-			tmp = rnndec_decode_enum(ctx, vals, valsnum, value);
+			tmp = rnndec_decode_enum_val(ctx, vals, valsnum, value);
 			if (tmp) {
 				asprintf (&res, "%s%s%s", ctx->colors->eval, tmp, ctx->colors->reset);
 				return res;
@@ -266,7 +278,7 @@ static char *appendidx (struct rnndeccontext *ctx, char *name, uint64_t idx, str
 	char *res, *index_name = NULL;
 
 	if (index)
-		index_name = rnndec_decode_enum(ctx, index->vals, index->valsnum, idx);
+		index_name = rnndec_decode_enum_val(ctx, index->vals, index->valsnum, idx);
 
 	if (index_name)
 		asprintf (&res, "%s[%s%s%s]", name, ctx->colors->eval, index_name, ctx->colors->reset);
