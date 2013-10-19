@@ -227,6 +227,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="GPU_BUSY_NOHC" pos="30" type="boolean"/>
 		<bitfield name="GPU_BUSY" pos="31" type="boolean"/>
 	</reg32>
+	<!-- used in fw CP_WAIT_FOR_IDLE, similar to NQWAIT_UNTIL on a2xx: -->
+	<reg32 offset="0x0040" name="RBBM_NQWAIT_UNTIL"/>
 	<reg32 offset="0x0033" name="RBBM_WAIT_IDLE_CLOCKS_CTL"/>
 	<reg32 offset="0x0050" name="RBBM_INTERFACE_HANG_INT_CTL"/>
 	<reg32 offset="0x0051" name="RBBM_INTERFACE_HANG_MASK_CTL0"/>
@@ -261,6 +263,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="UCHE_OOB_ACCESS" pos="25"/>
 	</bitset>
 
+
+	<!--
+		set in pm4 fw INVALID_JUMP_TABLE_ENTRY and CP_INTERRUPT (compare
+		to CP_INT_STATUS in a2xx firmware), so this seems to be the a3xx
+		way for fw to raise and irq:
+	 -->
+	<reg32 offset="0x0060" name="RBBM_INT_SET_CMD" type="A3XX_INT0"/>
 	<reg32 offset="0x0061" name="RBBM_INT_CLEAR_CMD" type="A3XX_INT0"/>
 	<reg32 offset="0x0063" name="RBBM_INT_0_MASK" type="A3XX_INT0"/>
 	<reg32 offset="0x0064" name="RBBM_INT_0_STATUS" type="A3XX_INT0"/>
@@ -1061,6 +1070,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0f07" name="TP_PERFCOUNTER3_SELECT"/>
 	<reg32 offset="0x0f08" name="TP_PERFCOUNTER4_SELECT"/>
 	<reg32 offset="0x0f09" name="TP_PERFCOUNTER5_SELECT"/>
+
+	<!-- seems to be same as a2xx according to fwdump.. -->
+	<reg32 offset="0x21f9" name="VGT_EVENT_INITIATOR"/>
+	<reg32 offset="0x21fc" name="VGT_DRAW_INITIATOR"/>
+	<reg32 offset="0x21fd" name="VGT_IMMED_DATA"/>
+
 </domain>
 
 <domain name="A3XX_TEX_SAMP" width="32">
