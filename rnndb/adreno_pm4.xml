@@ -29,13 +29,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="pc_di_primtype">
 	<value name="DI_PT_NONE" value="0"/>
-	<value name="DI_PT_POINTLIST" value="1"/>
+	<value name="DI_PT_POINTLIST_A2XX" value="1"/>
 	<value name="DI_PT_LINELIST" value="2"/>
 	<value name="DI_PT_LINESTRIP" value="3"/>
 	<value name="DI_PT_TRILIST" value="4"/>
 	<value name="DI_PT_TRIFAN" value="5"/>
 	<value name="DI_PT_TRISTRIP" value="6"/>
+	<value name="DI_PT_LINELOOP" value="7"/>  <!-- a22x, a3xx -->
 	<value name="DI_PT_RECTLIST" value="8"/>
+	<value name="DI_PT_POINTLIST_A3XX" value="9"/>
+	<!-- not sure if any of below are valid (from amd-gpu header): -->
 	<value name="DI_PT_QUADLIST" value="13"/>
 	<value name="DI_PT_QUADSTRIP" value="14"/>
 	<value name="DI_PT_POLYGON" value="15"/>
