@@ -539,16 +539,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FLOAT" low="16" high="31" type="float"/>
 	</reg32>
 
-	<reg32 offset="0x20e8" name="UNKNOWN_20E8">
+	<reg32 offset="0x20e8" name="RB_CLEAR_COLOR_DW0">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
-	<reg32 offset="0x20e9" name="UNKNOWN_20E9">
+	<reg32 offset="0x20e9" name="RB_CLEAR_COLOR_DW1">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
-	<reg32 offset="0x20ea" name="UNKNOWN_20EA">
+	<reg32 offset="0x20ea" name="RB_CLEAR_COLOR_DW2">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
-	<reg32 offset="0x20eb" name="UNKNOWN_20EB">
+	<reg32 offset="0x20eb" name="RB_CLEAR_COLOR_DW3">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
 	<enum name="adreno_rb_copy_control_mode">
@@ -589,7 +589,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
 		<bitfield name="Z_TEST_ENABLE" pos="31" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x2101" name="UNKNOWN_2101">
+	<reg32 offset="0x2101" name="RB_DEPTH_CLEAR">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
 	<reg32 offset="0x2102" name="RB_DEPTH_INFO">
@@ -624,22 +624,31 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ZPASS_BF" low="26" high="28" type="adreno_stencil_op"/>
 		<bitfield name="ZFAIL_BF" low="29" high="31" type="adreno_stencil_op"/>
 	</reg32>
-	<reg32 offset="0x2105" name="UNKNOWN_2105">
+	<reg32 offset="0x2105" name="RB_STENCIL_CLEAR">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
-	<reg32 offset="0x2106" name="UNKNOWN_2106">
+	<reg32 offset="0x2106" name="RB_STENCIL_BUF_INFO">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
-	<reg32 offset="0x2107" name="UNKNOWN_2107">
+	<reg32 offset="0x2107" name="RB_STENCIL_BUF_PITCH">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
 	<reg32 offset="0x2108" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x2109" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
-	<reg32 offset="0x210e" name="PA_SC_WINDOW_OFFSET">
+	<!-- VSC == visibility stream c?? -->
+	<reg32 offset="0x210c" name="RB_LRZ_VSC_CONTROL">
+		<doc>seems to be set to 0x00000002 during binning pass</doc>
+		<bitfield name="BINNING_ENABLE" pos="1" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x210e" name="RB_WINDOW_OFFSET">
 		<doc>X/Y offset of current bin</doc>
 		<bitfield name="X" low="0" high="15" type="uint"/>
 		<bitfield name="Y" low="16" high="31" type="uint"/>
 	</reg32>
+	<reg32 offset="0x2110" name="RB_SAMPLE_COUNT_CONTROL"/>
+	<reg32 offset="0x2111" name="RB_SAMPLE_COUNT_ADDR"/>
+	<reg32 offset="0x2114" name="RB_Z_CLAMP_MIN"/>
+	<reg32 offset="0x2115" name="RB_Z_CLAMP_MAX"/>
 
 	<!-- PC registers -->
 	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL"/>
@@ -701,6 +710,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2212" name="HLSQ_CL_CONTROL_1_REG"/>
 	<reg32 offset="0x2214" name="HLSQ_CL_KERNEL_CONST_REG"/>
 	<reg32 offset="0x2215" name="HLSQ_CL_KERNEL_GROUP_X_REG"/>
+	<reg32 offset="0x2216" name="HLSQ_CL_KERNEL_GROUP_Y_REG"/>
 	<reg32 offset="0x2217" name="HLSQ_CL_KERNEL_GROUP_Z_REG"/>
 	<reg32 offset="0x221a" name="HLSQ_CL_WG_OFFSET_REG"/>
 
@@ -837,11 +847,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
 		<!-- this bit is set during resolve pass: -->
 		<bitfield name="RESOLVE" pos="16" type="boolean"/>
-		<!--
-			guessing that these are two bits each.. but possibly could
-			be just a flag with some other flags in between..
-		-->
-		<bitfield name="CONSTMODE" low="18" high="19" type="uint"/>
+		<bitfield name="CONSTMODE" pos="18" type="uint"/>
+		<bitfield name="BINNING" pos="19" type="boolean"/>
 		<bitfield name="SLEEPMODE" low="20" high="21" type="uint"/>
 		<!-- LOMODE==1 when oxiliForceSpL0ModeBuffer=1 -->
 		<bitfield name="LOMODE" low="22" high="23" type="uint"/>
@@ -893,7 +900,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		SP_VS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl.. and
 		unused for opencl
 	 -->
-	<reg32 offset="0x22d6" name="SP_VS_PVT_MEM_CTRL_REG"/>
+	<reg32 offset="0x22d6" name="SP_VS_PVT_MEM_PARAM_REG"/>
 	<reg32 offset="0x22d7" name="SP_VS_PVT_MEM_ADDR_REG"/>
 	<reg32 offset="0x22d8" name="SP_VS_PVT_MEM_SIZE_REG"/>
 	<reg32 offset="0x22df" name="SP_VS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
@@ -912,7 +919,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		SP_FS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl..  so
 		probably only matters for opencl
 	 -->
-	<reg32 offset="0x22e4" name="SP_FS_PVT_MEM_CTRL_REG"/>
+	<reg32 offset="0x22e4" name="SP_FS_PVT_MEM_PARAM_REG"/>
 	<reg32 offset="0x22e5" name="SP_FS_PVT_MEM_ADDR_REG"/>
 	<reg32 offset="0x22e6" name="SP_FS_PVT_MEM_SIZE_REG"/>
 	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0"/>
@@ -990,6 +997,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x1" name="DATA_ADDRESS"/>
 		<reg32 offset="0x2" name="DATA_LENGTH"/>
 	</array>
+	<reg32 offset="0x0c3c" name="VSC_BIN_CONTROL">
+		<doc>seems to be set to 0x00000001 during binning pass</doc>
+		<bitfield name="BINNING_ENABLE" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0c3d" name="UNKNOWN_0C3D">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
@@ -997,7 +1008,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0c49" name="PC_PERFCOUNTER1_SELECT"/>
 	<reg32 offset="0x0c4a" name="PC_PERFCOUNTER2_SELECT"/>
 	<reg32 offset="0x0c4b" name="PC_PERFCOUNTER3_SELECT"/>
-	<reg32 offset="0x0c81" name="UNKNOWN_0C81">
+	<reg32 offset="0x0c81" name="GRAS_TSE_DEBUG_ECO">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
 	<reg32 offset="0x0c88" name="GRAS_PERFCOUNTER0_SELECT"/>
@@ -1011,9 +1022,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x3" name="W"/>
 	</array>
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
+	<reg32 offset="0x0cc1" name="RB_DEBUG_ECO_CONTROLS_ADDR"/>
 	<reg32 offset="0x0cc6" name="RB_PERFCOUNTER0_SELECT"/>
 	<reg32 offset="0x0cc7" name="RB_PERFCOUNTER1_SELECT"/>
-	<reg32 offset="0x0ce0" name="RB_WINDOW_SIZE">
+	<reg32 offset="0x0ce0" name="RB_FRAME_BUFFER_DIMENSION">
 		<bitfield name="WIDTH" low="0" high="13" type="uint"/>
 		<bitfield name="HEIGHT" low="14" high="27" type="uint"/>
 	</reg32>

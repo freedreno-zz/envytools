@@ -193,6 +193,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>Set bin (?)</doc>
 	<value name="CP_SET_BIN" value="0x4c"/>
 
+	<doc>test 2 memory locations to dword values specified</doc>
+	<value name="CP_TEST_TWO_MEMS" value="0x71"/>
+
+	<doc>PFP waits until the FIFO between the PFP and the ME is empty</doc>
+	<value name="CP_WAIT_FOR_ME" value="0x13"/>
+
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
 	<value name="IN_SUBBLK_PREFETCH" value="0x1f"/>
