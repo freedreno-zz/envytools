@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database xmlns="http://nouveau.freedesktop.org/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
+<import file="freedreno_copyright.xml"/>
+<import file="adreno_common.xml"/>
+<import file="adreno_pm4.xml"/>
+
+<domain name="A4XX" width="32">
+	<!-- RB registers -->
+	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
+	<reg32 offset="0x0cd2" name="RB_PERFCTR_CCU_SEL_3"/>
+	<reg32 offset="0x20a0" name="RB_MODE_CONTROL"/>
+	<reg32 offset="0x213f" name="RB_VPORT_Z_CLAMP_MAX_15"/>
+
+	<!-- RBBM registers -->
+	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
+	<reg32 offset="0x0002" name="RBBM_HW_CONFIGURATION"/>
+	<reg32 offset="0x0020" name="RBBM_CLOCK_CTL"/>
+	<reg32 offset="0x0021" name="RBBM_SP_HYST_CNT"/>
+	<reg32 offset="0x0023" name="RBBM_AHB_CTL0"/>
+	<reg32 offset="0x0024" name="RBBM_AHB_CTL1"/>
+	<reg32 offset="0x0025" name="RBBM_AHB_CMD"/>
+	<reg32 offset="0x0026" name="RBBM_RB_SUB_BLOCK_SEL_CTL"/>
+	<reg32 offset="0x0028" name="RBBM_RAM_ACC_63_32"/>
+	<reg32 offset="0x002b" name="RBBM_WAIT_IDLE_CLOCKS_CTL"/>
+	<reg32 offset="0x002f" name="RBBM_INTERFACE_HANG_INT_CTL"/>
+	<reg32 offset="0x0034" name="RBBM_INTERFACE_HANG_MASK_CTL4"/>
+	<reg32 offset="0x0036" name="RBBM_INT_CLEAR_CMD"/>
+	<reg32 offset="0x0037" name="RBBM_INT_0_MASK"/>
+	<reg32 offset="0x003f" name="RBBM_AHB_DEBUG_CTL"/>
+	<reg32 offset="0x0041" name="RBBM_VBIF_DEBUG_CTL"/>
+	<reg32 offset="0x0045" name="RBBM_BLOCK_SW_RESET_CMD"/>
+	<reg32 offset="0x0047" name="RBBM_RESET_CYCLES"/>
+	<reg32 offset="0x0049" name="RBBM_EXT_TRACE_BUS_CTL"/>
+	<reg32 offset="0x009c" name="RBBM_PERFCTR_CP_0_LO"/>
+	<reg32 offset="0x0168" name="RBBM_PERFCTR_PWR_1_LO"/>
+	<reg32 offset="0x0170" name="RBBM_PERFCTR_CTL"/>
+	<reg32 offset="0x0171" name="RBBM_PERFCTR_LOAD_CMD0"/>
+	<reg32 offset="0x0172" name="RBBM_PERFCTR_LOAD_CMD1"/>
+	<reg32 offset="0x0173" name="RBBM_PERFCTR_LOAD_CMD2"/>
+	<reg32 offset="0x0174" name="RBBM_PERFCTR_LOAD_VALUE_LO"/>
+	<reg32 offset="0x017a" name="RBBM_GPU_BUSY_MASKED"/>
+	<reg32 offset="0x017d" name="RBBM_INT_0_STATUS"/>
+	<reg32 offset="0x0182" name="RBBM_CLOCK_STATUS"/>
+	<reg32 offset="0x0189" name="RBBM_AHB_STATUS"/>
+	<reg32 offset="0x018f" name="RBBM_AHB_ERROR_STATUS"/>
+	<reg32 offset="0x0191" name="RBBM_STATUS"/>
+	<reg32 offset="0x019f" name="RBBM_INTERFACE_RRDY_STATUS5"/>
+
+	<!-- CP registers -->
+	<reg32 offset="0x0228" name="CP_SCRATCH_UMASK"/>
+	<reg32 offset="0x0229" name="CP_SCRATCH_ADDR"/>
+	<reg32 offset="0x0200" name="CP_RB_BASE"/>
+	<reg32 offset="0x0201" name="CP_RB_CNTL"/>
+	<reg32 offset="0x0205" name="CP_RB_WPTR"/>
+	<reg32 offset="0x0203" name="CP_RB_RPTR_ADDR"/>
+	<reg32 offset="0x0204" name="CP_RB_RPTR"/>
+	<reg32 offset="0x0206" name="CP_IB1_BASE"/>
+	<reg32 offset="0x0207" name="CP_IB1_BUFSZ"/>
+	<reg32 offset="0x0208" name="CP_IB2_BASE"/>
+	<reg32 offset="0x0209" name="CP_IB2_BUFSZ"/>
+	<reg32 offset="0x0217" name="CP_ME_RB_DONE_DATA"/>
+	<reg32 offset="0x0219" name="CP_QUEUE_THRESH2"/>
+	<reg32 offset="0x021b" name="CP_MERCIU_SIZE"/>
+	<reg32 offset="0x0223" name="CP_PFP_UCODE_ADDR"/>
+	<reg32 offset="0x0224" name="CP_PFP_UCODE_DATA"/>
+	<reg32 offset="0x0225" name="CP_ME_RAM_WADDR"/>
+	<reg32 offset="0x0226" name="CP_ME_RAM_RADDR"/>
+	<reg32 offset="0x0227" name="CP_ME_RAM_DATA"/>
+	<reg32 offset="0x022a" name="CP_PREEMPT"/>
+	<reg32 offset="0x022c" name="CP_CNTL"/>
+	<reg32 offset="0x022d" name="CP_ME_CNTL"/>
+	<reg32 offset="0x022e" name="CP_DEBUG"/>
+	<reg32 offset="0x0231" name="CP_DEBUG_ECO_CONTROL"/>
+	<reg32 offset="0x0232" name="CP_DRAW_STATE_ADDR"/>
+	<reg32 offset="0x0240" name="CP_PROTECT_REG_0"/>
+	<reg32 offset="0x0250" name="CP_PROTECT_CTRL"/>
+	<reg32 offset="0x04c0" name="CP_ST_BASE"/>
+	<reg32 offset="0x04ce" name="CP_STQ_AVAIL"/>
+	<reg32 offset="0x04d0" name="CP_MERCIU_STAT"/>
+	<reg32 offset="0x04d2" name="CP_WFI_PEND_CTR"/>
+	<reg32 offset="0x04dd" name="CP_EVENTS_IN_FLIGHT"/>
+	<reg32 offset="0x0500" name="CP_PERFCTR_CP_SEL_0"/>
+	<reg32 offset="0x050b" name="CP_PERFCOMBINER_SELECT"/>
+	<array offset="0x0578" name="CP_SCRATCH" stride="1" length="23">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+
+	<!-- SP registers -->
+	<reg32 offset="0x0ec0" name="SP_VS_STATUS"/>
+	<reg32 offset="0x0ecf" name="SP_PERFCTR_SP_SEL_11"/>
+	<reg32 offset="0x22c0" name="SP_SP_CTRL"/>
+	<reg32 offset="0x22c1" name="SP_INSTR_CACHE_CTRL"/>
+	<reg32 offset="0x22c4" name="SP_VS_CTRL_0"/>
+	<reg32 offset="0x22e1" name="SP_VS_OBJ_START"/>
+	<reg32 offset="0x22e2" name="SP_VS_PVT_MEM_PARAM"/>"
+	<reg32 offset="0x22e3" name="SP_VS_PVT_MEM_ADDR"/>
+	<reg32 offset="0x22eb" name="SP_FS_OBJ_START"/>
+	<reg32 offset="0x22ec" name="SP_FS_PVT_MEM_PARAM"/>"
+	<reg32 offset="0x22ed" name="SP_FS_PVT_MEM_ADDR"/>
+	<reg32 offset="0x2360" name="SP_GS_LENGTH"/>
+
+	<!-- VPC registers -->
+	<reg32 offset="0x0e60" name="VPC_DEBUG_RAM_SEL"/>
+	<reg32 offset="0x0e61" name="VPC_DEBUG_RAM_READ"/>
+	<reg32 offset="0x0e64" name="VPC_DEBUG_ECO_CONTROL"/>
+	<reg32 offset="0x0e68" name="VPC_PERFCTR_VPC_SEL_3"/>
+	<reg32 offset="0x2140" name="VPC_ATTR"/>
+	<reg32 offset="0x216e" name="VPC_SO_FLUSH_WADDR_3"/>
+
+	<!-- VSC registers -->
+	<reg32 offset="0x0c00" name="VSC_BIN_SIZE"/>
+	<reg32 offset="0x0c01" name="VSC_SIZE_ADDRESS"/>
+	<reg32 offset="0x0c03" name="VSC_DEBUG_ECO_CONTROL"/>
+	<reg32 offset="0x0c08" name="VSC_PIPE_CONFIG_0"/>
+	<reg32 offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS_0"/>
+	<reg32 offset="0x0c1f" name="VSC_PIPE_DATA_LENGTH_7"/>
+	<reg32 offset="0x0c41" name="VSC_PIPE_PARTIAL_POSN_1"/>
+	<reg32 offset="0x0c50" name="VSC_PERFCTR_VSC_SEL_0"/>
+	<reg32 offset="0x0c51" name="VSC_PERFCTR_VSC_SEL_1"/>
+
+	<!-- VFD registers -->
+	<reg32 offset="0x0e40" name="VFD_DEBUG_CONTROL"/>
+	<reg32 offset="0x0e4a" name="VFD_PERFCTR_VFD_SEL_7"/>
+	<reg32 offset="0x2200" name="VFD_CONTROL_0"/>
+	<reg32 offset="0x2201" name="VFD_CONTROL_1"/>
+	<reg32 offset="0x2202" name="VFD_CONTROL_2"/>
+	<reg32 offset="0x2203" name="VFD_CONTROL_3"/>
+	<reg32 offset="0x2204" name="VFD_CONTROL_4"/>
+	<reg32 offset="0x2208" name="VFD_INDEX_OFFSET"/>
+	<reg32 offset="0x220a" name="VFD_FETCH_INSTR_0_0"/>
+	<reg32 offset="0x2287" name="VFD_FETCH_INSTR_1_31"/>
+	<reg32 offset="0x22a9" name="VFD_DECODE_INSTR_31"/>
+
+	<!-- TPL1 registers -->
+	<reg32 offset="0x0f00" name="TPL1_DEBUG_ECO_CONTROL"/>
+	<reg32 offset="0x0f0b" name="TPL1_PERFCTR_TP_SEL_7"/>
+	<reg32 offset="0x2380" name="TPL1_TP_TEX_OFFSET"/>
+	<reg32 offset="0x23a6" name="TPL1_TP_CS_TEXMEMOBJ_BASE_ADDR"/>
+
+	<!-- GRAS registers -->
+	<reg32 offset="0x0c80" name="GRAS_TSE_STATUS"/>
+	<reg32 offset="0x0c81" name="GRAS_DEBUG_ECO_CONTROL"/>
+	<reg32 offset="0x0c88" name="GRAS_PERFCTR_TSE_SEL_0"/>
+	<reg32 offset="0x0c8b" name="GRAS_PERFCTR_TSE_SEL_3"/>
+	<reg32 offset="0x2000" name="GRAS_CL_CLIP_CNTL"/>
+	<reg32 offset="0x2004" name="GRAS_CL_GB_CLIP_ADJ"/>
+	<reg32 offset="0x2008" name="GRAS_CL_VPORT_XOFFSET_0"/>
+	<reg32 offset="0x209f" name="GRAS_SC_EXTENT_WINDOW_TL"/>
+
+	<!-- UCHE registers -->
+	<reg32 offset="0x0e80" name="UCHE_CACHE_MODE_CONTROL"/>
+	<reg32 offset="0x0e84" name="UCHE_TRAP_BASE_HI"/>
+	<reg32 offset="0x0e88" name="UCHE_CACHE_STATUS"/>
+	<reg32 offset="0x0e95" name="UCHE_PERFCTR_UCHE_SEL_7"/>
+
+	<!-- HLSQ registers -->
+	<reg32 offset="0x0e00" name="HLSQ_TIMEOUT_THRESHOLD"/>
+	<reg32 offset="0x0e04" name="HLSQ_DEBUG_ECO_CONTROL"/>
+	<reg32 offset="0x0e0e" name="HLSQ_PERF_PIPE_MASK"/>
+	<reg32 offset="0x23c0" name="HLSQ_CONTROL_0"/>
+	<reg32 offset="0x23db" name="HLSQ_UPDATE_CONTROL"/>
+
+	<!-- PC registers -->
+	<reg32 offset="0x0d00" name="PC_BINNING_COMMAND"/>
+	<reg32 offset="0x0d0c" name="PC_DRAWCALL_SETUP_OVERRIDE"/>
+	<reg32 offset="0x0d10" name="PC_PERFCTR_PC_SEL_0"/>
+	<reg32 offset="0x0d17" name="PC_PERFCTR_PC_SEL_7"/>
+	<reg32 offset="0x21c0" name="PC_BIN_BASE"/>
+	<reg32 offset="0x21c6" name="PC_RESTART_INDEX"/>
+	<reg32 offset="0x21e5" name="PC_GS_PARAM"/>
+	<reg32 offset="0x21e7" name="PC_HS_PARAM"/>
+
+	<!-- VBIF registers -->
+	<reg32 offset="0x301c" name="VBIF_ABIT_SORT"/>
+	<reg32 offset="0x301d" name="VBIF_ABIT_SORT_CONF"/>
+	<reg32 offset="0x302a" name="VBIF_GATE_OFF_WRREQ_EN"/>
+	<reg32 offset="0x302c" name="VBIF_IN_RD_LIM_CONF0"/>
+	<reg32 offset="0x302d" name="VBIF_IN_RD_LIM_CONF1"/>
+	<reg32 offset="0x3030" name="VBIF_IN_WR_LIM_CONF0"/>
+	<reg32 offset="0x3031" name="VBIF_IN_WR_LIM_CONF1"/>
+	<reg32 offset="0x3049" name="VBIF_ROUND_ROBIN_QOS_ARB"/>
+</domain>
+
+</database>

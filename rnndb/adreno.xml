@@ -6,5 +6,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <import file="a2xx/a2xx.xml"/>
 <import file="a3xx/a3xx.xml"/>
+<import file="a4xx/a4xx.xml"/>
 
 </database>
