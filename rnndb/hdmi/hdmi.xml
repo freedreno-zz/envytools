@@ -177,6 +177,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00130" name="HDCP_RESET">
 		<bitfield name="LINK0_DEAUTHENTICATE" pos="0" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x0016c" name="VENSPEC_INFO0"/>
+	<reg32 offset="0x00170" name="VENSPEC_INFO1"/>
+	<reg32 offset="0x00174" name="VENSPEC_INFO2"/>
+	<reg32 offset="0x00178" name="VENSPEC_INFO3"/>
+	<reg32 offset="0x0017c" name="VENSPEC_INFO4"/>
+	<reg32 offset="0x00180" name="VENSPEC_INFO5"/>
+	<reg32 offset="0x00184" name="VENSPEC_INFO6"/>
+
 	<reg32 offset="0x001d0" name="AUDIO_CFG">
 		<bitfield name="ENGINE_ENABLE" pos="0" type="boolean"/>
 		<bitfield name="FIFO_WATERMARK" low="4" high="7" type="uint"/>
@@ -207,6 +215,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SEND_RESET" pos="2" type="boolean"/>
 		<bitfield name="SW_STATUS_RESET" pos="3" type="boolean"/>
 		<bitfield name="TRANSACTION_CNT" low="20" high="21" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00210" name="DDC_ARBITRATION">
+		<bitfield name="HW_ARBITRATION" pos="4"/>
 	</reg32>
 	<reg32 offset="0x00214" name="DDC_INT_CTRL">
 		<!--
@@ -363,6 +374,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="REFTIMER" low="0" high="15" type="uint"/>
 	</reg32>
 
+	<reg32 offset="0x00298" name="CEC_STATUS"/>
+	<reg32 offset="0x0029c" name="CEC_INT"/>
+	<reg32 offset="0x002a0" name="CEC_ADDR"/>
+	<reg32 offset="0x002a4" name="CEC_TIME"/>
+	<reg32 offset="0x002a8" name="CEC_REFTIMER"/>
+	<reg32 offset="0x002ac" name="CEC_RD_DATA"/>
+	<reg32 offset="0x002b0" name="CEC_RD_FILTER"/>
+
 	<reg32 offset="0x002b4" name="ACTIVE_HSYNC">
 		<bitfield name="START" low="0" high="11" type="uint"/>
 		<bitfield name="END" low="16" high="27" type="uint"/>
@@ -390,17 +409,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="HSYNC_LOW" pos="29" type="boolean"/>
 		<bitfield name="INTERLACED_EN" pos="31" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x002d4" name="PHY_CTRL">
-		<!--
-			in hdmi_phy_reset() it appears to be toggling SW_RESET/
-			SW_RESET_PLL based on the value of the bit above, so
-			I'm guessing the bit above is a polarit bit
-		 -->
-		<bitfield name="SW_RESET_PLL" pos="0" type="boolean"/>
-		<bitfield name="SW_RESET_PLL_LOW" pos="1" type="boolean"/>
-		<bitfield name="SW_RESET" pos="2" type="boolean"/>
-		<bitfield name="SW_RESET_LOW" pos="3" type="boolean"/>
-	</reg32>
 	<reg32 offset="0x002cc" name="AUD_INT">
 		<!--
 			HDMI_AUD_INT[0x02CC]
@@ -414,6 +422,26 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="AUD_SAM_DROP_INT" pos="2" type="boolean"/>   <!-- write to ack irq -->
 		<bitfield name="AUD_SAM_DROP_MASK" pos="3" type="boolean"/>  <!-- r/w, enables irq -->
 	</reg32>
+	<reg32 offset="0x002d4" name="PHY_CTRL">
+		<!--
+			in hdmi_phy_reset() it appears to be toggling SW_RESET/
+			SW_RESET_PLL based on the value of the bit above, so
+			I'm guessing the bit above is a polarit bit
+		 -->
+		<bitfield name="SW_RESET_PLL" pos="0" type="boolean"/>
+		<bitfield name="SW_RESET_PLL_LOW" pos="1" type="boolean"/>
+		<bitfield name="SW_RESET" pos="2" type="boolean"/>
+		<bitfield name="SW_RESET_LOW" pos="3" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x002dc" name="CEC_WR_RANGE"/>
+	<reg32 offset="0x002e0" name="CEC_RD_RANGE"/>
+	<reg32 offset="0x002e4" name="VERSION"/>
+	<reg32 offset="0x00360" name="CEC_COMPL_CTL"/>
+	<reg32 offset="0x00364" name="CEC_RD_START_RANGE"/>
+	<reg32 offset="0x00368" name="CEC_RD_TOTAL_RANGE"/>
+	<reg32 offset="0x0036c" name="CEC_RD_ERR_RESP_LO"/>
+	<reg32 offset="0x00370" name="CEC_WR_CHECK_CONFIG"/>
+
 </domain>
 
 <domain name="HDMI_8x60" width="32">

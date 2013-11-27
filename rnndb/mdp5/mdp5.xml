@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database xmlns="http://nouveau.freedesktop.org/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
+<import file="freedreno_copyright.xml"/>
+
+<domain name="MDP5" width="32">
+
+	<enum name="mdp5_intf">
+		<value name="INTF_DSI"  value="0x1"/>
+		<value name="INTF_HDMI" value="0x3"/>
+		<value name="INTF_LCDC" value="0x5"/>
+		<value name="INTF_eDP"  value="0x9"/>
+	</enum>
+
+	<enum name="mdp5_intfnum">
+		<value name="NO_INTF" value="0"/>
+		<value name="INTF0"   value="1"/>
+		<value name="INTF1"   value="2"/>
+		<value name="INTF2"   value="3"/>
+		<value name="INTF3"   value="4"/>
+	</enum>
+
+	<enum name="mdp5_pipe">
+		<value name="SSPP_VIG0" value="0"/>
+		<value name="SSPP_VIG1" value="1"/>
+		<value name="SSPP_VIG2" value="2"/>
+		<value name="SSPP_RGB0" value="3"/>
+		<value name="SSPP_RGB1" value="4"/>
+		<value name="SSPP_RGB2" value="5"/>
+		<value name="SSPP_DMA0" value="6"/>
+		<value name="SSPP_DMA1" value="7"/>
+	</enum>
+
+	<enum name="mdp5_format">
+	</enum>
+
+	<enum name="mdp5_ctl_mode">
+		<value name="MODE_ROT0" value="1"/>
+		<value name="MODE_ROT1" value="2"/>
+		<value name="MODE_WB0" value="3"/>
+		<value name="MODE_WB1" value="4"/>
+		<value name="MODE_WFD" value="5"/>
+	</enum>
+
+	<enum name="mdp5_pack_3d">
+		<value name="PACK_3D_FRAME_INT" value="0"/>
+		<value name="PACK_3D_H_ROW_INT" value="1"/>
+		<value name="PACK_3D_V_ROW_INT" value="2"/>
+		<value name="PACK_3D_COL_INT"   value="3"/>
+	</enum>
+
+	<enum name="mdp5_chroma_samp_type">
+		<value name="CHROMA_RGB"  value="0"/>
+		<value name="CHROMA_H2V1" value="1"/>
+		<value name="CHROMA_H1V2" value="2"/>
+		<value name="CHROMA_420"  value="3"/>
+	</enum>
+
+	<enum name="mdp5_scale_filter">
+		<value name="SCALE_FILTER_NEAREST" value="0"/>
+		<value name="SCALE_FILTER_BIL" value="1"/>
+		<value name="SCALE_FILTER_PCMN" value="2"/>
+		<value name="SCALE_FILTER_CA" value="3"/>
+	</enum>
+
+	<bitset name="MDP5_IRQ">
+		<bitfield name="INTF0_WB_ROT_COMP"        pos="0"  type="boolean"/>
+		<bitfield name="INTF1_WB_ROT_COMP"        pos="1"  type="boolean"/>
+		<bitfield name="INTF2_WB_ROT_COMP"        pos="2"  type="boolean"/>
+		<bitfield name="INTF3_WB_ROT_COMP"        pos="3"  type="boolean"/>
+		<bitfield name="INTF0_WB_WFD"             pos="4"  type="boolean"/>
+		<bitfield name="INTF1_WB_WFD"             pos="5"  type="boolean"/>
+		<bitfield name="INTF2_WB_WFD"             pos="6"  type="boolean"/>
+		<bitfield name="INTF3_WB_WFD"             pos="7"  type="boolean"/>
+		<bitfield name="INTF0_PING_PONG_COMP"     pos="8"  type="boolean"/>
+		<bitfield name="INTF1_PING_PONG_COMP"     pos="9"  type="boolean"/>
+		<bitfield name="INTF2_PING_PONG_COMP"     pos="10" type="boolean"/>
+		<bitfield name="INTF3_PING_PONG_COMP"     pos="11" type="boolean"/>
+		<bitfield name="INTF0_PING_PONG_RD_PTR"   pos="12" type="boolean"/>
+		<bitfield name="INTF1_PING_PONG_RD_PTR"   pos="13" type="boolean"/>
+		<bitfield name="INTF2_PING_PONG_RD_PTR"   pos="14" type="boolean"/>
+		<bitfield name="INTF3_PING_PONG_RD_PTR"   pos="15" type="boolean"/>
+		<bitfield name="INTF0_PING_PONG_WR_PTR"   pos="16" type="boolean"/>
+		<bitfield name="INTF1_PING_PONG_WR_PTR"   pos="17" type="boolean"/>
+		<bitfield name="INTF2_PING_PONG_WR_PTR"   pos="18" type="boolean"/>
+		<bitfield name="INTF3_PING_PONG_WR_PTR"   pos="19" type="boolean"/>
+		<bitfield name="INTF0_PING_PONG_AUTO_REF" pos="20" type="boolean"/>
+		<bitfield name="INTF1_PING_PONG_AUTO_REF" pos="21" type="boolean"/>
+		<bitfield name="INTF2_PING_PONG_AUTO_REF" pos="22" type="boolean"/>
+		<bitfield name="INTF3_PING_PONG_AUTO_REF" pos="23" type="boolean"/>
+		<bitfield name="INTF0_UNDER_RUN"          pos="24" type="boolean"/>
+		<bitfield name="INTF0_VSYNC"              pos="25" type="boolean"/>
+		<bitfield name="INTF1_UNDER_RUN"          pos="26" type="boolean"/>
+		<bitfield name="INTF1_VSYNC"              pos="27" type="boolean"/>
+		<bitfield name="INTF2_UNDER_RUN"          pos="28" type="boolean"/>
+		<bitfield name="INTF2_VSYNC"              pos="29" type="boolean"/>
+		<bitfield name="INTF3_UNDER_RUN"          pos="30" type="boolean"/>
+		<bitfield name="INTF3_VSYNC"              pos="31" type="boolean"/>
+	</bitset>
+
+	<bitset name="mdp5_smp_alloc">
+		<bitfield name="CLIENT0" low="0"  high="7"  type="uint"/>
+		<bitfield name="CLIENT1" low="8"  high="15" type="uint"/>
+		<bitfield name="CLIENT2" low="16" high="23" type="uint"/>
+		<bitfield name="CLIENT3" low="24" high="31" type="uint"/>
+	</bitset>
+
+	<reg32 offset="0x00000" name="HW_VERSION"/>
+	<reg32 offset="0x00010" name="HW_INTR_STATUS">
+		<bitfield name="INTR_MDP"  pos="0"  type="boolean"/>
+		<bitfield name="INTR_DSI0" pos="4"  type="boolean"/>
+		<bitfield name="INTR_DSI1" pos="5"  type="boolean"/>
+		<bitfield name="INTR_HDMI" pos="8"  type="boolean"/>
+		<bitfield name="INTR_EDP"  pos="12" type="boolean"/>
+	</reg32>
+
+	<reg32 offset="0x00100" name="MDP_VERSION">
+		<bitfield name="MINOR" low="16" high="23" type="uint"/>
+		<bitfield name="MAJOR" low="28" high="31" type="uint"/>
+	</reg32>
+
+	<reg32 offset="0x00104" name="DISP_INTF_SEL">
+		<bitfield name="INTF0" low="0"  high="7"  type="mdp5_intf"/>
+		<bitfield name="INTF1" low="8"  high="15" type="mdp5_intf"/>
+		<bitfield name="INTF2" low="16" high="23" type="mdp5_intf"/>
+		<bitfield name="INTF3" low="24" high="31" type="mdp5_intf"/>
+	</reg32>
+	<reg32 offset="0x00110" name="INTR_EN" type="MDP5_IRQ"/>
+	<reg32 offset="0x00114" name="INTR_STATUS" type="MDP5_IRQ"/>
+	<reg32 offset="0x00118" name="INTR_CLEAR" type="MDP5_IRQ"/>
+	<reg32 offset="0x0011C" name="HIST_INTR_EN"/>
+	<reg32 offset="0x00120" name="HIST_INTR_STATUS"/>
+	<reg32 offset="0x00124" name="HIST_INTR_CLEAR"/>
+
+	<array offset="0x00180" name="SMP_ALLOC_W" length="4" stride="4">
+		<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
+	</array>
+	<array offset="0x00230" name="SMP_ALLOC_R" length="4" stride="4">
+		<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
+	</array>
+
+	<enum name="mdp5_igc_type">
+		<value name="IGC_VIG" value="0"/>		<!-- 0x300 -->
+		<value name="IGC_RGB" value="1"/>		<!-- 0x310 -->
+		<value name="IGC_DMA" value="2"/>		<!-- 0x320 -->
+		<value name="IGC_DSPP" value="3"/>		<!-- 0x400 -->
+	</enum>
+	<array offsets="0x00300,0x00310,0x00320,0x00400" name="IGC" length="3" stride="0x10" index="mdp5_igc_type">
+		<array offset="0x00" name="LUT" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="VAL" low="0" high="11"/>
+				<bitfield name="INDEX_UPDATE" pos="25" type="boolean"/>
+				<!--
+					not sure about these:
+						/* INDEX_UPDATE */
+						data = (1 << 25) | (((~(1 << blk_idx)) & 0x7) << 28);
+						MDSS_MDP_REG_WRITE(offset, (cfg->c0_c1_data[0] & 0xFFF) | data);
+				 -->
+				<bitfield name="DISABLE_PIPE_0" pos="28" type="boolean"/>
+				<bitfield name="DISABLE_PIPE_1" pos="29" type="boolean"/>
+				<bitfield name="DISABLE_PIPE_2" pos="30" type="boolean"/>
+			</reg32>
+		</array>
+	</array>
+
+	<array offset="0x00600" name="CTL" length="4" stride="0x100">
+		<array offset="0x000" name="LAYER" length="5" stride="4">
+			<reg32 offset="0" name="REG"/>
+		</array>
+		<reg32 offset="0x014" name="OP">
+			<bitfield name="MODE" low="0" high="3" type="mdp5_ctl_mode"/>
+			<bitfield name="INTF_NUM" low="4" high="6" type="mdp5_intfnum"/>
+			<bitfield name="CMD_MODE" pos="17" type="boolean"/>
+			<bitfield name="PACK_3D_ENABLE" pos="19" type="boolean"/>
+			<bitfield name="PACK_3D" low="20" high="21" type="mdp5_pack_3d"/>
+		</reg32>
+		<reg32 offset="0x018" name="FLUSH"/>
+		<reg32 offset="0x01C" name="START"/>
+		<reg32 offset="0x020" name="PACK_3D"/>
+	</array>
+
+	<!-- same as mdp4 -->
+	<bitset name="mdp5_unpack_pattern" inline="yes">
+		<bitfield name="ELEM0" low="0"  high="7"/>
+		<bitfield name="ELEM1" low="8"  high="15"/>
+		<bitfield name="ELEM2" low="16" high="23"/>
+		<bitfield name="ELEM3" low="24" high="31"/>
+	</bitset>
+
+	<array offset="0x01200" name="PIPE" length="8" stride="0x400" index="mdp5_pipe">
+		<reg32 offset="0x2C4" name="HIST_CTL_BASE"/>
+		<reg32 offset="0x2F0" name="HIST_LUT_BASE"/>
+		<reg32 offset="0x300" name="HIST_LUT_SWAP"/>
+		<!-- SSPP: -->
+		<reg32 offset="0x000" name="SRC_SIZE" type="reg_wh"/>
+		<reg32 offset="0x004" name="SRC_IMG_SIZE" type="reg_wh"/>
+		<reg32 offset="0x008" name="SRC_XY" type="reg_xy"/>
+		<reg32 offset="0x00C" name="OUT_SIZE" type="reg_wh"/>
+		<reg32 offset="0x010" name="OUT_XY" type="reg_xy"/>
+		<reg32 offset="0x014" name="SRC0_ADDR"/>
+		<reg32 offset="0x018" name="SRC1_ADDR"/>
+		<reg32 offset="0x01C" name="SRC2_ADDR"/>
+		<reg32 offset="0x020" name="SRC3_ADDR"/>
+		<reg32 offset="0x024" name="SRC_YSTRIDE0"/>
+		<reg32 offset="0x028" name="SRC_YSTRIDE1"/>
+		<reg32 offset="0x02C" name="STILE_FRAME_SIZE"/>
+		<reg32 offset="0x030" name="SRC_FORMAT">
+			<bitfield name="G_BPC" low="0" high="1" type="mdp4_bpc"/>
+			<bitfield name="B_BPC" low="2" high="3" type="mdp4_bpc"/>
+			<bitfield name="R_BPC" low="4" high="5" type="mdp4_bpc"/>
+			<bitfield name="A_BPC" low="6" high="7" type="mdp4_bpc_alpha"/>
+			<bitfield name="ALPHA_ENABLE" pos="8" type="boolean"/>
+			<bitfield name="CPP" low="9" high="10" type="uint">
+				<brief>8bit characters per pixel minus 1</brief>
+			</bitfield>
+			<bitfield name="ROT90" pos="11" type="boolean"/>
+			<bitfield name="UNPACK_COUNT" low="12" high="13" type="uint"/>
+			<bitfield name="UNPACK_TIGHT" pos="17" type="boolean"/>
+			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
+			<bitfield name="NUM_PLANES" low="19" high="22" type="uint"/>
+			<bitfield name="CHROMA_SAMP" low="23" high="24" type="mdp5_chroma_samp_type"/>
+		</reg32>
+		<reg32 offset="0x034" name="SRC_UNPACK" type="mdp5_unpack_pattern"/>
+		<reg32 offset="0x038" name="SRC_OP_MODE"/>
+		<reg32 offset="0x03c" name="SRC_CONSTANT_COLOR"/>
+		<reg32 offset="0x048" name="FETCH_CONFIG"/>
+		<reg32 offset="0x04c" name="VC1_RANGE"/>
+		<reg32 offset="0x050" name="REQPRIO_FIFO_WM_0"/>
+		<reg32 offset="0x054" name="REQPRIO_FIFO_WM_1"/>
+		<reg32 offset="0x058" name="REQPRIO_FIFO_WM_2"/>
+		<reg32 offset="0x070" name="SRC_ADDR_SW_STATUS"/>
+		<reg32 offset="0x0a4" name="CURRENT_SRC0_ADDR"/>
+		<reg32 offset="0x0a8" name="CURRENT_SRC1_ADDR"/>
+		<reg32 offset="0x0ac" name="CURRENT_SRC2_ADDR"/>
+		<reg32 offset="0x0b0" name="CURRENT_SRC3_ADDR"/>
+		<reg32 offset="0x0b4" name="DECIMATION">
+			<bitfield name="VERT" low="0" high="7" type="uint"/>
+			<bitfield name="HORZ" low="8" high="15" type="uint"/>
+		</reg32>
+		<reg32 offset="0x204" name="SCALE_CONFIG">
+			<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
+			<bitfield name="SCALEY_EN" pos="1" type="boolean"/>
+			<!-- guessing about min/max.. see mdss_mdp_scale_setup() -->
+			<bitfield name="SCALEX_MIN_FILTER" low="8"  high="9"  type="mdp5_scale_filter"/>
+			<bitfield name="SCALEY_MIN_FILTER" low="10" high="11" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEX_CR_FILTER"  low="12" high="13" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEY_CR_FILTER"  low="14" high="15" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEX_MAX_FILTER" low="16" high="17" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEY_MAX_FILTER" low="18" high="19" type="mdp5_scale_filter"/>
+		</reg32>
+		<reg32 offset="0x210" name="SCALE_PHASE_STEP_X"/>
+		<reg32 offset="0x214" name="SCALE_PHASE_STEP_Y"/>
+		<reg32 offset="0x220" name="SCALE_INIT_PHASE_X"/>
+		<reg32 offset="0x224" name="SCALE_INIT_PHASE_Y"/>
+	</array>
+
+	<array offset="0x03200" name="LM" length="4" stride="0x400">
+		<array offset="0x020" name="BLEND" length="4" stride="0x30">
+			<reg32 offset="0x00" name="OP"/>
+			<reg32 offset="0x04" name="FG_ALPHA"/>
+			<reg32 offset="0x08" name="BG_ALPHA"/>
+			<reg32 offset="0x0c" name="FG_TRANSP_LOW0"/>
+			<reg32 offset="0x10" name="FG_TRANSP_LOW1"/>
+			<reg32 offset="0x14" name="FG_TRANSP_HIGH0"/>
+			<reg32 offset="0x18" name="FG_TRANSP_HIGH1"/>
+			<reg32 offset="0x1c" name="BG_TRANSP_LOW0"/>
+			<reg32 offset="0x20" name="BG_TRANSP_LOW1"/>
+			<reg32 offset="0x24" name="BG_TRANSP_HIGH0"/>
+			<reg32 offset="0x28" name="BG_TRANSP_HIGH1"/>
+		</array>
+		<reg32 offset="0x000" name="OP_MODE"/>
+		<reg32 offset="0x004" name="OUT_SIZE" type="reg_wh"/>
+		<reg32 offset="0x008" name="BORDER_COLOR_0"/>
+		<reg32 offset="0x010" name="BORDER_COLOR_1"/>
+		<reg32 offset="0x0e0" name="CURSOR_IMG_SIZE"/>
+		<reg32 offset="0x0e4" name="CURSOR_SIZE"/>
+		<reg32 offset="0x0e8" name="CURSOR_XY"/>
+		<reg32 offset="0x0dc" name="CURSOR_STRIDE"/>
+		<reg32 offset="0x0ec" name="CURSOR_FORMAT"/>
+		<reg32 offset="0x0f0" name="CURSOR_BASE_ADDR"/>
+		<reg32 offset="0x0f4" name="CURSOR_START_XY"/>
+		<reg32 offset="0x0f8" name="CURSOR_BLEND_CONFIG"/>
+		<reg32 offset="0x0fc" name="CURSOR_BLEND_PARAM"/>
+		<reg32 offset="0x100" name="CURSOR_BLEND_TRANSP_LOW0"/>
+		<reg32 offset="0x104" name="CURSOR_BLEND_TRANSP_LOW1"/>
+		<reg32 offset="0x108" name="CURSOR_BLEND_TRANSP_HIGH0"/>
+		<reg32 offset="0x10c" name="CURSOR_BLEND_TRANSP_HIGH1"/>
+		<reg32 offset="0x110" name="GC_LUT_BASE"/>
+	</array>
+
+	<array offset="0x04600" name="DSPP" length="3" stride="0x400">
+		<reg32 offset="0x000" name="OP_MODE"/>
+		<reg32 offset="0x030" name="PCC_BASE"/>
+		<reg32 offset="0x150" name="DITHER_DEPTH"/>
+		<reg32 offset="0x210" name="HIST_CTL_BASE"/>
+		<reg32 offset="0x230" name="HIST_LUT_BASE"/>
+		<reg32 offset="0x234" name="HIST_LUT_SWAP"/>
+		<reg32 offset="0x238" name="PA_BASE"/>
+		<reg32 offset="0x2dc" name="GAMUT_BASE"/>
+		<reg32 offset="0x2b0" name="GC_BASE"/>
+	</array>
+
+	<array offset="0x12500" name="INTF" length="4" stride="0x200">
+		<reg32 offset="0x000" name="TIMING_ENGINE_EN"/>
+		<reg32 offset="0x004" name="CONFIG"/>
+		<reg32 offset="0x008" name="HSYNC_CTL">
+			<bitfield name="PULSEW" low="0" high="15" type="uint"/>
+			<bitfield name="PERIOD" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x00c" name="VSYNC_PERIOD_F0" type="uint"/>
+		<reg32 offset="0x010" name="VSYNC_PERIOD_F1" type="uint"/>
+		<reg32 offset="0x014" name="VSYNC_LEN_F0" type="uint"/>
+		<reg32 offset="0x018" name="VSYNC_LEN_F1" type="uint"/>
+		<reg32 offset="0x01c" name="DISPLAY_VSTART_F0" type="uint"/>
+		<reg32 offset="0x020" name="DISPLAY_VSTART_F1" type="uint"/>
+		<reg32 offset="0x024" name="DISPLAY_VEND_F0" type="uint"/>
+		<reg32 offset="0x028" name="DISPLAY_VEND_F1" type="uint"/>
+		<reg32 offset="0x02c" name="ACTIVE_VSTART_F0">
+			<bitfield name="VAL" low="0" high="30" type="uint"/>
+			<bitfield name="ACTIVE_V_ENABLE" pos="31" type="boolean"/>
+		</reg32>
+		<reg32 offset="0x030" name="ACTIVE_VSTART_F1">
+			<bitfield name="VAL" low="0" high="30" type="uint"/>
+		</reg32>
+		<reg32 offset="0x034" name="ACTIVE_VEND_F0" type="uint"/>
+		<reg32 offset="0x038" name="ACTIVE_VEND_F1" type="uint"/>
+		<reg32 offset="0x03c" name="DISPLAY_HCTL">
+			<bitfield name="START" low="0"  high="15" type="uint"/>
+			<bitfield name="END"   low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x040" name="ACTIVE_HCTL">
+			<bitfield name="START" low="0"  high="14" type="uint"/>
+			<bitfield name="END"   low="16" high="30" type="uint"/>
+			<bitfield name="ACTIVE_H_ENABLE" pos="31" type="boolean"/>
+		</reg32>
+		<reg32 offset="0x044" name="BORDER_COLOR"/>
+		<reg32 offset="0x048" name="UNDERFLOW_COLOR"/>
+		<reg32 offset="0x04c" name="HSYNC_SKEW"/>
+		<reg32 offset="0x050" name="POLARITY_CTL"/>
+		<reg32 offset="0x054" name="TEST_CTL"/>
+		<reg32 offset="0x058" name="TP_COLOR0"/>
+		<reg32 offset="0x05c" name="TP_COLOR1"/>
+		<reg32 offset="0x084" name="DSI_CMD_MODE_TRIGGER_EN"/>
+		<reg32 offset="0x090" name="PANEL_FORMAT" type="mdp5_format"/>
+		<reg32 offset="0x0a8" name="FRAME_LINE_COUNT_EN"/>
+		<reg32 offset="0x0ac" name="FRAME_COUNT"/>
+		<reg32 offset="0x0b0" name="LINE_COUNT"/>
+		<reg32 offset="0x0f0" name="DEFLICKER_CONFIG"/>
+		<reg32 offset="0x0f4" name="DEFLICKER_STRNG_COEFF"/>
+		<reg32 offset="0x0f8" name="DEFLICKER_WEAK_COEFF"/>
+		<reg32 offset="0x100" name="TPG_ENABLE"/>
+		<reg32 offset="0x104" name="TPG_MAIN_CONTROL"/>
+		<reg32 offset="0x108" name="TPG_VIDEO_CONFIG"/>
+		<reg32 offset="0x10c" name="TPG_COMPONENT_LIMITS"/>
+		<reg32 offset="0x110" name="TPG_RECTANGLE"/>
+		<reg32 offset="0x114" name="TPG_INITIAL_VALUE"/>
+		<reg32 offset="0x118" name="TPG_BLK_WHITE_PATTERN_FRAME"/>
+		<reg32 offset="0x11c" name="TPG_RGB_MAPPING"/>
+	</array>
+
+	<array offset="0x13100" name="AD" length="2" stride="0x200">
+		<reg32 offset="0x000" name="BYPASS"/>
+		<reg32 offset="0x004" name="CTRL_0"/>
+		<reg32 offset="0x008" name="CTRL_1"/>
+		<reg32 offset="0x00c" name="FRAME_SIZE"/>
+		<reg32 offset="0x010" name="CON_CTRL_0"/>
+		<reg32 offset="0x014" name="CON_CTRL_1"/>
+		<reg32 offset="0x018" name="STR_MAN"/>
+		<reg32 offset="0x01c" name="VAR"/>
+		<reg32 offset="0x020" name="DITH"/>
+		<reg32 offset="0x024" name="DITH_CTRL"/>
+		<reg32 offset="0x028" name="AMP_LIM"/>
+		<reg32 offset="0x02c" name="SLOPE"/>
+		<reg32 offset="0x030" name="BW_LVL"/>
+		<reg32 offset="0x034" name="LOGO_POS"/>
+		<reg32 offset="0x038" name="LUT_FI"/>
+		<reg32 offset="0x07c" name="LUT_CC"/>
+		<reg32 offset="0x0c8" name="STR_LIM"/>
+		<reg32 offset="0x0cc" name="CALIB_AB"/>
+		<reg32 offset="0x0d0" name="CALIB_CD"/>
+		<reg32 offset="0x0d4" name="MODE_SEL"/>
+		<reg32 offset="0x0d8" name="TFILT_CTRL"/>
+		<reg32 offset="0x0dc" name="BL_MINMAX"/>
+		<reg32 offset="0x0e0" name="BL"/>
+		<reg32 offset="0x0e8" name="BL_MAX"/>
+		<reg32 offset="0x0ec" name="AL"/>
+		<reg32 offset="0x0f0" name="AL_MIN"/>
+		<reg32 offset="0x0f4" name="AL_FILT"/>
+		<reg32 offset="0x0f8" name="CFG_BUF"/>
+		<reg32 offset="0x100" name="LUT_AL"/>
+		<reg32 offset="0x144" name="TARG_STR"/>
+		<reg32 offset="0x148" name="START_CALC"/>
+		<reg32 offset="0x14c" name="STR_OUT"/>
+		<reg32 offset="0x154" name="BL_OUT"/>
+		<reg32 offset="0x158" name="CALC_DONE"/>
+	</array>
+</domain>
+
+</database>
