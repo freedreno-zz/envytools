@@ -4,8 +4,8 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 
-<import file="a2xx/a2xx.xml"/>
-<import file="a3xx/a3xx.xml"/>
-<import file="a4xx/a4xx.xml"/>
+<import file="adreno/a2xx.xml"/>
+<import file="adreno/a3xx.xml"/>
+<import file="adreno/a4xx.xml"/>
 
 </database>

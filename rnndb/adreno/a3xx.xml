@@ -3,8 +3,8 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
-<import file="adreno_common.xml"/>
-<import file="adreno_pm4.xml"/>
+<import file="adreno/adreno_common.xml"/>
+<import file="adreno/adreno_pm4.xml"/>
 
 <enum name="a3xx_render_mode">
 	<value name="RB_RENDERING_PASS" value="0"/>

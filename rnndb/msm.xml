@@ -14,8 +14,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="MDP50"/>
 </enum>
 
-<import file="mdp4/mdp4.xml"/>
-<import file="mdp5/mdp5.xml"/>
+<import file="mdp/mdp4.xml"/>
+<import file="mdp/mdp5.xml"/>
 <import file="dsi/dsi.xml"/>
 <import file="dsi/sfpb.xml"/>
 <import file="dsi/mmss_cc.xml"/>
