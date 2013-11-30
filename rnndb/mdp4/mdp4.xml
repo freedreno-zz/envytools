@@ -53,6 +53,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="STAGE2" value="4"/>   <!-- zorder 2 -->
 		<value name="STAGE3" value="5"/>   <!-- zorder 3 -->
 	</enum>
+
 	<enum name="mdp4_intf">
 		<!--
 			A bit confusing the enums for interface selection:
