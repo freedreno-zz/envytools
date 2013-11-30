@@ -3,31 +3,9 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
+<import file="mdp/mdp_common.xml"/>
 
 <domain name="MDP4" width="32">
-	<enum name="mdp4_bpc">
-		<brief>bits per component (non-alpha channel)</brief>
-		<value name="BPC1" value="0"/> <!-- 1 bit -->
-		<value name="BPC5" value="1"/> <!-- 2 bits -->
-		<value name="BPC6" value="2"/> <!-- 6 bits -->
-		<value name="BPC8" value="3"/> <!-- 8 bits -->
-	</enum>
-
-	<enum name="mdp4_bpc_alpha">
-		<brief>bits per component (alpha channel)</brief>
-		<value name="BPC1A" value="0"/> <!-- 1 bit -->
-		<value name="BPC4A" value="1"/> <!-- 2 bits -->
-		<value name="BPC6A" value="2"/> <!-- 6 bits -->
-		<value name="BPC8A" value="3"/> <!-- 8 bits -->
-	</enum>
-
-	<enum name="mdp4_alpha_type">
-		<value name="FG_CONST" value="0"/>
-		<value name="BG_CONST" value="1"/>
-		<value name="FG_PIXEL" value="2"/>
-		<value name="BG_PIXEL" value="3"/>
-	</enum>
-
 	<enum name="mdp4_pipe">
 		<brief>pipe names, index into PIPE[]</brief>
 		<value name="VG1" value="0"/>
@@ -43,15 +21,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="MIXER0" value="0"/>
 		<value name="MIXER1" value="1"/>
 		<value name="MIXER2" value="2"/>
-	</enum>
-
-	<enum name="mdp4_mixer_stage_id">
-		<value name="STAGE_UNUSED" value="0"/>
-		<value name="STAGE_BASE" value="1"/>
-		<value name="STAGE0" value="2"/>   <!-- zorder 0 -->
-		<value name="STAGE1" value="3"/>   <!-- zorder 1 -->
-		<value name="STAGE2" value="4"/>   <!-- zorder 2 -->
-		<value name="STAGE3" value="5"/>   <!-- zorder 3 -->
 	</enum>
 
 	<enum name="mdp4_intf">
@@ -84,29 +53,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<bitset name="mdp4_layermixer_in_cfg" inline="yes">
 		<brief>appears to map pipe to mixer stage</brief>
-		<bitfield name="PIPE0" low="0"  high="2"  type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE0" low="0"  high="2"  type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE0_MIXER1" pos="3" type="boolean"/>
-		<bitfield name="PIPE1" low="4"  high="6"  type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE1" low="4"  high="6"  type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE1_MIXER1" pos="7" type="boolean"/>
-		<bitfield name="PIPE2" low="8"  high="10" type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE2" low="8"  high="10" type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE2_MIXER1" pos="11" type="boolean"/>
-		<bitfield name="PIPE3" low="12" high="14" type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE3" low="12" high="14" type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE3_MIXER1" pos="15" type="boolean"/>
-		<bitfield name="PIPE4" low="16" high="18" type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE4" low="16" high="18" type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE4_MIXER1" pos="19" type="boolean"/>
-		<bitfield name="PIPE5" low="20" high="22" type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE5" low="20" high="22" type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE5_MIXER1" pos="23" type="boolean"/>
-		<bitfield name="PIPE6" low="24" high="26" type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE6" low="24" high="26" type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE6_MIXER1" pos="27" type="boolean"/>
-		<bitfield name="PIPE7" low="28" high="30" type="mdp4_mixer_stage_id"/>
+		<bitfield name="PIPE7" low="28" high="30" type="mdp_mixer_stage_id"/>
 		<bitfield name="PIPE7_MIXER1" pos="31" type="boolean"/>
-	</bitset>
-
-	<bitset name="mdp4_unpack_pattern" inline="yes">
-		<bitfield name="ELEM0" low="0"  high="7"/>
-		<bitfield name="ELEM1" low="8"  high="15"/>
-		<bitfield name="ELEM2" low="16" high="23"/>
-		<bitfield name="ELEM3" low="24" high="31"/>
 	</bitset>
 
 	<bitset name="reg_wh" inline="yes">
@@ -217,10 +179,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 		<array offsets="0x0104,0x0124,0x0144,0x0160" name="STAGE" length="4" stride="0x1c">
 			<reg32 offset="0x00" name="OP">
-				<bitfield name="FG_ALPHA" low="0" high="1" type="mdp4_alpha_type"/>
+				<bitfield name="FG_ALPHA" low="0" high="1" type="mdp_alpha_type"/>
 				<bitfield name="FG_INV_ALPHA" pos="2" type="boolean"/>
 				<bitfield name="FG_MOD_ALPHA" pos="3" type="boolean"/>
-				<bitfield name="BG_ALPHA" low="4" high="5" type="mdp4_alpha_type"/>
+				<bitfield name="BG_ALPHA" low="4" high="5" type="mdp_alpha_type"/>
 				<bitfield name="BG_INV_ALPHA" pos="6" type="boolean"/>
 				<bitfield name="BG_MOD_ALPHA" pos="7" type="boolean"/>
 				<bitfield name="FG_TRANSP" pos="8" type="boolean"/>
@@ -268,9 +230,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xb0070" name="DMA_E_QUANT" length="3" stride="4"/>
 	<array offsets="0x90000,0xa0000,0xb0000" name="DMA" length="3" stride="0x10000" index="mdp4_dma">
 		<reg32 offset="0x0000" name="CONFIG">
-			<bitfield name="G_BPC" low="0" high="1" type="mdp4_bpc"/>
-			<bitfield name="B_BPC" low="2" high="3" type="mdp4_bpc"/>
-			<bitfield name="R_BPC" low="4" high="5" type="mdp4_bpc"/>
+			<bitfield name="G_BPC" low="0" high="1" type="mdp_bpc"/>
+			<bitfield name="B_BPC" low="2" high="3" type="mdp_bpc"/>
+			<bitfield name="R_BPC" low="4" high="5" type="mdp_bpc"/>
 			<bitfield name="PACK_ALIGN_MSB" pos="7" type="boolean"/>
 			<bitfield name="PACK" low="8" high="15"/>
 			<!-- bit 24 is DITHER_EN on DMA_P, DEFLKR_EN on DMA_E -->
@@ -329,10 +291,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 		<reg32 offset="0x0048" name="FRAME_SIZE" type="reg_wh"/>
 		<reg32 offset="0x0050" name="SRC_FORMAT">
-			<bitfield name="G_BPC" low="0" high="1" type="mdp4_bpc"/>
-			<bitfield name="B_BPC" low="2" high="3" type="mdp4_bpc"/>
-			<bitfield name="R_BPC" low="4" high="5" type="mdp4_bpc"/>
-			<bitfield name="A_BPC" low="6" high="7" type="mdp4_bpc_alpha"/>
+			<bitfield name="G_BPC" low="0" high="1" type="mdp_bpc"/>
+			<bitfield name="B_BPC" low="2" high="3" type="mdp_bpc"/>
+			<bitfield name="R_BPC" low="4" high="5" type="mdp_bpc"/>
+			<bitfield name="A_BPC" low="6" high="7" type="mdp_bpc_alpha"/>
 			<bitfield name="ALPHA_ENABLE" pos="8" type="boolean"/>
 			<bitfield name="CPP" low="9" high="10" type="uint">
 				<brief>8bit characters per pixel minus 1</brief>
@@ -343,7 +305,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
 			<bitfield name="SOLID_FILL" pos="22" type="boolean"/>
 		</reg32>
-		<reg32 offset="0x0054" name="SRC_UNPACK" type="mdp4_unpack_pattern"/>
+		<reg32 offset="0x0054" name="SRC_UNPACK" type="mdp_unpack_pattern"/>
 		<reg32 offset="0x0058" name="OP_MODE">
 			<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
 			<bitfield name="SCALEY_EN" pos="1" type="boolean"/>

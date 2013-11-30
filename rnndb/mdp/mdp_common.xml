@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database xmlns="http://nouveau.freedesktop.org/"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
+
+
+<!-- random bits that seem same between mdp4 and mdp5 (ie. not much) -->
+
+<enum name="mdp_mixer_stage_id">
+	<value name="STAGE_UNUSED" value="0"/>
+	<value name="STAGE_BASE" value="1"/>
+	<value name="STAGE0" value="2"/>   <!-- zorder 0 -->
+	<value name="STAGE1" value="3"/>   <!-- zorder 1 -->
+	<value name="STAGE2" value="4"/>   <!-- zorder 2 -->
+	<value name="STAGE3" value="5"/>   <!-- zorder 3 -->
+</enum>
+
+<enum name="mdp_alpha_type">
+	<value name="FG_CONST" value="0"/>
+	<value name="BG_CONST" value="1"/>
+	<value name="FG_PIXEL" value="2"/>
+	<value name="BG_PIXEL" value="3"/>
+</enum>
+
+<enum name="mdp_bpc">
+	<brief>bits per component (non-alpha channel)</brief>
+	<value name="BPC1" value="0"/> <!-- 1 bit -->
+	<value name="BPC5" value="1"/> <!-- 2 bits -->
+	<value name="BPC6" value="2"/> <!-- 6 bits -->
+	<value name="BPC8" value="3"/> <!-- 8 bits -->
+</enum>
+
+<enum name="mdp_bpc_alpha">
+	<brief>bits per component (alpha channel)</brief>
+	<value name="BPC1A" value="0"/> <!-- 1 bit -->
+	<value name="BPC4A" value="1"/> <!-- 2 bits -->
+	<value name="BPC6A" value="2"/> <!-- 6 bits -->
+	<value name="BPC8A" value="3"/> <!-- 8 bits -->
+</enum>
+
+<bitset name="mdp_unpack_pattern" inline="yes">
+	<bitfield name="ELEM0" low="0"  high="7"/>
+	<bitfield name="ELEM1" low="8"  high="15"/>
+	<bitfield name="ELEM2" low="16" high="23"/>
+	<bitfield name="ELEM3" low="24" high="31"/>
+</bitset>
+
+</database>
+
