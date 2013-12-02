@@ -37,6 +37,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</enum>
 
 	<enum name="mdp5_ctl_mode">
+		<value name="MODE_NONE" value="0"/>
 		<value name="MODE_ROT0" value="1"/>
 		<value name="MODE_ROT1" value="2"/>
 		<value name="MODE_WB0" value="3"/>
@@ -194,7 +195,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="PACK_3D_ENABLE" pos="19" type="boolean"/>
 			<bitfield name="PACK_3D" low="20" high="21" type="mdp5_pack_3d"/>
 		</reg32>
-		<reg32 offset="0x018" name="FLUSH"/>
+		<reg32 offset="0x018" name="FLUSH">
+			<bitfield name="VIG0" pos="0"  type="boolean"/>
+			<bitfield name="VIG1" pos="1"  type="boolean"/>
+			<bitfield name="VIG2" pos="2"  type="boolean"/>
+			<bitfield name="RGB0" pos="3"  type="boolean"/>
+			<bitfield name="RGB1" pos="4"  type="boolean"/>
+			<bitfield name="RGB2" pos="5"  type="boolean"/>
+			<bitfield name="LM0"  pos="6"  type="boolean"/>
+			<bitfield name="LM1"  pos="7"  type="boolean"/>
+			<bitfield name="LM2"  pos="8"  type="boolean"/>
+			<bitfield name="DMA0" pos="11" type="boolean"/>
+			<bitfield name="DMA1" pos="12" type="boolean"/>
+			<bitfield name="DSPP0" pos="13" type="boolean"/>
+			<bitfield name="DSPP1" pos="14" type="boolean"/>
+			<bitfield name="DSPP2" pos="15" type="boolean"/>
+			<bitfield name="CTL"   pos="17" type="boolean"/>
+		</reg32>
 		<reg32 offset="0x01C" name="START"/>
 		<reg32 offset="0x020" name="PACK_3D"/>
 	</array>
@@ -213,8 +230,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x018" name="SRC1_ADDR"/>
 		<reg32 offset="0x01C" name="SRC2_ADDR"/>
 		<reg32 offset="0x020" name="SRC3_ADDR"/>
-		<reg32 offset="0x024" name="SRC_YSTRIDE0"/>
-		<reg32 offset="0x028" name="SRC_YSTRIDE1"/>
+		<reg32 offset="0x024" name="SRC_STRIDE_A">
+			<bitfield name="P0" low="0" high="15" type="uint"/>
+			<bitfield name="P1" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x028" name="SRC_STRIDE_B">
+			<bitfield name="P2" low="0" high="15" type="uint"/>
+			<bitfield name="P3" low="16" high="31" type="uint"/>
+		</reg32>
 		<reg32 offset="0x02C" name="STILE_FRAME_SIZE"/>
 		<reg32 offset="0x030" name="SRC_FORMAT">
 			<bitfield name="G_BPC" low="0" high="1" type="mdp_bpc"/>
@@ -276,9 +299,29 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x224" name="SCALE_INIT_PHASE_Y"/>
 	</array>
 
-	<array offset="0x03200" name="LM" length="4" stride="0x400">
+	<array offset="0x03200" name="LM" length="3" stride="0x400">
+		<reg32 offset="0x000" name="BLEND_COLOR_OUT">
+			<bitfield name="STAGE0_FG_ALPHA" pos="1" type="boolean"/>
+			<bitfield name="STAGE1_FG_ALPHA" pos="2" type="boolean"/>
+			<bitfield name="STAGE2_FG_ALPHA" pos="3" type="boolean"/>
+			<bitfield name="STAGE3_FG_ALPHA" pos="4" type="boolean"/>
+		</reg32>
+		<reg32 offset="0x004" name="OUT_SIZE" type="reg_wh"/>
+		<reg32 offset="0x008" name="BORDER_COLOR_0"/>
+		<reg32 offset="0x010" name="BORDER_COLOR_1"/>
 		<array offset="0x020" name="BLEND" length="4" stride="0x30">
-			<reg32 offset="0x00" name="OP"/>
+			<reg32 offset="0x00" name="OP_MODE">
+				<bitfield name="FG_ALPHA" low="0" high="1" type="mdp_alpha_type"/>
+				<bitfield name="FG_INV_ALPHA"     pos="2"  type="boolean"/>
+				<bitfield name="FG_MOD_ALPHA"     pos="3"  type="boolean"/>
+				<bitfield name="FG_INV_MOD_ALPHA" pos="4"  type="boolean"/>
+				<bitfield name="FG_TRANSP_EN"     pos="5"  type="boolean"/>
+				<bitfield name="BG_ALPHA" low="8" high="9" type="mdp_alpha_type"/>
+				<bitfield name="BG_INV_ALPHA"     pos="10" type="boolean"/>
+				<bitfield name="BG_MOD_ALPHA"     pos="11" type="boolean"/>
+				<bitfield name="BG_INV_MOD_ALPHA" pos="12" type="boolean"/>
+				<bitfield name="BG_TRANSP_EN"     pos="13" type="boolean"/>
+			</reg32>
 			<reg32 offset="0x04" name="FG_ALPHA"/>
 			<reg32 offset="0x08" name="BG_ALPHA"/>
 			<reg32 offset="0x0c" name="FG_TRANSP_LOW0"/>
@@ -290,21 +333,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<reg32 offset="0x24" name="BG_TRANSP_HIGH0"/>
 			<reg32 offset="0x28" name="BG_TRANSP_HIGH1"/>
 		</array>
-		<reg32 offset="0x000" name="OP_MODE">
-			<bitfield name="FG_ALPHA" low="0" high="1" type="mdp_alpha_type"/>
-			<bitfield name="FG_INV_ALPHA"     pos="2"  type="boolean"/>
-			<bitfield name="FG_MOD_ALPHA"     pos="3"  type="boolean"/>
-			<bitfield name="FG_INV_MOD_ALPHA" pos="4"  type="boolean"/>
-			<bitfield name="FG_TRANSP_EN"     pos="5"  type="boolean"/>
-			<bitfield name="BG_ALPHA" low="8" high="9" type="mdp_alpha_type"/>
-			<bitfield name="BG_INV_ALPHA"     pos="10" type="boolean"/>
-			<bitfield name="BG_MOD_ALPHA"     pos="11" type="boolean"/>
-			<bitfield name="BG_INV_MOD_ALPHA" pos="12" type="boolean"/>
-			<bitfield name="BG_TRANSP_EN"     pos="13" type="boolean"/>
-		</reg32>
-		<reg32 offset="0x004" name="OUT_SIZE" type="reg_wh"/>
-		<reg32 offset="0x008" name="BORDER_COLOR_0"/>
-		<reg32 offset="0x010" name="BORDER_COLOR_1"/>
 		<reg32 offset="0x0e0" name="CURSOR_IMG_SIZE"/>
 		<reg32 offset="0x0e4" name="CURSOR_SIZE"/>
 		<reg32 offset="0x0e8" name="CURSOR_XY"/>
@@ -380,7 +408,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x044" name="BORDER_COLOR"/>
 		<reg32 offset="0x048" name="UNDERFLOW_COLOR"/>
 		<reg32 offset="0x04c" name="HSYNC_SKEW"/>
-		<reg32 offset="0x050" name="POLARITY_CTL"/>
+		<reg32 offset="0x050" name="POLARITY_CTL">
+			<bitfield name="HSYNC_LOW" pos="0" type="boolean"/>
+			<bitfield name="VSYNC_LOW" pos="1" type="boolean"/>
+			<bitfield name="DATA_EN_LOW" pos="2" type="boolean"/>
+		</reg32>
 		<reg32 offset="0x054" name="TEST_CTL"/>
 		<reg32 offset="0x058" name="TP_COLOR0"/>
 		<reg32 offset="0x05c" name="TP_COLOR1"/>

@@ -500,4 +500,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00430" name="PHY_REG12"/>
 </domain>
 
+<domain name="HDMI_8x74" width="32">
+	<!--
+		seems to be all mdp5+ have same?
+	 -->
+	<reg32 offset="0x00000" name="ANA_CFG0"/>
+	<reg32 offset="0x00004" name="ANA_CFG1"/>
+	<reg32 offset="0x00010" name="PD_CTRL0"/>
+	<reg32 offset="0x00014" name="PD_CTRL1"/>
+	<reg32 offset="0x00034" name="BIST_CFG0"/>
+	<reg32 offset="0x0003c" name="BIST_PATN0"/>
+	<reg32 offset="0x00040" name="BIST_PATN1"/>
+	<reg32 offset="0x00044" name="BIST_PATN2"/>
+	<reg32 offset="0x00048" name="BIST_PATN3"/>
+</domain>
+
 </database>
