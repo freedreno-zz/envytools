@@ -107,7 +107,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="INTF3_VSYNC"              pos="31" type="boolean"/>
 	</bitset>
 
-	<bitset name="mdp5_smp_alloc">
+	<bitset name="mdp5_smp_alloc" inline="yes">
 		<bitfield name="CLIENT0" low="0"  high="7"  type="uint"/>
 		<bitfield name="CLIENT1" low="8"  high="15" type="uint"/>
 		<bitfield name="CLIENT2" low="16" high="23" type="uint"/>
