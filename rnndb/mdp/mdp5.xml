@@ -5,6 +5,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="freedreno_copyright.xml"/>
 <import file="mdp/mdp_common.xml"/>
 
+<!-- where does this belong? -->
+<domain name="VBIF" width="32">
+</domain>
+
 <domain name="MDP5" width="32">
 
 	<enum name="mdp5_intf">
@@ -72,6 +76,29 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="BWC_Q_MED"    value="2"/>
 	</enum>
 
+	<enum name="mdp5_client_id">
+		<value name="CID_UNUSED"  value="0"/>
+		<value name="CID_VIG0_Y"  value="1"/>
+		<value name="CID_VIG0_CR" value="2"/>
+		<value name="CID_VIG0_CB" value="3"/>
+		<value name="CID_VIG1_Y"  value="4"/>
+		<value name="CID_VIG1_CR" value="5"/>
+		<value name="CID_VIG1_CB" value="6"/>
+		<value name="CID_VIG2_Y"  value="7"/>
+		<value name="CID_VIG2_CR" value="8"/>
+		<value name="CID_VIG2_CB" value="9"/>
+		<value name="CID_DMA0_Y"  value="10"/>
+		<value name="CID_DMA0_CR" value="11"/>
+		<value name="CID_DMA0_CB" value="12"/>
+		<value name="CID_DMA1_Y"  value="13"/>
+		<value name="CID_DMA1_CR" value="14"/>
+		<value name="CID_DMA1_CB" value="15"/>
+		<value name="CID_RGB0"    value="16"/>
+		<value name="CID_RGB1"    value="17"/>
+		<value name="CID_RGB2"    value="18"/>
+		<value name="CID_MAX"     value="19"/>
+	</enum>
+
 	<bitset name="MDP5_IRQ">
 		<bitfield name="INTF0_WB_ROT_COMP"        pos="0"  type="boolean"/>
 		<bitfield name="INTF1_WB_ROT_COMP"        pos="1"  type="boolean"/>
@@ -108,10 +135,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</bitset>
 
 	<bitset name="mdp5_smp_alloc" inline="yes">
-		<bitfield name="CLIENT0" low="0"  high="7"  type="uint"/>
-		<bitfield name="CLIENT1" low="8"  high="15" type="uint"/>
-		<bitfield name="CLIENT2" low="16" high="23" type="uint"/>
-		<bitfield name="CLIENT3" low="24" high="31" type="uint"/>
+		<bitfield name="CLIENT0" low="0"  high="7"  type="mdp5_client_id"/>
+		<bitfield name="CLIENT1" low="8"  high="15" type="mdp5_client_id"/>
+		<bitfield name="CLIENT2" low="16" high="23" type="mdp5_client_id"/>
 	</bitset>
 
 	<reg32 offset="0x00000" name="HW_VERSION"/>
@@ -141,10 +167,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00120" name="HIST_INTR_STATUS"/>
 	<reg32 offset="0x00124" name="HIST_INTR_CLEAR"/>
 
-	<array offset="0x00180" name="SMP_ALLOC_W" length="4" stride="4">
+	<array offset="0x00180" name="SMP_ALLOC_W" length="8" stride="4">
 		<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
 	</array>
-	<array offset="0x00230" name="SMP_ALLOC_R" length="4" stride="4">
+	<array offset="0x00230" name="SMP_ALLOC_R" length="8" stride="4">
 		<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
 	</array>
 
