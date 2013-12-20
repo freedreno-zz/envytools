@@ -258,5 +258,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 </domain>
 
+<domain name="CP_SET_BIN_DATA" width="32">
+	<reg32 offset="0" name="0">
+		<!-- corresponds to VSC_PIPE[n].DATA_ADDR -->
+		<bitfield name="BIN_DATA_ADDR" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<!-- seesm to correspond to VSC_SIZE_ADDRESS -->
+		<bitfield name="BIN_SIZE_ADDRESS" low="0" high="31"/>
+	</reg32>
+</domain>
+
 </database>
 

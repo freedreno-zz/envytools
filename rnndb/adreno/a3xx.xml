@@ -651,7 +651,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2115" name="RB_Z_CLAMP_MAX"/>
 
 	<!-- PC registers -->
-	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL"/>
+	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL">
+		<doc>SIZE is current pipe width * height (in tiles)</doc>
+		<bitfield name="SIZE" low="16" high="21" type="uint"/>
+		<doc>
+			N is some sort of slot # between 0..()SIZE-1).  In case
+			multiple tiles use same pipe, each tile gets unique slot #
+		</doc>
+		<bitfield name="N" low="22" high="26" type="uint"/>
+	</reg32>
 	<reg32 offset="0x21ea" name="PC_VERTEX_REUSE_BLOCK_CNTL"/>
 	<reg32 offset="0x21ec" name="PC_PRIM_VTX_CNTL">
 		<doc>
