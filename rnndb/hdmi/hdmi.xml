@@ -145,7 +145,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!--
 		TODO add a way to show symbolic offsets into array: hdmi_acr_cts-1
 	 -->
-	<array offset="0x00c4" name="ACR" length="3" stride="8">
+	<array offset="0x00c4" name="ACR" length="3" stride="8" index="hdmi_acr_cts">
 		<reg32 offset="0" name="0">
 			<bitfield name="CTS" low="12" high="31" type="uint"/>
 		</reg32>
