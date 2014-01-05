@@ -651,11 +651,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2115" name="RB_Z_CLAMP_MAX"/>
 
 	<!-- PC registers -->
+	<reg32 offset="0x21e1" name="VGT_BIN_BASE">
+		<doc>
+			seems to be where firmware writes BIN_DATA_ADDR from
+			CP_SET_BIN_DATA packet..  probably should be called
+			PC_BIN_BASE (just using name from yamato for now)
+		</doc>
+	</reg32>
+	<reg32 offset="0x21e2" name="VGT_BIN_SIZE">
+		<doc>probably should be PC_BIN_SIZE</doc>
+	</reg32>
 	<reg32 offset="0x21e4" name="PC_VSTREAM_CONTROL">
 		<doc>SIZE is current pipe width * height (in tiles)</doc>
 		<bitfield name="SIZE" low="16" high="21" type="uint"/>
 		<doc>
-			N is some sort of slot # between 0..()SIZE-1).  In case
+			N is some sort of slot # between 0..(SIZE-1).  In case
 			multiple tiles use same pipe, each tile gets unique slot #
 		</doc>
 		<bitfield name="N" low="22" high="26" type="uint"/>
@@ -858,8 +868,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CONSTMODE" pos="18" type="uint"/>
 		<bitfield name="BINNING" pos="19" type="boolean"/>
 		<bitfield name="SLEEPMODE" low="20" high="21" type="uint"/>
-		<!-- LOMODE==1 when oxiliForceSpL0ModeBuffer=1 -->
-		<bitfield name="LOMODE" low="22" high="23" type="uint"/>
+		<!-- L0MODE==1 when oxiliForceSpL0ModeBuffer=1 -->
+		<bitfield name="L0MODE" low="22" high="23" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a3xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1">
@@ -1097,7 +1107,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- seems to be same as a2xx according to fwdump.. -->
 	<reg32 offset="0x21f9" name="VGT_EVENT_INITIATOR"/>
-	<reg32 offset="0x21fc" name="VGT_DRAW_INITIATOR"/>
+	<reg32 offset="0x21fc" name="VGT_DRAW_INITIATOR" type="vgt_draw_initiator"/>
 	<reg32 offset="0x21fd" name="VGT_IMMED_DATA"/>
 </domain>
 

@@ -68,6 +68,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="pc_di_vis_cull_mode">
 	<value name="IGNORE_VISIBILITY" value="0"/>
+	<value name="USE_VISIBILITY" value="1"/>
 </enum>
 
 <enum name="adreno_pm4_packet_type">
@@ -243,6 +244,44 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="STATE_TYPE" low="0" high="1" type="adreno_state_type"/>
 		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
 	</reg32>
+</domain>
+
+<bitset name="vgt_draw_initiator" inline="yes">
+	<bitfield name="PRIM_TYPE" low="0" high="5" type="pc_di_primtype"/>
+	<bitfield name="SOURCE_SELECT" low="6" high="7" type="pc_di_src_sel"/>
+	<bitfield name="VIS_CULL" low="9" high="10" type="pc_di_vis_cull_mode"/>
+	<bitfield name="INDEX_SIZE" pos="11" type="pc_di_index_size"/>
+	<bitfield name="NOT_EOP" pos="12" type="boolean"/>
+	<bitfield name="SMALL_INDEX" pos="13" type="boolean"/>
+	<bitfield name="PRE_DRAW_INITIATOR_ENABLE" pos="14" type="boolean"/>
+	<bitfield name="NUM_INDICES" low="16" high="31" type="uint"/>
+</bitset>
+
+<domain name="CP_DRAW_INDX" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="VIZ_QUERY" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="1" name="1" type="vgt_draw_initiator"/>
+	<reg32 offset="2" name="2">
+		<bitfield name="NUM_INDICES" low="0" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="INDX_BASE" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="INDX_SIZE" low="0" high="31"/>
+	</reg32>
+</domain>
+
+<domain name="CP_DRAW_INDX_2" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="VIZ_QUERY" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="1" name="1" type="vgt_draw_initiator"/>
+	<reg32 offset="2" name="2">
+		<bitfield name="NUM_INDICES" low="0" high="31" type="uint"/>
+	</reg32>
+	<!-- followed by NUM_INDICES indices.. -->
 </domain>
 
 <domain name="CP_SET_BIN" width="32">
