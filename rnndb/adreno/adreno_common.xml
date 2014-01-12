@@ -137,7 +137,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x01f2" name="CP_INT_CNTL"/>
 	<reg32 offset="0x01f3" name="CP_INT_STATUS"/>
 	<reg32 offset="0x01f4" name="CP_INT_ACK"/>
-	<reg32 offset="0x01f6" name="CP_ME_CNTL"/>
+	<reg32 offset="0x01f6" name="CP_ME_CNTL">
+		<bitfield name="BUSY" pos="29" type="boolean"/>
+		<bitfield name="HALT" pos="28" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x01f7" name="CP_ME_STATUS"/>
 	<reg32 offset="0x01f8" name="CP_ME_RAM_WADDR"/>
 	<reg32 offset="0x01f9" name="CP_ME_RAM_RADDR"/>
