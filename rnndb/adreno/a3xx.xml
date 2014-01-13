@@ -403,6 +403,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="VP_CLIP_CODE_IGNORE" pos="19" type="boolean"/>
 		<bitfield name="VP_XFORM_DISABLE" pos="20" type="boolean"/>
 		<bitfield name="PERSP_DIVISION_DISABLE" pos="21" type="boolean"/>
+		<!-- set when frag shader writes z (so early z test disabled: -->
+		<bitfield name="ZCLIP_DISABLE" pos="25" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2044" name="GRAS_CL_GB_CLIP_ADJ">
 		<bitfield name="HORZ" low="0" high="9" type="uint"/>
@@ -581,6 +583,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			guessing that this matches a2xx with the stencil fields
 			moved out into RB_STENCIL_CONTROL?
 		 -->
+		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
 		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
 		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
 		<bitfield name="EARLY_Z_DISABLE" pos="3" type="boolean"/>
@@ -942,7 +945,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e6" name="SP_FS_PVT_MEM_SIZE_REG"/>
 	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0"/>
 	<reg32 offset="0x22e9" name="SP_FS_FLAT_SHAD_MODE_REG_1"/>
-	<reg32 offset="0x22ec" name="SP_FS_OUTPUT_REG"/>
+	<reg32 offset="0x22ec" name="SP_FS_OUTPUT_REG">
+		<bitfield name="DEPTH_ENABLE" pos="7" type="boolean"/>
+		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
+	</reg32>
 	<array offset="0x22f0" name="SP_FS_MRT" stride="1" length="4">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
