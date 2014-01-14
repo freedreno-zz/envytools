@@ -191,6 +191,25 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="SP_ALU_ACTIVE_CYCLES" value="0x1d"/>
 </enum>
 
+<enum name="a3xx_rop_code">
+	<value name="ROP_CLEAR"         value="0"/>
+	<value name="ROP_NOR"           value="1"/>
+	<value name="ROP_AND_INVERTED"  value="2"/>
+	<value name="ROP_COPY_INVERTED" value="3"/>
+	<value name="ROP_AND_REVERSE"   value="4"/>
+	<value name="ROP_INVERT"        value="5"/>
+	<value name="ROP_XOR"           value="6"/>
+	<value name="ROP_NAND"          value="7"/>
+	<value name="ROP_AND"           value="8"/>
+	<value name="ROP_EQUIV"         value="9"/>
+	<value name="ROP_NOOP"          value="10"/>
+	<value name="ROP_OR_INVERTED"   value="11"/>
+	<value name="ROP_COPY"          value="12"/>
+	<value name="ROP_OR_REVERSE"    value="13"/>
+	<value name="ROP_OR"            value="14"/>
+	<value name="ROP_SET"           value="15"/>
+</enum>
+
 <domain name="A3XX" width="32">
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
@@ -489,7 +508,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<!-- both these bits seem to get set when enabling GL_BLEND.. -->
 			<bitfield name="BLEND" pos="4" type="boolean"/>
 			<bitfield name="BLEND2" pos="5" type="boolean"/>
-			<bitfield name="ROP_CODE" low="8" high="11" type="uint"/>
+			<bitfield name="ROP_CODE" low="8" high="11" type="a3xx_rop_code"/>
 			<bitfield name="DITHER_MODE" low="12" high="13" type="adreno_rb_dither_mode"/>
 			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
 		</reg32>
