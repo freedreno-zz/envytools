@@ -424,6 +424,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="VP_CLIP_CODE_IGNORE" pos="19" type="boolean"/>
 		<bitfield name="VP_XFORM_DISABLE" pos="20" type="boolean"/>
 		<bitfield name="PERSP_DIVISION_DISABLE" pos="21" type="boolean"/>
+		<!-- set when gl_FragCoord.z is enabled in frag shader: -->
+		<bitfield name="ZCOORD" pos="23" type="boolean"/>
+		<bitfield name="WCOORD" pos="24" type="boolean"/>
 		<!-- set when frag shader writes z (so early z test disabled: -->
 		<bitfield name="ZCLIP_DISABLE" pos="25" type="boolean"/>
 	</reg32>
@@ -483,6 +486,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="PACKER_TIMER_ENABLE" pos="16" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x20c1" name="RB_RENDER_CONTROL">
+		<!-- set when gl_FrontFacing is accessed in frag shader: -->
+		<bitfield name="FACENESS" pos="3" type="boolean"/>
 		<bitfield name="BIN_WIDTH" low="4" high="11" shr="5" type="uint"/>
 		<bitfield name="DISABLE_COLOR_PIPE" pos="12" type="boolean"/>
 		<!--
@@ -490,6 +495,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			controlling blend or readback from GMEM??
 		 -->
 		<bitfield name="ENABLE_GMEM" pos="13" type="boolean"/>
+		<bitfield name="XCOORD" pos="14" type="boolean"/>
+		<bitfield name="YCOORD" pos="15" type="boolean"/>
+		<bitfield name="ZCOORD" pos="16" type="boolean"/>
+		<bitfield name="WCOORD" pos="17" type="boolean"/>
 		<bitfield name="ALPHA_TEST" pos="22" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="adreno_compare_func"/>
 
@@ -736,11 +745,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="VSTHREADSIZE" pos="6" type="a3xx_threadsize"/>
 		<bitfield name="VSSUPERTHREADENABLE" pos="8" type="boolean"/>
 		<bitfield name="RESERVED1" pos="9" type="boolean"/>
+		<!-- set if gl_FragCoord.[zw] used in frag shader: -->
+		<bitfield name="ZWCOORD" pos="25" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2202" name="HLSQ_CONTROL_2_REG">
 		<bitfield name="PRIMALLOCTHRESHOLD" low="26" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x2203" name="HLSQ_CONTROL_3_REG"/>
+	<reg32 offset="0x2203" name="HLSQ_CONTROL_3_REG">
+		<!-- register loaded with position (bary.f, gl_FragCoord, etc) -->
+		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
+	</reg32>
 	<reg32 offset="0x2204" name="HLSQ_VS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
 	<reg32 offset="0x2205" name="HLSQ_FS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
 	<reg32 offset="0x2206" name="HLSQ_CONST_VSPRESV_RANGE_REG" type="a3xx_hlsq_const_vs_fs_presv_range_reg"/>
