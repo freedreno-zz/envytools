@@ -714,6 +714,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="POLYMODE_FRONT_PTYPE" low="5" high="7" type="adreno_pa_su_sc_draw"/>
 		<bitfield name="POLYMODE_BACK_PTYPE" low="8" high="10" type="adreno_pa_su_sc_draw"/>
 		<bitfield name="PROVOKING_VTX_LAST" pos="25" type="boolean"/>
+		<!-- PSIZE bit set if gl_PointSize written: -->
+		<bitfield name="PSIZE" pos="26" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x21ed" name="PC_RESTART_INDEX"/>
 
@@ -829,7 +831,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- VPC registers -->
 	<reg32 offset="0x2280" name="VPC_ATTR">
-		<bitfield name="TOTALATTR" low="0" high="11" type="uint"/>
+		<bitfield name="TOTALATTR" low="0" high="8" type="uint"/>
+		<!-- PSIZE bit set if gl_PointSize written: -->
+		<bitfield name="PSIZE" pos="9" type="boolean"/>
 		<bitfield name="THRDASSIGN" low="12" high="27" type="uint"/>
 		<bitfield name="LMSIZE" low="28" high="31" type="uint"/>
 	</reg32>
