@@ -84,6 +84,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DEPTHX_24_8" value="1"/>
 </enum>
 
+<enum name="adreno_rb_copy_control_mode">
+	<value name="RB_COPY_RESOLVE" value="1"/>
+	<value name="RB_COPY_CLEAR" value="2"/>
+	<value name="RB_COPY_DEPTH_STENCIL" value="5"/>  <!-- not sure if this is part of MODE or another bitfield?? -->
+</enum>
+
 <bitset name="adreno_reg_xy" inline="yes">
 	<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>
 	<bitfield name="X" low="0" high="14" type="uint"/>
@@ -218,6 +224,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0614" name="CP_ME_VS_FETCH_DONE_DATA"/>
 
 </domain>
+
+<!--
+	Common between A3xx and A4xx:
+ -->
+
+<enum name="a3xx_render_mode">
+	<value name="RB_RENDERING_PASS" value="0"/>
+	<value name="RB_TILING_PASS" value="1"/>
+	<value name="RB_RESOLVE_PASS" value="2"/>
+</enum>
+
+<enum name="a3xx_msaa_samples">
+	<value name="MSAA_ONE" value="0"/>
+	<value name="MSAA_TWO" value="1"/>
+	<value name="MSAA_FOUR" value="2"/>
+</enum>
 
 </database>
 

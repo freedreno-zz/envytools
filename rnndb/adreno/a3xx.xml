@@ -440,8 +440,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x204b" name="GRAS_CL_VPORT_YSCALE" type="float"/>
 	<reg32 offset="0x204c" name="GRAS_CL_VPORT_ZOFFSET" type="float"/>
 	<reg32 offset="0x204d" name="GRAS_CL_VPORT_ZSCALE" type="float"/>
-	<reg32 offset="0x2068" name="GRAS_SU_POINT_MINMAX"/>
-	<reg32 offset="0x2069" name="GRAS_SU_POINT_SIZE"/>
+	<reg32 offset="0x2068" name="GRAS_SU_POINT_MINMAX">
+		<bitfield name="MIN" low="0" high="15" type="ufixed" radix="4"/>
+		<bitfield name="MAX" low="16" high="31" type="ufixed" radix="4"/>
+	</reg32>
+	<reg32 offset="0x2069" name="GRAS_SU_POINT_SIZE" type="fixed" radix="4"/>
 	<reg32 offset="0x206c" name="GRAS_SU_POLY_OFFSET_SCALE">
 		<bitfield name="VAL" low="0" high="23" type="fixed" radix="20"/>
 		<doc>range of -8.0 to 8.0</doc>
@@ -495,8 +498,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WCOORD" pos="17" type="boolean"/>
 		<bitfield name="ALPHA_TEST" pos="22" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="adreno_compare_func"/>
-
-
 	</reg32>
 	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL">
 		<bitfield name="DISABLE" pos="10" type="boolean"/>
@@ -569,14 +570,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20e9" name="RB_CLEAR_COLOR_DW1"/>
 	<reg32 offset="0x20ea" name="RB_CLEAR_COLOR_DW2"/>
 	<reg32 offset="0x20eb" name="RB_CLEAR_COLOR_DW3"/>
-	<enum name="adreno_rb_copy_control_mode">
-		<value name="RB_COPY_RESOLVE" value="1"/>
-		<value name="RB_COPY_DEPTH_STENCIL" value="5"/>  <!-- not sure if this is part of MODE or another bitfield?? -->
-	</enum>
 	<reg32 offset="0x20ec" name="RB_COPY_CONTROL">
 		<!-- not sure # of bits -->
 		<bitfield name="MSAA_RESOLVE" low="0" high="1" type="a3xx_msaa_samples"/>
 		<bitfield name="MODE" low="4" high="6" type="adreno_rb_copy_control_mode"/>
+		<bitfield name="FASTCLEAR" low="8" high="11" type="hex"/>
 		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
 	</reg32>
 	<reg32 offset="0x20ed" name="RB_COPY_DEST_BASE">
@@ -591,6 +589,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="TILE" low="0" high="1" type="a3xx_tile_mode"/>
 		<bitfield name="FORMAT" low="2" high="7" type="a3xx_color_fmt"/>
 		<bitfield name="SWAP" low="8" high="9" type="a3xx_color_swap"/>
+		<bitfield name="DITHER_MODE" low="10" high="11" type="adreno_rb_dither_mode"/>
 		<bitfield name="COMPONENT_ENABLE" low="14" high="17" type="hex"/>
 		<bitfield name="ENDIAN" low="18" high="20" type="adreno_rb_surface_endian"/>
 	</reg32>

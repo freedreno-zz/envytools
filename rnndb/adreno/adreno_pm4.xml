@@ -137,8 +137,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_DRAW_INDX_BIN" value="0x34"/>
 	<doc>initiate fetch of bin IDs and draw using supplied indices</doc>
 	<value name="CP_DRAW_INDX_2_BIN" value="0x35"/>
-	<doc>version of CP_DRAW_INDX used on a4xx:</doc>
-	<value name="CP_DRAW_INDX_A4X" value="0x38"/>
 	<doc>begin/end initiator for viz query extent processing</doc>
 	<value name="CP_VIZ_QUERY" value="0x23"/>
 	<doc>fetch state sub-blocks and initiate shader code DMAs</doc>
@@ -146,14 +144,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>load constant into chip and to memory</doc>
 	<value name="CP_SET_CONSTANT" value="0x2d"/>
 	<doc>load sequencer instruction memory (pointer-based)</doc>
-	<doc>
-		Used a bit like CP_SET_CONSTANT on a2xx, but can write multiple
-		groups of registers.  Looks like it can be used to create state
-		objects in GPU memory, and on state change only emit pointer
-		(via CP_REGISTER_LOAD), which should be nice for reducing CPU
-		overhead:
-	</doc>
-	<value name="CP_REGISTER_LOAD" value="0x43"/>
 	<value name="CP_IM_LOAD" value="0x27"/>
 	<doc>load sequencer instruction memory (code embedded in packet)</doc>
 	<value name="CP_IM_LOAD_IMMEDIATE" value="0x2b"/>
@@ -209,6 +199,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<doc>PFP waits until the FIFO between the PFP and the ME is empty</doc>
 	<value name="CP_WAIT_FOR_ME" value="0x13"/>
+
+	<!-- for a4xx -->
+	<doc>
+		Used a bit like CP_SET_CONSTANT on a2xx, but can write multiple
+		groups of registers.  Looks like it can be used to create state
+		objects in GPU memory, and on state change only emit pointer
+		(via CP_SET_DRAW_STATE), which should be nice for reducing CPU
+		overhead:
+	</doc>
+	<value name="CP_SET_DRAW_STATE" value="0x43"/>
+	<value name="CP_DRAW_INDX_OFFSET" value="0x38"/>
+	<value name="CP_DRAW_INDIRECT" value="0x28"/>
+	<value name="CP_DRAW_INDX_INDIRECT" value="0x29"/>
+	<value name="CP_DRAW_AUTO" value="0x24"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
@@ -267,6 +271,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitfield name="NUM_INDICES" low="16" high="31" type="uint"/>
 </bitset>
 
+<!-- changed on a4xx: -->
+<bitset name="vgt_draw_initiator_a4xx" inline="yes">
+	<bitfield name="PRIM_TYPE" low="0" high="5" type="pc_di_primtype"/>
+	<bitfield name="SOURCE_SELECT" low="6" high="7" type="pc_di_src_sel"/>
+	<bitfield name="VIS_CULL" low="8" high="10" type="pc_di_vis_cull_mode"/>
+	<bitfield name="INDEX_SIZE" pos="11" type="pc_di_index_size"/>
+	<bitfield name="NOT_EOP" pos="12" type="boolean"/>
+	<bitfield name="SMALL_INDEX" pos="13" type="boolean"/>
+	<bitfield name="PRE_DRAW_INITIATOR_ENABLE" pos="14" type="boolean"/>
+	<bitfield name="NUM_INDICES" low="16" high="31" type="uint"/>
+</bitset>
+
 <domain name="CP_DRAW_INDX" width="32">
 	<reg32 offset="0" name="0">
 		<bitfield name="VIZ_QUERY" low="0" high="31"/>
@@ -294,11 +310,31 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- followed by NUM_INDICES indices.. -->
 </domain>
 
-<domain name="CP_DRAW_INDX_A4X" width="32">
-	<reg32 offset="0" name="0" type="vgt_draw_initiator"/>
+<domain name="CP_DRAW_INDX_OFFSET" width="32">
+	<reg32 offset="0" name="0" type="vgt_draw_initiator_a4xx"/>
 	<reg32 offset="1" name="1"/>
 	<reg32 offset="2" name="2">
 		<bitfield name="NUM_INDICES" low="0" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="INDX_BASE" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="INDX_SIZE" low="0" high="31"/>
+	</reg32>
+</domain>
+
+<domain name="CP_SET_DRAW_STATE" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="COUNT" low="0" high="15" type="uint"/>
+		<bitfield name="DIRTY" pos="16" type="boolean"/>
+		<bitfield name="DISABLE" pos="17" type="boolean"/>
+		<bitfield name="DISABLE_ALL_GROUPS" pos="18" type="boolean"/>
+		<bitfield name="LOAD_IMMED" pos="19" type="boolean"/>
+		<bitfield name="GROUP_ID" low="24" high="28" type="uint"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="ADDR" low="0" high="31" type="hex"/>
 	</reg32>
 </domain>
 

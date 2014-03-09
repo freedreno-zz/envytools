@@ -6,16 +6,100 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_common.xml"/>
 <import file="adreno/adreno_pm4.xml"/>
 
+<enum name="a4xx_color_fmt">
+</enum>
+
 <domain name="A4XX" width="32">
 	<!-- RB registers -->
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
 	<reg32 offset="0x0cd2" name="RB_PERFCTR_CCU_SEL_3"/>
-	<reg32 offset="0x20a0" name="RB_MODE_CONTROL"/>
-	<reg32 offset="0x213f" name="RB_VPORT_Z_CLAMP_MAX_15"/>
+	<reg32 offset="0x0ce0" name="RB_FRAME_BUFFER_DIMENSION">
+		<bitfield name="WIDTH" low="0" high="13" type="uint"/>
+		<bitfield name="HEIGHT" low="16" high="29" type="uint"/>
+	</reg32>
 	<reg32 offset="0x20cc" name="RB_CLEAR_COLOR_DW0"/>
 	<reg32 offset="0x20cd" name="RB_CLEAR_COLOR_DW1"/>
 	<reg32 offset="0x20ce" name="RB_CLEAR_COLOR_DW2"/>
 	<reg32 offset="0x20cf" name="RB_CLEAR_COLOR_DW3"/>
+	<reg32 offset="0x20a0" name="RB_MODE_CONTROL"/>
+	<array offset="0x20a4" name="RB_MRT" stride="5" length="4">
+		<reg32 offset="0x0" name="CONTROL">
+			<bitfield name="READ_DEST_ENABLE" pos="3" type="boolean"/>
+			<!-- both these bits seem to get set when enabling GL_BLEND.. -->
+			<bitfield name="BLEND" pos="4" type="boolean"/>
+			<bitfield name="BLEND2" pos="5" type="boolean"/>
+			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
+		</reg32>
+		<reg32 offset="0x1" name="CONTROL2">
+			<bitfield name="DITHER_MODE" low="9" high="10" type="adreno_rb_dither_mode"/>
+		</reg32>
+		<reg32 offset="0x4" name="BLEND_CONTROL">
+			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="adreno_rb_blend_factor"/>
+			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="adreno_rb_blend_opcode"/>
+			<bitfield name="RGB_DEST_FACTOR" low="8" high="12" type="adreno_rb_blend_factor"/>
+			<bitfield name="ALPHA_SRC_FACTOR" low="16" high="20" type="adreno_rb_blend_factor"/>
+			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="adreno_rb_blend_opcode"/>
+			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="adreno_rb_blend_factor"/>
+		</reg32>
+	</array>
+	<reg32 offset="0x20f8" name="RB_RENDER_CONTROL">
+		<bitfield name="ALPHA_TEST" pos="8" type="boolean"/>
+		<bitfield name="ALPHA_TEST_FUNC" low="9" high="11" type="adreno_compare_func"/>
+	</reg32>
+	<reg32 offset="0x20fc" name="RB_COPY_CONTROL">
+		<!-- not sure # of bits -->
+		<bitfield name="MSAA_RESOLVE" low="0" high="1" type="a3xx_msaa_samples"/>
+		<bitfield name="MODE" low="4" high="6" type="adreno_rb_copy_control_mode"/>
+		<bitfield name="FASTCLEAR" low="8" high="11" type="hex"/>
+		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
+	</reg32>
+	<reg32 offset="0x20fd" name="RB_COPY_DEST_BASE">
+		<bitfield name="BASE" low="4" high="31" shr="4" type="hex"/>
+	</reg32>
+	<reg32 offset="0x20fe" name="RB_COPY_DEST_PITCH">
+		<doc>actually, appears to be pitch in bytes, so really is a stride</doc>
+		<!-- not actually sure about max pitch... -->
+		<bitfield name="PITCH" low="0" high="31" shr="5" type="uint"/>
+	</reg32>
+	<reg32 offset="0x20ff" name="RB_COPY_DEST_INFO">
+		<bitfield name="DITHER_MODE" low="10" high="11" type="adreno_rb_dither_mode"/>
+		<bitfield name="COMPONENT_ENABLE" low="14" high="17" type="hex"/>
+		<bitfield name="ENDIAN" low="18" high="20" type="adreno_rb_surface_endian"/>
+	</reg32>
+	<reg32 offset="0x2101" name="RB_DEPTH_CONTROL">
+		<!--
+			guessing that this matches a2xx with the stencil fields
+			moved out into RB_STENCIL_CONTROL?
+		 -->
+		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
+		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
+		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
+		<bitfield name="EARLY_Z_DISABLE" pos="3" type="boolean"/>
+		<bitfield name="ZFUNC" low="4" high="6" type="adreno_compare_func"/>
+		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
+		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
+		<bitfield name="Z_TEST_ENABLE" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x2106" name="RB_STENCIL_CONTROL">
+		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="STENCIL_ENABLE_BF" pos="1" type="boolean"/>
+		<!--
+			set for stencil operations that require read from stencil
+			buffer, but not for example for stencil clear (which does
+			not require read).. so guessing this is analogous to
+			READ_DEST_ENABLE for color buffer..
+		 -->
+		<bitfield name="STENCIL_READ" pos="2" type="boolean"/>
+		<bitfield name="FUNC" low="8" high="10" type="adreno_compare_func"/>
+		<bitfield name="FAIL" low="11" high="13" type="adreno_stencil_op"/>
+		<bitfield name="ZPASS" low="14" high="16" type="adreno_stencil_op"/>
+		<bitfield name="ZFAIL" low="17" high="19" type="adreno_stencil_op"/>
+		<bitfield name="FUNC_BF" low="20" high="22" type="adreno_compare_func"/>
+		<bitfield name="FAIL_BF" low="23" high="25" type="adreno_stencil_op"/>
+		<bitfield name="ZPASS_BF" low="26" high="28" type="adreno_stencil_op"/>
+		<bitfield name="ZFAIL_BF" low="29" high="31" type="adreno_stencil_op"/>
+	</reg32>
+	<reg32 offset="0x213f" name="RB_VPORT_Z_CLAMP_MAX_15"/>
 
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
@@ -97,6 +181,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22c0" name="SP_SP_CTRL"/>
 	<reg32 offset="0x22c1" name="SP_INSTR_CACHE_CTRL"/>
 	<reg32 offset="0x22c4" name="SP_VS_CTRL_0"/>
+	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG">
+		<bitfield name="POSREGID" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="PSIZEREGID" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="TOTALVSOUTVAR" low="20" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x22e1" name="SP_VS_OBJ_START"/>
 	<reg32 offset="0x22e2" name="SP_VS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22e3" name="SP_VS_PVT_MEM_ADDR"/>
@@ -110,7 +199,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e61" name="VPC_DEBUG_RAM_READ"/>
 	<reg32 offset="0x0e64" name="VPC_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0e68" name="VPC_PERFCTR_VPC_SEL_3"/>
-	<reg32 offset="0x2140" name="VPC_ATTR"/>
+	<reg32 offset="0x2140" name="VPC_ATTR">
+		<bitfield name="TOTALATTR" low="0" high="8" type="uint"/>
+		<!-- PSIZE bit set if gl_PointSize written: -->
+		<bitfield name="PSIZE" pos="9" type="boolean"/>
+		<bitfield name="THRDASSIGN" low="12" high="13" type="uint"/>
+		<bitfield name="ENABLE" pos="25" type="boolean"/>
+		<bitfield name="LMSIZE" low="28" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2141" name="VPC_PACK">
+		<bitfield name="NUMFPNONPOSVAR" low="8" high="15" type="uint"/>
+		<bitfield name="NUMNONPOSVSVAR" low="16" high="23" type="uint"/>
+	</reg32>
+
 	<reg32 offset="0x216e" name="VPC_SO_FLUSH_WADDR_3"/>
 
 	<!-- VSC registers -->
@@ -120,9 +221,28 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x0c01" name="VSC_SIZE_ADDRESS"/>
 	<reg32 offset="0x0c03" name="VSC_DEBUG_ECO_CONTROL"/>
-	<reg32 offset="0x0c08" name="VSC_PIPE_CONFIG_0"/>
-	<reg32 offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS_0"/>
-	<reg32 offset="0x0c1f" name="VSC_PIPE_DATA_LENGTH_7"/>
+	<array offset="0x0c08" name="VSC_PIPE_CONFIG" stride="1" length="8">
+		<reg32 offset="0x0" name="REG">
+			<doc>
+				Configures the mapping between VSC_PIPE buffer and
+				bin, X/Y specify the bin index in the horiz/vert
+				direction (0,0 is upper left, 0,1 is leftmost bin
+				on second row, and so on).  W/H specify the number
+				of bins assigned to this VSC_PIPE in the horiz/vert
+				dimension.
+			</doc>
+			<bitfield name="X" low="0" high="9" type="uint"/>
+			<bitfield name="Y" low="10" high="19" type="uint"/>
+			<bitfield name="W" low="20" high="23" type="uint"/>
+			<bitfield name="H" low="24" high="27" type="uint"/>
+		</reg32>
+	</array>
+	<array offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS" stride="1" length="8">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x0c18" name="VSC_PIPE_DATA_LENGTH" stride="1" length="8">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
 	<reg32 offset="0x0c41" name="VSC_PIPE_PARTIAL_POSN_1"/>
 	<reg32 offset="0x0c50" name="VSC_PERFCTR_VSC_SEL_0"/>
 	<reg32 offset="0x0c51" name="VSC_PERFCTR_VSC_SEL_1"/>
@@ -131,14 +251,35 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e40" name="VFD_DEBUG_CONTROL"/>
 	<reg32 offset="0x0e4a" name="VFD_PERFCTR_VFD_SEL_7"/>
 	<reg32 offset="0x2200" name="VFD_CONTROL_0"/>
-	<reg32 offset="0x2201" name="VFD_CONTROL_1"/>
+	<reg32 offset="0x2201" name="VFD_CONTROL_1">
+		<doc>MAXSTORAGE could be # of attributes/vbo's</doc>
+		<bitfield name="MAXSTORAGE" low="0" high="15" type="uint"/>
+		<!--
+			always seem to be 252 except when entire register is zero'd,
+			but in these cases it is overwritten with non-zero value
+			before the next DRAW_INDX
+		 -->
+		<bitfield name="REGID4VTX" low="16" high="23" type="a3xx_regid"/>
+		<bitfield name="REGID4INST" low="24" high="31" type="a3xx_regid"/>
+	</reg32>
 	<reg32 offset="0x2202" name="VFD_CONTROL_2"/>
 	<reg32 offset="0x2203" name="VFD_CONTROL_3"/>
 	<reg32 offset="0x2204" name="VFD_CONTROL_4"/>
 	<reg32 offset="0x2208" name="VFD_INDEX_OFFSET"/>
-	<reg32 offset="0x220a" name="VFD_FETCH_INSTR_0_0"/>
-	<reg32 offset="0x2287" name="VFD_FETCH_INSTR_1_31"/>
-	<reg32 offset="0x22a9" name="VFD_DECODE_INSTR_31"/>
+	<array offset="0x220a" name="VFD_FETCH" stride="4" length="32">
+		<reg32 offset="0x0" name="INSTR_0">
+			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
+			<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
+			<bitfield name="SWITCHNEXT" pos="17" type="boolean"/>
+			<bitfield name="INDEXCODE" low="18" high="23" type="uint"/>
+			<!-- STEPRATE doesn't seem to be set on a4xx, as it is with a3xx.. -->
+			<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x1" name="INSTR_1"/>
+	</array>
+	<array offset="0x228a" name="VFD_DECODE" stride="1" length="32">
+		<reg32 offset="0x0" name="INSTR"/>
+	</array>
 
 	<!-- TPL1 registers -->
 	<reg32 offset="0x0f00" name="TPL1_DEBUG_ECO_CONTROL"/>
@@ -162,13 +303,28 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x200b" name="GRAS_CL_VPORT_YSCALE_0" type="float"/>
 	<reg32 offset="0x200c" name="GRAS_CL_VPORT_ZOFFSET_0" type="float"/>
 	<reg32 offset="0x200d" name="GRAS_CL_VPORT_ZSCALE_0" type="float"/>
-	<reg32 offset="0x2070" name="GRAS_SU_POINT_MINMAX"/>
-	<reg32 offset="0x2071" name="GRAS_SU_POINT_SIZE"/>
+	<reg32 offset="0x2070" name="GRAS_SU_POINT_MINMAX">
+		<bitfield name="MIN" low="0" high="15" type="ufixed" radix="4"/>
+		<bitfield name="MAX" low="16" high="31" type="ufixed" radix="4"/>
+	</reg32>
+	<reg32 offset="0x2071" name="GRAS_SU_POINT_SIZE" type="fixed" radix="4"/>
 	<reg32 offset="0x209f" name="GRAS_SC_EXTENT_WINDOW_TL"/>
 	<reg32 offset="0x207c" name="GRAS_SC_SCREEN_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0x207d" name="GRAS_SC_SCREEN_SCISSOR_BR" type="adreno_reg_xy"/>
 	<reg32 offset="0x209b" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0x209c" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
+	<reg32 offset="0x2078" name="GRAS_SU_MODE_CONTROL">
+		<bitfield name="CULL_FRONT" pos="0" type="boolean"/>
+		<bitfield name="CULL_BACK" pos="1" type="boolean"/>
+		<bitfield name="FRONT_CW" pos="2" type="boolean"/>
+		<bitfield name="LINEHALFWIDTH" low="3" high="10" radix="2" type="fixed"/>
+		<bitfield name="POLY_OFFSET" pos="11" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x207b" name="GRAS_SC_CONTROL">
+		<!-- complete wild-ass-guess for sizes of these bitfields.. -->
+		<bitfield name="RENDER_MODE" low="2" high="3" type="a3xx_render_mode"/>
+		<bitfield name="RASTER_MODE" low="12" high="15"/>
+	</reg32>
 
 	<!-- UCHE registers -->
 	<reg32 offset="0x0e80" name="UCHE_CACHE_MODE_CONTROL"/>
@@ -184,7 +340,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x23db" name="HLSQ_UPDATE_CONTROL"/>
 
 	<!-- PC registers -->
-	<reg32 offset="0x0d00" name="PC_BINNING_COMMAND"/>
+	<reg32 offset="0x0d00" name="PC_BINNING_COMMAND">
+		<bitfield name="BINNING_ENABLE" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0d0c" name="PC_DRAWCALL_SETUP_OVERRIDE"/>
 	<reg32 offset="0x0d10" name="PC_PERFCTR_PC_SEL_0"/>
 	<reg32 offset="0x0d17" name="PC_PERFCTR_PC_SEL_7"/>
