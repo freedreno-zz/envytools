@@ -84,6 +84,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DEPTHX_24_8" value="1"/>
 </enum>
 
+<bitset name="adreno_reg_xy" inline="yes">
+	<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>
+	<bitfield name="X" low="0" high="14" type="uint"/>
+	<bitfield name="Y" low="16" high="30" type="uint"/>
+</bitset>
+
 <domain name="AXXX" width="32">
 	<brief>Registers in common between a2xx and a3xx</brief>
 

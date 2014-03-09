@@ -12,6 +12,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0cd2" name="RB_PERFCTR_CCU_SEL_3"/>
 	<reg32 offset="0x20a0" name="RB_MODE_CONTROL"/>
 	<reg32 offset="0x213f" name="RB_VPORT_Z_CLAMP_MAX_15"/>
+	<reg32 offset="0x20cc" name="RB_CLEAR_COLOR_DW0"/>
+	<reg32 offset="0x20cd" name="RB_CLEAR_COLOR_DW1"/>
+	<reg32 offset="0x20ce" name="RB_CLEAR_COLOR_DW2"/>
+	<reg32 offset="0x20cf" name="RB_CLEAR_COLOR_DW3"/>
 
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
@@ -110,7 +114,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x216e" name="VPC_SO_FLUSH_WADDR_3"/>
 
 	<!-- VSC registers -->
-	<reg32 offset="0x0c00" name="VSC_BIN_SIZE"/>
+	<reg32 offset="0x0c00" name="VSC_BIN_SIZE">
+		<bitfield name="WIDTH" low="0" high="4" shr="5" type="uint"/>
+		<bitfield name="HEIGHT" low="5" high="9" shr="5" type="uint"/>
+	</reg32>
 	<reg32 offset="0x0c01" name="VSC_SIZE_ADDRESS"/>
 	<reg32 offset="0x0c03" name="VSC_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0c08" name="VSC_PIPE_CONFIG_0"/>
@@ -145,9 +152,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0c88" name="GRAS_PERFCTR_TSE_SEL_0"/>
 	<reg32 offset="0x0c8b" name="GRAS_PERFCTR_TSE_SEL_3"/>
 	<reg32 offset="0x2000" name="GRAS_CL_CLIP_CNTL"/>
-	<reg32 offset="0x2004" name="GRAS_CL_GB_CLIP_ADJ"/>
-	<reg32 offset="0x2008" name="GRAS_CL_VPORT_XOFFSET_0"/>
+	<reg32 offset="0x2004" name="GRAS_CL_GB_CLIP_ADJ">
+		<bitfield name="HORZ" low="0" high="9" type="uint"/>
+		<bitfield name="VERT" low="10" high="19" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2008" name="GRAS_CL_VPORT_XOFFSET_0" type="float"/>
+	<reg32 offset="0x2009" name="GRAS_CL_VPORT_XSCALE_0" type="float"/>
+	<reg32 offset="0x200a" name="GRAS_CL_VPORT_YOFFSET_0" type="float"/>
+	<reg32 offset="0x200b" name="GRAS_CL_VPORT_YSCALE_0" type="float"/>
+	<reg32 offset="0x200c" name="GRAS_CL_VPORT_ZOFFSET_0" type="float"/>
+	<reg32 offset="0x200d" name="GRAS_CL_VPORT_ZSCALE_0" type="float"/>
+	<reg32 offset="0x2070" name="GRAS_SU_POINT_MINMAX"/>
+	<reg32 offset="0x2071" name="GRAS_SU_POINT_SIZE"/>
 	<reg32 offset="0x209f" name="GRAS_SC_EXTENT_WINDOW_TL"/>
+	<reg32 offset="0x207c" name="GRAS_SC_SCREEN_SCISSOR_TL" type="adreno_reg_xy"/>
+	<reg32 offset="0x207d" name="GRAS_SC_SCREEN_SCISSOR_BR" type="adreno_reg_xy"/>
+	<reg32 offset="0x209b" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
+	<reg32 offset="0x209c" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
 
 	<!-- UCHE registers -->
 	<reg32 offset="0x0e80" name="UCHE_CACHE_MODE_CONTROL"/>

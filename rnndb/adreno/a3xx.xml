@@ -463,16 +463,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="RASTER_MODE" low="12" high="15"/>
 	</reg32>
 
-	<bitset name="a3xx_reg_xy" inline="yes">
-		<bitfield name="WINDOW_OFFSET_DISABLE" pos="31" type="boolean"/>  <!-- I assume it is same as a2xx -->
-		<bitfield name="X" low="0" high="14" type="uint"/>
-		<bitfield name="Y" low="16" high="30" type="uint"/>
-	</bitset>
-
-	<reg32 offset="0x2074" name="GRAS_SC_SCREEN_SCISSOR_TL" type="a3xx_reg_xy"/>
-	<reg32 offset="0x2075" name="GRAS_SC_SCREEN_SCISSOR_BR" type="a3xx_reg_xy"/>
-	<reg32 offset="0x2079" name="GRAS_SC_WINDOW_SCISSOR_TL" type="a3xx_reg_xy"/>
-	<reg32 offset="0x207a" name="GRAS_SC_WINDOW_SCISSOR_BR" type="a3xx_reg_xy"/>
+	<reg32 offset="0x2074" name="GRAS_SC_SCREEN_SCISSOR_TL" type="adreno_reg_xy"/>
+	<reg32 offset="0x2075" name="GRAS_SC_SCREEN_SCISSOR_BR" type="adreno_reg_xy"/>
+	<reg32 offset="0x2079" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
+	<reg32 offset="0x207a" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
 
 	<!-- RB registers -->
 	<reg32 offset="0x20c0" name="RB_MODE_CONTROL">
@@ -571,18 +565,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FLOAT" low="16" high="31" type="float"/>
 	</reg32>
 
-	<reg32 offset="0x20e8" name="RB_CLEAR_COLOR_DW0">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
-	<reg32 offset="0x20e9" name="RB_CLEAR_COLOR_DW1">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
-	<reg32 offset="0x20ea" name="RB_CLEAR_COLOR_DW2">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
-	<reg32 offset="0x20eb" name="RB_CLEAR_COLOR_DW3">
-		<doc>seems to be always set to 0x00000000</doc>
-	</reg32>
+	<reg32 offset="0x20e8" name="RB_CLEAR_COLOR_DW0"/>
+	<reg32 offset="0x20e9" name="RB_CLEAR_COLOR_DW1"/>
+	<reg32 offset="0x20ea" name="RB_CLEAR_COLOR_DW2"/>
+	<reg32 offset="0x20eb" name="RB_CLEAR_COLOR_DW3"/>
 	<enum name="adreno_rb_copy_control_mode">
 		<value name="RB_COPY_RESOLVE" value="1"/>
 		<value name="RB_COPY_DEPTH_STENCIL" value="5"/>  <!-- not sure if this is part of MODE or another bitfield?? -->

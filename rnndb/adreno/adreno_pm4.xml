@@ -137,6 +137,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_DRAW_INDX_BIN" value="0x34"/>
 	<doc>initiate fetch of bin IDs and draw using supplied indices</doc>
 	<value name="CP_DRAW_INDX_2_BIN" value="0x35"/>
+	<doc>version of CP_DRAW_INDX used on a4xx:</doc>
+	<value name="CP_DRAW_INDX_A4X" value="0x38"/>
 	<doc>begin/end initiator for viz query extent processing</doc>
 	<value name="CP_VIZ_QUERY" value="0x23"/>
 	<doc>fetch state sub-blocks and initiate shader code DMAs</doc>
@@ -144,6 +146,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>load constant into chip and to memory</doc>
 	<value name="CP_SET_CONSTANT" value="0x2d"/>
 	<doc>load sequencer instruction memory (pointer-based)</doc>
+	<doc>
+		Used a bit like CP_SET_CONSTANT on a2xx, but can write multiple
+		groups of registers.  Looks like it can be used to create state
+		objects in GPU memory, and on state change only emit pointer
+		(via CP_REGISTER_LOAD), which should be nice for reducing CPU
+		overhead:
+	</doc>
+	<value name="CP_REGISTER_LOAD" value="0x43"/>
 	<value name="CP_IM_LOAD" value="0x27"/>
 	<doc>load sequencer instruction memory (code embedded in packet)</doc>
 	<value name="CP_IM_LOAD_IMMEDIATE" value="0x2b"/>
@@ -282,6 +292,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="NUM_INDICES" low="0" high="31" type="uint"/>
 	</reg32>
 	<!-- followed by NUM_INDICES indices.. -->
+</domain>
+
+<domain name="CP_DRAW_INDX_A4X" width="32">
+	<reg32 offset="0" name="0" type="vgt_draw_initiator"/>
+	<reg32 offset="1" name="1"/>
+	<reg32 offset="2" name="2">
+		<bitfield name="NUM_INDICES" low="0" high="31" type="uint"/>
+	</reg32>
 </domain>
 
 <domain name="CP_SET_BIN" width="32">
