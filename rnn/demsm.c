@@ -70,6 +70,8 @@ static struct domain *find_domain(struct rnndeccontext *ctx, uint32_t *addrp)
 		struct domain *d = &domains[i];
 
 		if ((d->base <= addr) && (addr < (d->base + d->size))) {
+			if (!d->dom)
+				continue;
 			if (!first_domain)
 				first_domain = d;
 			if (rnndec_checkaddr(ctx, d->dom, (addr - d->base) >> d->shift, 0)) {
@@ -77,7 +79,7 @@ static struct domain *find_domain(struct rnndeccontext *ctx, uint32_t *addrp)
 			}
 		}
 	}
-	if (is_a3xx(first_domain->name)) {
+	if (first_domain && is_a3xx(first_domain->name)) {
 		/* we appear to have some banked registers: */
 		uint32_t off = addr - first_domain->base;
 		if ((0x9000 <= off) && (off < 0x10000)) {
