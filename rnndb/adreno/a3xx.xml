@@ -17,20 +17,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TILE_32X32" value="2"/>
 </enum>
 
-<enum name="a3xx_threadmode">
-	<value value="0" name="MULTI"/>
-	<value value="1" name="SINGLE"/>
-</enum>
-
-<enum name="a3xx_instrbuffermode">
-	<value value="1" name="BUFFER"/>
-</enum>
-
-<enum name="a3xx_threadsize">
-	<value value="0" name="TWO_QUADS"/>
-	<value value="1" name="FOUR_QUADS"/>
-</enum>
-
 <enum name="a3xx_state_block_id">
 	<value name="HLSQ_BLOCK_ID_TP_TEX" value="2"/>
 	<value name="HLSQ_BLOCK_ID_TP_MIPMAP" value="3"/>
@@ -1194,6 +1180,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWIZ_W" low="13" high="15" type="a3xx_tex_swiz"/>
 		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
 		<bitfield name="FMT" low="22" high="28" type="a3xx_tex_fmt"/>
+		<bitfield name="NOCONVERT" pos="29" type="boolean"/>
 		<bitfield name="TYPE" low="30" high="31" type="a3xx_tex_type"/>
 	</reg32>
 	<reg32 offset="1" name="1">

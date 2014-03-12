@@ -241,5 +241,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="MSAA_FOUR" value="2"/>
 </enum>
 
+<enum name="a3xx_threadmode">
+	<value value="0" name="MULTI"/>
+	<value value="1" name="SINGLE"/>
+</enum>
+
+<enum name="a3xx_instrbuffermode">
+	<value value="1" name="BUFFER"/>
+</enum>
+
+<enum name="a3xx_threadsize">
+	<value value="0" name="TWO_QUADS"/>
+	<value value="1" name="FOUR_QUADS"/>
+</enum>
+
 </database>
 
