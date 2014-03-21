@@ -10,6 +10,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_RENDERING_PASS" value="0"/>
 	<value name="RB_TILING_PASS" value="1"/>
 	<value name="RB_RESOLVE_PASS" value="2"/>
+	<value name="RB_COMPUTE_PASS" value="3"/>
 </enum>
 
 <enum name="a3xx_tile_mode">
@@ -402,6 +403,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</array>
 	<reg32 offset="0x054d" name="CP_AHB_FAULT"/>
 
+	<!-- these I guess or either SP or HLSQ since related to shader core setup: -->
+	<reg32 offset="0x0e22" name="SP_GLOBAL_MEM_SIZE" type="uint">
+		<doc>seems to be 16 * global?</doc>
+	</reg32>
+	<reg32 offset="0x0e23" name="SP_GLOBAL_MEM_ADDR"/>
+
 	<!-- GRAS registers -->
 	<reg32 offset="0x2040" name="GRAS_CL_CLIP_CNTL">
 		<bitfield name="IJ_PERSP_CENTER" pos="12" type="boolean"/> <!-- is it more bits? -->
@@ -732,15 +739,26 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2205" name="HLSQ_FS_CONTROL_REG" type="a3xx_hlsq_vs_fs_control_reg"/>
 	<reg32 offset="0x2206" name="HLSQ_CONST_VSPRESV_RANGE_REG" type="a3xx_hlsq_const_vs_fs_presv_range_reg"/>
 	<reg32 offset="0x2207" name="HLSQ_CONST_FSPRESV_RANGE_REG" type="a3xx_hlsq_const_vs_fs_presv_range_reg"/>
-	<reg32 offset="0x220a" name="HLSQ_CL_NDRANGE_0_REG"/>
-	<reg32 offset="0x220b" name="HLSQ_CL_NDRANGE_1_REG"/>
-	<reg32 offset="0x220c" name="HLSQ_CL_NDRANGE_2_REG"/>
+	<reg32 offset="0x220a" name="HLSQ_CL_NDRANGE_0_REG">
+		<bitfield name="WORKDIM" low="0" high="1" type="uint"/>
+		<bitfield name="LOCALSIZE0" low="2" high="11" type="uint"/>
+		<bitfield name="LOCALSIZE1" low="12" high="21" type="uint"/>
+		<bitfield name="LOCALSIZE2" low="22" high="31" type="uint"/>
+	</reg32>
+	<array offset="0x220b" name="HLSQ_CL_GLOBAL_WORK" stride="2" length="3">
+		<doc>indexed by dimension</doc>
+		<reg32 offset="0" name="SIZE" type="uint"/>
+		<reg32 offset="1" name="OFFSET" type="uint"/>
+	</array>
 	<reg32 offset="0x2211" name="HLSQ_CL_CONTROL_0_REG"/>
 	<reg32 offset="0x2212" name="HLSQ_CL_CONTROL_1_REG"/>
 	<reg32 offset="0x2214" name="HLSQ_CL_KERNEL_CONST_REG"/>
-	<reg32 offset="0x2215" name="HLSQ_CL_KERNEL_GROUP_X_REG"/>
-	<reg32 offset="0x2216" name="HLSQ_CL_KERNEL_GROUP_Y_REG"/>
-	<reg32 offset="0x2217" name="HLSQ_CL_KERNEL_GROUP_Z_REG"/>
+	<array offset="0x2215" name="HLSQ_CL_KERNEL_GROUP" stride="1" length="3">
+		<doc>indexed by dimension, global_size / local_size</doc>
+		<reg32 offset="0" name="RATIO" type="uint"/>
+	</array>
+	<reg32 offset="0x2216" name="HLSQ_CL_KERNEL_GROUP_Y_REG" type="uint"/>
+	<reg32 offset="0x2217" name="HLSQ_CL_KERNEL_GROUP_Z_REG" type="uint"/>
 	<reg32 offset="0x221a" name="HLSQ_CL_WG_OFFSET_REG"/>
 
 	<!-- VFD registers -->
@@ -856,6 +874,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="THREADSIZE" pos="20" type="a3xx_threadsize"/>
 		<bitfield name="SUPERTHREADMODE" pos="21" type="boolean"/>
 		<bitfield name="PIXLODENABLE" pos="22" type="boolean"/>
+		<bitfield name="COMPUTEMODE" pos="23" type="boolean"/>
 		<doc>
 			From regspec:
 			SP_FS_CTRL_REG0.FS_LENGTH [31:24]: FS length, unit = 256bits.
