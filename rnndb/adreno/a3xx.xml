@@ -6,13 +6,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_common.xml"/>
 <import file="adreno/adreno_pm4.xml"/>
 
-<enum name="a3xx_render_mode">
-	<value name="RB_RENDERING_PASS" value="0"/>
-	<value name="RB_TILING_PASS" value="1"/>
-	<value name="RB_RESOLVE_PASS" value="2"/>
-	<value name="RB_COMPUTE_PASS" value="3"/>
-</enum>
-
 <enum name="a3xx_tile_mode">
 	<value name="LINEAR" value="0"/>
 	<value name="TILE_32X32" value="2"/>
@@ -165,12 +158,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="WXYZ" value="1"/>
 	<value name="ZYXW" value="2"/>
 	<value name="XYZW" value="3"/>
-</enum>
-
-<enum name="a3xx_msaa_samples">
-	<value name="MSAA_ONE" value="0"/>
-	<value name="MSAA_TWO" value="1"/>
-	<value name="MSAA_FOUR" value="2"/>
 </enum>
 
 <enum name="a3xx_sp_perfcounter_select">

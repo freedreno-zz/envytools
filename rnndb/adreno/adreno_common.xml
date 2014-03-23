@@ -233,6 +233,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_RENDERING_PASS" value="0"/>
 	<value name="RB_TILING_PASS" value="1"/>
 	<value name="RB_RESOLVE_PASS" value="2"/>
+	<value name="RB_COMPUTE_PASS" value="3"/>
 </enum>
 
 <enum name="a3xx_msaa_samples">

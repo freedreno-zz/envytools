@@ -7,77 +7,78 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_pm4.xml"/>
 
 <enum name="a4xx_color_fmt">
+	<value name="DUMMY" value="0"/>
 </enum>
 
 
-<enum name="a4xx_vtx_fmt">
+<enum name="a4xx_vtx_fmt" prefix="chipset">
 	<!-- hmm, shifted one compared to a3xx?!?  -->
-	<value name="VFMT_FLOAT_32" value="0x1"/>
-	<value name="VFMT_FLOAT_32_32" value="0x2"/>
-	<value name="VFMT_FLOAT_32_32_32" value="0x3"/>
-	<value name="VFMT_FLOAT_32_32_32_32" value="0x4"/>
+	<value name="VFMT4_FLOAT_32" value="0x1"/>
+	<value name="VFMT4_FLOAT_32_32" value="0x2"/>
+	<value name="VFMT4_FLOAT_32_32_32" value="0x3"/>
+	<value name="VFMT4_FLOAT_32_32_32_32" value="0x4"/>
 
-	<value name="VFMT_FLOAT_16" value="0x5"/>
-	<value name="VFMT_FLOAT_16_16" value="0x6"/>
-	<value name="VFMT_FLOAT_16_16_16" value="0x7"/>
-	<value name="VFMT_FLOAT_16_16_16_16" value="0x8"/>
+	<value name="VFMT4_FLOAT_16" value="0x5"/>
+	<value name="VFMT4_FLOAT_16_16" value="0x6"/>
+	<value name="VFMT4_FLOAT_16_16_16" value="0x7"/>
+	<value name="VFMT4_FLOAT_16_16_16_16" value="0x8"/>
 
-	<value name="VFMT_FIXED_32" value="0x9"/>
-	<value name="VFMT_FIXED_32_32" value="0xa"/>
-	<value name="VFMT_FIXED_32_32_32" value="0xb"/>
-	<value name="VFMT_FIXED_32_32_32_32" value="0xc"/>
+	<value name="VFMT4_FIXED_32" value="0x9"/>
+	<value name="VFMT4_FIXED_32_32" value="0xa"/>
+	<value name="VFMT4_FIXED_32_32_32" value="0xb"/>
+	<value name="VFMT4_FIXED_32_32_32_32" value="0xc"/>
 
 	<!-- beyond here it does not appear to be shifted -->
-	<value name="VFMT_SHORT_16" value="0x10"/>
-	<value name="VFMT_SHORT_16_16" value="0x11"/>
-	<value name="VFMT_SHORT_16_16_16" value="0x12"/>
-	<value name="VFMT_SHORT_16_16_16_16" value="0x13"/>
-	<value name="VFMT_USHORT_16" value="0x14"/>
-	<value name="VFMT_USHORT_16_16" value="0x15"/>
-	<value name="VFMT_USHORT_16_16_16" value="0x16"/>
-	<value name="VFMT_USHORT_16_16_16_16" value="0x17"/>
-	<value name="VFMT_NORM_SHORT_16" value="0x18"/>
-	<value name="VFMT_NORM_SHORT_16_16" value="0x19"/>
-	<value name="VFMT_NORM_SHORT_16_16_16" value="0x1a"/>
-	<value name="VFMT_NORM_SHORT_16_16_16_16" value="0x1b"/>
-	<value name="VFMT_NORM_USHORT_16" value="0x1c"/>
-	<value name="VFMT_NORM_USHORT_16_16" value="0x1d"/>
-	<value name="VFMT_NORM_USHORT_16_16_16" value="0x1e"/>
-	<value name="VFMT_NORM_USHORT_16_16_16_16" value="0x1f"/>
+	<value name="VFMT4_SHORT_16" value="0x10"/>
+	<value name="VFMT4_SHORT_16_16" value="0x11"/>
+	<value name="VFMT4_SHORT_16_16_16" value="0x12"/>
+	<value name="VFMT4_SHORT_16_16_16_16" value="0x13"/>
+	<value name="VFMT4_USHORT_16" value="0x14"/>
+	<value name="VFMT4_USHORT_16_16" value="0x15"/>
+	<value name="VFMT4_USHORT_16_16_16" value="0x16"/>
+	<value name="VFMT4_USHORT_16_16_16_16" value="0x17"/>
+	<value name="VFMT4_NORM_SHORT_16" value="0x18"/>
+	<value name="VFMT4_NORM_SHORT_16_16" value="0x19"/>
+	<value name="VFMT4_NORM_SHORT_16_16_16" value="0x1a"/>
+	<value name="VFMT4_NORM_SHORT_16_16_16_16" value="0x1b"/>
+	<value name="VFMT4_NORM_USHORT_16" value="0x1c"/>
+	<value name="VFMT4_NORM_USHORT_16_16" value="0x1d"/>
+	<value name="VFMT4_NORM_USHORT_16_16_16" value="0x1e"/>
+	<value name="VFMT4_NORM_USHORT_16_16_16_16" value="0x1f"/>
 
-	<value name="VFMT_UBYTE_8" value="0x28"/>
-	<value name="VFMT_UBYTE_8_8" value="0x29"/>
-	<value name="VFMT_UBYTE_8_8_8" value="0x2a"/>
-	<value name="VFMT_UBYTE_8_8_8_8" value="0x2b"/>
-	<value name="VFMT_NORM_UBYTE_8" value="0x2c"/>
-	<value name="VFMT_NORM_UBYTE_8_8" value="0x2d"/>
-	<value name="VFMT_NORM_UBYTE_8_8_8" value="0x2e"/>
-	<value name="VFMT_NORM_UBYTE_8_8_8_8" value="0x2f"/>
-	<value name="VFMT_BYTE_8" value="0x30"/>
-	<value name="VFMT_BYTE_8_8" value="0x31"/>
-	<value name="VFMT_BYTE_8_8_8" value="0x32"/>
-	<value name="VFMT_BYTE_8_8_8_8" value="0x33"/>
-	<value name="VFMT_NORM_BYTE_8" value="0x34"/>
-	<value name="VFMT_NORM_BYTE_8_8" value="0x35"/>
-	<value name="VFMT_NORM_BYTE_8_8_8" value="0x36"/>
-	<value name="VFMT_NORM_BYTE_8_8_8_8" value="0x37"/>
+	<value name="VFMT4_UBYTE_8" value="0x28"/>
+	<value name="VFMT4_UBYTE_8_8" value="0x29"/>
+	<value name="VFMT4_UBYTE_8_8_8" value="0x2a"/>
+	<value name="VFMT4_UBYTE_8_8_8_8" value="0x2b"/>
+	<value name="VFMT4_NORM_UBYTE_8" value="0x2c"/>
+	<value name="VFMT4_NORM_UBYTE_8_8" value="0x2d"/>
+	<value name="VFMT4_NORM_UBYTE_8_8_8" value="0x2e"/>
+	<value name="VFMT4_NORM_UBYTE_8_8_8_8" value="0x2f"/>
+	<value name="VFMT4_BYTE_8" value="0x30"/>
+	<value name="VFMT4_BYTE_8_8" value="0x31"/>
+	<value name="VFMT4_BYTE_8_8_8" value="0x32"/>
+	<value name="VFMT4_BYTE_8_8_8_8" value="0x33"/>
+	<value name="VFMT4_NORM_BYTE_8" value="0x34"/>
+	<value name="VFMT4_NORM_BYTE_8_8" value="0x35"/>
+	<value name="VFMT4_NORM_BYTE_8_8_8" value="0x36"/>
+	<value name="VFMT4_NORM_BYTE_8_8_8_8" value="0x37"/>
 
 	<!-- note: these also have bit 22 set in VFD_DECODE -->
-	<value name="VFMT_UINT_10_10_10_2" value="0x3c"/>
-	<value name="VFMT_NORM_UINT_10_10_10_2" value="0x3d"/>
-	<value name="VFMT_INT_10_10_10_2" value="0x3e"/>
-	<value name="VFMT_NORM_INT_10_10_10_2" value="0x3f"/>
+	<value name="VFMT4_UINT_10_10_10_2" value="0x3c"/>
+	<value name="VFMT4_NORM_UINT_10_10_10_2" value="0x3d"/>
+	<value name="VFMT4_INT_10_10_10_2" value="0x3e"/>
+	<value name="VFMT4_NORM_INT_10_10_10_2" value="0x3f"/>
 </enum>
 
 <enum name="a4xx_tex_fmt">
-	<value name="TFMT_NORM_USHORT_565" value="0x0b"/>
-	<value name="TFMT_NORM_USHORT_5551" value="0x0a"/>
-	<value name="TFMT_NORM_USHORT_4444" value="0x08"/>
-	<value name="TFMT_NORM_UINT_X8Z24" value="0x47"/>
+	<value name="TFMT4_NORM_USHORT_565" value="0x0b"/>
+	<value name="TFMT4_NORM_USHORT_5551" value="0x0a"/>
+	<value name="TFMT4_NORM_USHORT_4444" value="0x08"/>
+	<value name="TFMT4_NORM_UINT_X8Z24" value="0x47"/>
 
-	<value name="TFMT_NORM_UINT_2_10_10_10" value="0x21"/>
-	<value name="TFMT_NORM_UINT_A8" value="0x03"/>    <!-- GL_ALPHA -->
-	<value name="TFMT_NORM_UINT_L8_A8" value="0xd"/> <!-- GL_LUMINANCE_ALPHA -->
+	<value name="TFMT4_NORM_UINT_2_10_10_10" value="0x21"/>
+	<value name="TFMT4_NORM_UINT_A8" value="0x03"/>    <!-- GL_ALPHA -->
+	<value name="TFMT4_NORM_UINT_L8_A8" value="0xd"/> <!-- GL_LUMINANCE_ALPHA -->
 
 	<!--
 		NOTE: GL_ALPHA and GL_LUMINANCE_ALPHA aren't handled in a similar way
@@ -89,18 +90,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		the blob or tested.. you can guess what the missing ones are..
 	 -->
 
-	<value name="TFMT_NORM_UINT_8" value="0x04"/>     <!-- GL_LUMINANCE -->
-	<value name="TFMT_NORM_UINT_8_8_8_8" value="0x1c"/>
+	<value name="TFMT4_NORM_UINT_8" value="0x04"/>     <!-- GL_LUMINANCE -->
+	<value name="TFMT4_NORM_UINT_8_8_8_8" value="0x1c"/>
 
-	<value name="TFMT_FLOAT_16" value="0x14"/>
-	<value name="TFMT_FLOAT_16_16" value="0x28"/>
+	<value name="TFMT4_FLOAT_16" value="0x14"/>
+	<value name="TFMT4_FLOAT_16_16" value="0x28"/>
 	<!-- TFMT_FLOAT_16_16_16 -->
-	<value name="TFMT_FLOAT_16_16_16_16" value="0x35"/>
+	<value name="TFMT4_FLOAT_16_16_16_16" value="0x35"/>
 
-	<value name="TFMT_FLOAT_32" value="0x2b"/>
-	<value name="TFMT_FLOAT_32_32" value="0x38"/>
+	<value name="TFMT4_FLOAT_32" value="0x2b"/>
+	<value name="TFMT4_FLOAT_32_32" value="0x38"/>
 	<!-- TFMT_FLOAT_32_32_32 -->
-	<value name="TFMT_FLOAT_32_32_32_32" value="0x3f"/>
+	<value name="TFMT4_FLOAT_32_32_32_32" value="0x3f"/>
 </enum>
 
 <domain name="A4XX" width="32">
