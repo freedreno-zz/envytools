@@ -268,7 +268,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0061" name="RBBM_INT_CLEAR_CMD" type="A3XX_INT0"/>
 	<reg32 offset="0x0063" name="RBBM_INT_0_MASK" type="A3XX_INT0"/>
 	<reg32 offset="0x0064" name="RBBM_INT_0_STATUS" type="A3XX_INT0"/>
-	<reg32 offset="0x0080" name="RBBM_PERFCTR_CTL"/>
+	<reg32 offset="0x0080" name="RBBM_PERFCTR_CTL">
+		<bitfield name="ENABLE" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0081" name="RBBM_PERFCTR_LOAD_CMD0"/>
 	<reg32 offset="0x0082" name="RBBM_PERFCTR_LOAD_CMD1"/>
 	<reg32 offset="0x0084" name="RBBM_PERFCTR_LOAD_VALUE_LO"/>
@@ -392,7 +394,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- these I guess or either SP or HLSQ since related to shader core setup: -->
 	<reg32 offset="0x0e22" name="SP_GLOBAL_MEM_SIZE" type="uint">
-		<doc>seems to be 16 * global?</doc>
+		<doc>
+			The pair of MEM_SIZE/ADDR registers get programmed
+			in sequence with the size/addr of each buffer.
+		</doc>
 	</reg32>
 	<reg32 offset="0x0e23" name="SP_GLOBAL_MEM_ADDR"/>
 
@@ -643,7 +648,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="X" low="0" high="15" type="uint"/>
 		<bitfield name="Y" low="16" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x2110" name="RB_SAMPLE_COUNT_CONTROL"/>
+	<reg32 offset="0x2110" name="RB_SAMPLE_COUNT_CONTROL">
+		<bitfield name="RESET" pos="0" type="boolean"/>
+		<bitfield name="COPY" pos="1" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x2111" name="RB_SAMPLE_COUNT_ADDR"/>
 	<reg32 offset="0x2114" name="RB_Z_CLAMP_MIN"/>
 	<reg32 offset="0x2115" name="RB_Z_CLAMP_MAX"/>
@@ -1012,6 +1020,27 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x305e" name="VBIF_OUT_AXI_AOOO_EN"/>
 	<reg32 offset="0x305f" name="VBIF_OUT_AXI_AOOO"/>
 
+	<bitset name="a3xx_vbif_perf_cnt" inline="yes">
+		<bitfield name="CNT0" pos="0" type="boolean"/>
+		<bitfield name="CNT1" pos="1" type="boolean"/>
+		<bitfield name="PWRCNT0" pos="2" type="boolean"/>
+		<bitfield name="PWRCNT1" pos="3" type="boolean"/>
+		<bitfield name="PWRCNT2" pos="4" type="boolean"/>
+	</bitset>
+
+	<reg32 offset="0x3070" name="VBIF_PERF_CNT_EN" type="a3xx_vbif_perf_cnt"/>
+	<reg32 offset="0x3071" name="VBIF_PERF_CNT_CLR" type="a3xx_vbif_perf_cnt"/>
+	<reg32 offset="0x3072" name="VBIF_PERF_CNT_SEL"/>
+	<reg32 offset="0x3073" name="VBIF_PERF_CNT0_LO"/>
+	<reg32 offset="0x3074" name="VBIF_PERF_CNT0_HI"/>
+	<reg32 offset="0x3075" name="VBIF_PERF_CNT1_LO"/>
+	<reg32 offset="0x3076" name="VBIF_PERF_CNT1_HI"/>
+	<reg32 offset="0x3077" name="VBIF_PERF_PWR_CNT0_LO"/>
+	<reg32 offset="0x3078" name="VBIF_PERF_PWR_CNT0_HI"/>
+	<reg32 offset="0x3079" name="VBIF_PERF_PWR_CNT1_LO"/>
+	<reg32 offset="0x307a" name="VBIF_PERF_PWR_CNT1_HI"/>
+	<reg32 offset="0x307b" name="VBIF_PERF_PWR_CNT2_LO"/>
+	<reg32 offset="0x307c" name="VBIF_PERF_PWR_CNT2_HI"/>
 
 
 	<reg32 offset="0x0c01" name="VSC_BIN_SIZE">
