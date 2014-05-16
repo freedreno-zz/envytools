@@ -59,7 +59,7 @@ struct fout *fouts = 0;
 int foutsnum = 0;
 int foutsmax = 0;
 
-void seekcol (FILE *f, int src, int dst) {
+static void seekcol (FILE *f, int src, int dst) {
 	if (dst <= src)
 		fprintf (f, "\t");
 	else {
@@ -75,7 +75,7 @@ void seekcol (FILE *f, int src, int dst) {
 	}
 }
 
-FILE *findfout (char *file) {
+static FILE *findfout (char *file) {
 	int i;
 	for (i = 0; i < foutsnum; i++)
 		if (!strcmp(fouts[i].name, file))
@@ -87,7 +87,7 @@ FILE *findfout (char *file) {
 	return fouts[i].file;
 }
 
-void printdef (char *name, char *suf, int type, uint64_t val, char *file) {
+static void printdef (char *name, char *suf, int type, uint64_t val, char *file) {
 	FILE *dst = findfout(file);
 	int len;
 	if (suf)
@@ -111,16 +111,16 @@ void printdef (char *name, char *suf, int type, uint64_t val, char *file) {
 	}
 }
 
-void printvalue (struct rnnvalue *val, int shift) {
+static void printvalue (struct rnnvalue *val, int shift) {
 	if (val->varinfo.dead)
 		return;
 	if (val->valvalid)
 		printdef (val->fullname, 0, 0, val->value << shift, val->file);
 }
 
-void printbitfield (struct rnnbitfield *bf, int shift);
+static void printbitfield (struct rnnbitfield *bf, int shift);
 
-void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
+static void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 		char *prefix, int shift, char *file) {
 	FILE *dst = findfout(file);
 	enum rnnttype intype = ti->type;
@@ -214,13 +214,13 @@ void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 		printbitfield(ti->bitfields[i], shift);
 }
 
-void printbitfield (struct rnnbitfield *bf, int shift) {
+static void printbitfield (struct rnnbitfield *bf, int shift) {
 	if (bf->varinfo.dead)
 		return;
 	printtypeinfo (&bf->typeinfo, bf, bf->fullname, bf->low, bf->file);
 }
 
-void printdelem (struct rnndelem *elem, uint64_t offset) {
+static void printdelem (struct rnndelem *elem, uint64_t offset) {
 	if (elem->varinfo.dead)
 		return;
 	if (elem->length != 1)
@@ -303,14 +303,14 @@ void printdelem (struct rnndelem *elem, uint64_t offset) {
 	if (elem->length != 1) elemsnum--;
 }
 
-void print_file_info_(FILE *dst, struct stat* sb, struct tm* tm)
+static void print_file_info_(FILE *dst, struct stat* sb, struct tm* tm)
 {
 	char timestr[64];
 	strftime(timestr, sizeof(timestr), "%Y-%m-%d %H:%M:%S", tm);
 	fprintf(dst, "(%7Lu bytes, from %s)\n", (unsigned long long)sb->st_size, timestr);
 }
 
-void print_file_info(FILE *dst, const char* file)
+static void print_file_info(FILE *dst, const char* file)
 {
 	struct stat sb;
 	struct tm tm;
@@ -319,7 +319,7 @@ void print_file_info(FILE *dst, const char* file)
 	print_file_info_(dst, &sb, &tm);
 }
 
-void printhead(struct fout f, struct rnndb *db) {
+static void printhead(struct fout f, struct rnndb *db) {
 	int i, j;
 	struct stat sb;
 	struct tm tm;
