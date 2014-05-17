@@ -1209,6 +1209,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="TILED" pos="0" type="boolean"/>
+		<bitfield name="SRGB" pos="2" type="boolean"/>
 		<bitfield name="SWIZ_X" low="4" high="6" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_Y" low="7" high="9" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a3xx_tex_swiz"/>
