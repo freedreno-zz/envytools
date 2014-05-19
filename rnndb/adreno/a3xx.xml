@@ -1181,6 +1181,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WRAP_S" low="6" high="8" type="a3xx_tex_clamp"/>
 		<bitfield name="WRAP_T" low="9" high="11" type="a3xx_tex_clamp"/>
 		<bitfield name="WRAP_R" low="12" high="14" type="a3xx_tex_clamp"/>
+		<bitfield name="COMPARE_FUNC" low="20" high="22" type="adreno_compare_func"/>
 		<!-- UNNORM_COORDS == CLK_NORMALIZED_COORDS_FALSE -->
 		<bitfield name="UNNORM_COORDS" pos="31" type="boolean"/>
 	</reg32>
