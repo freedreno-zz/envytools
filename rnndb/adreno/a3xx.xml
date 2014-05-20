@@ -603,7 +603,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			something??  ie. 39 becomes 40, 78 becomes 80.. 75 becomes
 			80.. so maybe it needs to be multiple of 8??
 		</doc>
-		<bitfield name="DEPTH_BASE" low="11" high="31" shr="10" type="uint"/>
+		<bitfield name="DEPTH_BASE" low="11" high="31" shr="12" type="hex"/>
 	</reg32>
 	<reg32 offset="0x2103" name="RB_DEPTH_PITCH" shr="3" type="uint">
 		<doc>pitch of depth/stencil buffer</doc>
