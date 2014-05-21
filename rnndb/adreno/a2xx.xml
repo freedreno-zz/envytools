@@ -169,6 +169,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="SAMPLE_0123" value="6"/>
 </enum>
 
+<enum name="a2xx_rb_blend_opcode">
+	<value name="BLEND_DST_PLUS_SRC" value="0"/>
+	<value name="BLEND_SRC_MINUS_DST" value="1"/>
+	<value name="BLEND_MIN_DST_SRC" value="2"/>
+	<value name="BLEND_MAX_DST_SRC" value="3"/>
+	<value name="BLEND_DST_MINUS_SRC" value="4"/>
+	<value name="BLEND_DST_PLUS_SRC_BIAS" value="5"/>
+</enum>
+
 <domain name="A2XX" width="32">
 
 	<bitset name="a2xx_vgt_current_bin_id_min_max" inline="yes">
@@ -449,10 +458,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2201" name="RB_BLEND_CONTROL">
 		<bitfield name="COLOR_SRCBLEND" low="0" high="4" type="adreno_rb_blend_factor"/>
-		<bitfield name="COLOR_COMB_FCN" low="5" high="7" type="adreno_rb_blend_opcode"/>
+		<bitfield name="COLOR_COMB_FCN" low="5" high="7" type="a2xx_rb_blend_opcode"/>
 		<bitfield name="COLOR_DESTBLEND" low="8" high="12" type="adreno_rb_blend_factor"/>
 		<bitfield name="ALPHA_SRCBLEND" low="16" high="20" type="adreno_rb_blend_factor"/>
-		<bitfield name="ALPHA_COMB_FCN" low="21" high="23" type="adreno_rb_blend_opcode"/>
+		<bitfield name="ALPHA_COMB_FCN" low="21" high="23" type="a2xx_rb_blend_opcode"/>
 		<bitfield name="ALPHA_DESTBLEND" low="24" high="28" type="adreno_rb_blend_factor"/>
 		<bitfield name="BLEND_FORCE_ENABLE" pos="29" type="boolean"/>
 		<bitfield name="BLEND_FORCE" pos="30" type="boolean"/>

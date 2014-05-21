@@ -186,6 +186,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="ROP_SET"           value="15"/>
 </enum>
 
+<enum name="a3xx_rb_blend_opcode">
+	<value name="BLEND_DST_PLUS_SRC" value="0"/>
+	<value name="BLEND_SRC_MINUS_DST" value="1"/>
+	<value name="BLEND_DST_MINUS_SRC" value="2"/>
+	<value name="BLEND_MIN_DST_SRC" value="3"/>
+	<value name="BLEND_MAX_DST_SRC" value="4"/>
+</enum>
+
 <domain name="A3XX" width="32">
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
@@ -514,21 +522,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="COLOR_BUF_PITCH" low="17" high="31" shr="5" type="uint"/>
 		</reg32>
 		<reg32 offset="0x2" name="BUF_BASE">
-			<!--
-				XXX maybe this is offsets into GMEM.. we seem to get 0x20000
-				when depth buffer is enabled.. not sure if that means on
-				that the color buffer comes *after* the depth/stencil buffer
-				or that there are some high bits in here that are the offset
-				of the depth/stencil buffer like on a2xx
-			 -->
+			<doc>offset into GMEM (or system memory address in bypass mode)</doc>
 			<bitfield name="COLOR_BUF_BASE" low="4" high="31" shr="5" type="hex"/>
 		</reg32>
 		<reg32 offset="0x3" name="BLEND_CONTROL">
 			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="adreno_rb_blend_factor"/>
-			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="adreno_rb_blend_opcode"/>
+			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="a3xx_rb_blend_opcode"/>
 			<bitfield name="RGB_DEST_FACTOR" low="8" high="12" type="adreno_rb_blend_factor"/>
 			<bitfield name="ALPHA_SRC_FACTOR" low="16" high="20" type="adreno_rb_blend_factor"/>
-			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="adreno_rb_blend_opcode"/>
+			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="a3xx_rb_blend_opcode"/>
 			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="adreno_rb_blend_factor"/>
 			<bitfield name="CLAMP_ENABLE" pos="29" type="boolean"/>
 		</reg32>

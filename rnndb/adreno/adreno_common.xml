@@ -49,15 +49,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FACTOR_SRC_ALPHA_SATURATE" value="16"/>
 </enum>
 
-<enum name="adreno_rb_blend_opcode">
-	<value name="BLEND_DST_PLUS_SRC" value="0"/>
-	<value name="BLEND_SRC_MINUS_DST" value="1"/>
-	<value name="BLEND_MIN_DST_SRC" value="2"/>
-	<value name="BLEND_MAX_DST_SRC" value="3"/>
-	<value name="BLEND_DST_MINUS_SRC" value="4"/>
-	<value name="BLEND_DST_PLUS_SRC_BIAS" value="5"/>
-</enum>
-
 <bitset name="adreno_rb_stencilrefmask" inline="yes">
 	<bitfield name="STENCILREF" low="0" high="7" type="hex"/>
 	<bitfield name="STENCILMASK" low="8" high="15" type="hex"/>

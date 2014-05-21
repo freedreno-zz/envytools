@@ -10,6 +10,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DUMMY" value="0"/>
 </enum>
 
+<!-- assume same as a3xx for now.. -->
+<enum name="a4xx_rb_blend_opcode">
+	<value name="BLEND_DST_PLUS_SRC" value="0"/>
+	<value name="BLEND_SRC_MINUS_DST" value="1"/>
+	<value name="BLEND_DST_MINUS_SRC" value="2"/>
+	<value name="BLEND_MIN_DST_SRC" value="3"/>
+	<value name="BLEND_MAX_DST_SRC" value="4"/>
+</enum>
+
 
 <enum name="a4xx_vtx_fmt" prefix="chipset">
 	<!-- hmm, shifted one compared to a3xx?!?  -->
@@ -130,10 +139,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 		<reg32 offset="0x4" name="BLEND_CONTROL">
 			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="adreno_rb_blend_factor"/>
-			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="adreno_rb_blend_opcode"/>
+			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="a4xx_rb_blend_opcode"/>
 			<bitfield name="RGB_DEST_FACTOR" low="8" high="12" type="adreno_rb_blend_factor"/>
 			<bitfield name="ALPHA_SRC_FACTOR" low="16" high="20" type="adreno_rb_blend_factor"/>
-			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="adreno_rb_blend_opcode"/>
+			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="a4xx_rb_blend_opcode"/>
 			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="adreno_rb_blend_factor"/>
 		</reg32>
 	</array>
