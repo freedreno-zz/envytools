@@ -1169,12 +1169,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<enum name="a3xx_tex_filter">
 		<value name="A3XX_TEX_NEAREST" value="0"/>
 		<value name="A3XX_TEX_LINEAR" value="1"/>
+		<value name="A3XX_TEX_ANISO" value="2"/>
 	</enum>
 	<enum name="a3xx_tex_clamp">
 		<value name="A3XX_TEX_REPEAT" value="0"/>
 		<value name="A3XX_TEX_CLAMP_TO_EDGE" value="1"/>
 		<value name="A3XX_TEX_MIRROR_REPEAT" value="2"/>
-		<value name="A3XX_TEX_CLAMP_NONE" value="3"/>
+		<value name="A3XX_TEX_CLAMP_TO_BORDER" value="3"/>
+		<value name="A3XX_TEX_MIRROR_CLAMP" value="4"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="MIPFILTER_LINEAR" pos="1" type="boolean"/>
