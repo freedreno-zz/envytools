@@ -202,6 +202,10 @@ struct rnndelem {
 	uint64_t *offsets;       /* for "array" with irregular offsets */
 	int offsetsnum;
 	int offsetsmax;
+	char *doffset;
+	char **doffsets;
+	int doffsetsnum;
+	int doffsetsmax;
 	uint64_t length;
 	uint64_t stride;
 	struct rnndelem **subelems;

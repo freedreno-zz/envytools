@@ -506,6 +506,21 @@ static struct rnndelem *trydelem(struct rnndb *db, char *file, xmlNode *node) {
 				if (str)
 					fprintf(stderr, "%s:%d: invalid offsets: %s\n", file, node->line, str);
 				free(tmp);
+			} else if (!strcmp(attr->name, "doffset")) {
+				/* dynamic runtime determined offset: */
+				res->doffset = strdup(getattrib(db, file, node->line, attr));
+			} else if (!strcmp(attr->name, "doffsets")) {
+				/* dynamic runtime determined offsets: */
+				char *str = strdup(getattrib(db, file, node->line, attr));
+				char *tok, *save, *tmp = str;
+				while ((tok = strtok_r(str, ",", &save))) {
+					char *doffset = strdup(tok);
+					ADDARRAY(res->doffsets, doffset);
+					str = NULL;
+				}
+				if (str)
+					fprintf(stderr, "%s:%d: invalid offsets: %s\n", file, node->line, str);
+				free(tmp);
 			} else if (!strcmp(attr->name, "length")) {
 				res->length = getnumattrib(db, file, node->line, attr);
 			} else if (!strcmp(attr->name, "stride")) {
