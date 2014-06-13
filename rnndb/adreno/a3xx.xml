@@ -71,8 +71,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="VFMT_NORM_BYTE_8_8" value="0x35"/>
 	<value name="VFMT_NORM_BYTE_8_8_8" value="0x36"/>
 	<value name="VFMT_NORM_BYTE_8_8_8_8" value="0x37"/>
-
-	<!-- note: these also have bit 22 set in VFD_DECODE -->
 	<value name="VFMT_UINT_10_10_10_2" value="0x3c"/>
 	<value name="VFMT_NORM_UINT_10_10_10_2" value="0x3d"/>
 	<value name="VFMT_INT_10_10_10_2" value="0x3e"/>
@@ -805,6 +803,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="FORMAT" low="6" high="11" type="a3xx_vtx_fmt"/>
 			<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
 			<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
+			<bitfield name="SWAP" low="22" high="23" type="a3xx_color_swap"/>
 			<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
 			<bitfield name="LASTCOMPVALID" pos="29" type="boolean"/>
 			<bitfield name="SWITCHNEXT" pos="30" type="boolean"/>
