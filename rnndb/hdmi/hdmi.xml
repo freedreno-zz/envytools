@@ -497,7 +497,61 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00424" name="PHY_REG9"/>
 	<reg32 offset="0x00428" name="PHY_REG10"/>
 	<reg32 offset="0x0042c" name="PHY_REG11"/>
-	<reg32 offset="0x00430" name="PHY_REG12"/>
+	<reg32 offset="0x00430" name="PHY_REG12">
+		<bitfield name="SW_RESET" pos="5" type="boolean"/>
+		<bitfield name="PWRDN_B" pos="7" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00434" name="PHY_REG_BIST_CFG"/>
+	<reg32 offset="0x00438" name="PHY_DEBUG_BUS_SEL"/>
+	<reg32 offset="0x0043c" name="PHY_REG_MISC0"/>
+	<reg32 offset="0x00440" name="PHY_REG13"/>
+	<reg32 offset="0x00444" name="PHY_REG14"/>
+	<reg32 offset="0x00448" name="PHY_REG15"/>
+	<reg32 offset="0x00500" name="PHY_PLL_REFCLK_CFG"/>
+	<reg32 offset="0x00504" name="PHY_PLL_CHRG_PUMP_CFG"/>
+	<reg32 offset="0x00508" name="PHY_PLL_LOOP_FLT_CFG0"/>
+	<reg32 offset="0x0050c" name="PHY_PLL_LOOP_FLT_CFG1"/>
+	<reg32 offset="0x00510" name="PHY_PLL_IDAC_ADJ_CFG"/>
+	<reg32 offset="0x00514" name="PHY_PLL_I_VI_KVCO_CFG"/>
+	<reg32 offset="0x00518" name="PHY_PLL_PWRDN_B">
+		<bitfield name="PD_PLL" pos="1" type="boolean"/>
+		<bitfield name="PLL_PWRDN_B" pos="3" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x0051c" name="PHY_PLL_SDM_CFG0"/>
+	<reg32 offset="0x00520" name="PHY_PLL_SDM_CFG1"/>
+	<reg32 offset="0x00524" name="PHY_PLL_SDM_CFG2"/>
+	<reg32 offset="0x00528" name="PHY_PLL_SDM_CFG3"/>
+	<reg32 offset="0x0052c" name="PHY_PLL_SDM_CFG4"/>
+	<reg32 offset="0x00530" name="PHY_PLL_SSC_CFG0"/>
+	<reg32 offset="0x00534" name="PHY_PLL_SSC_CFG1"/>
+	<reg32 offset="0x00538" name="PHY_PLL_SSC_CFG2"/>
+	<reg32 offset="0x0053c" name="PHY_PLL_SSC_CFG3"/>
+	<reg32 offset="0x00540" name="PHY_PLL_LOCKDET_CFG0"/>
+	<reg32 offset="0x00544" name="PHY_PLL_LOCKDET_CFG1"/>
+	<reg32 offset="0x00548" name="PHY_PLL_LOCKDET_CFG2"/>
+	<reg32 offset="0x0054c" name="PHY_PLL_VCOCAL_CFG0"/>
+	<reg32 offset="0x00550" name="PHY_PLL_VCOCAL_CFG1"/>
+	<reg32 offset="0x00554" name="PHY_PLL_VCOCAL_CFG2"/>
+	<reg32 offset="0x00558" name="PHY_PLL_VCOCAL_CFG3"/>
+	<reg32 offset="0x0055c" name="PHY_PLL_VCOCAL_CFG4"/>
+	<reg32 offset="0x00560" name="PHY_PLL_VCOCAL_CFG5"/>
+	<reg32 offset="0x00564" name="PHY_PLL_VCOCAL_CFG6"/>
+	<reg32 offset="0x00568" name="PHY_PLL_VCOCAL_CFG7"/>
+	<reg32 offset="0x0056c" name="PHY_PLL_DEBUG_SEL"/>
+	<reg32 offset="0x00570" name="PHY_PLL_MISC0"/>
+	<reg32 offset="0x00574" name="PHY_PLL_MISC1"/>
+	<reg32 offset="0x00578" name="PHY_PLL_MISC2"/>
+	<reg32 offset="0x0057c" name="PHY_PLL_MISC3"/>
+	<reg32 offset="0x00580" name="PHY_PLL_MISC4"/>
+	<reg32 offset="0x00584" name="PHY_PLL_MISC5"/>
+	<reg32 offset="0x00588" name="PHY_PLL_MISC6"/>
+	<reg32 offset="0x0058c" name="PHY_PLL_DEBUG_BUS0"/>
+	<reg32 offset="0x00590" name="PHY_PLL_DEBUG_BUS1"/>
+	<reg32 offset="0x00594" name="PHY_PLL_DEBUG_BUS2"/>
+	<reg32 offset="0x00598" name="PHY_PLL_STATUS0">
+		<bitfield name="PLL_LOCK" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x0059c" name="PHY_PLL_STATUS1"/>
 </domain>
 
 <domain name="HDMI_8x74" width="32">
