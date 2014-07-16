@@ -179,11 +179,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
 		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
 		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
-		<bitfield name="EARLY_Z_DISABLE" pos="3" type="boolean"/>
 		<bitfield name="ZFUNC" low="4" high="6" type="adreno_compare_func"/>
 		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
+		<bitfield name="EARLY_Z_DISABLE" pos="16" type="boolean"/>
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
 		<bitfield name="Z_TEST_ENABLE" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x2102" name="RB_DEPTH_CLEAR"/>
+	<reg32 offset="0x2104" name="RB_DEPTH_PITCH" shr="4" type="uint">
+		<doc>pitch of depth/stencil buffer</doc>
+	</reg32>
+	<reg32 offset="0x2105" name="RB_DEPTH_PITCH2" shr="4" type="uint">
+		<doc>???</doc>
 	</reg32>
 	<reg32 offset="0x2106" name="RB_STENCIL_CONTROL">
 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
@@ -206,6 +213,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x210b" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210c" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
+	<reg32 offset="0x210d" name="RB_BIN_OFFSET" type="adreno_reg_xy"/>
 	<reg32 offset="0x213f" name="RB_VPORT_Z_CLAMP_MAX_15"/>
 
 	<!-- RBBM registers -->
@@ -354,6 +362,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22eb" name="SP_FS_OBJ_START"/>
 	<reg32 offset="0x22ec" name="SP_FS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22ed" name="SP_FS_PVT_MEM_ADDR"/>
+	<array offset="0x22f1" name="SP_FS_MRT" stride="1" length="4">
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
+			<bitfield name="HALF_PRECISION" pos="8" type="boolean"/>
+		</reg32>
+	</array>
+	<array offset="0x22f5" name="SP_FS_IMAGE_OUTPUT" stride="1" length="4">
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="MRTFORMAT" low="0" high="5" type="a3xx_color_fmt"/>
+		</reg32>
+	</array>
 	<reg32 offset="0x2360" name="SP_GS_LENGTH"/>
 
 	<!-- VPC registers -->
@@ -373,6 +392,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="NUMFPNONPOSVAR" low="8" high="15" type="uint"/>
 		<bitfield name="NUMNONPOSVSVAR" low="16" high="23" type="uint"/>
 	</reg32>
+	<array offset="0x2142" name="VPC_VARYING_INTERP" stride="1" length="8">
+		<reg32 offset="0x0" name="MODE"/>
+	</array>
+	<array offset="0x214a" name="VPC_VARYING_PS_REPL" stride="1" length="8">
+		<reg32 offset="0x0" name="MODE"/>
+	</array>
 
 	<reg32 offset="0x216e" name="VPC_SO_FLUSH_WADDR_3"/>
 
@@ -382,6 +407,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="HEIGHT" low="5" high="9" shr="5" type="uint"/>
 	</reg32>
 	<reg32 offset="0x0c01" name="VSC_SIZE_ADDRESS"/>
+	<reg32 offset="0x0c02" name="VSC_SIZE_ADDRESS2"/>
 	<reg32 offset="0x0c03" name="VSC_DEBUG_ECO_CONTROL"/>
 	<array offset="0x0c08" name="VSC_PIPE_CONFIG" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
@@ -432,12 +458,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0" name="INSTR_0">
 			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
 			<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
-			<bitfield name="SWITCHNEXT" pos="17" type="boolean"/>
+			<bitfield name="SWITCHNEXT" pos="19" type="boolean"/>
 			<bitfield name="INDEXCODE" low="18" high="23" type="uint"/>
-			<!-- STEPRATE doesn't seem to be set on a4xx, as it is with a3xx.. -->
 			<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
 		</reg32>
 		<reg32 offset="0x1" name="INSTR_1"/>
+		<reg32 offset="0x2" name="INSTR_2">
+			<bitfield name="SIZE" low="4" high="31" shr="4"/>
+		</reg32>
+		<!-- INSTR_3 seems to be always 1 -->
+		<reg32 offset="0x3" name="INSTR_3"/>
 	</array>
 	<array offset="0x228a" name="VFD_DECODE" stride="1" length="32">
 		<reg32 offset="0x0" name="INSTR">
@@ -447,6 +477,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="FORMAT" low="6" high="11" type="a4xx_vtx_fmt"/>
 			<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
 			<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
+			<bitfield name="SWAP" low="22" high="23" type="a4xx_color_swap"/>
 			<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
 			<bitfield name="LASTCOMPVALID" pos="29" type="boolean"/>
 			<bitfield name="SWITCHNEXT" pos="30" type="boolean"/>
@@ -508,7 +539,34 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e00" name="HLSQ_TIMEOUT_THRESHOLD"/>
 	<reg32 offset="0x0e04" name="HLSQ_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0e0e" name="HLSQ_PERF_PIPE_MASK"/>
-	<reg32 offset="0x23c0" name="HLSQ_CONTROL_0"/>
+	<reg32 offset="0x23c0" name="HLSQ_CONTROL_0">
+		<!-- I guess same as a3xx, but so far only seen 08000050 -->
+		<bitfield name="FSTHREADSIZE" pos="4" type="a3xx_threadsize"/>
+		<bitfield name="FSSUPERTHREADENABLE" pos="6" type="boolean"/>
+		<bitfield name="SPSHADERRESTART" pos="9" type="boolean"/>
+		<bitfield name="RESERVED2" pos="10" type="boolean"/>
+		<bitfield name="CHUNKDISABLE" pos="26" type="boolean"/>
+		<bitfield name="CONSTSWITCHMODE" pos="27" type="boolean"/>
+		<bitfield name="LAZYUPDATEDISABLE" pos="28" type="boolean"/>
+		<bitfield name="SPCONSTFULLUPDATE" pos="29" type="boolean"/>
+		<bitfield name="TPFULLUPDATE" pos="30" type="boolean"/>
+		<bitfield name="SINGLECONTEXT" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x23c1" name="HLSQ_CONTROL_1_REG">
+		<bitfield name="VSTHREADSIZE" pos="6" type="a3xx_threadsize"/>
+		<bitfield name="VSSUPERTHREADENABLE" pos="8" type="boolean"/>
+		<bitfield name="RESERVED1" pos="9" type="boolean"/>
+		<!-- set if gl_FragCoord.[zw] used in frag shader: -->
+		<bitfield name="ZWCOORD" pos="25" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x23c2" name="HLSQ_CONTROL_2_REG">
+		<bitfield name="PRIMALLOCTHRESHOLD" low="26" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x23c3" name="HLSQ_CONTROL_3_REG">
+		<!-- register loaded with position (bary.f, gl_FragCoord, etc) -->
+		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
+	</reg32>
+
 	<reg32 offset="0x23db" name="HLSQ_UPDATE_CONTROL"/>
 
 	<!-- PC registers -->
@@ -547,6 +605,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A4XX_TEX_MIRROR_REPEAT" value="2"/>
 		<value name="A4XX_TEX_CLAMP_NONE" value="3"/>
 	</enum>
+	<reg32 offset="0" name="0">
+	</reg32>
+	<reg32 offset="1" name="1">
+		<!-- TODO check radix.. -->
+		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="6"/>
+		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="6"/>
+	</reg32>
 </domain>
 
 <domain name="A4XX_TEX_CONST" width="32">
