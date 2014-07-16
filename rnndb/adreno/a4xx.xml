@@ -113,6 +113,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_FLOAT_32_32_32_32" value="0x3f"/>
 </enum>
 
+<enum name="a4xx_depth_format">
+	<value name="DEPTH4_NONE" value="0"/>
+	<value name="DEPTH4_16" value="1"/>
+	<value name="DEPTH4_24_8" value="2"/>
+</enum>
+
+<!-- same as a3xx? -->
+<enum name="a4xx_color_swap">
+	<value name="WZYX" value="0"/>
+	<value name="WXYZ" value="1"/>
+	<value name="ZYXW" value="2"/>
+	<value name="XYZW" value="3"/>
+</enum>
+
 <domain name="A4XX" width="32">
 	<!-- RB registers -->
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
@@ -125,17 +139,48 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20cd" name="RB_CLEAR_COLOR_DW1"/>
 	<reg32 offset="0x20ce" name="RB_CLEAR_COLOR_DW2"/>
 	<reg32 offset="0x20cf" name="RB_CLEAR_COLOR_DW3"/>
-	<reg32 offset="0x20a0" name="RB_MODE_CONTROL"/>
+	<reg32 offset="0x20a0" name="RB_MODE_CONTROL">
+	</reg32>
+	<reg32 offset="0x20a1" name="RB_LRZ_VSC_CONTROL">
+		<!-- maybe actually RB_RENDER_CONTROL? -->
+		<bitfield name="BINNING_PASS" pos="0" type="boolean"/>
+		<!-- nearly everything has bit3 set.. -->
+		<!-- bit5 set on resolve and tiling pass -->
+		<bitfield name="DISABLE_COLOR_PIPE" pos="5" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x20a2" name="RB_MSAA_CONTROL">
+		<bitfield name="DISABLE" pos="12" type="boolean"/>
+		<bitfield name="SAMPLES" low="13" high="15" type="uint"/>
+	</reg32>
+	<reg32 offset="0x20a3" name="RB_MSAA_CONTROL2">
+		<!--
+		ok, stretching for names here.. but duplicate information
+		suggests that one of these is not actually RB but some
+		other block which needs to know about MSAA..
+		-->
+		<bitfield name="MSAA_SAMPLES" low="7" high="9" type="uint"/>
+	</reg32>
 	<array offset="0x20a4" name="RB_MRT" stride="5" length="4">
 		<reg32 offset="0x0" name="CONTROL">
 			<bitfield name="READ_DEST_ENABLE" pos="3" type="boolean"/>
 			<!-- both these bits seem to get set when enabling GL_BLEND.. -->
 			<bitfield name="BLEND" pos="4" type="boolean"/>
 			<bitfield name="BLEND2" pos="5" type="boolean"/>
+			<!-- bit10 set when RB_RESOLVE_PASS+RB_COPY_CLEAR -->
+			<bitfield name="FASTCLEAR" pos="10" type="boolean"/>
+			<!-- bit11 set for everything bit binning pass? -->
+			<bitfield name="B11" pos="11" type="boolean"/>
 			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
 		</reg32>
 		<reg32 offset="0x1" name="CONTROL2">
 			<bitfield name="DITHER_MODE" low="9" high="10" type="adreno_rb_dither_mode"/>
+			<!-- note: possibly some # of lsb's aren't there: -->
+			<bitfield name="BIN_W" low="12" high="22" type="uint"/>
+		</reg32>
+		<reg32 offset="0x3" name="CONTROL3">
+			<!-- probably missing some lsb's.. and guessing upper size -->
+			<!-- pitch * cpp * msaa: -->
+			<bitfield name="STRIDE" low="3" high="16" type="uint"/>
 		</reg32>
 		<reg32 offset="0x4" name="BLEND_CONTROL">
 			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="adreno_rb_blend_factor"/>
@@ -496,6 +541,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0c88" name="GRAS_PERFCTR_TSE_SEL_0"/>
 	<reg32 offset="0x0c8b" name="GRAS_PERFCTR_TSE_SEL_3"/>
 	<reg32 offset="0x2000" name="GRAS_CL_CLIP_CNTL"/>
+	<reg32 offset="0x2003" name="GRAS_CLEAR_CNTL">
+		<!-- probably not the right name, but.. -->
+		<!-- bit0 set for everything *but* fastclear -->
+		<bitfield name="NOT_FASTCLEAR" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x2004" name="GRAS_CL_GB_CLIP_ADJ">
 		<bitfield name="HORZ" low="0" high="9" type="uint"/>
 		<bitfield name="VERT" low="10" high="19" type="uint"/>
@@ -516,6 +566,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x207d" name="GRAS_SC_SCREEN_SCISSOR_BR" type="adreno_reg_xy"/>
 	<reg32 offset="0x209b" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0x209c" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
+	<reg32 offset="0x2077" name="GRAS_DEPTH_CONTROL">
+		<!-- guestimating that this is GRAS based on addr -->
+		<bitfield name="FORMAT" low="0" high="1" type="a4xx_depth_format"/>
+	</reg32>
 	<reg32 offset="0x2078" name="GRAS_SU_MODE_CONTROL">
 		<bitfield name="CULL_FRONT" pos="0" type="boolean"/>
 		<bitfield name="CULL_BACK" pos="1" type="boolean"/>
@@ -526,6 +580,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x207b" name="GRAS_SC_CONTROL">
 		<!-- complete wild-ass-guess for sizes of these bitfields.. -->
 		<bitfield name="RENDER_MODE" low="2" high="3" type="a3xx_render_mode"/>
+		<bitfield name="MSAA_SAMPLES" low="7" high="9" type="uint"/>
+		<bitfield name="MSAA_DISABLE" pos="11" type="boolean"/>
 		<bitfield name="RASTER_MODE" low="12" high="15"/>
 	</reg32>
 
@@ -590,6 +646,33 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x3030" name="VBIF_IN_WR_LIM_CONF0"/>
 	<reg32 offset="0x3031" name="VBIF_IN_WR_LIM_CONF1"/>
 	<reg32 offset="0x3049" name="VBIF_ROUND_ROBIN_QOS_ARB"/>
+
+	<!-- Unknown registers:  -->
+
+	<!-- always 00000006: -->
+	<reg32 offset="0x0cc5" name="UNKNOWN_0CC5"/>
+
+	<!-- always 00000001: -->
+	<reg32 offset="0x0d01" name="UNKNOWN_0D01"/>
+
+	<!-- always 00000012: -->
+	<reg32 offset="0x0e8b" name="UNKNOWN_0E8B"/>
+
+	<!-- always 00000007: -->
+	<reg32 offset="0x0e8c" name="UNKNOWN_0E8C"/>
+
+	<!-- always 00000007: -->
+	<reg32 offset="0x0ec3" name="UNKNOWN_0EC3"/>
+
+	<!-- always 0000003a: -->
+	<reg32 offset="0x0f03" name="UNKNOWN_0F03"/>
+
+	<!-- always 3c007fff: -->
+	<reg32 offset="0x20f6" name="UNKNOWN_20F6"/>
+
+	<!-- always 3f800000 (1.0):  -->
+	<reg32 offset="0x20f7" name="UNKNOWN_20F7"/>
+
 </domain>
 
 
