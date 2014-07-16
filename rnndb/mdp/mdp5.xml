@@ -35,6 +35,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="SSPP_RGB2" value="5"/>
 		<value name="SSPP_DMA0" value="6"/>
 		<value name="SSPP_DMA1" value="7"/>
+		<value name="SSPP_VIG3" value="8"/>
+		<value name="SSPP_RGB3" value="9"/>
 	</enum>
 
 	<enum name="mdp5_format">
@@ -96,7 +98,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="CID_RGB0"    value="16"/>
 		<value name="CID_RGB1"    value="17"/>
 		<value name="CID_RGB2"    value="18"/>
-		<value name="CID_MAX"     value="19"/>
+		<value name="CID_VIG3_Y"  value="19"/>
+		<value name="CID_VIG3_CR" value="20"/>
+		<value name="CID_VIG3_CB" value="21"/>
+		<value name="CID_RGB3"    value="22"/>
+		<value name="CID_MAX"     value="23"/>
 	</enum>
 
 	<bitset name="MDP5_IRQ">
@@ -199,8 +205,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</array>
 
 <!-- check length/index.. -->
-	<array offset="0x00600" name="CTL" length="4" stride="0x100">
-		<array offset="0x000" name="LAYER" length="5" stride="4">
+    <array doffsets="mdp5_cfg->ctl.base[0],mdp5_cfg->ctl.base[1],mdp5_cfg->ctl.base[2],mdp5_cfg->ctl.base[3],mdp5_cfg->ctl.base[4]" name="CTL" length="5" stride="0x400">
+		<array offsets="0x000,0x004,0x008,0x00C,0x010,0x024" name="LAYER" length="6" stride="4">
 			<reg32 offset="0" name="REG">
 				<bitfield name="VIG0"  low="0"  high="2"  type="mdp_mixer_stage_id"/>
 				<bitfield name="VIG1"  low="3"  high="5"  type="mdp_mixer_stage_id"/>
@@ -212,6 +218,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 				<bitfield name="DMA1"  low="21" high="23" type="mdp_mixer_stage_id"/>
 				<bitfield name="BORDER_COLOR" pos="24" type="boolean"/>
 				<bitfield name="CURSOR_OUT"   pos="25" type="boolean"/>
+				<bitfield name="VIG3"  low="26"  high="28"  type="mdp_mixer_stage_id"/>
+				<bitfield name="RGB3"  low="29" high="31" type="mdp_mixer_stage_id"/>
 			</reg32>
 		</array>
 		<reg32 offset="0x014" name="OP">
@@ -231,18 +239,24 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="LM0"  pos="6"  type="boolean"/>
 			<bitfield name="LM1"  pos="7"  type="boolean"/>
 			<bitfield name="LM2"  pos="8"  type="boolean"/>
+			<bitfield name="LM3"  pos="9"  type="boolean"/>
+			<bitfield name="LM4"  pos="10"  type="boolean"/>
 			<bitfield name="DMA0" pos="11" type="boolean"/>
 			<bitfield name="DMA1" pos="12" type="boolean"/>
 			<bitfield name="DSPP0" pos="13" type="boolean"/>
 			<bitfield name="DSPP1" pos="14" type="boolean"/>
 			<bitfield name="DSPP2" pos="15" type="boolean"/>
 			<bitfield name="CTL"   pos="17" type="boolean"/>
+			<bitfield name="VIG3" pos="18"  type="boolean"/>
+			<bitfield name="RGB3" pos="19"  type="boolean"/>
+			<bitfield name="LM5"  pos="20"  type="boolean"/>
+			<bitfield name="DSPP3" pos="21" type="boolean"/>
 		</reg32>
 		<reg32 offset="0x01C" name="START"/>
 		<reg32 offset="0x020" name="PACK_3D"/>
 	</array>
 
-	<array offset="0x01200" name="PIPE" length="8" stride="0x400" index="mdp5_pipe">
+	<array doffsets="mdp5_cfg->pipe_vig.base[0],mdp5_cfg->pipe_vig.base[1],mdp5_cfg->pipe_vig.base[2],mdp5_cfg->pipe_rgb.base[0],mdp5_cfg->pipe_rgb.base[1],mdp5_cfg->pipe_rgb.base[2],mdp5_cfg->pipe_dma.base[0],mdp5_cfg->pipe_dma.base[1],mdp5_cfg->pipe_vig.base[3],mdp5_cfg->pipe_rgb.base[3]" name="PIPE" length="10" stride="0x400" index="mdp5_pipe">
 		<reg32 offset="0x2C4" name="HIST_CTL_BASE"/>
 		<reg32 offset="0x2F0" name="HIST_LUT_BASE"/>
 		<reg32 offset="0x300" name="HIST_LUT_SWAP"/>
@@ -325,7 +339,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x224" name="SCALE_INIT_PHASE_Y"/>
 	</array>
 
-	<array offset="0x03200" name="LM" length="3" stride="0x400">
+    <array doffsets="mdp5_cfg->lm.base[0],mdp5_cfg->lm.base[1],mdp5_cfg->lm.base[2],mdp5_cfg->lm.base[3],mdp5_cfg->lm.base[4]" name="LM" length="5" stride="0x400">
 		<reg32 offset="0x000" name="BLEND_COLOR_OUT">
 			<bitfield name="STAGE0_FG_ALPHA" pos="1" type="boolean"/>
 			<bitfield name="STAGE1_FG_ALPHA" pos="2" type="boolean"/>
@@ -375,7 +389,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x110" name="GC_LUT_BASE"/>
 	</array>
 
-	<array offset="0x04600" name="DSPP" length="3" stride="0x400">
+    <array doffsets="mdp5_cfg->dspp.base[0],mdp5_cfg->dspp.base[1],mdp5_cfg->dspp.base[2],mdp5_cfg->dspp.base[3]" name="DSPP" length="4" stride="0x400">
 		<reg32 offset="0x000" name="OP_MODE">
 			<bitfield name="IGC_LUT_EN" pos="0" type="boolean"/>
 			<bitfield name="IGC_TBL_IDX" low="1" high="3" type="uint"/>
@@ -398,7 +412,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x2b0" name="GC_BASE"/>
 	</array>
 
-	<array offset="0x12500" name="INTF" length="4" stride="0x200">
+    <array doffsets="mdp5_cfg->intf.base[0],mdp5_cfg->intf.base[1],mdp5_cfg->intf.base[2],mdp5_cfg->intf.base[3],mdp5_cfg->intf.base[4]" name="INTF" length="5" stride="0x200">
 		<reg32 offset="0x000" name="TIMING_ENGINE_EN"/>
 		<reg32 offset="0x004" name="CONFIG"/>
 		<reg32 offset="0x008" name="HSYNC_CTL">
@@ -460,7 +474,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x11c" name="TPG_RGB_MAPPING"/>
 	</array>
 
-	<array offset="0x13100" name="AD" length="2" stride="0x200">
+    <array doffsets="mdp5_cfg->ad.base[0],mdp5_cfg->ad.base[1]" name="AD" length="2" stride="0x200">
 		<reg32 offset="0x000" name="BYPASS"/>
 		<reg32 offset="0x004" name="CTRL_0"/>
 		<reg32 offset="0x008" name="CTRL_1"/>
