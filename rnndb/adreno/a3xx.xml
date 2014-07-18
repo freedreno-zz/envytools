@@ -437,10 +437,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2069" name="GRAS_SU_POINT_SIZE" type="fixed" radix="4"/>
 	<reg32 offset="0x206c" name="GRAS_SU_POLY_OFFSET_SCALE">
-		<bitfield name="VAL" low="0" high="23" type="fixed" radix="20"/>
+		<bitfield name="VAL" low="0" high="23" type="fixed" radix="14"/>
 		<doc>range of -8.0 to 8.0</doc>
 	</reg32>
-	<reg32 offset="0x206d" name="GRAS_SU_POLY_OFFSET_OFFSET" radix="22" type="fixed">
+	<reg32 offset="0x206d" name="GRAS_SU_POLY_OFFSET_OFFSET" radix="14" type="fixed">
 		<doc>range of -512.0 to 512.0</doc>
 	</reg32>
 	<reg32 offset="0x2070" name="GRAS_SU_MODE_CONTROL">
