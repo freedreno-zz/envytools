@@ -908,7 +908,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			something with a mediump/lowp uniform.
 		 -->
 		<bitfield name="CONSTFOOTPRINT" low="10" high="19" type="uint"/>
-		<bitfield name="INITIALOUTSTANDING" low="24" high="29" type="uint"/>
+		<bitfield name="INITIALOUTSTANDING" low="24" high="30" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG">
 		<bitfield name="POSREGID" low="0" high="7" type="a3xx_regid"/>

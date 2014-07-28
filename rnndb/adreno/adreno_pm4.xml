@@ -197,6 +197,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>test 2 memory locations to dword values specified</doc>
 	<value name="CP_TEST_TWO_MEMS" value="0x71"/>
 
+	<doc>Write register, ignoring context state for context sensitive registers</doc>
+	<value name="CP_REG_WR_NO_CTXT" value="0x78"/>
+
+	<doc>Record the real-time when this packet is processed by PFP</doc>
+	<value name="CP_RECORD_PFP_TIMESTAMP" value="0x11"/>
+
+
 	<doc>PFP waits until the FIFO between the PFP and the ME is empty</doc>
 	<value name="CP_WAIT_FOR_ME" value="0x13"/>
 
@@ -213,6 +220,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_DRAW_INDIRECT" value="0x28"/>
 	<value name="CP_DRAW_INDX_INDIRECT" value="0x29"/>
 	<value name="CP_DRAW_AUTO" value="0x24"/>
+
+	<doc>set to 1 for fastclear..:</doc>
+	<value name="CP_UNKNOWN_1A" value="0x1a"/>
+
+	<doc>
+		for A4xx
+		Write to register with address that does not fit into type-0 pkt
+	</doc>
+	<value name="CP_WIDE_REG_WRITE" value="0x74"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>

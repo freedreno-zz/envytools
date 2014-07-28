@@ -7,7 +7,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_pm4.xml"/>
 
 <enum name="a4xx_color_fmt">
-	<value name="DUMMY" value="0"/>
+	<value name="RB4_R8G8B8A8_UNORM" value="0x28"/>
+	<value name="RB_Z16_UNORM" value="0x3c"/>
+</enum>
+
+<enum name="a4xx_tile_mode">
+	<value name="TILE4_LINEAR" value="0"/>
+	<value name="TILE4_3" value="3"/>
 </enum>
 
 <!-- assume same as a3xx for now.. -->
@@ -141,8 +147,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20cf" name="RB_CLEAR_COLOR_DW3"/>
 	<reg32 offset="0x20a0" name="RB_MODE_CONTROL">
 	</reg32>
-	<reg32 offset="0x20a1" name="RB_LRZ_VSC_CONTROL">
-		<!-- maybe actually RB_RENDER_CONTROL? -->
+	<reg32 offset="0x20a1" name="RB_RENDER_CONTROL">
 		<bitfield name="BINNING_PASS" pos="0" type="boolean"/>
 		<!-- nearly everything has bit3 set.. -->
 		<!-- bit5 set on resolve and tiling pass -->
@@ -160,7 +165,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		-->
 		<bitfield name="MSAA_SAMPLES" low="7" high="9" type="uint"/>
 	</reg32>
-	<array offset="0x20a4" name="RB_MRT" stride="5" length="4">
+	<array offset="0x20a4" name="RB_MRT" stride="5" length="8">
 		<reg32 offset="0x0" name="CONTROL">
 			<bitfield name="READ_DEST_ENABLE" pos="3" type="boolean"/>
 			<!-- both these bits seem to get set when enabling GL_BLEND.. -->
@@ -191,11 +196,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="adreno_rb_blend_factor"/>
 		</reg32>
 	</array>
-	<reg32 offset="0x20f8" name="RB_RENDER_CONTROL">
+	<reg32 offset="0x20f8" name="RB_ALPHA_CONTROL">
 		<bitfield name="ALPHA_TEST" pos="8" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="9" high="11" type="adreno_compare_func"/>
 	</reg32>
-	<reg32 offset="0x20f9" name="RB_RENDER_CONTROL2">
+	<reg32 offset="0x20f9" name="RB_FS_OUTPUT">
 		<!--  bit0 set if !fastclear -->
 		<bitfield name="ENABLE_COLOR_PIPE" pos="0" type="boolean"/>
 		<!-- else bit8 set when RB_RESOLVE_PASS+RB_COPY_CLEAR -->
@@ -228,10 +233,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="DITHER_MODE" low="10" high="11" type="adreno_rb_dither_mode"/>
 		<bitfield name="COMPONENT_ENABLE" low="14" high="17" type="hex"/>
 		<bitfield name="ENDIAN" low="18" high="20" type="adreno_rb_surface_endian"/>
+		<bitfield name="TILE" low="24" high="25" type="a4xx_tile_mode"/>
 	</reg32>
-	<reg32 offset="0x2100" name="RB_RENDER_CONTROL4">
+	<reg32 offset="0x2100" name="RB_FS_OUTPUT_REG">
 		<!-- bit0 set except for binning pass.. -->
 		<bitfield name="COLOR_PIPE_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="FRAG_WRITES_Z" pos="5" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2101" name="RB_DEPTH_CONTROL">
 		<!--
@@ -374,7 +381,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- SP registers -->
 	<reg32 offset="0x0ec0" name="SP_VS_STATUS"/>
 	<reg32 offset="0x0ecf" name="SP_PERFCTR_SP_SEL_11"/>
-	<reg32 offset="0x22c0" name="SP_SP_CTRL"/> <!-- always 00140010 -->
+	<reg32 offset="0x22c0" name="SP_SP_CTRL">
+		<bitfield name="BINNING_PASS" pos="19" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x22c1" name="SP_INSTR_CACHE_CTRL"/> <!-- always 000001c3 -->
 
 	<bitset name="a4xx_sp_vs_fs_ctrl_reg0" inline="yes">
@@ -406,7 +415,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a4xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1">
-		<bitfield name="INITIALOUTSTANDING" low="24" high="29" type="uint"/>
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="INITIALOUTSTANDING" low="24" high="30" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG">
 		<bitfield name="POSREGID" low="0" high="7" type="a3xx_regid"/>
@@ -434,29 +444,39 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="OUTLOC3" low="24" high="31" type="uint"/>
 		</reg32>
 	</array>
+
+	<reg32 offset="0x22e0" name="SP_VS_OBJ_OFFSET_REG">
+		<!-- always 00000000: -->
+		<doc>
+			From register spec:
+			SP_FS_OBJ_OFFSET_REG.CONSTOBJECTSTARTOFFSET [16:24]: Constant object
+			start offset in on chip RAM,
+			128bit aligned
+		</doc>
+		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x22e1" name="SP_VS_OBJ_START"/>
 	<reg32 offset="0x22e2" name="SP_VS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22e3" name="SP_VS_PVT_MEM_ADDR"/>
 	<reg32 offset="0x22e8" name="SP_FS_CTRL_REG0" type="a4xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22e9" name="SP_FS_CTRL_REG1">
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 	</reg32>
-	<reg32 offset="0x22ea" name="SP_FS_CTRL_REG2">
-		<!-- either double value compared to a3xx or shifted one.. -->
-		<bitfield name="INITIALOUTSTANDING" low="21" high="24" type="uint"/>
-		<bitfield name="HALFPRECVAROFFSET" low="25" high="30" type="uint"/>
+	<reg32 offset="0x22ea" name="SP_FS_OBJ_OFFSET_REG">
+		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22eb" name="SP_FS_OBJ_START"/>
 	<reg32 offset="0x22ec" name="SP_FS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22ed" name="SP_FS_PVT_MEM_ADDR"/>
-	<array offset="0x22f1" name="SP_FS_MRT" stride="1" length="4">
+	<reg32 offset="0x22f0" name="SP_FS_OUTPUT_REG">
+		<bitfield name="FRAG_WRITES_Z" pos="7" type="boolean"/>
+	</reg32>
+	<array offset="0x22f1" name="SP_FS_MRT" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 			<bitfield name="HALF_PRECISION" pos="8" type="boolean"/>
-		</reg32>
-	</array>
-	<array offset="0x22f5" name="SP_FS_IMAGE_OUTPUT" stride="1" length="4">
-		<reg32 offset="0x0" name="REG">
-			<bitfield name="MRTFORMAT" low="0" high="5" type="a3xx_color_fmt"/>
 		</reg32>
 	</array>
 	<reg32 offset="0x2360" name="SP_GS_LENGTH"/>
@@ -472,7 +492,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="PSIZE" pos="9" type="boolean"/>
 		<bitfield name="THRDASSIGN" low="12" high="13" type="uint"/>
 		<bitfield name="ENABLE" pos="25" type="boolean"/>
-		<bitfield name="LMSIZE" low="28" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x2141" name="VPC_PACK">
 		<bitfield name="NUMFPNONPOSVAR" low="8" high="15" type="uint"/>
@@ -524,7 +543,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- VFD registers -->
 	<reg32 offset="0x0e40" name="VFD_DEBUG_CONTROL"/>
 	<reg32 offset="0x0e4a" name="VFD_PERFCTR_VFD_SEL_7"/>
-	<reg32 offset="0x2200" name="VFD_CONTROL_0"/>
+	<reg32 offset="0x2200" name="VFD_CONTROL_0">
+		<doc>
+			TOTALATTRTOVS is # of attributes to vertex shader, in register
+			slots (ie. vec4+vec3 -> 7)
+		</doc>
+		<bitfield name="TOTALATTRTOVS" low="0" high="7" type="uint"/>
+		<doc>STRMDECINSTRCNT is # of VFD_DECODE_INSTR registers valid</doc>
+		<bitfield name="STRMDECINSTRCNT" low="20" high="25" type="uint"/>
+		<doc>STRMFETCHINSTRCNT is # of VFD_FETCH_INSTR registers valid</doc>
+		<bitfield name="STRMFETCHINSTRCNT" low="26" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x2201" name="VFD_CONTROL_1">
 		<doc>MAXSTORAGE could be # of attributes/vbo's</doc>
 		<bitfield name="MAXSTORAGE" low="0" high="15" type="uint"/>
@@ -637,6 +666,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e80" name="UCHE_CACHE_MODE_CONTROL"/>
 	<reg32 offset="0x0e84" name="UCHE_TRAP_BASE_HI"/>
 	<reg32 offset="0x0e88" name="UCHE_CACHE_STATUS"/>
+	<reg32 offset="0x0e8a" name="UCHE_INVALIDATE0"/>
+	<reg32 offset="0x0e8b" name="UCHE_INVALIDATE1"/>
+	<reg32 offset="0x0e8c" name="UCHE_CACHE_WAYS_VFD"/>
 	<reg32 offset="0x0e95" name="UCHE_PERFCTR_UCHE_SEL_7"/>
 
 	<!-- HLSQ registers -->
@@ -670,7 +702,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- register loaded with position (bary.f, gl_FragCoord, etc) -->
 		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
-
+	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL">
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x23c6" name="HLSQ_FS_CONTROL">
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
+		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x23db" name="HLSQ_UPDATE_CONTROL"/>
 
 	<!-- PC registers -->
@@ -693,6 +735,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x21e7" name="PC_HS_PARAM"/>
 
 	<!-- VBIF registers -->
+	<reg32 offset="0x3000" name="VBIF_VERSION"/>
+	<reg32 offset="0x3001" name="VBIF_CLKON">
+		<bitfield name="FORCE_ON_TESTBUS" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x301c" name="VBIF_ABIT_SORT"/>
 	<reg32 offset="0x301d" name="VBIF_ABIT_SORT_CONF"/>
 	<reg32 offset="0x302a" name="VBIF_GATE_OFF_WRREQ_EN"/>
@@ -722,16 +768,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- always 00000000: -->
 	<reg32 offset="0x0e42" name="UNKNOWN_0E42"/>
 
-	<!-- always 00000000: -->
-	<reg32 offset="0x0e8a" name="UNKNOWN_0E8A"/>
+	<!-- always 00040000: -->
+	<reg32 offset="0x0ec2" name="UNKNOWN_0EC2"/>
 
-	<!-- always 00000012: -->
-	<reg32 offset="0x0e8b" name="UNKNOWN_0E8B"/>
-
-	<!-- always 00000007: -->
-	<reg32 offset="0x0e8c" name="UNKNOWN_0E8C"/>
-
-	<!-- always 00000007: -->
+	<!-- always 00000006: -->
 	<reg32 offset="0x0ec3" name="UNKNOWN_0EC3"/>
 
 	<!-- always 0000003a: -->
@@ -799,9 +839,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- always 00000000: -->
 	<reg32 offset="0x22d7" name="UNKNOWN_22D7"/>
-
-	<!-- always 00000000: -->
-	<reg32 offset="0x22e0" name="UNKNOWN_22E0"/>
 
 </domain>
 
