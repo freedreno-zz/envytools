@@ -7,8 +7,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_pm4.xml"/>
 
 <enum name="a4xx_color_fmt">
-	<value name="RB4_R8G8B8A8_UNORM" value="0x28"/>
-	<value name="RB_Z16_UNORM" value="0x3c"/>
+	<value name="RB4_A8_UNORM" value="0x01"/>
+	<value name="RB4_R5G6R5_UNORM" value="0x0e"/>
+	<value name="RB4_Z16_UNORM" value="0x0f"/>
+	<value name="RB4_R8G8B8_UNORM" value="0x19"/>
+	<value name="RB4_R8G8B8A8_UNORM" value="0x1a"/>
 </enum>
 
 <enum name="a4xx_tile_mode">
@@ -146,6 +149,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20ce" name="RB_CLEAR_COLOR_DW2"/>
 	<reg32 offset="0x20cf" name="RB_CLEAR_COLOR_DW3"/>
 	<reg32 offset="0x20a0" name="RB_MODE_CONTROL">
+		<!--
+		for non-bypass mode, these are bin width/height..  although
+		possibly bigger bitfields to hold entire width/height for
+		gmem-bypass??  Either way, it appears to need to be multiple
+		of 32..
+		-->
+		<bitfield name="WIDTH" low="0" high="5" shr="5" type="uint"/>
+		<bitfield name="HEIGHT" low="8" high="13" shr="5" type="uint"/>
 	</reg32>
 	<reg32 offset="0x20a1" name="RB_RENDER_CONTROL">
 		<bitfield name="BINNING_PASS" pos="0" type="boolean"/>
@@ -177,10 +188,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="B11" pos="11" type="boolean"/>
 			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
 		</reg32>
-		<reg32 offset="0x1" name="CONTROL2">
+		<reg32 offset="0x1" name="BUF_INFO">
+			<bitfield name="COLOR_FORMAT" low="0" high="5" type="a4xx_color_fmt"/>
 			<bitfield name="DITHER_MODE" low="9" high="10" type="adreno_rb_dither_mode"/>
 			<!-- note: possibly some # of lsb's aren't there: -->
-			<bitfield name="BIN_W" low="12" high="22" type="uint"/>
+			<doc>
+				Pitch (actually, appears to be pitch in bytes, so really is a stride)
+				in GMEM, so pitch of the current tile.
+			</doc>
+			<bitfield name="COLOR_BUF_PITCH" low="12" high="22" type="uint"/>
 		</reg32>
 		<reg32 offset="0x3" name="CONTROL3">
 			<!-- probably missing some lsb's.. and guessing upper size -->
@@ -229,7 +245,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="PITCH" low="0" high="31" shr="5" type="uint"/>
 	</reg32>
 	<reg32 offset="0x20ff" name="RB_COPY_DEST_INFO">
-		<bitfield name="FORMAT" low="0" high="5" type="a4xx_color_fmt"/>
+		<bitfield name="FORMAT" low="2" high="7" type="a4xx_color_fmt"/>
 		<bitfield name="DITHER_MODE" low="10" high="11" type="adreno_rb_dither_mode"/>
 		<bitfield name="COMPONENT_ENABLE" low="14" high="17" type="hex"/>
 		<bitfield name="ENDIAN" low="18" high="20" type="adreno_rb_surface_endian"/>
@@ -459,6 +475,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e1" name="SP_VS_OBJ_START"/>
 	<reg32 offset="0x22e2" name="SP_VS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22e3" name="SP_VS_PVT_MEM_ADDR"/>
+	<reg32 offset="0x22e5" name="SP_VS_LENGTH" type="uint"/>
 	<reg32 offset="0x22e8" name="SP_FS_CTRL_REG0" type="a4xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22e9" name="SP_FS_CTRL_REG1">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
@@ -470,6 +487,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22eb" name="SP_FS_OBJ_START"/>
 	<reg32 offset="0x22ec" name="SP_FS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22ed" name="SP_FS_PVT_MEM_ADDR"/>
+	<reg32 offset="0x22ef" name="SP_FS_LENGTH" type="uint"/>
 	<reg32 offset="0x22f0" name="SP_FS_OUTPUT_REG">
 		<bitfield name="FRAG_WRITES_Z" pos="7" type="boolean"/>
 	</reg32>
@@ -477,9 +495,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 			<bitfield name="HALF_PRECISION" pos="8" type="boolean"/>
+			<bitfield name="MRTFORMAT" low="12" high="17" type="a4xx_color_fmt"/>
 		</reg32>
 	</array>
-	<reg32 offset="0x2360" name="SP_GS_LENGTH"/>
+	<reg32 offset="0x230d" name="SP_HS_OBJ_OFFSET_REG">
+		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2334" name="SP_DS_OBJ_OFFSET_REG">
+		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x235b" name="SP_GS_OBJ_OFFSET_REG">
+		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2360" name="SP_GS_LENGTH" type="uint"/>
 
 	<!-- VPC registers -->
 	<reg32 offset="0x0e60" name="VPC_DEBUG_RAM_SEL"/>
@@ -702,12 +733,34 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- register loaded with position (bary.f, gl_FragCoord, etc) -->
 		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
+
+	<!-- TODO probably a bitset for HLSQ_*S_CONTROL.. -->
 	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x23c6" name="HLSQ_FS_CONTROL">
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
+		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
+	</reg32>
+	<!-- not quite sure the order of the remainder, so order of hull/domain/geom yet -->
+	<reg32 offset="0x23c7" name="HLSQ_HS_CONTROL">
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
+		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x23c8" name="HLSQ_DS_CONTROL">
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
+		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x23c9" name="HLSQ_GS_CONTROL">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
