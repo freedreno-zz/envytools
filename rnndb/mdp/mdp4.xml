@@ -414,6 +414,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 	</array>
 
+	<reg32 offset="0xc2034" name="LCDC_LVDS_PHY_RESET"/>
+
+	<reg32 offset="0xc3000" name="LVDS_PHY_PLL_CTRL_0"/>
+	<reg32 offset="0xc3004" name="LVDS_PHY_PLL_CTRL_1"/>
+	<reg32 offset="0xc3008" name="LVDS_PHY_PLL_CTRL_2"/>
+	<reg32 offset="0xc300c" name="LVDS_PHY_PLL_CTRL_3"/>
+	<reg32 offset="0xc3014" name="LVDS_PHY_PLL_CTRL_5"/>
+	<reg32 offset="0xc3018" name="LVDS_PHY_PLL_CTRL_6"/>
+	<reg32 offset="0xc301c" name="LVDS_PHY_PLL_CTRL_7"/>
+	<reg32 offset="0xc3020" name="LVDS_PHY_PLL_CTRL_8"/>
+	<reg32 offset="0xc3024" name="LVDS_PHY_PLL_CTRL_9"/>
+	<reg32 offset="0xc3080" name="LVDS_PHY_PLL_LOCKED"/>
+	<reg32 offset="0xc3108" name="LVDS_PHY_CFG2"/>
+
 	<reg32 offset="0xc3100" name="LVDS_PHY_CFG0">
 		<bitfield name="SERIALIZATION_ENBLE" pos="4" type="boolean"/>
 		<bitfield name="CHANNEL0" pos="6" type="boolean"/>

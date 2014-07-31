@@ -40,6 +40,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="VAL" low="24" high="31"></bitfield>
 		</reg32>
 	</array>
+	<reg32 offset="0x0094" name="DSI2_PIXEL_CC"/>
+	<reg32 offset="0x00e4" name="DSI2_PIXEL_NS"/>
+	<reg32 offset="0x0264" name="DSI2_PIXEL_CC2"/>
 </domain>
 
 </database>
