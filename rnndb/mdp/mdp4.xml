@@ -381,6 +381,45 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0038" name="CTRL_POLARITY" type="mdp4_ctrl_polarity"/>
 	</array>
 
+	<reg32 offset="0xc2000" name="LCDC_LVDS_INTF_CTL">
+		<bitfield name="MODE_SEL"           pos="2"  type="boolean"/>
+		<bitfield name="RGB_OUT"            pos="3"  type="boolean"/>
+		<bitfield name="CH_SWAP"            pos="4"  type="boolean"/>
+		<bitfield name="CH1_RES_BIT"        pos="5"  type="boolean"/>
+		<bitfield name="CH2_RES_BIT"        pos="6"  type="boolean"/>
+		<bitfield name="ENABLE"             pos="7"  type="boolean"/>
+		<bitfield name="CH1_DATA_LANE0_EN"  pos="8"  type="boolean"/>
+		<bitfield name="CH1_DATA_LANE1_EN"  pos="9"  type="boolean"/>
+		<bitfield name="CH1_DATA_LANE2_EN"  pos="10" type="boolean"/>
+		<bitfield name="CH1_DATA_LANE3_EN"  pos="11" type="boolean"/>
+		<bitfield name="CH2_DATA_LANE0_EN"  pos="12" type="boolean"/>
+		<bitfield name="CH2_DATA_LANE1_EN"  pos="13" type="boolean"/>
+		<bitfield name="CH2_DATA_LANE2_EN"  pos="14" type="boolean"/>
+		<bitfield name="CH2_DATA_LANE3_EN"  pos="15" type="boolean"/>
+		<bitfield name="CH1_CLK_LANE_EN"    pos="16" type="boolean"/>
+		<bitfield name="CH2_CLK_LANE_EN"    pos="17" type="boolean"/>
+	</reg32>
+
+	<array offset="0xc2014" name="LCDC_LVDS_MUX_CTL" length="4" stride="0x8">
+		<reg32 offset="0x0" name="3_TO_0">
+			<bitfield name="BIT0" low="0"  high="7"/>
+			<bitfield name="BIT1" low="8"  high="15"/>
+			<bitfield name="BIT2" low="16" high="23"/>
+			<bitfield name="BIT3" low="24" high="31"/>
+		</reg32>
+		<reg32 offset="0x4" name="6_TO_4">
+			<bitfield name="BIT4" low="0"  high="7"/>
+			<bitfield name="BIT5" low="8"  high="15"/>
+			<bitfield name="BIT6" low="16" high="23"/>
+		</reg32>
+	</array>
+
+	<reg32 offset="0xc3100" name="LVDS_PHY_CFG0">
+		<bitfield name="SERIALIZATION_ENBLE" pos="4" type="boolean"/>
+		<bitfield name="CHANNEL0" pos="6" type="boolean"/>
+		<bitfield name="CHANNEL1" pos="7" type="boolean"/>
+	</reg32>
+
 	<array offset="0xd0000" name="DTV" length="1" stride="0x1000">
 		<reg32 offset="0x0000" name="ENABLE"/>
 		<reg32 offset="0x0004" name="HSYNC_CTRL" type="mdp4_hsync_ctrl"/>
