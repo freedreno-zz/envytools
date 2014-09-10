@@ -81,6 +81,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_NORM_USHORT_565" value="0x4"/>
 	<value name="TFMT_NORM_USHORT_5551" value="0x6"/>
 	<value name="TFMT_NORM_USHORT_4444" value="0x7"/>
+	<value name="TFMT_NORM_USHORT_Z16" value="0x9"/>
 	<value name="TFMT_NORM_UINT_X8Z24" value="0xa"/>
 
 	<!--
