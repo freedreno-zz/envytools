@@ -148,6 +148,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_R8G8B8A8_UNORM" value="8"/>
 	<value name="RB_Z16_UNORM" value="12"/>
 	<value name="RB_A8_UNORM" value="20"/>
+	<value name="RB_R8_UNORM" value="21"/>
 	<value name="RB_R16G16B16A16_FLOAT" value="27"/> <!-- GL_HALF_FLOAT_OES -->
 	<value name="RB_R32G32B32A32_FLOAT" value="51"/> <!-- GL_FLOAT -->
 </enum>
