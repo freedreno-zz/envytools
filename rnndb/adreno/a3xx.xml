@@ -1241,8 +1241,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
 	<reg32 offset="3" name="3">
-		<!-- also see 0x10000001 set.. not sure what those are yet -->
+		<!--
+		not quite sure why two layer size.. probably that is not
+		what they both are..  but layers within a slice (mipmap
+		level) seem to be aligned to page boundary, and those two
+		fields get set to # of pages in the layer
+		 -->
+		<bitfield name="LAYERSZ1" low="0" high="3" shr="12" type="uint"/>
 		<bitfield name="DEPTH" low="17" high="27" type="uint"/>
+		<bitfield name="LAYERSZ2" low="28" high="31" shr="12" type="uint"/>
 	</reg32>
 </domain>
 
