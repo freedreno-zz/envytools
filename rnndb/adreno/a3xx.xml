@@ -1240,7 +1240,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>SWAP bit is set for BGRA instead of RGBA</doc>
 		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
-	<reg32 offset="3" name="3"/>
+	<reg32 offset="3" name="3">
+		<!-- also see 0x10000001 set.. not sure what those are yet -->
+		<bitfield name="DEPTH" low="17" high="27" type="uint"/>
+	</reg32>
 </domain>
 
 </database>
