@@ -194,6 +194,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="BLEND_MAX_DST_SRC" value="4"/>
 </enum>
 
+<enum name="a3xx_intp_mode">
+	<value name="SMOOTH" value="0"/>
+	<value name="FLAT" value="1"/>
+	<!-- two more values?? -->
+</enum>
+
 <domain name="A3XX" width="32">
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
@@ -832,12 +838,30 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="NUMNONPOSVSVAR" low="16" high="23" type="uint"/>
 	</reg32>
 	<!--
-		interpolate or interrupt?  former makes sense, but kernel calls
-		it both "VARRYING_INTERUPT_MODE_n (sic) and VARYING_INTERP_MODE_n
-		(and few other misspell variations..)
+		varying interpolate mode.  One field per scalar/component
+		(since varying slots are scalar, so things don't have to
+		be aligned to vec4).
+		4 regs * 16 scalar components each => 16 vec4
 	 -->
 	<array offset="0x2282" name="VPC_VARYING_INTERP" stride="1" length="4">
-		<reg32 offset="0x0" name="MODE"/>
+		<reg32 offset="0x0" name="MODE">
+			<bitfield name="C0" low="0"  high="1"  type="a3xx_intp_mode"/>
+			<bitfield name="C1" low="2"  high="3"  type="a3xx_intp_mode"/>
+			<bitfield name="C2" low="4"  high="5"  type="a3xx_intp_mode"/>
+			<bitfield name="C3" low="6"  high="7"  type="a3xx_intp_mode"/>
+			<bitfield name="C4" low="8"  high="9"  type="a3xx_intp_mode"/>
+			<bitfield name="C5" low="10" high="11" type="a3xx_intp_mode"/>
+			<bitfield name="C6" low="12" high="13" type="a3xx_intp_mode"/>
+			<bitfield name="C7" low="14" high="15" type="a3xx_intp_mode"/>
+			<bitfield name="C8" low="16" high="17" type="a3xx_intp_mode"/>
+			<bitfield name="C9" low="18" high="19" type="a3xx_intp_mode"/>
+			<bitfield name="CA" low="20" high="21" type="a3xx_intp_mode"/>
+			<bitfield name="CB" low="22" high="23" type="a3xx_intp_mode"/>
+			<bitfield name="CC" low="24" high="25" type="a3xx_intp_mode"/>
+			<bitfield name="CD" low="26" high="27" type="a3xx_intp_mode"/>
+			<bitfield name="CE" low="28" high="29" type="a3xx_intp_mode"/>
+			<bitfield name="CF" low="30" high="31" type="a3xx_intp_mode"/>
+		</reg32>
 	</array>
 	<array offset="0x2286" name="VPC_VARYING_PS_REPL" stride="1" length="4">
 		<reg32 offset="0x0" name="MODE"/>
