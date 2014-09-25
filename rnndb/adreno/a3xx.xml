@@ -55,6 +55,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="VFMT_NORM_USHORT_16_16_16" value="0x1e"/>
 	<value name="VFMT_NORM_USHORT_16_16_16_16" value="0x1f"/>
 
+	<!-- seems to be no NORM variants for 32bit.. -->
+	<value name="VFMT_UINT_32" value="0x20"/>
+	<value name="VFMT_UINT_32_32" value="0x21"/>
+	<value name="VFMT_UINT_32_32_32" value="0x22"/>
+	<value name="VFMT_UINT_32_32_32_32" value="0x23"/>
+	<value name="VFMT_INT_32" value="0x24"/>
+	<value name="VFMT_INT_32_32" value="0x25"/>
+	<value name="VFMT_INT_32_32_32" value="0x26"/>
+	<value name="VFMT_INT_32_32_32_32" value="0x27"/>
+
 	<value name="VFMT_UBYTE_8" value="0x28"/>
 	<value name="VFMT_UBYTE_8_8" value="0x29"/>
 	<value name="VFMT_UBYTE_8_8_8" value="0x2a"/>
@@ -811,6 +821,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="CONSTFILL" pos="4" type="boolean"/>
 			<bitfield name="FORMAT" low="6" high="11" type="a3xx_vtx_fmt"/>
 			<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
+			<bitfield name="INT" pos="20" type="boolean"/>
 			<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
 			<bitfield name="SWAP" low="22" high="23" type="a3xx_color_swap"/>
 			<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
@@ -996,8 +1007,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e4" name="SP_FS_PVT_MEM_PARAM_REG"/>
 	<reg32 offset="0x22e5" name="SP_FS_PVT_MEM_ADDR_REG"/>
 	<reg32 offset="0x22e6" name="SP_FS_PVT_MEM_SIZE_REG"/>
-	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0"/>
-	<reg32 offset="0x22e9" name="SP_FS_FLAT_SHAD_MODE_REG_1"/>
+	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0">
+		<doc>seems to be one bit per scalar, '1' for flat, '0' for smooth</doc>
+	</reg32>
+	<reg32 offset="0x22e9" name="SP_FS_FLAT_SHAD_MODE_REG_1">
+		<doc>seems to be one bit per scalar, '1' for flat, '0' for smooth</doc>
+	</reg32>
 	<reg32 offset="0x22ec" name="SP_FS_OUTPUT_REG">
 		<bitfield name="DEPTH_ENABLE" pos="7" type="boolean"/>
 		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
