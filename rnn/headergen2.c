@@ -181,8 +181,10 @@ static void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 
 		fprintf(dst, "\treturn ((");
 
-		if ((ti->type == RNN_TTYPE_FIXED) || (ti->type == RNN_TTYPE_UFIXED)) {
-			fprintf(dst, "((uint32_t)(val * %d.0))", 2 * ti->radix);
+		if (ti->type == RNN_TTYPE_FIXED) {
+			fprintf(dst, "((int32_t)(val * %d.0))", (1 << ti->radix));
+		} else if (ti->type == RNN_TTYPE_UFIXED) {
+			fprintf(dst, "((uint32_t)(val * %d.0))", (1 << ti->radix));
 		} else if (ti->type == RNN_TTYPE_FLOAT) {
 			if (width == 32)
 				fprintf(dst, "fui(val)");
