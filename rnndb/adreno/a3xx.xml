@@ -1232,6 +1232,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="UNNORM_COORDS" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="1" name="1">
+		<bitfield name="LOD_BIAS" low="0" high="10" type="fixed" radix="6"/>
 		<bitfield name="MAX_LOD" low="12" high="21" type="ufixed" radix="6"/>
 		<bitfield name="MIN_LOD" low="22" high="31" type="ufixed" radix="6"/>
 	</reg32>
