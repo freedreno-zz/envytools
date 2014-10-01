@@ -239,6 +239,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a3xx_instrbuffermode">
+	<!--
+	When shader size goes above ~128 or so, blob switches to '0'
+	and doesn't emit shader in cmdstream.  When either is '0' it
+	doesn't get emitted via CP_LOAD_STATE.  When only one is
+	'0' the other gets size 256-others_size.  So I think that:
+		BUFFER => execute out of state memory
+		CACHE  => use available state memory as local cache
+	NOTE that when CACHE mode, also set CACHEINVALID flag!
+
+	TODO check if that 256 size is same for all a3xx
+	 -->
+	<value value="0" name="CACHE"/>
 	<value value="1" name="BUFFER"/>
 </enum>
 
