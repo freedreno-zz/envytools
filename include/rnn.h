@@ -112,6 +112,7 @@ struct rnnvalue {
 struct rnntypeinfo {
 	char *name;
 	enum rnnttype {
+		RNN_TTYPE_INVALID,
 		RNN_TTYPE_INLINE_ENUM,
 		RNN_TTYPE_INLINE_BITSET,
 		RNN_TTYPE_ENUM,
