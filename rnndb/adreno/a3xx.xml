@@ -730,7 +730,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SPSHADERRESTART" pos="9" type="boolean"/>
 		<bitfield name="RESERVED2" pos="10" type="boolean"/>
 		<bitfield name="CHUNKDISABLE" pos="26" type="boolean"/>
-		<bitfield name="CONSTSWITCHMODE" pos="27" type="boolean"/>
+		<bitfield name="CONSTMODE" pos="27" type="uint"/>
 		<bitfield name="LAZYUPDATEDISABLE" pos="28" type="boolean"/>
 		<bitfield name="SPCONSTFULLUPDATE" pos="29" type="boolean"/>
 		<bitfield name="TPFULLUPDATE" pos="30" type="boolean"/>
