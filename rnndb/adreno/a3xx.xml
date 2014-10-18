@@ -93,6 +93,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_NORM_USHORT_4444" value="0x7"/>
 	<value name="TFMT_NORM_USHORT_Z16" value="0x9"/>
 	<value name="TFMT_NORM_UINT_X8Z24" value="0xa"/>
+	<value name="TFMT_FLOAT_Z32" value="0xb"/>
 
 	<!--
 		YUV formats.. the different Y plane formats (ie. NV12 vs I420)
@@ -111,6 +112,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_NORM_UINT_I420_V" value="0x1b"/>
 
 	<value name="TFMT_NORM_UINT_2_10_10_10" value="0x29"/>
+	<value name="TFMT_FLOAT_9_9_9_E5" value="0x2a"/>
+	<value name="TFMT_FLOAT_10_11_11" value="0x2b"/>
 	<value name="TFMT_NORM_UINT_A8" value="0x2c"/>    <!-- GL_ALPHA -->
 	<value name="TFMT_NORM_UINT_L8_A8" value="0x2f"/> <!-- GL_LUMINANCE_ALPHA -->
 
@@ -129,15 +132,40 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_NORM_UINT_8_8_8" value="0x32"/>
 	<value name="TFMT_NORM_UINT_8_8_8_8" value="0x33"/>
 
+	<value name="TFMT_NORM_SINT_8_8" value="0x35"/>
+	<value name="TFMT_NORM_SINT_8_8_8_8" value="0x37"/>
+
+	<value name="TFMT_UINT_8_8" value="0x39"/>
+	<value name="TFMT_UINT_8_8_8_8" value="0x3b"/>
+
+	<value name="TFMT_SINT_8_8" value="0x3d"/>
+	<value name="TFMT_SINT_8_8_8_8" value="0x3f"/>
+
 	<value name="TFMT_FLOAT_16" value="0x40"/>
 	<value name="TFMT_FLOAT_16_16" value="0x41"/>
 	<!-- TFMT_FLOAT_16_16_16 -->
 	<value name="TFMT_FLOAT_16_16_16_16" value="0x43"/>
 
+	<value name="TFMT_UINT_16" value="0x44"/>
+	<value name="TFMT_UINT_16_16" value="0x45"/>
+	<value name="TFMT_UINT_16_16_16_16" value="0x47"/>
+
+	<value name="TFMT_SINT_16" value="0x48"/>
+	<value name="TFMT_SINT_16_16" value="0x49"/>
+	<value name="TFMT_SINT_16_16_16_16" value="0x4b"/>
+
 	<value name="TFMT_FLOAT_32" value="0x54"/>
 	<value name="TFMT_FLOAT_32_32" value="0x55"/>
 	<!-- TFMT_FLOAT_32_32_32 -->
 	<value name="TFMT_FLOAT_32_32_32_32" value="0x57"/>
+
+	<value name="TFMT_UINT_32" value="0x58"/>
+	<value name="TFMT_UINT_32_32" value="0x59"/>
+	<value name="TFMT_UINT_32_32_32_32" value="0x5b"/>
+
+	<value name="TFMT_SINT_32" value="0x5c"/>
+	<value name="TFMT_SINT_32_32" value="0x5d"/>
+	<value name="TFMT_SINT_32_32_32_32" value="0x5f"/>
 </enum>
 
 <enum name="a3xx_tex_fetchsize">
@@ -154,13 +182,41 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a3xx_color_fmt">
-	<value name="RB_R8G8B8_UNORM" value="4"/>
-	<value name="RB_R8G8B8A8_UNORM" value="8"/>
-	<value name="RB_Z16_UNORM" value="12"/>
-	<value name="RB_A8_UNORM" value="20"/>
-	<value name="RB_R8_UNORM" value="21"/>
-	<value name="RB_R16G16B16A16_FLOAT" value="27"/> <!-- GL_HALF_FLOAT_OES -->
-	<value name="RB_R32G32B32A32_FLOAT" value="51"/> <!-- GL_FLOAT -->
+	<value name="RB_R5G6B5_UNORM"       value="0x00"/>
+	<value name="RB_R5G5B5A1_UNORM"     value="0x01"/>
+	<value name="RB_R4G4B4A4_UNORM"     value="0x03"/>
+	<value name="RB_R8G8B8_UNORM"	    value="0x04"/>
+	<value name="RB_R8G8B8A8_UNORM"	    value="0x08"/>
+	<value name="RB_R8G8B8A8_UINT"	    value="0x0a"/>
+	<value name="RB_R8G8B8A8_SINT"	    value="0x0b"/>
+	<value name="RB_R8G8_UNORM"	    value="0x0c"/>
+	<value name="RB_R8_UINT"	    value="0x0e"/> <!-- also used for R8G8_UINT? -->
+	<value name="RB_R8_SINT"	    value="0x0f"/> <!-- also used for R8G8_SINT? -->
+	<value name="RB_R10G10B10A2_UNORM"  value="0x10"/>
+
+	<value name="RB_A8_UNORM"	    value="0x14"/>
+	<value name="RB_R8_UNORM"	    value="0x15"/>
+
+	<value name="RB_R16G16B16A16_FLOAT" value="0x1b"/> <!-- GL_HALF_FLOAT_OES -->
+	<value name="RB_R11G11B10_FLOAT"    value="0x1c"/>
+
+	<value name="RB_R16_SINT"	    value="0x28"/>
+	<value name="RB_R16G16_SINT"	    value="0x29"/>
+	<value name="RB_R16G16B16A16_SINT"  value="0x2b"/>
+
+	<value name="RB_R16_UINT"	    value="0x2c"/>
+	<value name="RB_R16G16_UINT"	    value="0x2d"/>
+	<value name="RB_R16G16B16A16_UINT"  value="0x2f"/>
+
+	<value name="RB_R32G32B32A32_FLOAT" value="0x33"/> <!-- GL_FLOAT -->
+
+	<value name="RB_R32_SINT"	    value="0x34"/>
+	<value name="RB_R32G32_SINT"	    value="0x35"/>
+	<value name="RB_R32G32B32A32_SINT"  value="0x37"/>
+
+	<value name="RB_R32_UINT"	    value="0x38"/>
+	<value name="RB_R32G32_UINT"	    value="0x39"/>
+	<value name="RB_R32G32B32A32_UINT"  value="0x3b"/>
 </enum>
 
 <enum name="a3xx_color_swap">
@@ -531,6 +587,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="COLOR_FORMAT" low="0" high="5" type="a3xx_color_fmt"/>
 			<bitfield name="COLOR_TILE_MODE" low="6" high="7" type="a3xx_tile_mode"/>
 			<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+			<bitfield name="COLOR_SRGB" pos="14" type="boolean"/>
 			<doc>
 				Pitch (actually, appears to be pitch in bytes, so really is a stride)
 				in GMEM, so pitch of the current tile.
@@ -579,6 +636,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="DEPTHCLEAR" pos="3" type="boolean"/>
 		<bitfield name="MODE" low="4" high="6" type="adreno_rb_copy_control_mode"/>
 		<bitfield name="FASTCLEAR" low="8" high="11" type="hex"/>
+		<bitfield name="UNK12" pos="12" type="boolean"/> <!-- enabled on a Z32F copy -->
 		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
 	</reg32>
 	<reg32 offset="0x20ed" name="RB_COPY_DEST_BASE">
@@ -615,7 +673,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
 	<reg32 offset="0x2102" name="RB_DEPTH_INFO">
-		<bitfield name="DEPTH_FORMAT" pos="0" type="adreno_rb_depth_format"/>
+		<bitfield name="DEPTH_FORMAT" low="0" high="1" type="adreno_rb_depth_format"/>
 		<doc>
 			DEPTH_BASE is offset in GMEM to depth/stencil buffer, ie
 			bin_w * bin_h / 1024 (possible rounded up to multiple of
@@ -650,7 +708,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
 	<reg32 offset="0x2106" name="RB_STENCIL_BUF_INFO">
-		<doc>seems to be always set to 0x00000000</doc>
+		<doc>seems to be always set to 0x00000000, except 0x2000 for Z32_X24S8(?)</doc>
 	</reg32>
 	<reg32 offset="0x2107" name="RB_STENCIL_BUF_PITCH">
 		<doc>seems to be always set to 0x00000000</doc>
@@ -1021,6 +1079,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 			<bitfield name="HALF_PRECISION" pos="8" type="boolean"/>
+			<bitfield name="SINT" pos="10" type="boolean"/>
+			<bitfield name="UINT" pos="11" type="boolean"/>
 		</reg32>
 	</array>
 	<array offset="0x22f4" name="SP_FS_IMAGE_OUTPUT" stride="1" length="4">
