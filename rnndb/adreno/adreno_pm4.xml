@@ -284,7 +284,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitfield name="NOT_EOP" pos="12" type="boolean"/>
 	<bitfield name="SMALL_INDEX" pos="13" type="boolean"/>
 	<bitfield name="PRE_DRAW_INITIATOR_ENABLE" pos="14" type="boolean"/>
-	<bitfield name="NUM_INDICES" low="16" high="31" type="uint"/>
+	<bitfield name="NUM_INSTANCES" low="24" high="31" type="uint"/>
 </bitset>
 
 <!-- changed on a4xx: -->
