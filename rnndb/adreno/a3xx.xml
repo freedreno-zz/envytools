@@ -463,7 +463,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- see a3xx_snapshot_cp_meq().. looks like the way to dump queue between pfp and pm4 -->
 	<reg32 offset="0x01da" name="CP_MEQ_ADDR"/>
 	<reg32 offset="0x01db" name="CP_MEQ_DATA"/>
+	<reg32 offset="0x01f5" name="CP_WFI_PEND_CTR"/>
+	<reg32 offset="0x039d" name="RBBM_PM_OVERRIDE2"/>
+
 	<reg32 offset="0x0445" name="CP_PERFCOUNTER_SELECT"/>
+	<reg32 offset="0x0458" name="CP_IB1_BASE"/>
+	<reg32 offset="0x0459" name="CP_IB1_BUFSZ"/>
+	<reg32 offset="0x045a" name="CP_IB2_BASE"/>
+	<reg32 offset="0x045b" name="CP_IB2_BUFSZ"/>
 	<reg32 offset="0x045c" name="CP_HW_FAULT"/>
 	<reg32 offset="0x045e" name="CP_PROTECT_CTRL"/>
 	<reg32 offset="0x045f" name="CP_PROTECT_STATUS"/>
@@ -471,6 +478,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
 	<reg32 offset="0x054d" name="CP_AHB_FAULT"/>
+
+	<reg32 offset="0x0d00" name="SQ_GPR_MANAGEMENT"/>
+	<reg32 offset="0x0d02" name="SQ_INST_STORE_MANAGMENT"/>
+	<reg32 offset="0x0e1e" name="TP0_CHICKEN"/>
 
 	<!-- these I guess or either SP or HLSQ since related to shader core setup: -->
 	<reg32 offset="0x0e22" name="SP_GLOBAL_MEM_SIZE" type="uint">
@@ -862,6 +873,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2243" name="VFD_INDEX_MAX" type="uint"/>
 	<reg32 offset="0x2244" name="VFD_INSTANCEID_OFFSET" type="uint"/>
 	<reg32 offset="0x2245" name="VFD_INDEX_OFFSET" type="uint"/>
+	<reg32 offset="0x2245" name="VFD_INDEX_OFFSET" type="uint"/>
+	<reg32 offset="0x2246" name="VFD_FETCH_INSTR_0_0"/>
+	<reg32 offset="0x2265" name="VFD_FETCH_INSTR_1_F"/>
 	<array offset="0x2246" name="VFD_FETCH" stride="2" length="16">
 		<reg32 offset="0x0" name="INSTR_0">
 			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
@@ -1090,6 +1104,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</array>
 	<reg32 offset="0x22ff" name="SP_FS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
 
+	<reg32 offset="0x2301" name="PA_SC_AA_CONFIG"/>
 	<!-- TPL1 registers -->
 	<!-- assume VS/FS_TEX_OFFSET is same -->
 	<bitset name="a3xx_tpl1_tp_vs_fs_tex_offset" inline="yes">
@@ -1151,6 +1166,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WIDTH" low="0" high="4" shr="5" type="uint"/>
 		<bitfield name="HEIGHT" low="5" high="9" shr="5" type="uint"/>
 	</reg32>
+
+	<reg32 offset="0x0c07" name="VSC_PIPE_DATA_ADDRESS_0"/>
+	<reg32 offset="0x0c1d" name="VSC_PIPE_DATA_LENGTH_7"/>
 	<reg32 offset="0x0c02" name="VSC_SIZE_ADDRESS"/>
 	<array offset="0x0c06" name="VSC_PIPE" stride="3" length="8">
 		<reg32 offset="0x0" name="CONFIG">

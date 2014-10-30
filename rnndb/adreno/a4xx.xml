@@ -139,6 +139,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <domain name="A4XX" width="32">
 	<!-- RB registers -->
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
+	<reg32 offset="0x0cc7" name="RB_PERFCTR_RB_SEL_0"/>
+	<reg32 offset="0x0cc8" name="RB_PERFCTR_RB_SEL_1"/>
+	<reg32 offset="0x0cc9" name="RB_PERFCTR_RB_SEL_2"/>
+	<reg32 offset="0x0cca" name="RB_PERFCTR_RB_SEL_3"/>
+	<reg32 offset="0x0ccb" name="RB_PERFCTR_RB_SEL_4"/>
+	<reg32 offset="0x0ccc" name="RB_PERFCTR_RB_SEL_5"/>
+	<reg32 offset="0x0ccd" name="RB_PERFCTR_RB_SEL_6"/>
+	<reg32 offset="0x0cce" name="RB_PERFCTR_RB_SEL_7"/>
 	<reg32 offset="0x0cd2" name="RB_PERFCTR_CCU_SEL_3"/>
 	<reg32 offset="0x0ce0" name="RB_FRAME_BUFFER_DIMENSION">
 		<bitfield name="WIDTH" low="0" high="13" type="uint"/>
@@ -323,8 +331,33 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
 	<reg32 offset="0x0002" name="RBBM_HW_CONFIGURATION"/>
+	<array offset="0x4" name="RBBM_CLOCK_CTL_TP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x8" name="RBBM_CLOCK_CTL2_TP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0xc" name="RBBM_CLOCK_HYST_TP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x10" name="RBBM_CLOCK_DELAY_TP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<reg32 offset="0x0014" name="RBBM_CLOCK_CTL_UCHE "/>
+	<reg32 offset="0x0015" name="RBBM_CLOCK_CTL2_UCHE"/>
+	<reg32 offset="0x0016" name="RBBM_CLOCK_CTL3_UCHE"/>
+	<reg32 offset="0x0017" name="RBBM_CLOCK_CTL4_UCHE"/>
+	<reg32 offset="0x0018" name="RBBM_CLOCK_HYST_UCHE"/>
+	<reg32 offset="0x0019" name="RBBM_CLOCK_DELAY_UCHE"/>
+	<reg32 offset="0x001a" name="RBBM_CLOCK_MODE_GPC"/>
+	<reg32 offset="0x001b" name="RBBM_CLOCK_DELAY_GPC"/>
+	<reg32 offset="0x001c" name="RBBM_CLOCK_HYST_GPC"/>
+	<reg32 offset="0x001d" name="RBBM_CLOCK_CTL_TSE_RAS_RBBM"/>
+	<reg32 offset="0x001e" name="RBBM_CLOCK_HYST_TSE_RAS_RBBM"/>
+	<reg32 offset="0x001f" name="RBBM_CLOCK_DELAY_TSE_RAS_RBBM"/>
 	<reg32 offset="0x0020" name="RBBM_CLOCK_CTL"/>
 	<reg32 offset="0x0021" name="RBBM_SP_HYST_CNT"/>
+	<reg32 offset="0x0022" name="RBBM_SW_RESET_CMD"/>
 	<reg32 offset="0x0023" name="RBBM_AHB_CTL0"/>
 	<reg32 offset="0x0024" name="RBBM_AHB_CTL1"/>
 	<reg32 offset="0x0025" name="RBBM_AHB_CMD"/>
@@ -335,24 +368,118 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0034" name="RBBM_INTERFACE_HANG_MASK_CTL4"/>
 	<reg32 offset="0x0036" name="RBBM_INT_CLEAR_CMD"/>
 	<reg32 offset="0x0037" name="RBBM_INT_0_MASK"/>
+	<reg32 offset="0x003e" name="RBBM_RBBM_CTL"/>
 	<reg32 offset="0x003f" name="RBBM_AHB_DEBUG_CTL"/>
 	<reg32 offset="0x0041" name="RBBM_VBIF_DEBUG_CTL"/>
+	<reg32 offset="0x0042" name="RBBM_CLOCK_CTL2"/>
 	<reg32 offset="0x0045" name="RBBM_BLOCK_SW_RESET_CMD"/>
 	<reg32 offset="0x0047" name="RBBM_RESET_CYCLES"/>
 	<reg32 offset="0x0049" name="RBBM_EXT_TRACE_BUS_CTL"/>
+	<reg32 offset="0x004a" name="RBBM_CFG_DEBBUS_SEL_A"/>
+	<reg32 offset="0x004b" name="RBBM_CFG_DEBBUS_SEL_B"/>
+	<reg32 offset="0x004c" name="RBBM_CFG_DEBBUS_SEL_C"/>
+	<reg32 offset="0x004d" name="RBBM_CFG_DEBBUS_SEL_D"/>
 	<reg32 offset="0x009c" name="RBBM_PERFCTR_CP_0_LO"/>
+	<array offset="0x0068" name="RBBM_CLOCK_CTL_SP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x006c" name="RBBM_CLOCK_CTL2_SP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x0070" name="RBBM_CLOCK_HYST_SP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x0074" name="RBBM_CLOCK_DELAY_SP" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x0078" name="RBBM_CLOCK_CTL_RB" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x007c" name="RBBM_CLOCK_CTL2_RB" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x0082" name="RBBM_CLOCK_CTL_MARB_CCU" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<array offset="0x0086" name="RBBM_CLOCK_HYST_RB_MARB_CCU" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<reg32 offset="0x0080" name="RBBM_CLOCK_HYST_COM_DCOM"/>
+	<reg32 offset="0x0081" name="RBBM_CLOCK_CTL_COM_DCOM"/>
+	<reg32 offset="0x008a" name="RBBM_CLOCK_CTL_HLSQ"/>
+	<reg32 offset="0x008b" name="RBBM_CLOCK_HYST_HLSQ"/>
+	<reg32 offset="0x008c" name="RBBM_CLOCK_DELAY_HLSQ"/>
+	<bitset name="A4XX_CGC_HLSQ">
+		<bitfield name="EARLY_CYC" low="20" high="22" type="uint"/>
+	</bitset>
+	<reg32 offset="0x008d" name="RBBM_CLOCK_DELAY_COM_DCOM"/>
+	<array offset="0x008e" name="RBBM_CLOCK_DELAY_RB_MARB_CCU_L1" stride="1" length="4">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
+	<bitset name="A4XX_INT0">
+		<bitfield name="RBBM_GPU_IDLE" pos="0"/>
+		<bitfield name="RBBM_AHB_ERROR" pos="1"/>
+		<bitfield name="RBBM_REG_TIMEOUT" pos="2"/>
+		<bitfield name="RBBM_ME_MS_TIMEOUT" pos="3"/>
+		<bitfield name="RBBM_PFP_MS_TIMEOUT" pos="4"/>
+		<bitfield name="RBBM_ATB_BUS_OVERFLOW" pos="5"/>
+		<bitfield name="VFD_ERROR" pos="6"/>
+		<bitfield name="CP_SW_INT" pos="7"/>
+		<bitfield name="CP_T0_PACKET_IN_IB" pos="8"/>
+		<bitfield name="CP_OPCODE_ERROR" pos="9"/>
+		<bitfield name="CP_RESERVED_BIT_ERROR" pos="10"/>
+		<bitfield name="CP_HW_FAULT" pos="11"/>
+		<bitfield name="CP_DMA" pos="12"/>
+		<bitfield name="CP_IB2_INT" pos="13"/>
+		<bitfield name="CP_IB1_INT" pos="14"/>
+		<bitfield name="CP_RB_INT" pos="15"/>
+		<bitfield name="CP_REG_PROTECT_FAULT" pos="16"/>
+		<bitfield name="CP_RB_DONE_TS" pos="17"/>
+		<bitfield name="CP_VS_DONE_TS" pos="18"/>
+		<bitfield name="CP_PS_DONE_TS" pos="19"/>
+		<bitfield name="CACHE_FLUSH_TS" pos="20"/>
+		<bitfield name="CP_AHB_ERROR_HALT" pos="21"/>
+		<bitfield name="MISC_HANG_DETECT" pos="24"/>
+		<bitfield name="UCHE_OOB_ACCESS" pos="25"/>
+	</bitset>
+
 	<reg32 offset="0x0168" name="RBBM_PERFCTR_PWR_1_LO"/>
 	<reg32 offset="0x0170" name="RBBM_PERFCTR_CTL"/>
 	<reg32 offset="0x0171" name="RBBM_PERFCTR_LOAD_CMD0"/>
 	<reg32 offset="0x0172" name="RBBM_PERFCTR_LOAD_CMD1"/>
 	<reg32 offset="0x0173" name="RBBM_PERFCTR_LOAD_CMD2"/>
 	<reg32 offset="0x0174" name="RBBM_PERFCTR_LOAD_VALUE_LO"/>
+	<reg32 offset="0x0175" name="RBBM_PERFCTR_LOAD_VALUE_HI"/>
 	<reg32 offset="0x017a" name="RBBM_GPU_BUSY_MASKED"/>
 	<reg32 offset="0x017d" name="RBBM_INT_0_STATUS"/>
 	<reg32 offset="0x0182" name="RBBM_CLOCK_STATUS"/>
 	<reg32 offset="0x0189" name="RBBM_AHB_STATUS"/>
+	<reg32 offset="0x018c" name="RBBM_AHB_ME_SPLIT_STATUS"/>
+	<reg32 offset="0x018d" name="RBBM_AHB_PFP_SPLIT_STATUS"/>
 	<reg32 offset="0x018f" name="RBBM_AHB_ERROR_STATUS"/>
-	<reg32 offset="0x0191" name="RBBM_STATUS"/>
+	<reg32 offset="0x0191" name="RBBM_STATUS">
+		<bitfield name="HI_BUSY" pos="0" type="boolean"/>
+		<bitfield name="CP_ME_BUSY" pos="1" type="boolean"/>
+		<bitfield name="CP_PFP_BUSY" pos="2" type="boolean"/>
+		<bitfield name="CP_NRT_BUSY" pos="14" type="boolean"/>
+		<bitfield name="VBIF_BUSY" pos="15" type="boolean"/>
+		<bitfield name="TSE_BUSY" pos="16" type="boolean"/>
+		<bitfield name="RAS_BUSY" pos="17" type="boolean"/>
+		<bitfield name="RB_BUSY" pos="18" type="boolean"/>
+		<bitfield name="PC_DCALL_BUSY" pos="19" type="boolean"/>
+		<bitfield name="PC_VSD_BUSY" pos="20" type="boolean"/>
+		<bitfield name="VFD_BUSY" pos="21" type="boolean"/>
+		<bitfield name="VPC_BUSY" pos="22" type="boolean"/>
+		<bitfield name="UCHE_BUSY" pos="23" type="boolean"/>
+		<bitfield name="SP_BUSY" pos="24" type="boolean"/>
+		<bitfield name="TPL1_BUSY" pos="25" type="boolean"/>
+		<bitfield name="MARB_BUSY" pos="26" type="boolean"/>
+		<bitfield name="VSC_BUSY" pos="27" type="boolean"/>
+		<bitfield name="ARB_BUSY" pos="28" type="boolean"/>
+		<bitfield name="HLSQ_BUSY" pos="29" type="boolean"/>
+		<bitfield name="GPU_BUSY_NOHC" pos="30" type="boolean"/>
+		<bitfield name="GPU_BUSY" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x019f" name="RBBM_INTERFACE_RRDY_STATUS5"/>
 
 	<!-- CP registers -->
@@ -370,6 +497,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0217" name="CP_ME_RB_DONE_DATA"/>
 	<reg32 offset="0x0219" name="CP_QUEUE_THRESH2"/>
 	<reg32 offset="0x021b" name="CP_MERCIU_SIZE"/>
+	<reg32 offset="0x021c" name="CP_ROQ_ADDR"/>
+	<reg32 offset="0x021d" name="CP_ROQ_DATA"/>
+	<reg32 offset="0x21E" name="CP_MEQ_ADDR	"/>
+	<reg32 offset="0x21F" name="CP_MEQ_DATA	"/>
+	<reg32 offset="0x0220" name="CP_MERCIU_ADDR"/>
+	<reg32 offset="0x0221" name="CP_MERCIU_DATA"/>
+	<reg32 offset="0x0222" name="CP_MERCIU_DATA2"/>
 	<reg32 offset="0x0223" name="CP_PFP_UCODE_ADDR"/>
 	<reg32 offset="0x0224" name="CP_PFP_UCODE_DATA"/>
 	<reg32 offset="0x0225" name="CP_ME_RAM_WADDR"/>
@@ -382,14 +516,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0231" name="CP_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0232" name="CP_DRAW_STATE_ADDR"/>
 	<reg32 offset="0x0240" name="CP_PROTECT_REG_0"/>
+	<array offset="0x0240" name="CP_PROTECT" stride="1" length="16">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
 	<reg32 offset="0x0250" name="CP_PROTECT_CTRL"/>
 	<reg32 offset="0x04c0" name="CP_ST_BASE"/>
 	<reg32 offset="0x04ce" name="CP_STQ_AVAIL"/>
 	<reg32 offset="0x04d0" name="CP_MERCIU_STAT"/>
 	<reg32 offset="0x04d2" name="CP_WFI_PEND_CTR"/>
+	<reg32 offset="0x04d8" name="CP_HW_FAULT"/>
+	<reg32 offset="0x04da" name="CP_PROTECT_STATUS"/>
 	<reg32 offset="0x04dd" name="CP_EVENTS_IN_FLIGHT"/>
 	<reg32 offset="0x0500" name="CP_PERFCTR_CP_SEL_0"/>
 	<reg32 offset="0x050b" name="CP_PERFCOMBINER_SELECT"/>
+	<reg32 offset="0x0578" name="CP_SCRATCH_0"/>
 	<array offset="0x0578" name="CP_SCRATCH" stride="1" length="23">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
@@ -561,9 +701,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="H" low="24" high="27" type="uint"/>
 		</reg32>
 	</array>
+	<reg32 offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS_0"/>
 	<array offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS" stride="1" length="8">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
+	<reg32 offset="0x0c18" name="VSC_PIPE_DATA_LENGTH_0"/>
 	<array offset="0x0c18" name="VSC_PIPE_DATA_LENGTH" stride="1" length="8">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
@@ -600,6 +742,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2203" name="VFD_CONTROL_3"/>
 	<reg32 offset="0x2204" name="VFD_CONTROL_4"/>
 	<reg32 offset="0x2208" name="VFD_INDEX_OFFSET"/>
+	<reg32 offset="0x220a" name="VFD_FETCH_INSTR_0_0"/>
+	<reg32 offset="0x220b" name="VFD_FETCH_INSTR_1_0"/>
 	<array offset="0x220a" name="VFD_FETCH" stride="4" length="32">
 		<reg32 offset="0x0" name="INSTR_0">
 			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
@@ -695,6 +839,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- UCHE registers -->
 	<reg32 offset="0x0e80" name="UCHE_CACHE_MODE_CONTROL"/>
+	<reg32 offset="0x0e83" name="UCHE_TRAP_BASE_LO"/>
 	<reg32 offset="0x0e84" name="UCHE_TRAP_BASE_HI"/>
 	<reg32 offset="0x0e88" name="UCHE_CACHE_STATUS"/>
 	<reg32 offset="0x0e8a" name="UCHE_INVALIDATE0"/>
