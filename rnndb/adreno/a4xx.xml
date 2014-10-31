@@ -529,7 +529,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x04dd" name="CP_EVENTS_IN_FLIGHT"/>
 	<reg32 offset="0x0500" name="CP_PERFCTR_CP_SEL_0"/>
 	<reg32 offset="0x050b" name="CP_PERFCOMBINER_SELECT"/>
-	<reg32 offset="0x0578" name="CP_SCRATCH_0"/>
 	<array offset="0x0578" name="CP_SCRATCH" stride="1" length="23">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
@@ -701,11 +700,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="H" low="24" high="27" type="uint"/>
 		</reg32>
 	</array>
-	<reg32 offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS_0"/>
 	<array offset="0x0c10" name="VSC_PIPE_DATA_ADDRESS" stride="1" length="8">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
-	<reg32 offset="0x0c18" name="VSC_PIPE_DATA_LENGTH_0"/>
 	<array offset="0x0c18" name="VSC_PIPE_DATA_LENGTH" stride="1" length="8">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
@@ -742,8 +739,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2203" name="VFD_CONTROL_3"/>
 	<reg32 offset="0x2204" name="VFD_CONTROL_4"/>
 	<reg32 offset="0x2208" name="VFD_INDEX_OFFSET"/>
-	<reg32 offset="0x220a" name="VFD_FETCH_INSTR_0_0"/>
-	<reg32 offset="0x220b" name="VFD_FETCH_INSTR_1_0"/>
 	<array offset="0x220a" name="VFD_FETCH" stride="4" length="32">
 		<reg32 offset="0x0" name="INSTR_0">
 			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
