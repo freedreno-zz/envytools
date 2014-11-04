@@ -61,6 +61,17 @@ static int is_a3xx(const char *name)
 			!strcmp("A3XX", name);
 }
 
+static int is_a4xx(const char *name)
+{
+	return !strcmp("A420", name) ||
+			!strcmp("A430", name);
+}
+
+static int is_adreno(const char *name)
+{
+	return is_a2xx(name) || is_a3xx(name) || is_a4xx(name);
+}
+
 static struct domain *find_domain(struct rnndeccontext *ctx, uint32_t *addrp)
 {
 	struct domain *first_domain = NULL; /* if no exact match, pick first closest match */
@@ -220,8 +231,11 @@ int main(int argc, char **argv) {
 		if (find_region(buf, domains[i].name, &domains[i].base, &domains[i].size)) {
 			printf("%s", buf);
 			/* special handling for gpu: */
-			if (is_a3xx(domains[i].name) || is_a2xx(domains[i].name)) {
-				if (is_a3xx(domains[i].name)) {
+			if (is_adreno(domains[i].name)) {
+				if (is_a4xx(domains[i].name)) {
+					sprintf(domains[i].name, "A4XX");
+					domains[i].dom = rnn_finddomain(db, domains[i].name);
+				} else if (is_a3xx(domains[i].name)) {
 					sprintf(domains[i].name, "A3XX");
 					domains[i].dom = rnn_finddomain(db, domains[i].name);
 				} else {
