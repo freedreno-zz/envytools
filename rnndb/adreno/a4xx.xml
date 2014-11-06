@@ -536,7 +536,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- SP registers -->
 	<reg32 offset="0x0ec0" name="SP_VS_STATUS"/>
 	<reg32 offset="0x0ecf" name="SP_PERFCTR_SP_SEL_11"/>
-	<reg32 offset="0x22c0" name="SP_SP_CTRL">
+	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
 		<bitfield name="BINNING_PASS" pos="19" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x22c1" name="SP_INSTR_CACHE_CTRL"/> <!-- always 000001c3 -->
@@ -614,7 +614,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e1" name="SP_VS_OBJ_START"/>
 	<reg32 offset="0x22e2" name="SP_VS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22e3" name="SP_VS_PVT_MEM_ADDR"/>
-	<reg32 offset="0x22e5" name="SP_VS_LENGTH" type="uint"/>
+	<reg32 offset="0x22e5" name="SP_VS_LENGTH_REG" type="uint"/>
 	<reg32 offset="0x22e8" name="SP_FS_CTRL_REG0" type="a4xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22e9" name="SP_FS_CTRL_REG1">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
@@ -626,7 +626,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22eb" name="SP_FS_OBJ_START"/>
 	<reg32 offset="0x22ec" name="SP_FS_PVT_MEM_PARAM"/>"
 	<reg32 offset="0x22ed" name="SP_FS_PVT_MEM_ADDR"/>
-	<reg32 offset="0x22ef" name="SP_FS_LENGTH" type="uint"/>
+	<reg32 offset="0x22ef" name="SP_FS_LENGTH_REG" type="uint"/>
 	<reg32 offset="0x22f0" name="SP_FS_OUTPUT_REG">
 		<bitfield name="FRAG_WRITES_Z" pos="7" type="boolean"/>
 	</reg32>
@@ -649,7 +649,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x2360" name="SP_GS_LENGTH" type="uint"/>
+	<reg32 offset="0x2360" name="SP_GS_LENGTH_REG" type="uint"/>
 
 	<!-- VPC registers -->
 	<reg32 offset="0x0e60" name="VPC_DEBUG_RAM_SEL"/>
@@ -846,14 +846,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e00" name="HLSQ_TIMEOUT_THRESHOLD"/>
 	<reg32 offset="0x0e04" name="HLSQ_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0e0e" name="HLSQ_PERF_PIPE_MASK"/>
-	<reg32 offset="0x23c0" name="HLSQ_CONTROL_0">
+	<reg32 offset="0x23c0" name="HLSQ_CONTROL_0_REG">
 		<!-- I guess same as a3xx, but so far only seen 08000050 -->
 		<bitfield name="FSTHREADSIZE" pos="4" type="a3xx_threadsize"/>
 		<bitfield name="FSSUPERTHREADENABLE" pos="6" type="boolean"/>
 		<bitfield name="SPSHADERRESTART" pos="9" type="boolean"/>
 		<bitfield name="RESERVED2" pos="10" type="boolean"/>
 		<bitfield name="CHUNKDISABLE" pos="26" type="boolean"/>
-		<bitfield name="CONSTSWITCHMODE" pos="27" type="boolean"/>
+		<bitfield name="CONSTMODE" pos="27" type="uint"/>
 		<bitfield name="LAZYUPDATEDISABLE" pos="28" type="boolean"/>
 		<bitfield name="SPCONSTFULLUPDATE" pos="29" type="boolean"/>
 		<bitfield name="TPFULLUPDATE" pos="30" type="boolean"/>
@@ -875,32 +875,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 
 	<!-- TODO probably a bitset for HLSQ_*S_CONTROL.. -->
-	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL">
+	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x23c6" name="HLSQ_FS_CONTROL">
+	<reg32 offset="0x23c6" name="HLSQ_FS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
 	<!-- not quite sure the order of the remainder, so order of hull/domain/geom yet -->
-	<reg32 offset="0x23c7" name="HLSQ_HS_CONTROL">
+	<reg32 offset="0x23c7" name="HLSQ_HS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x23c8" name="HLSQ_DS_CONTROL">
+	<reg32 offset="0x23c8" name="HLSQ_DS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x23c9" name="HLSQ_GS_CONTROL">
+	<reg32 offset="0x23c9" name="HLSQ_GS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
@@ -1089,6 +1089,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="2" name="2">
 		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="9" high="29" type="uint"/>
+	</reg32>
+	<reg32 offset="3" name="3">
 	</reg32>
 </domain>
 
