@@ -296,7 +296,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitfield name="NOT_EOP" pos="12" type="boolean"/>
 	<bitfield name="SMALL_INDEX" pos="13" type="boolean"/>
 	<bitfield name="PRE_DRAW_INITIATOR_ENABLE" pos="14" type="boolean"/>
-	<bitfield name="NUM_INDICES" low="16" high="31" type="uint"/>
+	<bitfield name="NUM_INSTANCES" low="16" high="31" type="uint"/>
 </bitset>
 
 <domain name="CP_DRAW_INDX" width="32">
@@ -307,10 +307,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="2" name="2">
 		<bitfield name="NUM_INDICES" low="0" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="2" name="2">
+	<reg32 offset="3" name="3">
 		<bitfield name="INDX_BASE" low="0" high="31"/>
 	</reg32>
-	<reg32 offset="2" name="2">
+	<reg32 offset="4" name="4">
 		<bitfield name="INDX_SIZE" low="0" high="31"/>
 	</reg32>
 </domain>
@@ -332,10 +332,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="2" name="2">
 		<bitfield name="NUM_INDICES" low="0" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="2" name="2">
+	<reg32 offset="3" name="3">
+	</reg32>
+	<reg32 offset="4" name="4">
 		<bitfield name="INDX_BASE" low="0" high="31"/>
 	</reg32>
-	<reg32 offset="2" name="2">
+	<reg32 offset="5" name="5">
 		<bitfield name="INDX_SIZE" low="0" high="31"/>
 	</reg32>
 </domain>
