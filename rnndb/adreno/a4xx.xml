@@ -183,6 +183,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		other block which needs to know about MSAA..
 		-->
 		<bitfield name="MSAA_SAMPLES" low="7" high="9" type="uint"/>
+		<bitfield name="VARYING" pos="12" type="boolean"/>
 	</reg32>
 	<array offset="0x20a4" name="RB_MRT" stride="5" length="8">
 		<reg32 offset="0x0" name="CONTROL">
@@ -618,6 +619,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e8" name="SP_FS_CTRL_REG0" type="a4xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22e9" name="SP_FS_CTRL_REG1">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="VARYING" pos="20" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x22ea" name="SP_FS_OBJ_OFFSET_REG">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
@@ -664,8 +666,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ENABLE" pos="25" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2141" name="VPC_PACK">
-		<bitfield name="NUMFPNONPOSVAR" low="8" high="15" type="uint"/>
-		<bitfield name="NUMNONPOSVSVAR" low="16" high="23" type="uint"/>
+		<bitfield name="NUMFPNONPOSVAR" low="0" high="7" type="uint"/>
+		<bitfield name="NUMNONPOSVSVAR" low="8" high="15" type="uint"/>
 	</reg32>
 	<array offset="0x2142" name="VPC_VARYING_INTERP" stride="1" length="8">
 		<reg32 offset="0x0" name="MODE"/>
@@ -719,6 +721,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			slots (ie. vec4+vec3 -> 7)
 		</doc>
 		<bitfield name="TOTALATTRTOVS" low="0" high="7" type="uint"/>
+		<doc>
+		BYPASSATTROVS seems to count varyings that are just directly
+		assigned from attributes (ie, "vFoo = aFoo;")
+		</doc>
+		<bitfield name="BYPASSATTROVS" low="9" high="16" type="uint"/>
 		<doc>STRMDECINSTRCNT is # of VFD_DECODE_INSTR registers valid</doc>
 		<bitfield name="STRMDECINSTRCNT" low="20" high="25" type="uint"/>
 		<doc>STRMFETCHINSTRCNT is # of VFD_FETCH_INSTR registers valid</doc>
@@ -744,7 +751,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
 			<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
 			<bitfield name="SWITCHNEXT" pos="19" type="boolean"/>
-			<bitfield name="INDEXCODE" low="18" high="23" type="uint"/>
 			<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
 		</reg32>
 		<reg32 offset="0x1" name="INSTR_1"/>
@@ -1032,6 +1038,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- always 00000000: -->
 	<reg32 offset="0x22d7" name="UNKNOWN_22D7"/>
+
+	<!-- always 00000010: -->
+	<reg32 offset="0x2381" name="UNKNOWN_2381"/>
+
+	<!-- always 00000010: -->
+	<reg32 offset="0x23a0" name="UNKNOWN_23A0"/>
 
 </domain>
 

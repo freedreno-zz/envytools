@@ -182,6 +182,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>sets the register protection mode</doc>
 	<value name="CP_SET_PROTECTED_MODE" value="0x5f"/>
 
+	<value name="CP_BOOTSTRAP_UCODE" value="0x6f"/>
+
 	<!-- for a3xx -->
 	<doc>load high level sequencer command</doc>
 	<value name="CP_LOAD_STATE" value="0x30"/>
