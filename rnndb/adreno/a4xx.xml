@@ -548,7 +548,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			appears to be the same..
 		-->
 		<bitfield name="THREADMODE" pos="0" type="a3xx_threadmode"/>
-		<bitfield name="INSTRBUFFERMODE" pos="1" type="a3xx_instrbuffermode"/>
+		<!-- VARYING bit only for FS.. think it controls emitting (ei) flag? -->
+		<bitfield name="VARYING" pos="1" type="boolean"/>
 		<!-- maybe CACHEINVALID is two bits?? -->
 		<bitfield name="CACHEINVALID" pos="2" type="boolean"/>
 		<doc>
@@ -630,7 +631,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22ed" name="SP_FS_PVT_MEM_ADDR"/>
 	<reg32 offset="0x22ef" name="SP_FS_LENGTH_REG" type="uint"/>
 	<reg32 offset="0x22f0" name="SP_FS_OUTPUT_REG">
-		<bitfield name="FRAG_WRITES_Z" pos="7" type="boolean"/>
+		<bitfield name="DEPTH_ENABLE" pos="7" type="boolean"/>
+		<!-- TODO double check.. for now assume same as a3xx -->
+		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
 	</reg32>
 	<array offset="0x22f1" name="SP_FS_MRT" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
@@ -666,8 +669,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ENABLE" pos="25" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2141" name="VPC_PACK">
-		<bitfield name="NUMFPNONPOSVAR" low="0" high="7" type="uint"/>
-		<bitfield name="NUMNONPOSVSVAR" low="8" high="15" type="uint"/>
+		<bitfield name="NUMBYPASSVAR" low="0" high="7" type="uint"/>
+		<bitfield name="NUMFPNONPOSVAR" low="8" high="15" type="uint"/>
+		<bitfield name="NUMNONPOSVSVAR" low="16" high="23" type="uint"/>
 	</reg32>
 	<array offset="0x2142" name="VPC_VARYING_INTERP" stride="1" length="8">
 		<reg32 offset="0x0" name="MODE"/>
@@ -734,11 +738,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2201" name="VFD_CONTROL_1">
 		<doc>MAXSTORAGE could be # of attributes/vbo's</doc>
 		<bitfield name="MAXSTORAGE" low="0" high="15" type="uint"/>
-		<!--
-			always seem to be 252 except when entire register is zero'd,
-			but in these cases it is overwritten with non-zero value
-			before the next DRAW_INDX
-		 -->
 		<bitfield name="REGID4VTX" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="REGID4INST" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
@@ -929,6 +928,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- PSIZE bit set if gl_PointSize written: -->
 		<bitfield name="PSIZE" pos="26" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x21c5" name="UNKNOWN_21C5"/>
 	<reg32 offset="0x21c6" name="PC_RESTART_INDEX"/>
 	<reg32 offset="0x21e5" name="PC_GS_PARAM"/>
 	<reg32 offset="0x21e7" name="PC_HS_PARAM"/>
