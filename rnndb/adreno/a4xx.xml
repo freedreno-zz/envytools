@@ -128,14 +128,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DEPTH4_24_8" value="2"/>
 </enum>
 
-<!-- same as a3xx? -->
-<enum name="a4xx_color_swap">
-	<value name="WZYX" value="0"/>
-	<value name="WXYZ" value="1"/>
-	<value name="ZYXW" value="2"/>
-	<value name="XYZW" value="3"/>
-</enum>
-
 <domain name="A4XX" width="32">
 	<!-- RB registers -->
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
@@ -767,7 +759,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="FORMAT" low="6" high="11" type="a4xx_vtx_fmt"/>
 			<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
 			<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
-			<bitfield name="SWAP" low="22" high="23" type="a4xx_color_swap"/>
+			<bitfield name="SWAP" low="22" high="23" type="a3xx_color_swap"/>
 			<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
 			<bitfield name="LASTCOMPVALID" pos="29" type="boolean"/>
 			<bitfield name="SWITCHNEXT" pos="30" type="boolean"/>
@@ -1061,8 +1053,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A4XX_TEX_CLAMP_NONE" value="3"/>
 	</enum>
 	<reg32 offset="0" name="0">
+		<bitfield name="XY_MAG" low="1" high="2" type="a4xx_tex_filter"/>
+		<bitfield name="XY_MIN" low="3" high="4" type="a4xx_tex_filter"/>
+		<bitfield name="WRAP_S" low="5" high="7" type="a4xx_tex_clamp"/>
+		<bitfield name="WRAP_T" low="8" high="10" type="a4xx_tex_clamp"/>
+		<bitfield name="WRAP_R" low="11" high="13" type="a4xx_tex_clamp"/>
 	</reg32>
 	<reg32 offset="1" name="1">
+		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
 		<!-- TODO check radix.. -->
 		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="6"/>
 		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="6"/>
@@ -1093,17 +1091,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a4xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a4xx_tex_swiz"/>
 		<bitfield name="FMT" low="22" high="28" type="a4xx_tex_fmt"/>
+		<bitfield name="TYPE" low="29" high="30" type="a4xx_tex_type"/>
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="HEIGHT" low="0" high="14" type="uint"/>
 		<bitfield name="WIDTH" low="15" high="28" type="uint"/>
 	</reg32>
 	<reg32 offset="2" name="2">
+		<!-- low bits may be fetchsize?? -->
 		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="9" high="29" type="uint"/>
+		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
 	<reg32 offset="3" name="3">
+		<bitfield name="LAYERSZ" low="0" high="3" shr="12" type="uint"/>
 	</reg32>
+	<reg32 offset="4" name="4">
+		<!--
+		if you don't have mipmap, this appears to be lvl 0,
+		not entirely sure about mipmaps yet, since blob just
+		segfaults ;-)
+		 -->
+		<bitfield name="BASE" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="5" name="5"/>
+	<reg32 offset="6" name="6"/>
+	<reg32 offset="7" name="7"/>
 </domain>
 
 </database>

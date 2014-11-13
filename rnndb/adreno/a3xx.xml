@@ -219,13 +219,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_R32G32B32A32_UINT"  value="0x3b"/>
 </enum>
 
-<enum name="a3xx_color_swap">
-	<value name="WZYX" value="0"/>
-	<value name="WXYZ" value="1"/>
-	<value name="ZYXW" value="2"/>
-	<value name="XYZW" value="3"/>
-</enum>
-
 <enum name="a3xx_sp_perfcounter_select">
 	<value name="SP_FS_CFLOW_INSTRUCTIONS" value="0x0c"/>
 	<value name="SP_FS_FULL_ALU_INSTRUCTIONS" value="0x0e"/>

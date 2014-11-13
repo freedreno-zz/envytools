@@ -260,5 +260,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="1" name="FOUR_QUADS"/>
 </enum>
 
+<enum name="a3xx_color_swap">
+	<value name="WZYX" value="0"/>
+	<value name="WXYZ" value="1"/>
+	<value name="ZYXW" value="2"/>
+	<value name="XYZW" value="3"/>
+</enum>
+
 </database>
 
