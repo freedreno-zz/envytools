@@ -109,6 +109,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	 -->
 
 	<value name="TFMT4_NORM_UINT_8" value="0x04"/>     <!-- GL_LUMINANCE -->
+	<value name="TFMT4_NORM_UINT_8_8" value="0xe"/>
 	<value name="TFMT4_NORM_UINT_8_8_8_8" value="0x1c"/>
 
 	<value name="TFMT4_FLOAT_16" value="0x14"/>
@@ -285,10 +286,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</doc>
 		<bitfield name="DEPTH_BASE" low="12" high="31" shr="12" type="hex"/>
 	</reg32>
-	<reg32 offset="0x2104" name="RB_DEPTH_PITCH" shr="4" type="uint">
-		<doc>pitch of depth/stencil buffer</doc>
+	<reg32 offset="0x2104" name="RB_DEPTH_PITCH" shr="5" type="uint">
+		<doc>stride of depth/stencil buffer</doc>
 	</reg32>
-	<reg32 offset="0x2105" name="RB_DEPTH_PITCH2" shr="4" type="uint">
+	<reg32 offset="0x2105" name="RB_DEPTH_PITCH2" shr="5" type="uint">
 		<doc>???</doc>
 	</reg32>
 	<reg32 offset="0x2106" name="RB_STENCIL_CONTROL">
