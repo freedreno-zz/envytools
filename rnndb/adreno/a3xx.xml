@@ -23,77 +23,77 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a3xx_vtx_fmt">
-	<value name="VFMT_FLOAT_32" value="0x0"/>
-	<value name="VFMT_FLOAT_32_32" value="0x1"/>
-	<value name="VFMT_FLOAT_32_32_32" value="0x2"/>
-	<value name="VFMT_FLOAT_32_32_32_32" value="0x3"/>
+	<value name="VFMT_32_FLOAT" value="0x0"/>
+	<value name="VFMT_32_32_FLOAT" value="0x1"/>
+	<value name="VFMT_32_32_32_FLOAT" value="0x2"/>
+	<value name="VFMT_32_32_32_32_FLOAT" value="0x3"/>
 
-	<value name="VFMT_FLOAT_16" value="0x4"/>
-	<value name="VFMT_FLOAT_16_16" value="0x5"/>
-	<value name="VFMT_FLOAT_16_16_16" value="0x6"/>
-	<value name="VFMT_FLOAT_16_16_16_16" value="0x7"/>
+	<value name="VFMT_16_FLOAT" value="0x4"/>
+	<value name="VFMT_16_16_FLOAT" value="0x5"/>
+	<value name="VFMT_16_16_16_FLOAT" value="0x6"/>
+	<value name="VFMT_16_16_16_16_FLOAT" value="0x7"/>
 
-	<value name="VFMT_FIXED_32" value="0x8"/>
-	<value name="VFMT_FIXED_32_32" value="0x9"/>
-	<value name="VFMT_FIXED_32_32_32" value="0xa"/>
-	<value name="VFMT_FIXED_32_32_32_32" value="0xb"/>
+	<value name="VFMT_32_FIXED" value="0x8"/>
+	<value name="VFMT_32_32_FIXED" value="0x9"/>
+	<value name="VFMT_32_32_32_FIXED" value="0xa"/>
+	<value name="VFMT_32_32_32_32_FIXED" value="0xb"/>
 
-	<value name="VFMT_SHORT_16" value="0x10"/>
-	<value name="VFMT_SHORT_16_16" value="0x11"/>
-	<value name="VFMT_SHORT_16_16_16" value="0x12"/>
-	<value name="VFMT_SHORT_16_16_16_16" value="0x13"/>
-	<value name="VFMT_USHORT_16" value="0x14"/>
-	<value name="VFMT_USHORT_16_16" value="0x15"/>
-	<value name="VFMT_USHORT_16_16_16" value="0x16"/>
-	<value name="VFMT_USHORT_16_16_16_16" value="0x17"/>
-	<value name="VFMT_NORM_SHORT_16" value="0x18"/>
-	<value name="VFMT_NORM_SHORT_16_16" value="0x19"/>
-	<value name="VFMT_NORM_SHORT_16_16_16" value="0x1a"/>
-	<value name="VFMT_NORM_SHORT_16_16_16_16" value="0x1b"/>
-	<value name="VFMT_NORM_USHORT_16" value="0x1c"/>
-	<value name="VFMT_NORM_USHORT_16_16" value="0x1d"/>
-	<value name="VFMT_NORM_USHORT_16_16_16" value="0x1e"/>
-	<value name="VFMT_NORM_USHORT_16_16_16_16" value="0x1f"/>
+	<value name="VFMT_16_SINT" value="0x10"/>
+	<value name="VFMT_16_16_SINT" value="0x11"/>
+	<value name="VFMT_16_16_16_SINT" value="0x12"/>
+	<value name="VFMT_16_16_16_16_SINT" value="0x13"/>
+	<value name="VFMT_16_UINT" value="0x14"/>
+	<value name="VFMT_16_16_UINT" value="0x15"/>
+	<value name="VFMT_16_16_16_UINT" value="0x16"/>
+	<value name="VFMT_16_16_16_16_UINT" value="0x17"/>
+	<value name="VFMT_16_SNORM" value="0x18"/>
+	<value name="VFMT_16_16_SNORM" value="0x19"/>
+	<value name="VFMT_16_16_16_SNORM" value="0x1a"/>
+	<value name="VFMT_16_16_16_16_SNORM" value="0x1b"/>
+	<value name="VFMT_16_UNORM" value="0x1c"/>
+	<value name="VFMT_16_16_UNORM" value="0x1d"/>
+	<value name="VFMT_16_16_16_UNORM" value="0x1e"/>
+	<value name="VFMT_16_16_16_16_UNORM" value="0x1f"/>
 
 	<!-- seems to be no NORM variants for 32bit.. -->
-	<value name="VFMT_UINT_32" value="0x20"/>
-	<value name="VFMT_UINT_32_32" value="0x21"/>
-	<value name="VFMT_UINT_32_32_32" value="0x22"/>
-	<value name="VFMT_UINT_32_32_32_32" value="0x23"/>
-	<value name="VFMT_INT_32" value="0x24"/>
-	<value name="VFMT_INT_32_32" value="0x25"/>
-	<value name="VFMT_INT_32_32_32" value="0x26"/>
-	<value name="VFMT_INT_32_32_32_32" value="0x27"/>
+	<value name="VFMT_32_UINT" value="0x20"/>
+	<value name="VFMT_32_32_UINT" value="0x21"/>
+	<value name="VFMT_32_32_32_UINT" value="0x22"/>
+	<value name="VFMT_32_32_32_32_UINT" value="0x23"/>
+	<value name="VFMT_32_SINT" value="0x24"/>
+	<value name="VFMT_32_32_SINT" value="0x25"/>
+	<value name="VFMT_32_32_32_SINT" value="0x26"/>
+	<value name="VFMT_32_32_32_32_SINT" value="0x27"/>
 
-	<value name="VFMT_UBYTE_8" value="0x28"/>
-	<value name="VFMT_UBYTE_8_8" value="0x29"/>
-	<value name="VFMT_UBYTE_8_8_8" value="0x2a"/>
-	<value name="VFMT_UBYTE_8_8_8_8" value="0x2b"/>
-	<value name="VFMT_NORM_UBYTE_8" value="0x2c"/>
-	<value name="VFMT_NORM_UBYTE_8_8" value="0x2d"/>
-	<value name="VFMT_NORM_UBYTE_8_8_8" value="0x2e"/>
-	<value name="VFMT_NORM_UBYTE_8_8_8_8" value="0x2f"/>
-	<value name="VFMT_BYTE_8" value="0x30"/>
-	<value name="VFMT_BYTE_8_8" value="0x31"/>
-	<value name="VFMT_BYTE_8_8_8" value="0x32"/>
-	<value name="VFMT_BYTE_8_8_8_8" value="0x33"/>
-	<value name="VFMT_NORM_BYTE_8" value="0x34"/>
-	<value name="VFMT_NORM_BYTE_8_8" value="0x35"/>
-	<value name="VFMT_NORM_BYTE_8_8_8" value="0x36"/>
-	<value name="VFMT_NORM_BYTE_8_8_8_8" value="0x37"/>
-	<value name="VFMT_UINT_10_10_10_2" value="0x3c"/>
-	<value name="VFMT_NORM_UINT_10_10_10_2" value="0x3d"/>
-	<value name="VFMT_INT_10_10_10_2" value="0x3e"/>
-	<value name="VFMT_NORM_INT_10_10_10_2" value="0x3f"/>
+	<value name="VFMT_8_UINT" value="0x28"/>
+	<value name="VFMT_8_8_UINT" value="0x29"/>
+	<value name="VFMT_8_8_8_UINT" value="0x2a"/>
+	<value name="VFMT_8_8_8_8_UINT" value="0x2b"/>
+	<value name="VFMT_8_UNORM" value="0x2c"/>
+	<value name="VFMT_8_8_UNORM" value="0x2d"/>
+	<value name="VFMT_8_8_8_UNORM" value="0x2e"/>
+	<value name="VFMT_8_8_8_8_UNORM" value="0x2f"/>
+	<value name="VFMT_8_SINT" value="0x30"/>
+	<value name="VFMT_8_8_SINT" value="0x31"/>
+	<value name="VFMT_8_8_8_SINT" value="0x32"/>
+	<value name="VFMT_8_8_8_8_SINT" value="0x33"/>
+	<value name="VFMT_8_SNORM" value="0x34"/>
+	<value name="VFMT_8_8_SNORM" value="0x35"/>
+	<value name="VFMT_8_8_8_SNORM" value="0x36"/>
+	<value name="VFMT_8_8_8_8_SNORM" value="0x37"/>
+	<value name="VFMT_10_10_10_2_UINT" value="0x3c"/>
+	<value name="VFMT_10_10_10_2_UNORM" value="0x3d"/>
+	<value name="VFMT_10_10_10_2_SINT" value="0x3e"/>
+	<value name="VFMT_10_10_10_2_SNORM" value="0x3f"/>
 </enum>
 
 <enum name="a3xx_tex_fmt">
-	<value name="TFMT_NORM_USHORT_565" value="0x4"/>
-	<value name="TFMT_NORM_USHORT_5551" value="0x6"/>
-	<value name="TFMT_NORM_USHORT_4444" value="0x7"/>
-	<value name="TFMT_NORM_USHORT_Z16" value="0x9"/>
-	<value name="TFMT_NORM_UINT_X8Z24" value="0xa"/>
-	<value name="TFMT_FLOAT_Z32" value="0xb"/>
+	<value name="TFMT_5_6_5_UNORM" value="0x4"/>
+	<value name="TFMT_5_5_5_1_UNORM" value="0x5"/>
+	<value name="TFMT_4_4_4_4_UNORM" value="0x7"/>
+	<value name="TFMT_Z16_UNORM" value="0x9"/>
+	<value name="TFMT_X8Z24_UNORM" value="0xa"/>
+	<value name="TFMT_Z32_FLOAT" value="0xb"/>
 
 	<!--
 		YUV formats.. the different Y plane formats (ie. NV12 vs I420)
@@ -103,19 +103,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		blob driver appears to setup 3 texture samplers for I420, NV12,
 		and NV21
 	 -->
-	<value name="TFMT_NORM_UINT_NV12_UV_TILED" value="0x11"/>
-	<value name="TFMT_NORM_UINT_NV12_Y_TILED" value="0x13"/>
-	<value name="TFMT_NORM_UINT_NV12_UV" value="0x15"/>
-	<value name="TFMT_NORM_UINT_NV12_Y" value="0x17"/>
-	<value name="TFMT_NORM_UINT_I420_Y" value="0x18"/>
-	<value name="TFMT_NORM_UINT_I420_U" value="0x1a"/>
-	<value name="TFMT_NORM_UINT_I420_V" value="0x1b"/>
+	<value name="TFMT_NV12_UV_TILED" value="0x11"/>
+	<value name="TFMT_NV12_Y_TILED" value="0x13"/>
+	<value name="TFMT_NV12_UV" value="0x15"/>
+	<value name="TFMT_NV12_Y" value="0x17"/>
+	<value name="TFMT_I420_Y" value="0x18"/>
+	<value name="TFMT_I420_U" value="0x1a"/>
+	<value name="TFMT_I420_V" value="0x1b"/>
 
-	<value name="TFMT_NORM_UINT_2_10_10_10" value="0x29"/>
-	<value name="TFMT_FLOAT_9_9_9_E5" value="0x2a"/>
-	<value name="TFMT_FLOAT_10_11_11" value="0x2b"/>
-	<value name="TFMT_NORM_UINT_A8" value="0x2c"/>    <!-- GL_ALPHA -->
-	<value name="TFMT_NORM_UINT_L8_A8" value="0x2f"/> <!-- GL_LUMINANCE_ALPHA -->
+	<value name="TFMT_10_10_10_2_UNORM" value="0x29"/>
+	<value name="TFMT_9_9_9_E5_FLOAT" value="0x2a"/>
+	<value name="TFMT_11_11_10_FLOAT" value="0x2b"/>
+	<value name="TFMT_A8_UNORM" value="0x2c"/>    <!-- GL_ALPHA -->
+	<value name="TFMT_L8_A8_UNORM" value="0x2f"/> <!-- GL_LUMINANCE_ALPHA -->
 
 	<!--
 		NOTE: GL_ALPHA and GL_LUMINANCE_ALPHA aren't handled in a similar way
@@ -127,45 +127,51 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		the blob or tested.. you can guess what the missing ones are..
 	 -->
 
-	<value name="TFMT_NORM_UINT_8" value="0x30"/>     <!-- GL_LUMINANCE -->
-	<value name="TFMT_NORM_UINT_8_8" value="0x31"/>
-	<value name="TFMT_NORM_UINT_8_8_8" value="0x32"/>
-	<value name="TFMT_NORM_UINT_8_8_8_8" value="0x33"/>
+	<value name="TFMT_8_UNORM" value="0x30"/>     <!-- GL_LUMINANCE -->
+	<value name="TFMT_8_8_UNORM" value="0x31"/>
+	<value name="TFMT_8_8_8_UNORM" value="0x32"/>
+	<value name="TFMT_8_8_8_8_UNORM" value="0x33"/>
 
-	<value name="TFMT_NORM_SINT_8_8" value="0x35"/>
-	<value name="TFMT_NORM_SINT_8_8_8_8" value="0x37"/>
+	<value name="TFMT_8_SNORM" value="0x34"/>
+	<value name="TFMT_8_8_SNORM" value="0x35"/>
+	<value name="TFMT_8_8_8_SNORM" value="0x36"/>
+	<value name="TFMT_8_8_8_8_SNORM" value="0x37"/>
 
-	<value name="TFMT_UINT_8_8" value="0x39"/>
-	<value name="TFMT_UINT_8_8_8_8" value="0x3b"/>
+	<value name="TFMT_8_UINT" value="0x38"/>
+	<value name="TFMT_8_8_UINT" value="0x39"/>
+	<value name="TFMT_8_8_8_UINT" value="0x3a"/>
+	<value name="TFMT_8_8_8_8_UINT" value="0x3b"/>
 
-	<value name="TFMT_SINT_8_8" value="0x3d"/>
-	<value name="TFMT_SINT_8_8_8_8" value="0x3f"/>
+	<value name="TFMT_8_SINT" value="0x3c"/>
+	<value name="TFMT_8_8_SINT" value="0x3d"/>
+	<value name="TFMT_8_8_8_SINT" value="0x3e"/>
+	<value name="TFMT_8_8_8_8_SINT" value="0x3f"/>
 
-	<value name="TFMT_FLOAT_16" value="0x40"/>
-	<value name="TFMT_FLOAT_16_16" value="0x41"/>
+	<value name="TFMT_16_FLOAT" value="0x40"/>
+	<value name="TFMT_16_16_FLOAT" value="0x41"/>
 	<!-- TFMT_FLOAT_16_16_16 -->
-	<value name="TFMT_FLOAT_16_16_16_16" value="0x43"/>
+	<value name="TFMT_16_16_16_16_FLOAT" value="0x43"/>
 
-	<value name="TFMT_UINT_16" value="0x44"/>
-	<value name="TFMT_UINT_16_16" value="0x45"/>
-	<value name="TFMT_UINT_16_16_16_16" value="0x47"/>
+	<value name="TFMT_16_UINT" value="0x44"/>
+	<value name="TFMT_16_16_UINT" value="0x45"/>
+	<value name="TFMT_16_16_16_16_UINT" value="0x47"/>
 
-	<value name="TFMT_SINT_16" value="0x48"/>
-	<value name="TFMT_SINT_16_16" value="0x49"/>
-	<value name="TFMT_SINT_16_16_16_16" value="0x4b"/>
+	<value name="TFMT_16_SINT" value="0x48"/>
+	<value name="TFMT_16_16_SINT" value="0x49"/>
+	<value name="TFMT_16_16_16_16_SINT" value="0x4b"/>
 
-	<value name="TFMT_FLOAT_32" value="0x54"/>
-	<value name="TFMT_FLOAT_32_32" value="0x55"/>
-	<!-- TFMT_FLOAT_32_32_32 -->
-	<value name="TFMT_FLOAT_32_32_32_32" value="0x57"/>
+	<value name="TFMT_32_FLOAT" value="0x54"/>
+	<value name="TFMT_32_32_FLOAT" value="0x55"/>
+	<!-- TFMT_32_32_32_FLOAT -->
+	<value name="TFMT_32_32_32_32_FLOAT" value="0x57"/>
 
-	<value name="TFMT_UINT_32" value="0x58"/>
-	<value name="TFMT_UINT_32_32" value="0x59"/>
-	<value name="TFMT_UINT_32_32_32_32" value="0x5b"/>
+	<value name="TFMT_32_UINT" value="0x58"/>
+	<value name="TFMT_32_32_UINT" value="0x59"/>
+	<value name="TFMT_32_32_32_32_UINT" value="0x5b"/>
 
-	<value name="TFMT_SINT_32" value="0x5c"/>
-	<value name="TFMT_SINT_32_32" value="0x5d"/>
-	<value name="TFMT_SINT_32_32_32_32" value="0x5f"/>
+	<value name="TFMT_32_SINT" value="0x5c"/>
+	<value name="TFMT_32_32_SINT" value="0x5d"/>
+	<value name="TFMT_32_32_32_32_SINT" value="0x5f"/>
 </enum>
 
 <enum name="a3xx_tex_fetchsize">
