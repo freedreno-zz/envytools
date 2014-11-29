@@ -160,6 +160,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_16_16_SINT" value="0x49"/>
 	<value name="TFMT_16_16_16_16_SINT" value="0x4b"/>
 
+	<value name="TFMT_16_UNORM" value="0x4c"/>
+	<value name="TFMT_16_16_UNORM" value="0x4d"/>
+	<value name="TFMT_16_16_16_16_UNORM" value="0x4f"/>
+
+	<value name="TFMT_16_SNORM" value="0x50"/>
+	<value name="TFMT_16_16_SNORM" value="0x51"/>
+	<value name="TFMT_16_16_16_16_SNORM" value="0x53"/>
+
 	<value name="TFMT_32_FLOAT" value="0x54"/>
 	<value name="TFMT_32_32_FLOAT" value="0x55"/>
 	<!-- TFMT_32_32_32_FLOAT -->
