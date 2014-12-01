@@ -223,8 +223,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_DRAW_INDX_INDIRECT" value="0x29"/>
 	<value name="CP_DRAW_AUTO" value="0x24"/>
 
+	<value name="CP_UNKNOWN_19" value="0x19"/>
+
 	<doc>set to 1 for fastclear..:</doc>
 	<value name="CP_UNKNOWN_1A" value="0x1a"/>
+
+	<value name="CP_UNKNOWN_4E" value="0x4e"/>
 
 	<doc>
 		for A4xx
@@ -290,14 +294,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </bitset>
 
 <!-- changed on a4xx: -->
+<enum name="a4xx_index_size">
+	<value name="INDEX4_SIZE_8_BIT" value="0"/>
+	<value name="INDEX4_SIZE_16_BIT" value="1"/>
+	<value name="INDEX4_SIZE_32_BIT" value="2"/>
+</enum>
+
 <bitset name="vgt_draw_initiator_a4xx" inline="yes">
 	<bitfield name="PRIM_TYPE" low="0" high="5" type="pc_di_primtype"/>
 	<bitfield name="SOURCE_SELECT" low="6" high="7" type="pc_di_src_sel"/>
-	<bitfield name="VIS_CULL" low="8" high="10" type="pc_di_vis_cull_mode"/>
-	<bitfield name="INDEX_SIZE" pos="11" type="pc_di_index_size"/>
-	<bitfield name="NOT_EOP" pos="12" type="boolean"/>
-	<bitfield name="SMALL_INDEX" pos="13" type="boolean"/>
-	<bitfield name="PRE_DRAW_INITIATOR_ENABLE" pos="14" type="boolean"/>
+	<bitfield name="INDEX_SIZE" low="10" high="11" type="a4xx_index_size"/>
 	<bitfield name="NUM_INSTANCES" low="16" high="31" type="uint"/>
 </bitset>
 
