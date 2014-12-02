@@ -222,7 +222,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x20f9" name="RB_FS_OUTPUT">
 		<!--  bit0 set if !fastclear -->
-		<bitfield name="ENABLE_COLOR_PIPE" pos="0" type="boolean"/>
+		<bitfield name="ENABLE_BLEND" pos="0" type="boolean"/>
 		<!-- else bit8 set when RB_RESOLVE_PASS+RB_COPY_CLEAR -->
 		<bitfield name="FAST_CLEAR" pos="8" type="boolean"/>
 		<!-- a guess? -->
