@@ -1300,6 +1300,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A3XX_TEX_CLAMP_TO_BORDER" value="3"/>
 		<value name="A3XX_TEX_MIRROR_CLAMP" value="4"/>
 	</enum>
+	<enum name="a3xx_tex_aniso">
+		<value name="A3XX_TEX_ANISO_1" value="0"/>
+		<value name="A3XX_TEX_ANISO_2" value="1"/>
+		<value name="A3XX_TEX_ANISO_4" value="2"/>
+		<value name="A3XX_TEX_ANISO_8" value="3"/>
+		<value name="A3XX_TEX_ANISO_16" value="4"/>
+	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="MIPFILTER_LINEAR" pos="1" type="boolean"/>
 		<bitfield name="XY_MAG" low="2" high="3" type="a3xx_tex_filter"/>
@@ -1307,6 +1314,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WRAP_S" low="6" high="8" type="a3xx_tex_clamp"/>
 		<bitfield name="WRAP_T" low="9" high="11" type="a3xx_tex_clamp"/>
 		<bitfield name="WRAP_R" low="12" high="14" type="a3xx_tex_clamp"/>
+		<bitfield name="ANISO" low="15" high="17" type="a3xx_tex_aniso"/>
 		<bitfield name="COMPARE_FUNC" low="20" high="22" type="adreno_compare_func"/>
 		<!-- UNNORM_COORDS == CLK_NORMALIZED_COORDS_FALSE -->
 		<bitfield name="UNNORM_COORDS" pos="31" type="boolean"/>
