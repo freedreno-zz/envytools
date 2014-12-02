@@ -1065,6 +1065,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
+		<bitfield name="UNNORM_COORDS" pos="5" type="boolean"/>
 		<!-- TODO check radix.. -->
 		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="6"/>
 		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="6"/>
