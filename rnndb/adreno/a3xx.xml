@@ -882,7 +882,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<array offset="0x2246" name="VFD_FETCH" stride="2" length="16">
 		<reg32 offset="0x0" name="INSTR_0">
 			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
-			<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
+			<bitfield name="BUFSTRIDE" low="7" high="15" type="uint"/>
+			<bitfield name="INSTANCED" pos="16" type="boolean"/>
 			<bitfield name="SWITCHNEXT" pos="17" type="boolean"/>
 			<bitfield name="INDEXCODE" low="18" high="23" type="uint"/>
 			<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
