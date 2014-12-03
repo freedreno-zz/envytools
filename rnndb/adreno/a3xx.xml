@@ -180,6 +180,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_32_SINT" value="0x5c"/>
 	<value name="TFMT_32_32_SINT" value="0x5d"/>
 	<value name="TFMT_32_32_32_32_SINT" value="0x5f"/>
+
+	<!-- These pass some but not all tests -->
+	<value name="TFMT_RGTC2_SNORM" value="0x70"/>
+	<value name="TFMT_RGTC2_UNORM" value="0x71"/>
+	<value name="TFMT_RGTC1_SNORM" value="0x72"/>
+	<value name="TFMT_RGTC1_UNORM" value="0x73"/>
 </enum>
 
 <enum name="a3xx_tex_fetchsize">
