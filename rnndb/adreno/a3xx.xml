@@ -111,6 +111,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_I420_U" value="0x1a"/>
 	<value name="TFMT_I420_V" value="0x1b"/>
 
+	<value name="TFMT_DXT1" value="0x24"/>
+	<value name="TFMT_DXT3" value="0x25"/>
+	<value name="TFMT_DXT5" value="0x26"/>
+
 	<value name="TFMT_10_10_10_2_UNORM" value="0x29"/>
 	<value name="TFMT_9_9_9_E5_FLOAT" value="0x2a"/>
 	<value name="TFMT_11_11_10_FLOAT" value="0x2b"/>
