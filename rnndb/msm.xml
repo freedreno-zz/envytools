@@ -21,5 +21,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="dsi/mmss_cc.xml"/>
 <import file="hdmi/qfprom.xml"/>
 <import file="hdmi/hdmi.xml"/>
+<import file="edp/edp.xml"/>
 
 </database>
