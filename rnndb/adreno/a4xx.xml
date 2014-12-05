@@ -1109,15 +1109,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
 	<reg32 offset="3" name="3">
-		<bitfield name="LAYERSZ" low="0" high="3" shr="12" type="uint"/>
+		<bitfield name="LAYERSZ" low="0" high="13" shr="12" type="uint"/>
+		<bitfield name="DEPTH" low="18" high="30" type="uint"/>
 	</reg32>
 	<reg32 offset="4" name="4">
+		<!--
+		like a3xx we seem to have two LAYERSZ's.. although this one
+		seems too small to be useful, and when it overflows blob just
+		sets it to zero..
+		 -->
+		<bitfield name="LAYERSZ" low="0" high="3" shr="12" type="uint"/>
 		<!--
 		if you don't have mipmap, this appears to be lvl 0,
 		not entirely sure about mipmaps yet, since blob just
 		segfaults ;-)
 		 -->
-		<bitfield name="BASE" low="0" high="31"/>
+		<bitfield name="BASE" low="5" high="31" shr="5"/>
 	</reg32>
 	<reg32 offset="5" name="5"/>
 	<reg32 offset="6" name="6"/>
