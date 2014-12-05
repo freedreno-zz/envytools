@@ -64,6 +64,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="VFMT4_16_16_16_UNORM" value="0x1e"/>
 	<value name="VFMT4_16_16_16_16_UNORM" value="0x1f"/>
 
+	<value name="VFMT4_32_32_SINT" value="0x25"/>
+
 	<value name="VFMT4_8_UINT" value="0x28"/>
 	<value name="VFMT4_8_8_UINT" value="0x29"/>
 	<value name="VFMT4_8_8_8_UINT" value="0x2a"/>
@@ -123,6 +125,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_32_32_32_32_FLOAT" value="0x3f"/>
 </enum>
 
+<enum name="a4xx_tex_fetchsize">
+	<doc>
+		Size pixel to fetch, in bytes.  Doesn't seem to be required, setting
+		it to 0x0 seems to work ok, but may be less optimal.
+	</doc>
+	<value name="TFETCH4_1_BYTE"  value="0"/>
+	<value name="TFETCH4_2_BYTE"  value="1"/>
+	<value name="TFETCH4_4_BYTE"  value="2"/>
+	<value name="TFETCH4_8_BYTE"  value="3"/>
+	<value name="TFETCH4_16_BYTE" value="4"/>
+</enum>
+
 <enum name="a4xx_depth_format">
 	<value name="DEPTH4_NONE" value="0"/>
 	<value name="DEPTH4_16" value="1"/>
@@ -169,12 +183,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="DISABLE" pos="12" type="boolean"/>
 		<bitfield name="SAMPLES" low="13" high="15" type="uint"/>
 	</reg32>
-	<reg32 offset="0x20a3" name="RB_MSAA_CONTROL2">
-		<!--
-		ok, stretching for names here.. but duplicate information
-		suggests that one of these is not actually RB but some
-		other block which needs to know about MSAA..
-		-->
+	<reg32 offset="0x20a3" name="RB_RENDER_CONTROL2">
+		<bitfield name="XCOORD" pos="0" type="boolean"/>
+		<bitfield name="YCOORD" pos="1" type="boolean"/>
+		<!-- assuming zcoord/wcoord follows.. -->
+		<bitfield name="ZCOORD" pos="2" type="boolean"/>
+		<bitfield name="WCOORD" pos="3" type="boolean"/>
+		<bitfield name="FACENESS" pos="5" type="boolean"/>
 		<bitfield name="MSAA_SAMPLES" low="7" high="9" type="uint"/>
 		<bitfield name="VARYING" pos="12" type="boolean"/>
 	</reg32>
@@ -616,7 +631,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22e8" name="SP_FS_CTRL_REG0" type="a4xx_sp_vs_fs_ctrl_reg0"/>
 	<reg32 offset="0x22e9" name="SP_FS_CTRL_REG1">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="FACENESS" pos="19" type="boolean"/>
 		<bitfield name="VARYING" pos="20" type="boolean"/>
+		<bitfield name="FRAGCOORD" pos="21" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x22ea" name="SP_FS_OBJ_OFFSET_REG">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
@@ -762,6 +779,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="CONSTFILL" pos="4" type="boolean"/>
 			<bitfield name="FORMAT" low="6" high="11" type="a4xx_vtx_fmt"/>
 			<bitfield name="REGID" low="12" high="19" type="a3xx_regid"/>
+			<bitfield name="INT" pos="20" type="boolean"/>
 			<doc>SHIFTCNT appears to be size, ie. FLOAT_32_32_32 is 12, and BYTE_8 is 1</doc>
 			<bitfield name="SWAP" low="22" high="23" type="a3xx_color_swap"/>
 			<bitfield name="SHIFTCNT" low="24" high="28" type="uint"/>
@@ -864,11 +882,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="VSTHREADSIZE" pos="6" type="a3xx_threadsize"/>
 		<bitfield name="VSSUPERTHREADENABLE" pos="8" type="boolean"/>
 		<bitfield name="RESERVED1" pos="9" type="boolean"/>
+		<bitfield name="COORDREGID" low="16" high="23" type="a3xx_regid"/>
 		<!-- set if gl_FragCoord.[zw] used in frag shader: -->
 		<bitfield name="ZWCOORD" pos="25" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x23c2" name="HLSQ_CONTROL_2_REG">
 		<bitfield name="PRIMALLOCTHRESHOLD" low="26" high="31" type="uint"/>
+		<bitfield name="FACEREGID" low="2" high="9" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0x23c3" name="HLSQ_CONTROL_3_REG">
 		<!-- register loaded with position (bary.f, gl_FragCoord, etc) -->
@@ -1103,7 +1123,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WIDTH" low="15" high="28" type="uint"/>
 	</reg32>
 	<reg32 offset="2" name="2">
-		<!-- low bits may be fetchsize?? -->
+		<bitfield name="FETCHSIZE" low="0" high="3" type="a4xx_tex_fetchsize"/>
 		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="9" high="29" type="uint"/>
 		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
