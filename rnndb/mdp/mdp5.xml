@@ -58,13 +58,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="PACK_3D_COL_INT"   value="3"/>
 	</enum>
 
-	<enum name="mdp5_chroma_samp_type">
-		<value name="CHROMA_RGB"  value="0"/>
-		<value name="CHROMA_H2V1" value="1"/>
-		<value name="CHROMA_H1V2" value="2"/>
-		<value name="CHROMA_420"  value="3"/>
-	</enum>
-
 	<enum name="mdp5_scale_filter">
 		<value name="SCALE_FILTER_NEAREST" value="0"/>
 		<value name="SCALE_FILTER_BIL" value="1"/>
@@ -256,10 +249,61 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x020" name="PACK_3D"/>
 	</array>
 
+	<enum name="mdp5_data_format">
+		<value name="DATA_FORMAT_RGB" value="0"/>
+		<value name="DATA_FORMAT_YUV" value="1"/>
+	</enum>
+
 	<array doffsets="mdp5_cfg->pipe_vig.base[0],mdp5_cfg->pipe_vig.base[1],mdp5_cfg->pipe_vig.base[2],mdp5_cfg->pipe_rgb.base[0],mdp5_cfg->pipe_rgb.base[1],mdp5_cfg->pipe_rgb.base[2],mdp5_cfg->pipe_dma.base[0],mdp5_cfg->pipe_dma.base[1],mdp5_cfg->pipe_vig.base[3],mdp5_cfg->pipe_rgb.base[3]" name="PIPE" length="10" stride="0x400" index="mdp5_pipe">
+		<reg32 offset="0x200" name="OP_MODE">
+			<bitfield name="CSC_DST_DATA_FORMAT" pos="19" type="mdp5_data_format"/>
+			<bitfield name="CSC_SRC_DATA_FORMAT" pos="18" type="mdp5_data_format"/>
+			<bitfield name="CSC_1_EN" pos="17" type="boolean"/>
+		</reg32>
 		<reg32 offset="0x2C4" name="HIST_CTL_BASE"/>
 		<reg32 offset="0x2F0" name="HIST_LUT_BASE"/>
 		<reg32 offset="0x300" name="HIST_LUT_SWAP"/>
+		<reg32 offset="0x320" name="CSC_1_MATRIX_COEFF_0">
+			<bitfield name="COEFF_11" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_12" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x324" name="CSC_1_MATRIX_COEFF_1">
+			<bitfield name="COEFF_13" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_21" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x328" name="CSC_1_MATRIX_COEFF_2">
+			<bitfield name="COEFF_22" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_23" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x32c" name="CSC_1_MATRIX_COEFF_3">
+			<bitfield name="COEFF_31" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_32" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x330" name="CSC_1_MATRIX_COEFF_4">
+			<bitfield name="COEFF_33" low="0" high="12" type="uint"/>
+		</reg32>
+		<array offset="0x334" name="CSC_1_PRE_CLAMP" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="HIGH"  low="0"  high="7"  type="uint"/>
+				<bitfield name="LOW"  low="8"  high="15"  type="uint"/>
+			</reg32>
+		</array>
+		<array offset="0x340" name="CSC_1_POST_CLAMP" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="HIGH"  low="0"  high="7"  type="uint"/>
+				<bitfield name="LOW"  low="8"  high="15"  type="uint"/>
+			</reg32>
+		</array>
+		<array offset="0x34c" name="CSC_1_PRE_BIAS" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="VALUE"  low="0"  high="8"  type="uint"/>
+			</reg32>
+		</array>
+		<array offset="0x358" name="CSC_1_POST_BIAS" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="VALUE"  low="0"  high="8"  type="uint"/>
+			</reg32>
+		</array>
 		<!-- SSPP: -->
 		<reg32 offset="0x000" name="SRC_SIZE" type="reg_wh"/>
 		<reg32 offset="0x004" name="SRC_IMG_SIZE" type="reg_wh"/>
@@ -292,8 +336,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="UNPACK_COUNT" low="12" high="13" type="uint"/>
 			<bitfield name="UNPACK_TIGHT" pos="17" type="boolean"/>
 			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
-			<bitfield name="NUM_PLANES" low="19" high="22" type="uint"/>
-			<bitfield name="CHROMA_SAMP" low="23" high="24" type="mdp5_chroma_samp_type"/>
+			<bitfield name="NUM_PLANES" low="19" high="20" type="mdp_sspp_fetch_type"/>
+			<bitfield name="CHROMA_SAMP" low="23" high="24" type="mdp_chroma_samp_type"/>
 		</reg32>
 		<reg32 offset="0x034" name="SRC_UNPACK" type="mdp_unpack_pattern"/>
 		<reg32 offset="0x038" name="SRC_OP_MODE">
@@ -335,6 +379,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 		<reg32 offset="0x210" name="SCALE_PHASE_STEP_X"/>
 		<reg32 offset="0x214" name="SCALE_PHASE_STEP_Y"/>
+		<reg32 offset="0x218" name="SCALE_CR_PHASE_STEP_X"/>
+		<reg32 offset="0x21c" name="SCALE_CR_PHASE_STEP_Y"/>
 		<reg32 offset="0x220" name="SCALE_INIT_PHASE_X"/>
 		<reg32 offset="0x224" name="SCALE_INIT_PHASE_Y"/>
 	</array>

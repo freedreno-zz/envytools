@@ -6,6 +6,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <!-- random bits that seem same between mdp4 and mdp5 (ie. not much) -->
 
+<enum name="mdp_chroma_samp_type">
+    <value name="CHROMA_RGB"  value="0"/>
+    <value name="CHROMA_H2V1" value="1"/>
+    <value name="CHROMA_H1V2" value="2"/>
+    <value name="CHROMA_420"  value="3"/>
+</enum>
+
+<enum name="mdp_sspp_fetch_type">
+    <value name="MDP_PLANE_INTERLEAVED"   value="0"/>
+    <value name="MDP_PLANE_PLANAR"        value="1"/>
+    <value name="MDP_PLANE_PSEUDO_PLANAR" value="2"/>
+</enum>
+
 <enum name="mdp_mixer_stage_id">
 	<value name="STAGE_UNUSED" value="0"/>
 	<value name="STAGE_BASE" value="1"/>

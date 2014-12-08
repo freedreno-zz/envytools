@@ -50,6 +50,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="CURSOR_ARGB" value="1"/>
 		<value name="CURSOR_XRGB" value="2"/>
 	</enum>
+	<enum name="mdp4_frame_format">
+		<value name="FRAME_LINEAR" value="0"/>
+		<value name="FRAME_TILE_ARGB_4X4" value="1"/>
+		<value name="FRAME_TILE_YCBCR_420" value="2"/>
+	</enum>
+	<enum name="mdp4_scale_unit">
+		<value name="SCALE_FIR" value="0"/>
+		<value name="SCALE_MN_PHASE" value="1"/>
+		<value name="SCALE_PIXEL_RPT" value="2"/>
+	</enum>
 
 	<bitset name="mdp4_layermixer_in_cfg" inline="yes">
 		<brief>appears to map pipe to mixer stage</brief>
@@ -271,6 +281,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x0010" name="SRCP0_BASE"/>
 		<reg32 offset="0x0014" name="SRCP1_BASE"/>
 		<reg32 offset="0x0018" name="SRCP2_BASE"/>
+		<reg32 offset="0x001c" name="SRCP3_BASE"/>
 		<reg32 offset="0x0040" name="SRC_STRIDE_A">
 			<bitfield name="P0" low="0" high="15" type="uint"/>
 			<bitfield name="P1" low="16" high="31" type="uint"/>
@@ -293,12 +304,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="UNPACK_COUNT" low="13" high="14" type="uint"/>
 			<bitfield name="UNPACK_TIGHT" pos="17" type="boolean"/>
 			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
+			<bitfield name="FETCH_PLANES" low="19" high="20" type="uint"/>
 			<bitfield name="SOLID_FILL" pos="22" type="boolean"/>
+			<bitfield name="CHROMA_SAMP" low="26" high="27" type="mdp_chroma_samp_type"/>
+			<bitfield name="FRAME_FORMAT" low="29" high="30" type="mdp4_frame_format"/>
 		</reg32>
 		<reg32 offset="0x0054" name="SRC_UNPACK" type="mdp_unpack_pattern"/>
 		<reg32 offset="0x0058" name="OP_MODE">
 			<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
 			<bitfield name="SCALEY_EN" pos="1" type="boolean"/>
+			<bitfield name="SCALEX_UNIT_SEL" low="2" high="3" type="mdp4_scale_unit"/>
+			<bitfield name="SCALEY_UNIT_SEL" low="4" high="5" type="mdp4_scale_unit"/>
 			<bitfield name="SRC_YCBCR" pos="9" type="boolean"/>
 			<bitfield name="DST_YCBCR" pos="10" type="boolean"/>
 			<bitfield name="CSC_EN" pos="11" type="boolean"/>
