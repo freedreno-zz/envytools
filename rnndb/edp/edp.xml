@@ -174,8 +174,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </domain>
 
 <domain name="EDP_PHY" width="32">
-	<array offset="0x0404" name="LN" length="4" stride="0x40">
-		<reg32 offset="0x00" name="PD_CTL"/>
+	<array offset="0x0400" name="LN" length="4" stride="0x40">
+		<reg32 offset="0x04" name="PD_CTL"/>
 	</array>
 	<reg32 offset="0x0510" name="GLB_VM_CFG0"/>
 	<reg32 offset="0x0514" name="GLB_VM_CFG1"/>
