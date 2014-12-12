@@ -1077,6 +1077,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A4XX_TEX_CLAMP_NONE" value="3"/>
 	</enum>
 	<reg32 offset="0" name="0">
+		<bitfield name="MIPFILTER_LINEAR_NEAR" pos="0" type="boolean"/>
 		<bitfield name="XY_MAG" low="1" high="2" type="a4xx_tex_filter"/>
 		<bitfield name="XY_MIN" low="3" high="4" type="a4xx_tex_filter"/>
 		<bitfield name="WRAP_S" low="5" high="7" type="a4xx_tex_clamp"/>
@@ -1086,9 +1087,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="1" name="1">
 		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
 		<bitfield name="UNNORM_COORDS" pos="5" type="boolean"/>
-		<!-- TODO check radix.. -->
-		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="6"/>
-		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="6"/>
+		<bitfield name="MIPFILTER_LINEAR_FAR" pos="6" type="boolean"/>
+		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="8"/>
+		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="8"/>
 	</reg32>
 </domain>
 
@@ -1115,6 +1116,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWIZ_Y" low="7" high="9" type="a4xx_tex_swiz"/>
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a4xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a4xx_tex_swiz"/>
+		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
 		<bitfield name="FMT" low="22" high="28" type="a4xx_tex_fmt"/>
 		<bitfield name="TYPE" low="29" high="30" type="a4xx_tex_type"/>
 	</reg32>
@@ -1139,11 +1141,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		sets it to zero..
 		 -->
 		<bitfield name="LAYERSZ" low="0" high="3" shr="12" type="uint"/>
-		<!--
-		if you don't have mipmap, this appears to be lvl 0,
-		not entirely sure about mipmaps yet, since blob just
-		segfaults ;-)
-		 -->
 		<bitfield name="BASE" low="5" high="31" shr="5"/>
 	</reg32>
 	<reg32 offset="5" name="5"/>
