@@ -231,7 +231,26 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="adreno_rb_blend_factor"/>
 		</reg32>
 	</array>
+
+	<reg32 offset="0x20f3" name="RB_BLEND_RED">
+		<bitfield name="UINT" low="0" high="14" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
+	<reg32 offset="0x20f4" name="RB_BLEND_GREEN">
+		<bitfield name="UINT" low="0" high="14" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
+	<reg32 offset="0x20f5" name="RB_BLEND_BLUE">
+		<bitfield name="UINT" low="0" high="14" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
+	<reg32 offset="0x20f6" name="RB_BLEND_ALPHA">
+		<bitfield name="UINT" low="0" high="14" type="hex"/>
+		<bitfield name="FLOAT" low="16" high="31" type="float"/>
+	</reg32>
+
 	<reg32 offset="0x20f8" name="RB_ALPHA_CONTROL">
+		<bitfield name="ALPHA_REF" low="0" high="7" type="hex"/>
 		<bitfield name="ALPHA_TEST" pos="8" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="9" high="11" type="adreno_compare_func"/>
 	</reg32>
@@ -256,7 +275,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
 	</reg32>
 	<reg32 offset="0x20fd" name="RB_COPY_DEST_BASE">
-		<bitfield name="BASE" low="4" high="31" shr="4" type="hex"/>
+		<bitfield name="BASE" low="5" high="31" shr="5" type="hex"/>
 	</reg32>
 	<reg32 offset="0x20fe" name="RB_COPY_DEST_PITCH">
 		<doc>actually, appears to be pitch in bytes, so really is a stride</doc>
@@ -338,7 +357,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x210b" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210c" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210d" name="RB_BIN_OFFSET" type="adreno_reg_xy"/>
-	<reg32 offset="0x213f" name="RB_VPORT_Z_CLAMP_MAX_15"/>
+	<array offset="0x2120" name="RB_VPORT_Z_CLAMP" stride="2" length="16">
+		<reg32 offset="0x0" name="MIN"/>
+		<reg32 offset="0x1" name="MAX"/>
+	</array>
 
 	<!-- RBBM registers -->
 	<reg32 offset="0x0000" name="RBBM_HW_VERSION"/>
@@ -825,11 +847,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2074" name="GRAS_SU_POLY_OFFSET_SCALE" type="float"/>
 	<reg32 offset="0x2075" name="GRAS_SU_POLY_OFFSET_OFFSET" type="float"/>
-	<reg32 offset="0x209f" name="GRAS_SC_EXTENT_WINDOW_TL"/>
-	<reg32 offset="0x207c" name="GRAS_SC_SCREEN_SCISSOR_TL" type="adreno_reg_xy"/>
-	<reg32 offset="0x207d" name="GRAS_SC_SCREEN_SCISSOR_BR" type="adreno_reg_xy"/>
-	<reg32 offset="0x209c" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
-	<reg32 offset="0x209d" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0x2077" name="GRAS_DEPTH_CONTROL">
 		<!-- guestimating that this is GRAS based on addr -->
 		<bitfield name="FORMAT" low="0" high="1" type="a4xx_depth_format"/>
@@ -850,6 +867,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="MSAA_DISABLE" pos="11" type="boolean"/>
 		<bitfield name="RASTER_MODE" low="12" high="15"/>
 	</reg32>
+	<reg32 offset="0x207c" name="GRAS_SC_SCREEN_SCISSOR_TL" type="adreno_reg_xy"/>
+	<reg32 offset="0x207d" name="GRAS_SC_SCREEN_SCISSOR_BR" type="adreno_reg_xy"/>
+	<reg32 offset="0x209c" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
+	<reg32 offset="0x209d" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
+	<reg32 offset="0x209e" name="GRAS_SC_EXTENT_WINDOW_BR" type="adreno_reg_xy"/>
+	<reg32 offset="0x209f" name="GRAS_SC_EXTENT_WINDOW_TL" type="adreno_reg_xy"/>
 
 	<!-- UCHE registers -->
 	<reg32 offset="0x0e80" name="UCHE_CACHE_MODE_CONTROL"/>
@@ -1010,20 +1033,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- always 00000000: -->
 	<reg32 offset="0x20f2" name="UNKNOWN_20F2"/>
 
-	<!-- always 00000000: -->
-	<reg32 offset="0x20f3" name="UNKNOWN_20F3"/>
-
-	<!-- always 00000000: -->
-	<reg32 offset="0x20f4" name="UNKNOWN_20F4"/>
-
-	<!-- always 00000000: -->
-	<reg32 offset="0x20f5" name="UNKNOWN_20F5"/>
-
-	<!-- always 3c007fff: -->
-	<reg32 offset="0x20f6" name="UNKNOWN_20F6"/>
-
 	<!-- always 3f800000 (1.0):  -->
-	<reg32 offset="0x20f7" name="UNKNOWN_20F7"/>
+	<reg32 offset="0x20f7" name="UNKNOWN_20F7" type="float"/>
 
 	<!-- always 00000000: -->
 	<reg32 offset="0x2152" name="UNKNOWN_2152"/>
