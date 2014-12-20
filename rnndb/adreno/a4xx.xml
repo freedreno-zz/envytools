@@ -785,14 +785,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="FETCHSIZE" low="0" high="6" type="uint"/>
 			<bitfield name="BUFSTRIDE" low="7" high="16" type="uint"/>
 			<bitfield name="SWITCHNEXT" pos="19" type="boolean"/>
-			<bitfield name="STEPRATE" low="24" high="31" type="uint"/>
+			<bitfield name="INSTANCED" pos="20" type="boolean"/>
 		</reg32>
 		<reg32 offset="0x1" name="INSTR_1"/>
 		<reg32 offset="0x2" name="INSTR_2">
 			<bitfield name="SIZE" low="4" high="31" shr="4"/>
 		</reg32>
-		<!-- INSTR_3 seems to be always 1 -->
-		<reg32 offset="0x3" name="INSTR_3"/>
+		<reg32 offset="0x3" name="INSTR_3">
+			<!-- might well be bigger.. -->
+			<bitfield name="STEPRATE" low="0" high="8" type="uint"/>
+		</reg32>
 	</array>
 	<array offset="0x228a" name="VFD_DECODE" stride="1" length="32">
 		<reg32 offset="0x0" name="INSTR">
