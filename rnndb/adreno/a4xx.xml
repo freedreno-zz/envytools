@@ -777,7 +777,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="REGID4INST" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0x2202" name="VFD_CONTROL_2"/>
-	<reg32 offset="0x2203" name="VFD_CONTROL_3"/>
+	<reg32 offset="0x2203" name="VFD_CONTROL_3">
+		<bitfield name="REGID_VTXCNT" low="8" high="15" type="a3xx_regid"/>
+	</reg32>
 	<reg32 offset="0x2204" name="VFD_CONTROL_4"/>
 	<reg32 offset="0x2208" name="VFD_INDEX_OFFSET"/>
 	<array offset="0x220a" name="VFD_FETCH" stride="4" length="32">
