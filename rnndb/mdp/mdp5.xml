@@ -98,6 +98,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="CID_MAX"     value="23"/>
 	</enum>
 
+	<enum name="mdp5_cursor_format">
+		<value name="CURSOR_FMT_ARGB8888" value="0"/>
+		<value name="CURSOR_FMT_ARGB1555" value="2"/>
+		<value name="CURSOR_FMT_ARGB4444" value="4"/>
+	</enum>
+
+	<enum name="mdp5_cursor_alpha">
+		<value name="CURSOR_ALPHA_CONST" value="0"/>
+		<value name="CURSOR_ALPHA_PER_PIXEL" value="2"/>
+	</enum>
+
 	<bitset name="MDP5_IRQ">
 		<bitfield name="INTF0_WB_ROT_COMP"        pos="0"  type="boolean"/>
 		<bitfield name="INTF1_WB_ROT_COMP"        pos="1"  type="boolean"/>
@@ -419,14 +430,34 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<reg32 offset="0x24" name="BG_TRANSP_HIGH0"/>
 			<reg32 offset="0x28" name="BG_TRANSP_HIGH1"/>
 		</array>
-		<reg32 offset="0x0e0" name="CURSOR_IMG_SIZE"/>
-		<reg32 offset="0x0e4" name="CURSOR_SIZE"/>
-		<reg32 offset="0x0e8" name="CURSOR_XY"/>
-		<reg32 offset="0x0dc" name="CURSOR_STRIDE"/>
-		<reg32 offset="0x0ec" name="CURSOR_FORMAT"/>
+		<reg32 offset="0x0e0" name="CURSOR_IMG_SIZE">
+			<bitfield name="SRC_W" low="0" high="15" type="uint"/>
+			<bitfield name="SRC_H" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x0e4" name="CURSOR_SIZE">
+			<bitfield name="ROI_W" low="0" high="15" type="uint"/>
+			<bitfield name="ROI_H" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x0e8" name="CURSOR_XY">
+			<bitfield name="SRC_X" low="0" high="15" type="uint"/>
+			<bitfield name="SRC_Y" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x0dc" name="CURSOR_STRIDE">
+			<bitfield name="STRIDE" low="0"  high="15"  type="uint"/>
+		</reg32>
+		<reg32 offset="0x0ec" name="CURSOR_FORMAT">
+			<bitfield name="FORMAT" low="0"  high="2"  type="mdp5_cursor_format"/>
+		</reg32>
 		<reg32 offset="0x0f0" name="CURSOR_BASE_ADDR"/>
-		<reg32 offset="0x0f4" name="CURSOR_START_XY"/>
-		<reg32 offset="0x0f8" name="CURSOR_BLEND_CONFIG"/>
+		<reg32 offset="0x0f4" name="CURSOR_START_XY">
+			<bitfield name="X_START" low="0" high="15" type="uint"/>
+			<bitfield name="Y_START" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x0f8" name="CURSOR_BLEND_CONFIG">
+			<bitfield name="BLEND_EN" pos="0" type="boolean"/>
+			<bitfield name="BLEND_ALPHA_SEL" low="1"  high="2"  type="mdp5_cursor_alpha"/>
+			<bitfield name="BLEND_TRANSP_EN" pos="3" type="boolean"/>
+		</reg32>
 		<reg32 offset="0x0fc" name="CURSOR_BLEND_PARAM"/>
 		<reg32 offset="0x100" name="CURSOR_BLEND_TRANSP_LOW0"/>
 		<reg32 offset="0x104" name="CURSOR_BLEND_TRANSP_LOW1"/>
