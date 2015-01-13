@@ -170,16 +170,46 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ENABLE" pos="0" type="boolean"/>
 		<bitfield name="ENCRYPTION_ENABLE" pos="8" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x00114" name="HDCP_DEBUG_CTRL"/>
-	<reg32 offset="0x00118" name="HDCP_INT_CTRL"/>
+	<reg32 offset="0x00114" name="HDCP_DEBUG_CTRL">
+		<bitfield name="RNG_CIPHER" pos="2" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00118" name="HDCP_INT_CTRL">
+		<bitfield name="AUTH_SUCCESS_INT" pos="0" type="boolean"/>
+		<bitfield name="AUTH_SUCCESS_ACK" pos="1" type="boolean"/>
+		<bitfield name="AUTH_SUCCESS_MASK" pos="2" type="boolean"/>
+		<bitfield name="AUTH_FAIL_INT" pos="4" type="boolean"/>
+		<bitfield name="AUTH_FAIL_ACK" pos="5" type="boolean"/>
+		<bitfield name="AUTH_FAIL_MASK" pos="6" type="boolean"/>
+		<bitfield name="AUTH_FAIL_INFO_ACK" pos="7" type="boolean"/>
+		<bitfield name="AUTH_XFER_REQ_INT" pos="8" type="boolean"/>
+		<bitfield name="AUTH_XFER_REQ_ACK" pos="9" type="boolean"/>
+		<bitfield name="AUTH_XFER_REQ_MASK" pos="10" type="boolean"/>
+		<bitfield name="AUTH_XFER_DONE_INT" pos="12" type="boolean"/>
+		<bitfield name="AUTH_XFER_DONE_ACK" pos="13" type="boolean"/>
+		<bitfield name="AUTH_XFER_DONE_MASK" pos="14" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0011c" name="HDCP_LINK0_STATUS">
 		<bitfield name="AN_0_READY" pos="8" type="boolean"/>
 		<bitfield name="AN_1_READY" pos="9" type="boolean"/>
+		<bitfield name="RI_MATCHES" pos="12" type="boolean"/>
+		<bitfield name="V_MATCHES" pos="20" type="boolean"/>
 		<bitfield name="KEY_STATE" low="28" high="30" type="hdmi_hdcp_key_state"/>
 	</reg32>
-	<reg32 offset="0x00120" name="HDCP_DDC_CTRL_0"/>
-	<reg32 offset="0x00124" name="HDCP_DDC_CTRL_1"/>
-	<reg32 offset="0x00128" name="HDCP_DDC_STATUS"/>
+	<reg32 offset="0x00120" name="HDCP_DDC_CTRL_0">
+		<bitfield name="DISABLE" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00124" name="HDCP_DDC_CTRL_1">
+		<bitfield name="FAILED_ACK" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00128" name="HDCP_DDC_STATUS">
+		<bitfield name="XFER_REQ" pos="4" type="boolean"/>
+		<bitfield name="XFER_DONE" pos="10" type="boolean"/>
+		<bitfield name="ABORTED" pos="12" type="boolean"/>
+		<bitfield name="TIMEOUT" pos="13" type="boolean"/>
+		<bitfield name="NACK0" pos="14" type="boolean"/>
+		<bitfield name="NACK1" pos="15" type="boolean"/>
+		<bitfield name="FAILED" pos="16" type="boolean"/>
+	</reg32>
 
 	<reg32 offset="0x0012c" name="HDCP_ENTROPY_CTRL0"/>
 	<reg32 offset="0x0025c" name="HDCP_ENTROPY_CTRL1"/>
@@ -264,7 +294,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="NACK2" pos="14" type="boolean"/>
 		<bitfield name="NACK3" pos="15" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x0021c" name="DDC_HW_STATUS"/>
+	<reg32 offset="0x0021c" name="DDC_HW_STATUS">
+		<bitfield name="DONE" pos="3" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x00220" name="DDC_SPEED">
 		<!--
 		   0x0220 HDMI_DDC_SPEED
@@ -347,8 +379,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 
 	<reg32 offset="0x0023c" name="HDCP_SHA_CTRL"/>
-	<reg32 offset="0x00240" name="HDCP_SHA_STATUS"/>
-	<reg32 offset="0x00244" name="HDCP_SHA_DATA"/>
+	<reg32 offset="0x00240" name="HDCP_SHA_STATUS">
+		<bitfield name="BLOCK_DONE" pos="0" type="boolean"/>
+		<bitfield name="COMP_DONE" pos="4" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00244" name="HDCP_SHA_DATA">
+		<bitfield name="DONE" pos="0" type="boolean"/>
+	</reg32>
 
 	<reg32 offset="0x00250" name="HPD_INT_STATUS">
 		<bitfield name="INT" pos="0"/>  <!-- an irq has occurred -->
