@@ -207,6 +207,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 		<reg32 offset="0x1" name="BUF_INFO">
 			<bitfield name="COLOR_FORMAT" low="0" high="5" type="a4xx_color_fmt"/>
+			<!--
+			    guestimate position of COLOR_TILE_MODE..  this works out if
+			    common value is 2, like on a3xx..
+			 -->
+			<bitfield name="COLOR_TILE_MODE" low="6" high="7" type="a4xx_tile_mode"/>
 			<bitfield name="DITHER_MODE" low="9" high="10" type="adreno_rb_dither_mode"/>
 			<bitfield name="COLOR_SWAP" low="11" high="12" type="a3xx_color_swap"/>
 			<!-- note: possibly some # of lsb's aren't there: -->
