@@ -570,6 +570,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			RENDER_MODE is RB_RESOLVE_PASS for gmem->mem, otherwise RB_RENDER_PASS
 		</doc>
 		<bitfield name="RENDER_MODE" low="8" high="10" type="a3xx_render_mode"/>
+		<bitfield name="MRT" low="12" high="13" type="uint">
+			<doc>render targets - 1</doc>
+		</bitfield>
 		<bitfield name="MARB_CACHE_SPLIT_MODE" pos="15" type="boolean"/>
 		<bitfield name="PACKER_TIMER_ENABLE" pos="16" type="boolean"/>
 	</reg32>
@@ -1100,6 +1103,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>seems to be one bit per scalar, '1' for flat, '0' for smooth</doc>
 	</reg32>
 	<reg32 offset="0x22ec" name="SP_FS_OUTPUT_REG">
+		<bitfield name="MRT" low="0" high="1" type="uint">
+			<doc>render targets - 1</doc>
+		</bitfield>
 		<bitfield name="DEPTH_ENABLE" pos="7" type="boolean"/>
 		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
 	</reg32>
