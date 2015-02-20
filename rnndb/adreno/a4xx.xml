@@ -533,13 +533,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0207" name="CP_IB1_BUFSZ"/>
 	<reg32 offset="0x0208" name="CP_IB2_BASE"/>
 	<reg32 offset="0x0209" name="CP_IB2_BUFSZ"/>
+	<reg32 offset="0x020c" name="CP_ME_NRT_ADDR"/>
+	<reg32 offset="0x020d" name="CP_ME_NRT_DATA"/>
 	<reg32 offset="0x0217" name="CP_ME_RB_DONE_DATA"/>
 	<reg32 offset="0x0219" name="CP_QUEUE_THRESH2"/>
 	<reg32 offset="0x021b" name="CP_MERCIU_SIZE"/>
 	<reg32 offset="0x021c" name="CP_ROQ_ADDR"/>
 	<reg32 offset="0x021d" name="CP_ROQ_DATA"/>
-	<reg32 offset="0x21E" name="CP_MEQ_ADDR	"/>
-	<reg32 offset="0x21F" name="CP_MEQ_DATA	"/>
+	<reg32 offset="0x021e" name="CP_MEQ_ADDR"/>
+	<reg32 offset="0x021f" name="CP_MEQ_DATA"/>
 	<reg32 offset="0x0220" name="CP_MERCIU_ADDR"/>
 	<reg32 offset="0x0221" name="CP_MERCIU_DATA"/>
 	<reg32 offset="0x0222" name="CP_MERCIU_DATA2"/>
@@ -759,6 +761,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- VFD registers -->
 	<reg32 offset="0x0e40" name="VFD_DEBUG_CONTROL"/>
 	<reg32 offset="0x0e4a" name="VFD_PERFCTR_VFD_SEL_7"/>
+	<reg32 offset="0x21d0" name="VGT_CL_INITIATOR"/>
+	<reg32 offset="0x21d9" name="VGT_EVENT_INITIATOR"/>
 	<reg32 offset="0x2200" name="VFD_CONTROL_0">
 		<doc>
 			TOTALATTRTOVS is # of attributes to vertex shader, in register
