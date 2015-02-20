@@ -396,7 +396,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x224" name="SCALE_INIT_PHASE_Y"/>
 	</array>
 
-    <array doffsets="mdp5_cfg->lm.base[0],mdp5_cfg->lm.base[1],mdp5_cfg->lm.base[2],mdp5_cfg->lm.base[3],mdp5_cfg->lm.base[4]" name="LM" length="5" stride="0x400">
+	<array doffsets="mdp5_cfg->lm.base[0],mdp5_cfg->lm.base[1],mdp5_cfg->lm.base[2],mdp5_cfg->lm.base[3],mdp5_cfg->lm.base[4],mdp5_cfg->lm.base[5]" name="LM" length="6" stride="0x400">
 		<reg32 offset="0x000" name="BLEND_COLOR_OUT">
 			<bitfield name="STAGE0_FG_ALPHA" pos="1" type="boolean"/>
 			<bitfield name="STAGE1_FG_ALPHA" pos="2" type="boolean"/>
