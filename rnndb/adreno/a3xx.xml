@@ -111,6 +111,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_I420_U" value="0x1a"/>
 	<value name="TFMT_I420_V" value="0x1b"/>
 
+	<value name="TFMT_ATC_RGB" value="0x20"/>
+	<value name="TFMT_ATC_RGBA_EXPLICIT" value="0x21"/>
+	<value name="TFMT_ETC1" value="0x22"/>
+	<value name="TFMT_ATC_RGBA_INTERPOLATED" value="0x23"/>
+
 	<value name="TFMT_DXT1" value="0x24"/>
 	<value name="TFMT_DXT3" value="0x25"/>
 	<value name="TFMT_DXT5" value="0x26"/>
@@ -185,11 +190,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_32_32_SINT" value="0x5d"/>
 	<value name="TFMT_32_32_32_32_SINT" value="0x5f"/>
 
-	<!-- These pass some but not all tests -->
-	<value name="TFMT_RGTC2_SNORM" value="0x70"/>
-	<value name="TFMT_RGTC2_UNORM" value="0x71"/>
-	<value name="TFMT_RGTC1_SNORM" value="0x72"/>
-	<value name="TFMT_RGTC1_UNORM" value="0x73"/>
+	<value name="TFMT_ETC2_RG11_SNORM" value="0x70"/>
+	<value name="TFMT_ETC2_RG11_UNORM" value="0x71"/>
+	<value name="TFMT_ETC2_R11_SNORM" value="0x72"/>
+	<value name="TFMT_ETC2_R11_UNORM" value="0x73"/>
+	<value name="TFMT_ETC2_RGBA8" value="0x74"/>
+	<value name="TFMT_ETC2_RGB8A1" value="0x75"/>
+	<value name="TFMT_ETC2_RGB8" value="0x76"/>
 </enum>
 
 <enum name="a3xx_tex_fetchsize">
