@@ -975,7 +975,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x21c0" name="PC_BIN_BASE"/>
 	<reg32 offset="0x21c4" name="PC_PRIM_VTX_CNTL">
 		<!-- bit0 set if there is >= 1 varying (actually used by FS) -->
-		<bitfield name="VAROUT" pos="0" type="boolean"/>
+		<bitfield name="VAROUT" low="0" high="3" type="uint">
+			<doc>in groups of 4x vec4, blob only uses values
+			0, 1, 2, 4, 6, 8</doc>
+		</bitfield>
 		<bitfield name="PROVOKING_VTX_LAST" pos="25" type="boolean"/>
 		<!-- PSIZE bit set if gl_PointSize written: -->
 		<bitfield name="PSIZE" pos="26" type="boolean"/>
