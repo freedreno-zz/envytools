@@ -1096,12 +1096,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<enum name="a4xx_tex_filter">
 		<value name="A4XX_TEX_NEAREST" value="0"/>
 		<value name="A4XX_TEX_LINEAR" value="1"/>
+		<value name="A4XX_TEX_ANISO" value="2"/>
 	</enum>
 	<enum name="a4xx_tex_clamp">
 		<value name="A4XX_TEX_REPEAT" value="0"/>
 		<value name="A4XX_TEX_CLAMP_TO_EDGE" value="1"/>
 		<value name="A4XX_TEX_MIRROR_REPEAT" value="2"/>
 		<value name="A4XX_TEX_CLAMP_NONE" value="3"/>
+	</enum>
+	<enum name="a4xx_tex_aniso">
+		<value name="A4XX_TEX_ANISO_1" value="0"/>
+		<value name="A4XX_TEX_ANISO_2" value="1"/>
+		<value name="A4XX_TEX_ANISO_4" value="2"/>
+		<value name="A4XX_TEX_ANISO_8" value="3"/>
+		<value name="A4XX_TEX_ANISO_16" value="4"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="MIPFILTER_LINEAR_NEAR" pos="0" type="boolean"/>
@@ -1110,6 +1118,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WRAP_S" low="5" high="7" type="a4xx_tex_clamp"/>
 		<bitfield name="WRAP_T" low="8" high="10" type="a4xx_tex_clamp"/>
 		<bitfield name="WRAP_R" low="11" high="13" type="a4xx_tex_clamp"/>
+		<bitfield name="ANISO" low="14" high="16" type="a4xx_tex_aniso"/>
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
