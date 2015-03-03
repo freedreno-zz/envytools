@@ -11,11 +11,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <domain name="MDP5" width="32">
 
-	<enum name="mdp5_intf">
+	<enum name="mdp5_intf_type">
+		<value name="INTF_DISABLED" value="0x0"/>
 		<value name="INTF_DSI"  value="0x1"/>
 		<value name="INTF_HDMI" value="0x3"/>
 		<value name="INTF_LCDC" value="0x5"/>
 		<value name="INTF_eDP"  value="0x9"/>
+		<value name="INTF_VIRTUAL"  value="0x64"/>
+		<!-- non-display interfaces are listed below: -->
+		<value name="INTF_WB"  value="0x65"/>
 	</enum>
 
 	<enum name="mdp5_intfnum">
@@ -44,11 +48,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<enum name="mdp5_ctl_mode">
 		<value name="MODE_NONE" value="0"/>
-		<value name="MODE_ROT0" value="1"/>
-		<value name="MODE_ROT1" value="2"/>
-		<value name="MODE_WB0" value="3"/>
-		<value name="MODE_WB1" value="4"/>
-		<value name="MODE_WFD" value="5"/>
+		<value name="MODE_WB_0_BLOCK" value="1"/>
+		<value name="MODE_WB_1_BLOCK" value="2"/>
+		<value name="MODE_WB_0_LINE" value="3"/>
+		<value name="MODE_WB_1_LINE" value="4"/>
+		<value name="MODE_WB_2_LINE" value="5"/>
 	</enum>
 
 	<enum name="mdp5_pack_3d">
@@ -110,30 +114,25 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</enum>
 
 	<bitset name="MDP5_IRQ">
-		<bitfield name="INTF0_WB_ROT_COMP"        pos="0"  type="boolean"/>
-		<bitfield name="INTF1_WB_ROT_COMP"        pos="1"  type="boolean"/>
-		<bitfield name="INTF2_WB_ROT_COMP"        pos="2"  type="boolean"/>
-		<bitfield name="INTF3_WB_ROT_COMP"        pos="3"  type="boolean"/>
-		<bitfield name="INTF0_WB_WFD"             pos="4"  type="boolean"/>
-		<bitfield name="INTF1_WB_WFD"             pos="5"  type="boolean"/>
-		<bitfield name="INTF2_WB_WFD"             pos="6"  type="boolean"/>
-		<bitfield name="INTF3_WB_WFD"             pos="7"  type="boolean"/>
-		<bitfield name="INTF0_PING_PONG_COMP"     pos="8"  type="boolean"/>
-		<bitfield name="INTF1_PING_PONG_COMP"     pos="9"  type="boolean"/>
-		<bitfield name="INTF2_PING_PONG_COMP"     pos="10" type="boolean"/>
-		<bitfield name="INTF3_PING_PONG_COMP"     pos="11" type="boolean"/>
-		<bitfield name="INTF0_PING_PONG_RD_PTR"   pos="12" type="boolean"/>
-		<bitfield name="INTF1_PING_PONG_RD_PTR"   pos="13" type="boolean"/>
-		<bitfield name="INTF2_PING_PONG_RD_PTR"   pos="14" type="boolean"/>
-		<bitfield name="INTF3_PING_PONG_RD_PTR"   pos="15" type="boolean"/>
-		<bitfield name="INTF0_PING_PONG_WR_PTR"   pos="16" type="boolean"/>
-		<bitfield name="INTF1_PING_PONG_WR_PTR"   pos="17" type="boolean"/>
-		<bitfield name="INTF2_PING_PONG_WR_PTR"   pos="18" type="boolean"/>
-		<bitfield name="INTF3_PING_PONG_WR_PTR"   pos="19" type="boolean"/>
-		<bitfield name="INTF0_PING_PONG_AUTO_REF" pos="20" type="boolean"/>
-		<bitfield name="INTF1_PING_PONG_AUTO_REF" pos="21" type="boolean"/>
-		<bitfield name="INTF2_PING_PONG_AUTO_REF" pos="22" type="boolean"/>
-		<bitfield name="INTF3_PING_PONG_AUTO_REF" pos="23" type="boolean"/>
+		<bitfield name="WB_0_DONE"                pos="0"  type="boolean"/>
+		<bitfield name="WB_1_DONE"                pos="1"  type="boolean"/>
+		<bitfield name="WB_2_DONE"                pos="4"  type="boolean"/>
+		<bitfield name="PING_PONG_0_DONE"         pos="8"  type="boolean"/>
+		<bitfield name="PING_PONG_1_DONE"         pos="9"  type="boolean"/>
+		<bitfield name="PING_PONG_2_DONE"         pos="10" type="boolean"/>
+		<bitfield name="PING_PONG_3_DONE"         pos="11" type="boolean"/>
+		<bitfield name="PING_PONG_0_RD_PTR"       pos="12" type="boolean"/>
+		<bitfield name="PING_PONG_1_RD_PTR"       pos="13" type="boolean"/>
+		<bitfield name="PING_PONG_2_RD_PTR"       pos="14" type="boolean"/>
+		<bitfield name="PING_PONG_3_RD_PTR"       pos="15" type="boolean"/>
+		<bitfield name="PING_PONG_0_WR_PTR"       pos="16" type="boolean"/>
+		<bitfield name="PING_PONG_1_WR_PTR"       pos="17" type="boolean"/>
+		<bitfield name="PING_PONG_2_WR_PTR"       pos="18" type="boolean"/>
+		<bitfield name="PING_PONG_3_WR_PTR"       pos="19" type="boolean"/>
+		<bitfield name="PING_PONG_0_AUTO_REF"     pos="20" type="boolean"/>
+		<bitfield name="PING_PONG_1_AUTO_REF"     pos="21" type="boolean"/>
+		<bitfield name="PING_PONG_2_AUTO_REF"     pos="22" type="boolean"/>
+		<bitfield name="PING_PONG_3_AUTO_REF"     pos="23" type="boolean"/>
 		<bitfield name="INTF0_UNDER_RUN"          pos="24" type="boolean"/>
 		<bitfield name="INTF0_VSYNC"              pos="25" type="boolean"/>
 		<bitfield name="INTF1_UNDER_RUN"          pos="26" type="boolean"/>
@@ -165,10 +164,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 
 	<reg32 offset="0x00104" name="DISP_INTF_SEL">
-		<bitfield name="INTF0" low="0"  high="7"  type="mdp5_intf"/>
-		<bitfield name="INTF1" low="8"  high="15" type="mdp5_intf"/>
-		<bitfield name="INTF2" low="16" high="23" type="mdp5_intf"/>
-		<bitfield name="INTF3" low="24" high="31" type="mdp5_intf"/>
+		<bitfield name="INTF0" low="0"  high="7"  type="mdp5_intf_type"/>
+		<bitfield name="INTF1" low="8"  high="15" type="mdp5_intf_type"/>
+		<bitfield name="INTF2" low="16" high="23" type="mdp5_intf_type"/>
+		<bitfield name="INTF3" low="24" high="31" type="mdp5_intf_type"/>
 	</reg32>
 	<reg32 offset="0x00110" name="INTR_EN" type="MDP5_IRQ"/>
 	<reg32 offset="0x00114" name="INTR_STATUS" type="MDP5_IRQ"/>
