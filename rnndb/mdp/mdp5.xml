@@ -175,6 +175,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0011C" name="HIST_INTR_EN"/>
 	<reg32 offset="0x00120" name="HIST_INTR_STATUS"/>
 	<reg32 offset="0x00124" name="HIST_INTR_CLEAR"/>
+	<reg32 offset="0x00128" name="SPARE_0">
+		<bitfield name="SPLIT_DPL_SINGLE_FLUSH_EN" pos="0"/>
+	</reg32>
 
 	<array offset="0x00180" name="SMP_ALLOC_W" length="8" stride="4">
 		<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
@@ -207,6 +210,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</array>
 	</array>
 
+	<reg32 offset="0x003f4" name="SPLIT_DPL_EN"/>
+	<reg32 offset="0x003f8" name="SPLIT_DPL_UPPER">
+		<bitfield name="SMART_PANEL" pos="1" type="boolean"/>
+		<bitfield name="SMART_PANEL_FREE_RUN" pos="2" type="boolean"/>
+		<bitfield name="INTF1_SW_TRG_MUX" pos="4" type="boolean"/>
+		<bitfield name="INTF2_SW_TRG_MUX" pos="8" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x004f0" name="SPLIT_DPL_LOWER">
+		<bitfield name="SMART_PANEL" pos="1" type="boolean"/>
+		<bitfield name="SMART_PANEL_FREE_RUN" pos="2" type="boolean"/>
+		<bitfield name="INTF1_TG_SYNC" pos="4" type="boolean"/>
+		<bitfield name="INTF2_TG_SYNC" pos="8" type="boolean"/>
+	</reg32>
 <!-- check length/index.. -->
     <array doffsets="mdp5_cfg->ctl.base[0],mdp5_cfg->ctl.base[1],mdp5_cfg->ctl.base[2],mdp5_cfg->ctl.base[3],mdp5_cfg->ctl.base[4]" name="CTL" length="5" stride="0x400">
 		<array offsets="0x000,0x004,0x008,0x00C,0x010,0x024" name="LAYER" length="6" stride="4">
@@ -486,6 +502,38 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x238" name="PA_BASE"/>
 		<reg32 offset="0x2dc" name="GAMUT_BASE"/>
 		<reg32 offset="0x2b0" name="GC_BASE"/>
+	</array>
+
+    <array doffsets="mdp5_cfg->pp.base[0],mdp5_cfg->pp.base[1],mdp5_cfg->pp.base[2],mdp5_cfg->pp.base[3]" name="PP" length="4" stride="0x100">
+		<reg32 offset="0x000" name="TEAR_CHECK_EN"/>
+		<reg32 offset="0x004" name="SYNC_CONFIG_VSYNC">
+			<bitfield name="COUNT" low="0" high="18" type="uint"/>
+			<bitfield name="COUNTER_EN" pos="19" type="boolean"/>
+			<bitfield name="IN_EN" pos="20" type="boolean"/>
+		</reg32>
+		<reg32 offset="0x008" name="SYNC_CONFIG_HEIGHT"/>
+		<reg32 offset="0x00c" name="SYNC_WRCOUNT">
+			<bitfield name="LINE_COUNT" low="0" high="15" type="uint"/>
+			<bitfield name="FRAME_COUNT" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x010" name="VSYNC_INIT_VAL"/>
+		<reg32 offset="0x014" name="INT_COUNT_VAL">
+			<bitfield name="LINE_COUNT" low="0" high="15" type="uint"/>
+			<bitfield name="FRAME_COUNT" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x018" name="SYNC_THRESH">
+			<bitfield name="START" low="0" high="15" type="uint"/>
+			<bitfield name="CONTINUE" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x01c" name="START_POS"/>
+		<reg32 offset="0x020" name="RD_PTR_IRQ"/>
+		<reg32 offset="0x024" name="WR_PTR_IRQ"/>
+		<reg32 offset="0x028" name="OUT_LINE_COUNT"/>
+		<reg32 offset="0x02c" name="PP_LINE_COUNT"/>
+		<reg32 offset="0x030" name="AUTOREFRESH_CONFIG"/>
+		<reg32 offset="0x034" name="FBC_MODE"/>
+		<reg32 offset="0x038" name="FBC_BUDGET_CTL"/>
+		<reg32 offset="0x03c" name="FBC_LOSSY_MODE"/>
 	</array>
 
     <array doffsets="mdp5_cfg->intf.base[0],mdp5_cfg->intf.base[1],mdp5_cfg->intf.base[2],mdp5_cfg->intf.base[3],mdp5_cfg->intf.base[4]" name="INTF" length="5" stride="0x200">
