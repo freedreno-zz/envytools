@@ -91,33 +91,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="BWC_Q_MED"    value="2"/>
 	</enum>
 
-	<enum name="mdp5_client_id">
-		<value name="CID_UNUSED"  value="0"/>
-		<value name="CID_VIG0_Y"  value="1"/>
-		<value name="CID_VIG0_CR" value="2"/>
-		<value name="CID_VIG0_CB" value="3"/>
-		<value name="CID_VIG1_Y"  value="4"/>
-		<value name="CID_VIG1_CR" value="5"/>
-		<value name="CID_VIG1_CB" value="6"/>
-		<value name="CID_VIG2_Y"  value="7"/>
-		<value name="CID_VIG2_CR" value="8"/>
-		<value name="CID_VIG2_CB" value="9"/>
-		<value name="CID_DMA0_Y"  value="10"/>
-		<value name="CID_DMA0_CR" value="11"/>
-		<value name="CID_DMA0_CB" value="12"/>
-		<value name="CID_DMA1_Y"  value="13"/>
-		<value name="CID_DMA1_CR" value="14"/>
-		<value name="CID_DMA1_CB" value="15"/>
-		<value name="CID_RGB0"    value="16"/>
-		<value name="CID_RGB1"    value="17"/>
-		<value name="CID_RGB2"    value="18"/>
-		<value name="CID_VIG3_Y"  value="19"/>
-		<value name="CID_VIG3_CR" value="20"/>
-		<value name="CID_VIG3_CB" value="21"/>
-		<value name="CID_RGB3"    value="22"/>
-		<value name="CID_MAX"     value="23"/>
-	</enum>
-
 	<enum name="mdp5_cursor_format">
 		<value name="CURSOR_FMT_ARGB8888" value="0"/>
 		<value name="CURSOR_FMT_ARGB1555" value="2"/>
@@ -160,9 +133,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</bitset>
 
 	<bitset name="mdp5_smp_alloc" inline="yes">
-		<bitfield name="CLIENT0" low="0"  high="7"  type="mdp5_client_id"/>
-		<bitfield name="CLIENT1" low="8"  high="15" type="mdp5_client_id"/>
-		<bitfield name="CLIENT2" low="16" high="23" type="mdp5_client_id"/>
+        <!-- Use "mdp5_cfg->mdp.smp.clients[enum mdp5_pipe]" instead -->
+		<bitfield name="CLIENT0" low="0"  high="7"  type="uint"/>
+		<bitfield name="CLIENT1" low="8"  high="15" type="uint"/>
+		<bitfield name="CLIENT2" low="16" high="23" type="uint"/>
 	</bitset>
 
 	<!-- Even though there is 1 MDP, length=2 to force dynamic offset usage -->
