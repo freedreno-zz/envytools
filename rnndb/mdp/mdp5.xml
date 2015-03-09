@@ -9,6 +9,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <domain name="VBIF" width="32">
 </domain>
 
+<domain name="MDSS" width="32">
+	<reg32 offset="0x00000" name="HW_VERSION">
+		<bitfield name="STEP" low="0" high="15" type="uint"/>
+		<bitfield name="MINOR" low="16" high="27" type="uint"/>
+		<bitfield name="MAJOR" low="28" high="31" type="uint"/>
+	</reg32>
+
+	<reg32 offset="0x00010" name="HW_INTR_STATUS">
+		<bitfield name="INTR_MDP"  pos="0"  type="boolean"/>
+		<bitfield name="INTR_DSI0" pos="4"  type="boolean"/>
+		<bitfield name="INTR_DSI1" pos="5"  type="boolean"/>
+		<bitfield name="INTR_HDMI" pos="8"  type="boolean"/>
+		<bitfield name="INTR_EDP"  pos="12" type="boolean"/>
+	</reg32>
+</domain>
+
 <domain name="MDP5" width="32">
 
 	<enum name="mdp5_intf_type">
@@ -149,82 +165,77 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CLIENT2" low="16" high="23" type="mdp5_client_id"/>
 	</bitset>
 
-	<reg32 offset="0x00000" name="HW_VERSION"/>
-	<reg32 offset="0x00010" name="HW_INTR_STATUS">
-		<bitfield name="INTR_MDP"  pos="0"  type="boolean"/>
-		<bitfield name="INTR_DSI0" pos="4"  type="boolean"/>
-		<bitfield name="INTR_DSI1" pos="5"  type="boolean"/>
-		<bitfield name="INTR_HDMI" pos="8"  type="boolean"/>
-		<bitfield name="INTR_EDP"  pos="12" type="boolean"/>
-	</reg32>
+	<!-- Even though there is 1 MDP, length=2 to force dynamic offset usage -->
+	<array doffsets="mdp5_cfg->mdp.base[0]" name="MDP" length="2" stride="0x1000">
+		<reg32 offset="0x00000" name="HW_VERSION">
+			<bitfield name="STEP" low="0" high="15" type="uint"/>
+			<bitfield name="MINOR" low="16" high="27" type="uint"/>
+			<bitfield name="MAJOR" low="28" high="31" type="uint"/>
+		</reg32>
 
-	<reg32 offset="0x00100" name="MDP_VERSION">
-		<bitfield name="MINOR" low="16" high="23" type="uint"/>
-		<bitfield name="MAJOR" low="28" high="31" type="uint"/>
-	</reg32>
+		<reg32 offset="0x00004" name="DISP_INTF_SEL">
+			<bitfield name="INTF0" low="0"  high="7"  type="mdp5_intf_type"/>
+			<bitfield name="INTF1" low="8"  high="15" type="mdp5_intf_type"/>
+			<bitfield name="INTF2" low="16" high="23" type="mdp5_intf_type"/>
+			<bitfield name="INTF3" low="24" high="31" type="mdp5_intf_type"/>
+		</reg32>
+		<reg32 offset="0x00010" name="INTR_EN" type="MDP5_IRQ"/>
+		<reg32 offset="0x00014" name="INTR_STATUS" type="MDP5_IRQ"/>
+		<reg32 offset="0x00018" name="INTR_CLEAR" type="MDP5_IRQ"/>
+		<reg32 offset="0x0001C" name="HIST_INTR_EN"/>
+		<reg32 offset="0x00020" name="HIST_INTR_STATUS"/>
+		<reg32 offset="0x00024" name="HIST_INTR_CLEAR"/>
+		<reg32 offset="0x00028" name="SPARE_0">
+			<bitfield name="SPLIT_DPL_SINGLE_FLUSH_EN" pos="0"/>
+		</reg32>
 
-	<reg32 offset="0x00104" name="DISP_INTF_SEL">
-		<bitfield name="INTF0" low="0"  high="7"  type="mdp5_intf_type"/>
-		<bitfield name="INTF1" low="8"  high="15" type="mdp5_intf_type"/>
-		<bitfield name="INTF2" low="16" high="23" type="mdp5_intf_type"/>
-		<bitfield name="INTF3" low="24" high="31" type="mdp5_intf_type"/>
-	</reg32>
-	<reg32 offset="0x00110" name="INTR_EN" type="MDP5_IRQ"/>
-	<reg32 offset="0x00114" name="INTR_STATUS" type="MDP5_IRQ"/>
-	<reg32 offset="0x00118" name="INTR_CLEAR" type="MDP5_IRQ"/>
-	<reg32 offset="0x0011C" name="HIST_INTR_EN"/>
-	<reg32 offset="0x00120" name="HIST_INTR_STATUS"/>
-	<reg32 offset="0x00124" name="HIST_INTR_CLEAR"/>
-	<reg32 offset="0x00128" name="SPARE_0">
-		<bitfield name="SPLIT_DPL_SINGLE_FLUSH_EN" pos="0"/>
-	</reg32>
-
-	<array offset="0x00180" name="SMP_ALLOC_W" length="8" stride="4">
-		<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
-	</array>
-	<array offset="0x00230" name="SMP_ALLOC_R" length="8" stride="4">
-		<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
-	</array>
-
-	<enum name="mdp5_igc_type">
-		<value name="IGC_VIG" value="0"/>		<!-- 0x300 -->
-		<value name="IGC_RGB" value="1"/>		<!-- 0x310 -->
-		<value name="IGC_DMA" value="2"/>		<!-- 0x320 -->
-		<value name="IGC_DSPP" value="3"/>		<!-- 0x400 -->
-	</enum>
-	<array offsets="0x00300,0x00310,0x00320,0x00400" name="IGC" length="3" stride="0x10" index="mdp5_igc_type">
-		<array offset="0x00" name="LUT" length="3" stride="4">
-			<reg32 offset="0" name="REG">
-				<bitfield name="VAL" low="0" high="11"/>
-				<bitfield name="INDEX_UPDATE" pos="25" type="boolean"/>
-				<!--
-					not sure about these:
-						/* INDEX_UPDATE */
-						data = (1 << 25) | (((~(1 << blk_idx)) & 0x7) << 28);
-						MDSS_MDP_REG_WRITE(offset, (cfg->c0_c1_data[0] & 0xFFF) | data);
-				 -->
-				<bitfield name="DISABLE_PIPE_0" pos="28" type="boolean"/>
-				<bitfield name="DISABLE_PIPE_1" pos="29" type="boolean"/>
-				<bitfield name="DISABLE_PIPE_2" pos="30" type="boolean"/>
-			</reg32>
+		<array offset="0x00080" name="SMP_ALLOC_W" length="8" stride="4">
+			<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
 		</array>
+		<array offset="0x00130" name="SMP_ALLOC_R" length="8" stride="4">
+			<reg32 offset="0" name="REG" type="mdp5_smp_alloc"/>
+		</array>
+
+		<enum name="mdp5_igc_type">
+			<value name="IGC_VIG" value="0"/>		<!-- 0x200 -->
+			<value name="IGC_RGB" value="1"/>		<!-- 0x210 -->
+			<value name="IGC_DMA" value="2"/>		<!-- 0x220 -->
+			<value name="IGC_DSPP" value="3"/>		<!-- 0x300 -->
+		</enum>
+		<array offsets="0x00200,0x00210,0x00220,0x00300" name="IGC" length="3" stride="0x10" index="mdp5_igc_type">
+			<array offset="0x00" name="LUT" length="3" stride="4">
+				<reg32 offset="0" name="REG">
+					<bitfield name="VAL" low="0" high="11"/>
+					<bitfield name="INDEX_UPDATE" pos="25" type="boolean"/>
+					<!--
+						not sure about these:
+							/* INDEX_UPDATE */
+							data = (1 << 25) | (((~(1 << blk_idx)) & 0x7) << 28);
+							MDSS_MDP_REG_WRITE(offset, (cfg->c0_c1_data[0] & 0xFFF) | data);
+					-->
+					<bitfield name="DISABLE_PIPE_0" pos="28" type="boolean"/>
+					<bitfield name="DISABLE_PIPE_1" pos="29" type="boolean"/>
+					<bitfield name="DISABLE_PIPE_2" pos="30" type="boolean"/>
+				</reg32>
+			</array>
+		</array>
+		<reg32 offset="0x002f4" name="SPLIT_DPL_EN"/>
+		<reg32 offset="0x002f8" name="SPLIT_DPL_UPPER">
+			<bitfield name="SMART_PANEL" pos="1" type="boolean"/>
+			<bitfield name="SMART_PANEL_FREE_RUN" pos="2" type="boolean"/>
+			<bitfield name="INTF1_SW_TRG_MUX" pos="4" type="boolean"/>
+			<bitfield name="INTF2_SW_TRG_MUX" pos="8" type="boolean"/>
+		</reg32>
+		<reg32 offset="0x003f0" name="SPLIT_DPL_LOWER">
+			<bitfield name="SMART_PANEL" pos="1" type="boolean"/>
+			<bitfield name="SMART_PANEL_FREE_RUN" pos="2" type="boolean"/>
+			<bitfield name="INTF1_TG_SYNC" pos="4" type="boolean"/>
+			<bitfield name="INTF2_TG_SYNC" pos="8" type="boolean"/>
+		</reg32>
 	</array>
 
-	<reg32 offset="0x003f4" name="SPLIT_DPL_EN"/>
-	<reg32 offset="0x003f8" name="SPLIT_DPL_UPPER">
-		<bitfield name="SMART_PANEL" pos="1" type="boolean"/>
-		<bitfield name="SMART_PANEL_FREE_RUN" pos="2" type="boolean"/>
-		<bitfield name="INTF1_SW_TRG_MUX" pos="4" type="boolean"/>
-		<bitfield name="INTF2_SW_TRG_MUX" pos="8" type="boolean"/>
-	</reg32>
-	<reg32 offset="0x004f0" name="SPLIT_DPL_LOWER">
-		<bitfield name="SMART_PANEL" pos="1" type="boolean"/>
-		<bitfield name="SMART_PANEL_FREE_RUN" pos="2" type="boolean"/>
-		<bitfield name="INTF1_TG_SYNC" pos="4" type="boolean"/>
-		<bitfield name="INTF2_TG_SYNC" pos="8" type="boolean"/>
-	</reg32>
 <!-- check length/index.. -->
-    <array doffsets="mdp5_cfg->ctl.base[0],mdp5_cfg->ctl.base[1],mdp5_cfg->ctl.base[2],mdp5_cfg->ctl.base[3],mdp5_cfg->ctl.base[4]" name="CTL" length="5" stride="0x400">
+	<array doffsets="mdp5_cfg->ctl.base[0],mdp5_cfg->ctl.base[1],mdp5_cfg->ctl.base[2],mdp5_cfg->ctl.base[3],mdp5_cfg->ctl.base[4]" name="CTL" length="5" stride="0x400">
 		<array offsets="0x000,0x004,0x008,0x00C,0x010,0x024" name="LAYER" length="6" stride="4">
 			<reg32 offset="0" name="REG">
 				<bitfield name="VIG0"  low="0"  high="2"  type="mdp_mixer_stage_id"/>
