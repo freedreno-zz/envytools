@@ -290,7 +290,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="P2" low="0" high="15" type="uint"/>
 			<bitfield name="P3" low="16" high="31" type="uint"/>
 		</reg32>
-		<reg32 offset="0x0048" name="FRAME_SIZE" type="reg_wh"/>
+		<reg32 offset="0x0048" name="SSTILE_FRAME_SIZE" type="reg_wh"/>
 		<reg32 offset="0x0050" name="SRC_FORMAT">
 			<bitfield name="G_BPC" low="0" high="1" type="mdp_bpc"/>
 			<bitfield name="B_BPC" low="2" high="3" type="mdp_bpc"/>
