@@ -1393,12 +1393,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="3" name="3">
 		<!--
-		not quite sure why two layer size.. probably that is not
-		what they both are..  but layers within a slice (mipmap
-		level) seem to be aligned to page boundary, and those two
-		fields get set to # of pages in the layer
+		Update: the two LAYERSZn seem not to be the same thing.
+		According to Ilia's experimentation the first one goes up
+		to at *least* bit 12..
 		 -->
-		<bitfield name="LAYERSZ1" low="0" high="3" shr="12" type="uint"/>
+		<bitfield name="LAYERSZ1" low="0" high="12" shr="12" type="uint"/>
 		<bitfield name="DEPTH" low="17" high="27" type="uint"/>
 		<bitfield name="LAYERSZ2" low="28" high="31" shr="12" type="uint"/>
 	</reg32>
