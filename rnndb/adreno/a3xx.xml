@@ -721,7 +721,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="DEPTH_BASE" low="11" high="31" shr="12" type="hex"/>
 	</reg32>
 	<reg32 offset="0x2103" name="RB_DEPTH_PITCH" shr="3" type="uint">
-		<doc>pitch of depth/stencil buffer</doc>
+		<doc>
+			Pitch of depth buffer or combined depth+stencil buffer
+			in z24s8 cases.
+		</doc>
 	</reg32>
 	<reg32 offset="0x2104" name="RB_STENCIL_CONTROL">
 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
@@ -745,11 +748,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2105" name="RB_STENCIL_CLEAR">
 		<doc>seems to be always set to 0x00000000</doc>
 	</reg32>
-	<reg32 offset="0x2106" name="RB_STENCIL_BUF_INFO">
-		<doc>seems to be always set to 0x00000000, except 0x2000 for Z32_X24S8(?)</doc>
+	<reg32 offset="0x2106" name="RB_STENCIL_INFO">
+		<doc>Base address for stencil when not using interleaved depth/stencil</doc>
+		<bitfield name="STENCIL_BASE" low="11" high="31" shr="12" type="hex"/>
 	</reg32>
-	<reg32 offset="0x2107" name="RB_STENCIL_BUF_PITCH">
-		<doc>seems to be always set to 0x00000000</doc>
+	<reg32 offset="0x2107" name="RB_STENCIL_PITCH" shr="3" type="uint">
+		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
 	</reg32>
 	<reg32 offset="0x2108" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x2109" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
