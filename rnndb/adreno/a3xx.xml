@@ -241,6 +241,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_R16G16_UINT"	    value="0x2d"/>
 	<value name="RB_R16G16B16A16_UINT"  value="0x2f"/>
 
+	<value name="RB_R32_FLOAT"          value="0x30"/>
+	<value name="RB_R32G32_FLOAT"       value="0x31"/>
 	<value name="RB_R32G32B32A32_FLOAT" value="0x33"/> <!-- GL_FLOAT -->
 
 	<value name="RB_R32_SINT"	    value="0x34"/>
