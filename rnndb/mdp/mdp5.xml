@@ -355,7 +355,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="UNPACK_COUNT" low="12" high="13" type="uint"/>
 			<bitfield name="UNPACK_TIGHT" pos="17" type="boolean"/>
 			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
-			<bitfield name="NUM_PLANES" low="19" high="20" type="mdp_sspp_fetch_type"/>
+			<bitfield name="NUM_PLANES" low="19" high="20" type="mdp_fetch_type"/>
 			<bitfield name="CHROMA_SAMP" low="23" high="24" type="mdp_chroma_samp_type"/>
 		</reg32>
 		<reg32 offset="0x034" name="SRC_UNPACK" type="mdp_unpack_pattern"/>
@@ -474,7 +474,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x110" name="GC_LUT_BASE"/>
 	</array>
 
-    <array doffsets="mdp5_cfg->dspp.base[0],mdp5_cfg->dspp.base[1],mdp5_cfg->dspp.base[2],mdp5_cfg->dspp.base[3]" name="DSPP" length="4" stride="0x400">
+	<array doffsets="mdp5_cfg->dspp.base[0],mdp5_cfg->dspp.base[1],mdp5_cfg->dspp.base[2],mdp5_cfg->dspp.base[3]" name="DSPP" length="4" stride="0x400">
 		<reg32 offset="0x000" name="OP_MODE">
 			<bitfield name="IGC_LUT_EN" pos="0" type="boolean"/>
 			<bitfield name="IGC_TBL_IDX" low="1" high="3" type="uint"/>
@@ -497,7 +497,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x2b0" name="GC_BASE"/>
 	</array>
 
-    <array doffsets="mdp5_cfg->pp.base[0],mdp5_cfg->pp.base[1],mdp5_cfg->pp.base[2],mdp5_cfg->pp.base[3]" name="PP" length="4" stride="0x100">
+	<array doffsets="mdp5_cfg->pp.base[0],mdp5_cfg->pp.base[1],mdp5_cfg->pp.base[2],mdp5_cfg->pp.base[3]" name="PP" length="4" stride="0x100">
 		<reg32 offset="0x000" name="TEAR_CHECK_EN"/>
 		<reg32 offset="0x004" name="SYNC_CONFIG_VSYNC">
 			<bitfield name="COUNT" low="0" high="18" type="uint"/>
@@ -529,7 +529,131 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x03c" name="FBC_LOSSY_MODE"/>
 	</array>
 
-    <array doffsets="mdp5_cfg->intf.base[0],mdp5_cfg->intf.base[1],mdp5_cfg->intf.base[2],mdp5_cfg->intf.base[3],mdp5_cfg->intf.base[4]" name="INTF" length="5" stride="0x200">
+	<enum name="mdp5_block_size">
+		<value name="BLOCK_SIZE_64" value="0"/>
+		<value name="BLOCK_SIZE_128" value="1"/>
+	</enum>
+
+	<enum name="mdp5_rotate_mode">
+		<value name="ROTATE_0" value="0"/>
+		<value name="ROTATE_90" value="1"/>
+	</enum>
+
+	<enum name="mdp5_chroma_downsample_method">
+		<value name="DS_MTHD_NO_PIXEL_DROP" value="0"/>
+		<value name="DS_MTHD_PIXEL_DROP" value="1"/>
+	</enum>
+
+	<array doffsets="mdp5_cfg->wb.base[0],mdp5_cfg->wb.base[1],mdp5_cfg->wb.base[2],mdp5_cfg->wb.base[3],,mdp5_cfg->wb.base[4]" name="WB" length="5" stride="0x400">
+		<reg32 offset="0x000" name="DST_FORMAT">
+			<bitfield name="DSTC0_OUT" low="0" high="1" type="uint"/>
+			<bitfield name="DSTC1_OUT" low="2" high="3" type="uint"/>
+			<bitfield name="DSTC2_OUT" low="4" high="5" type="uint"/>
+			<bitfield name="DSTC3_OUT" low="6" high="7" type="uint"/>
+			<bitfield name="DSTC3_EN" pos="8" type="boolean"/>
+			<bitfield name="DST_BPP" low="9" high="10" type="uint"/>
+			<bitfield name="PACK_COUNT" low="12" high="13" type="uint"/>
+			<bitfield name="DST_ALPHA_X" pos="14" type="boolean"/>
+			<bitfield name="PACK_TIGHT" pos="17" type="boolean"/>
+			<bitfield name="PACK_ALIGN_MSB" pos="18" type="boolean"/>
+			<bitfield name="WRITE_PLANES" low="19" high="20" type="uint"/>
+			<bitfield name="DST_DITHER_EN" pos="22" type="boolean"/>
+			<bitfield name="DST_CHROMA_SAMP" low="23" high="25" type="uint"/>
+			<bitfield name="DST_CHROMA_SITE" low="26" high="29" type="uint"/>
+			<bitfield name="FRAME_FORMAT" low="30" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x004" name="DST_OP_MODE">
+			<bitfield name="BWC_ENC_EN" pos="0" type="boolean"/>
+			<bitfield name="BWC_ENC_OP" low="1" high="2" type="uint"/>
+			<bitfield name="BLOCK_SIZE" low="4" high="4" type="uint"/>
+			<bitfield name="ROT_MODE" low="5" high="5" type="uint"/>
+			<bitfield name="ROT_EN" pos="6" type="boolean"/>
+			<bitfield name="CSC_EN" pos="8" type="boolean"/>
+			<bitfield name="CSC_SRC_DATA_FORMAT" low="9" high="9" type="uint"/>
+			<bitfield name="CSC_DST_DATA_FORMAT" low="10" high="10" type="uint"/>
+			<bitfield name="CHROMA_DWN_SAMPLE_EN" pos="11" type="boolean"/>
+			<bitfield name="CHROMA_DWN_SAMPLE_FORMAT" low="12" high="12" type="uint"/>
+			<bitfield name="CHROMA_DWN_SAMPLE_H_MTHD" low="13" high="13" type="uint"/>
+			<bitfield name="CHROMA_DWN_SAMPLE_V_MTHD" low="14" high="14" type="uint"/>
+		</reg32>
+		<reg32 offset="0x008" name="DST_PACK_PATTERN">
+			<bitfield name="ELEMENT0" low="0" high="1" type="uint"/>
+			<bitfield name="ELEMENT1" low="8" high="9" type="uint"/>
+			<bitfield name="ELEMENT2" low="16" high="17" type="uint"/>
+			<bitfield name="ELEMENT3" low="24" high="25" type="uint"/>
+		</reg32>
+		<reg32 offset="0x00c" name="DST0_ADDR"/>
+		<reg32 offset="0x010" name="DST1_ADDR"/>
+		<reg32 offset="0x014" name="DST2_ADDR"/>
+		<reg32 offset="0x018" name="DST3_ADDR"/>
+		<reg32 offset="0x01c" name="DST_YSTRIDE0">
+			<bitfield name="DST0_YSTRIDE" low="0" high="15" type="uint"/>
+			<bitfield name="DST1_YSTRIDE" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x020" name="DST_YSTRIDE1">
+			<bitfield name="DST2_YSTRIDE" low="0" high="15" type="uint"/>
+			<bitfield name="DST3_YSTRIDE" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x024" name="DST_DITHER_BITDEPTH"/>
+		<reg32 offset="0x030" name="DITHER_MATRIX_ROW0"/>
+		<reg32 offset="0x034" name="DITHER_MATRIX_ROW1"/>
+		<reg32 offset="0x038" name="DITHER_MATRIX_ROW2"/>
+		<reg32 offset="0x03c" name="DITHER_MATRIX_ROW3"/>
+		<reg32 offset="0x048" name="DST_WRITE_CONFIG"/>
+		<reg32 offset="0x050" name="ROTATION_DNSCALER"/>
+		<reg32 offset="0x060" name="N16_INIT_PHASE_X_0_3"/>
+		<reg32 offset="0x064" name="N16_INIT_PHASE_X_1_2"/>
+		<reg32 offset="0x068" name="N16_INIT_PHASE_Y_0_3"/>
+		<reg32 offset="0x06c" name="N16_INIT_PHASE_Y_1_2"/>
+		<reg32 offset="0x074" name="OUT_SIZE">
+			<bitfield name="DST_W" low="0" high="15" type="uint"/>
+			<bitfield name="DST_H" low="16" high="31" type="uint"/>
+		</reg32>
+		<reg32 offset="0x078" name="ALPHA_X_VALUE"/>
+		<reg32 offset="0x260" name="CSC_MATRIX_COEFF_0">
+			<bitfield name="COEFF_11" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_12" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x264" name="CSC_MATRIX_COEFF_1">
+			<bitfield name="COEFF_13" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_21" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x268" name="CSC_MATRIX_COEFF_2">
+			<bitfield name="COEFF_22" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_23" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x26c" name="CSC_MATRIX_COEFF_3">
+			<bitfield name="COEFF_31" low="0" high="12" type="uint"/>
+			<bitfield name="COEFF_32" low="16" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="0x270" name="CSC_MATRIX_COEFF_4">
+			<bitfield name="COEFF_33" low="0" high="12" type="uint"/>
+		</reg32>
+		<array offset="0x274" name="CSC_COMP_PRECLAMP" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="HIGH"  low="0"  high="7"  type="uint"/>
+				<bitfield name="LOW"  low="8"  high="15"  type="uint"/>
+			</reg32>
+		</array>
+		<array offset="0x280" name="CSC_COMP_POSTCLAMP" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="HIGH"  low="0"  high="7"  type="uint"/>
+				<bitfield name="LOW"  low="8"  high="15"  type="uint"/>
+			</reg32>
+		</array>
+		<array offset="0x28c" name="CSC_COMP_PREBIAS" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="VALUE"  low="0"  high="8"  type="uint"/>
+			</reg32>
+		</array>
+		<array offset="0x298" name="CSC_COMP_POSTBIAS" length="3" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="VALUE"  low="0"  high="8"  type="uint"/>
+			</reg32>
+		</array>
+	</array>
+
+	<array doffsets="mdp5_cfg->intf.base[0],mdp5_cfg->intf.base[1],mdp5_cfg->intf.base[2],mdp5_cfg->intf.base[3],mdp5_cfg->intf.base[4]" name="INTF" length="5" stride="0x200">
 		<reg32 offset="0x000" name="TIMING_ENGINE_EN"/>
 		<reg32 offset="0x004" name="CONFIG"/>
 		<reg32 offset="0x008" name="HSYNC_CTL">
@@ -591,7 +715,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x11c" name="TPG_RGB_MAPPING"/>
 	</array>
 
-    <array doffsets="mdp5_cfg->ad.base[0],mdp5_cfg->ad.base[1]" name="AD" length="2" stride="0x200">
+	<array doffsets="mdp5_cfg->ad.base[0],mdp5_cfg->ad.base[1]" name="AD" length="2" stride="0x200">
 		<reg32 offset="0x000" name="BYPASS"/>
 		<reg32 offset="0x004" name="CTRL_0"/>
 		<reg32 offset="0x008" name="CTRL_1"/>

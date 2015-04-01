@@ -13,7 +13,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
     <value name="CHROMA_420"  value="3"/>
 </enum>
 
-<enum name="mdp_sspp_fetch_type">
+<enum name="mdp_fetch_type">
     <value name="MDP_PLANE_INTERLEAVED"   value="0"/>
     <value name="MDP_PLANE_PLANAR"        value="1"/>
     <value name="MDP_PLANE_PSEUDO_PLANAR" value="2"/>
