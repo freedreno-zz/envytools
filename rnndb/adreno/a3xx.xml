@@ -1424,9 +1424,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!--
 		Update: the two LAYERSZn seem not to be the same thing.
 		According to Ilia's experimentation the first one goes up
-		to at *least* bit 12..
+		to at *least* bit 14..
 		 -->
-		<bitfield name="LAYERSZ1" low="0" high="12" shr="12" type="uint"/>
+		<bitfield name="LAYERSZ1" low="0" high="14" shr="12" type="uint"/>
 		<bitfield name="DEPTH" low="17" high="27" type="uint"/>
 		<bitfield name="LAYERSZ2" low="28" high="31" shr="12" type="uint"/>
 	</reg32>
