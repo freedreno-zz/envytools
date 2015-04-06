@@ -230,6 +230,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_A8_UNORM"	    value="0x14"/>
 	<value name="RB_R8_UNORM"	    value="0x15"/>
 
+	<value name="RB_R16_FLOAT"          value="0x18"/>
+	<value name="RB_R16G16_FLOAT"       value="0x19"/>
 	<value name="RB_R16G16B16A16_FLOAT" value="0x1b"/> <!-- GL_HALF_FLOAT_OES -->
 	<value name="RB_R11G11B10_FLOAT"    value="0x1c"/>
 
