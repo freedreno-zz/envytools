@@ -821,6 +821,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="STRIDE_IN_VPC" low="0" high="4" type="uint"/>
 		<bitfield name="POLYMODE_FRONT_PTYPE" low="5" high="7" type="adreno_pa_su_sc_draw"/>
 		<bitfield name="POLYMODE_BACK_PTYPE" low="8" high="10" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="POLYMODE_ENABLE" pos="12" type="boolean"/>
 		<bitfield name="PRIMITIVE_RESTART" pos="20" type="boolean"/>
 		<bitfield name="PROVOKING_VTX_LAST" pos="25" type="boolean"/>
 		<!-- PSIZE bit set if gl_PointSize written: -->
