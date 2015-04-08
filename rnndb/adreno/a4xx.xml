@@ -200,6 +200,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_ETC2_RGBA8" value="0x6d"/>
 	<value name="TFMT4_ETC2_RGB8A1" value="0x6e"/>
 
+	<value name="TFMT4_ASTC_4x4" value="0x6f"/>
+	<value name="TFMT4_ASTC_5x4" value="0x70"/>
+	<value name="TFMT4_ASTC_5x5" value="0x71"/>
+	<value name="TFMT4_ASTC_6x5" value="0x72"/>
+	<value name="TFMT4_ASTC_6x6" value="0x73"/>
+	<value name="TFMT4_ASTC_8x5" value="0x74"/>
+	<value name="TFMT4_ASTC_8x6" value="0x75"/>
+	<value name="TFMT4_ASTC_8x8" value="0x76"/>
+	<value name="TFMT4_ASTC_10x5" value="0x77"/>
+	<value name="TFMT4_ASTC_10x6" value="0x78"/>
+	<value name="TFMT4_ASTC_10x8" value="0x79"/>
+	<value name="TFMT4_ASTC_10x10" value="0x7a"/>
+	<value name="TFMT4_ASTC_12x10" value="0x7b"/>
+	<value name="TFMT4_ASTC_12x12" value="0x7c"/>
+
 </enum>
 
 <enum name="a4xx_tex_fetchsize">
