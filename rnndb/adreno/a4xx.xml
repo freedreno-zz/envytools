@@ -114,6 +114,31 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_8_8_UNORM" value="0xe"/>
 	<value name="TFMT4_8_8_8_8_UNORM" value="0x1c"/>
 
+	<value name="TFMT4_8_8_SNORM" value="0x0f"/>
+	<value name="TFMT4_8_8_8_8_SNORM" value="0x1d"/>
+
+	<value name="TFMT4_8_8_UINT" value="0x10"/>
+	<value name="TFMT4_8_8_8_8_UINT" value="0x1e"/>
+
+	<value name="TFMT4_8_8_SINT" value="0x11"/>
+	<value name="TFMT4_8_8_8_8_SINT" value="0x1f"/>
+
+	<value name="TFMT4_16_UINT" value="0x15"/>
+	<value name="TFMT4_16_16_UINT" value="0x29"/>
+	<value name="TFMT4_16_16_16_16_UINT" value="0x36"/>
+
+	<value name="TFMT4_16_SINT" value="0x16"/>
+	<value name="TFMT4_16_16_SINT" value="0x2a"/>
+	<value name="TFMT4_16_16_16_16_SINT" value="0x37"/>
+
+	<value name="TFMT4_32_UINT" value="0x2c"/>
+	<value name="TFMT4_32_32_UINT" value="0x39"/>
+	<value name="TFMT4_32_32_32_32_UINT" value="0x40"/>
+
+	<value name="TFMT4_32_SINT" value="0x2d"/>
+	<value name="TFMT4_32_32_SINT" value="0x3a"/>
+	<value name="TFMT4_32_32_32_32_SINT" value="0x41"/>
+
 	<value name="TFMT4_16_FLOAT" value="0x14"/>
 	<value name="TFMT4_16_16_FLOAT" value="0x28"/>
 	<!-- TFMT_16_16_16_FLOAT -->
