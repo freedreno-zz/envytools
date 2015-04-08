@@ -291,6 +291,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="COLOR_TILE_MODE" low="6" high="7" type="a4xx_tile_mode"/>
 			<bitfield name="DITHER_MODE" low="9" high="10" type="adreno_rb_dither_mode"/>
 			<bitfield name="COLOR_SWAP" low="11" high="12" type="a3xx_color_swap"/>
+			<bitfield name="COLOR_SRGB" pos="13" type="boolean"/>
 			<!-- note: possibly some # of lsb's aren't there: -->
 			<doc>
 				Pitch (actually, appears to be pitch in bytes, so really is a stride)
