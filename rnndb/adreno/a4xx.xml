@@ -99,7 +99,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="VFMT4_16_16_16_UNORM" value="0x1e"/>
 	<value name="VFMT4_16_16_16_16_UNORM" value="0x1f"/>
 
+	<value name="VFMT4_32_UINT" value="0x20"/>
+	<value name="VFMT4_32_32_UINT" value="0x21"/>
+	<value name="VFMT4_32_32_32_UINT" value="0x22"/>
+	<value name="VFMT4_32_32_32_32_UINT" value="0x23"/>
+	<value name="VFMT4_32_SINT" value="0x24"/>
 	<value name="VFMT4_32_32_SINT" value="0x25"/>
+	<value name="VFMT4_32_32_32_SINT" value="0x26"/>
+	<value name="VFMT4_32_32_32_32_SINT" value="0x27"/>
 
 	<value name="VFMT4_8_UINT" value="0x28"/>
 	<value name="VFMT4_8_8_UINT" value="0x29"/>
