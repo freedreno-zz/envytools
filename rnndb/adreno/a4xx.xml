@@ -8,10 +8,45 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="a4xx_color_fmt">
 	<value name="RB4_A8_UNORM" value="0x01"/>
+	<value name="RB4_R8_UNORM" value="0x02"/>
+
+	<value name="RB4_R4G4B4A4_UNORM" value="0x08"/>
+	<value name="RB4_R5G5B5A1_UNORM" value="0x0a"/>
 	<value name="RB4_R5G6R5_UNORM" value="0x0e"/>
-	<value name="RB4_Z16_UNORM" value="0x0f"/>
+	<value name="RB4_R8G8_UNORM" value="0x0f"/>
+	<value name="RB4_R8G8_SNORM" value="0x10"/>
+	<value name="RB4_R8G8_UINT" value="0x11"/>
+	<value name="RB4_R8G8_SINT" value="0x12"/>
+	<value name="RB4_R16_FLOAT" value="0x15"/>
+	<value name="RB4_R16_UINT" value="0x16"/>
+	<value name="RB4_R16_SINT" value="0x17"/>
+
 	<value name="RB4_R8G8B8_UNORM" value="0x19"/>
+
 	<value name="RB4_R8G8B8A8_UNORM" value="0x1a"/>
+	<value name="RB4_R8G8B8A8_SNORM" value="0x1c"/>
+	<value name="RB4_R8G8B8A8_UINT" value="0x1d"/>
+	<value name="RB4_R8G8B8A8_SINT" value="0x1e"/>
+	<value name="RB4_R10G10B10A2_UNORM" value="0x1f"/>
+	<value name="RB4_R10G10B10A2_UINT" value="0x22"/>
+	<value name="RB4_R11G11B10_FLOAT" value="0x27"/>
+	<value name="RB4_R16G16_FLOAT" value="0x2a"/>
+	<value name="RB4_R16G16_UINT" value="0x2b"/>
+	<value name="RB4_R16G16_SINT" value="0x2c"/>
+	<value name="RB4_R32_FLOAT" value="0x2d"/>
+	<value name="RB4_R32_UINT" value="0x2e"/>
+	<value name="RB4_R32_SINT" value="0x2f"/>
+
+	<value name="RB4_R16G16B16A16_FLOAT" value="0x36"/>
+	<value name="RB4_R16G16B16A16_UINT" value="0x37"/>
+	<value name="RB4_R16G16B16A16_SINT" value="0x38"/>
+	<value name="RB4_R32G32_FLOAT" value="0x39"/>
+	<value name="RB4_R32G32_UINT" value="0x3a"/>
+	<value name="RB4_R32G32_SINT" value="0x3b"/>
+
+	<value name="RB4_R32G32B32A32_FLOAT" value="0x3c"/>
+	<value name="RB4_R32G32B32A32_UINT" value="0x3d"/>
+	<value name="RB4_R32G32B32A32_SINT" value="0x3e"/>
 </enum>
 
 <enum name="a4xx_tile_mode">
