@@ -877,6 +877,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2074" name="GRAS_SU_POLY_OFFSET_SCALE" type="float"/>
 	<reg32 offset="0x2075" name="GRAS_SU_POLY_OFFSET_OFFSET" type="float"/>
+	<reg32 offset="0x2076" name="GRAS_SU_POLY_OFFSET_CLAMP" type="float"/>
 	<reg32 offset="0x2077" name="GRAS_DEPTH_CONTROL">
 		<!-- guestimating that this is GRAS based on addr -->
 		<bitfield name="FORMAT" low="0" high="1" type="a4xx_depth_format"/>
