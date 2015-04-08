@@ -187,6 +187,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="TX_EOT_APPEND" pos="0" type="boolean"/>
 		<bitfield name="RX_EOT_IGNORE" pos="4" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x000a8" name="LANE_CTRL">
+		<bitfield name="CLKLN_HS_FORCE_REQUEST" pos="28" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x000ac" name="LANE_SWAP_CTRL">
 		<bitfield name="DLN_SWAP_SEL" low="0" high="2" type="dsi_lane_swap"/>
 	</reg32>
