@@ -123,6 +123,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_32_32_FLOAT" value="0x38"/>
 	<!-- TFMT_32_32_32_FLOAT -->
 	<value name="TFMT4_32_32_32_32_FLOAT" value="0x3f"/>
+
+	<value name="TFMT4_9_9_9_E5_FLOAT" value="0x20"/>
+	<value name="TFMT4_11_11_10_FLOAT" value="0x25"/>
+
+	<value name="TFMT4_ATC_RGB" value="0x64"/>
+	<value name="TFMT4_ATC_RGBA_EXPLICIT" value="0x65"/>
+	<value name="TFMT4_ATC_RGBA_INTERPOLATED" value="0x66"/>
+
+	<value name="TFMT4_ETC2_RG11_UNORM" value="0x67"/>
+	<value name="TFMT4_ETC2_RG11_SNORM" value="0x68"/>
+	<value name="TFMT4_ETC2_R11_UNORM" value="0x69"/>
+	<value name="TFMT4_ETC2_R11_SNORM" value="0x6a"/>
+	<value name="TFMT4_ETC1" value="0x6b"/>
+	<value name="TFMT4_ETC2_RGB8" value="0x6c"/>
+	<value name="TFMT4_ETC2_RGBA8" value="0x6d"/>
+	<value name="TFMT4_ETC2_RGB8A1" value="0x6e"/>
+
 </enum>
 
 <enum name="a4xx_tex_fetchsize">
