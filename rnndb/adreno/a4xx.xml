@@ -360,16 +360,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ALPHA_TEST_FUNC" low="9" high="11" type="adreno_compare_func"/>
 	</reg32>
 	<reg32 offset="0x20f9" name="RB_FS_OUTPUT">
-		<!--  bit0 set if !fastclear -->
-		<bitfield name="ENABLE_BLEND" pos="0" type="boolean"/>
+		<!-- per-mrt enable bit -->
+		<bitfield name="ENABLE_BLEND" low="0" high="7"/>
 		<!-- else bit8 set when RB_RESOLVE_PASS+RB_COPY_CLEAR -->
 		<bitfield name="FAST_CLEAR" pos="8" type="boolean"/>
 		<!-- a guess? -->
 		<bitfield name="SAMPLE_MASK" low="16" high="31"/>
 	</reg32>
 	<!-- always 00000000 for binning pass, else 0000000f: -->
-	<reg32 offset="0x20fb" name="RB_RENDER_CONTROL3">
-		<bitfield name="COMPONENT_ENABLE" low="0" high="4"/>
+	<reg32 offset="0x20fb" name="RB_RENDER_COMPONENTS">
+		<bitfield name="RT0" low="0" high="3"/>
+		<bitfield name="RT1" low="4" high="7"/>
+		<bitfield name="RT2" low="8" high="11"/>
+		<bitfield name="RT3" low="12" high="15"/>
+		<bitfield name="RT4" low="16" high="19"/>
+		<bitfield name="RT5" low="20" high="23"/>
+		<bitfield name="RT6" low="24" high="27"/>
+		<bitfield name="RT7" low="28" high="31"/>
 	</reg32>
 
 	<reg32 offset="0x20fc" name="RB_COPY_CONTROL">
@@ -397,7 +404,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2100" name="RB_FS_OUTPUT_REG">
 		<!-- bit0 set except for binning pass.. -->
-		<bitfield name="COLOR_PIPE_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="MRT" low="0" high="3" type="uint"/>
 		<bitfield name="FRAG_WRITES_Z" pos="5" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2101" name="RB_DEPTH_CONTROL">
@@ -459,6 +466,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		-->
 		<bitfield name="STENCIL_BUFFER" pos="0" type="boolean"/>
 	</reg32>
+	<!-- 0x2108 - something MRT-related -->
 	<reg32 offset="0x210b" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210c" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210d" name="RB_BIN_OFFSET" type="adreno_reg_xy"/>
@@ -773,6 +781,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22ed" name="SP_FS_PVT_MEM_ADDR"/>
 	<reg32 offset="0x22ef" name="SP_FS_LENGTH_REG" type="uint"/>
 	<reg32 offset="0x22f0" name="SP_FS_OUTPUT_REG">
+		<bitfield name="MRT" low="0" high="3" type="uint"/>
 		<bitfield name="DEPTH_ENABLE" pos="7" type="boolean"/>
 		<!-- TODO double check.. for now assume same as a3xx -->
 		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
