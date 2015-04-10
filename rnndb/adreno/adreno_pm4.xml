@@ -38,17 +38,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DI_PT_LINELOOP" value="7"/>  <!-- a22x, a3xx -->
 	<value name="DI_PT_RECTLIST" value="8"/>
 	<value name="DI_PT_POINTLIST_A3XX" value="9"/>
-	<!-- not sure if any of below are valid (from amd-gpu header): -->
-	<value name="DI_PT_QUADLIST" value="13"/>
-	<value name="DI_PT_QUADSTRIP" value="14"/>
-	<value name="DI_PT_POLYGON" value="15"/>
-	<value name="DI_PT_2D_COPY_RECT_LIST_V0" value="16"/>
-	<value name="DI_PT_2D_COPY_RECT_LIST_V1" value="17"/>
-	<value name="DI_PT_2D_COPY_RECT_LIST_V2" value="18"/>
-	<value name="DI_PT_2D_COPY_RECT_LIST_V3" value="19"/>
-	<value name="DI_PT_2D_FILL_RECT_LIST" value="20"/>
-	<value name="DI_PT_2D_LINE_STRIP" value="21"/>
-	<value name="DI_PT_2D_TRI_STRIP" value="22"/>
+	<value name="DI_PT_LINE_ADJ" value="0xa"/>
+	<value name="DI_PT_LINESTRIP_ADJ" value="0xb"/>
+	<value name="DI_PT_TRI_ADJ" value="0xc"/>
+	<value name="DI_PT_TRISTRIP_ADJ" value="0xd"/>
 </enum>
 
 <enum name="pc_di_src_sel">
@@ -256,6 +249,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="SB_FRAG_TEX" value="2"/>
 		<value name="SB_FRAG_MIPADDR" value="3"/>
 		<value name="SB_VERT_SHADER" value="4"/>
+		<value name="SB_GEOM_SHADER" value="5"/>
 		<value name="SB_FRAG_SHADER" value="6"/>
 	</enum>
 	<enum name="adreno_state_type">

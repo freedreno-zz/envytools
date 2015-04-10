@@ -809,6 +809,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
 	</reg32>
+	<reg32 offset="0x235c" name="SP_GS_OBJ_START"/>
+	<reg32 offset="0x235d" name="SP_GS_PVT_MEM_PARAM"/>"
+	<reg32 offset="0x235e" name="SP_GS_PVT_MEM_ADDR"/>
 	<reg32 offset="0x2360" name="SP_GS_LENGTH_REG" type="uint"/>
 
 	<!-- VPC registers -->
@@ -1101,7 +1104,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x21c5" name="UNKNOWN_21C5"/>
 	<reg32 offset="0x21c6" name="PC_RESTART_INDEX"/>
-	<reg32 offset="0x21e5" name="PC_GS_PARAM"/>
+	<reg32 offset="0x21e5" name="PC_GS_PARAM">
+		<bitfield name="MAX_VERTICES" low="0" high="9" type="uint"/><!-- +1, i.e. max is 1024 -->
+		<bitfield name="PRIMTYPE" low="23" high="24" type="adreno_pa_su_sc_draw"/>
+	</reg32>
 	<reg32 offset="0x21e7" name="PC_HS_PARAM"/>
 
 	<!-- VBIF registers -->
