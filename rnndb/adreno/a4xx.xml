@@ -288,8 +288,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- assuming zcoord/wcoord follows.. -->
 		<bitfield name="ZCOORD" pos="2" type="boolean"/>
 		<bitfield name="WCOORD" pos="3" type="boolean"/>
+		<bitfield name="SAMPLEMASK" pos="4" type="boolean"/>
 		<bitfield name="FACENESS" pos="5" type="boolean"/>
+		<bitfield name="SAMPLEID" pos="6" type="boolean"/>
 		<bitfield name="MSAA_SAMPLES" low="7" high="9" type="uint"/>
+		<bitfield name="SAMPLEID_HR" pos="11" type="boolean"/>
 		<bitfield name="VARYING" pos="12" type="boolean"/>
 	</reg32>
 	<array offset="0x20a4" name="RB_MRT" stride="5" length="8">
@@ -785,6 +788,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="DEPTH_ENABLE" pos="7" type="boolean"/>
 		<!-- TODO double check.. for now assume same as a3xx -->
 		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="SAMPLEMASK_REGID" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
 	<array offset="0x22f1" name="SP_FS_MRT" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
@@ -1035,6 +1039,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x23c2" name="HLSQ_CONTROL_2_REG">
 		<bitfield name="PRIMALLOCTHRESHOLD" low="26" high="31" type="uint"/>
 		<bitfield name="FACEREGID" low="2" high="9" type="a3xx_regid"/>
+		<bitfield name="SAMPLEID_REGID" low="10" high="17" type="a3xx_regid"/>
+		<bitfield name="SAMPLEMASK_REGID" low="18" high="25" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0x23c3" name="HLSQ_CONTROL_3_REG">
 		<!-- register loaded with position (bary.f, gl_FragCoord, etc) -->
