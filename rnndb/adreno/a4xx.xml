@@ -691,7 +691,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
 		<bitfield name="BINNING_PASS" pos="19" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x22c1" name="SP_INSTR_CACHE_CTRL"/> <!-- always 000001c3 -->
+	<reg32 offset="0x22c1" name="SP_INSTR_CACHE_CTRL">
+		<!-- set when VS in buffer mode: -->
+		<bitfield name="VS_BUFFER" pos="7" type="boolean"/>
+		<!-- set when FS in buffer mode: -->
+		<bitfield name="FS_BUFFER" pos="8" type="boolean"/>
+		<!-- set when both VS or FS in buffer mode: -->
+		<bitfield name="INSTR_BUFFER" pos="10" type="boolean"/>
+		<!-- TODO other bits probably matter when other stages active? -->
+	</reg32>
 
 	<bitset name="a4xx_sp_vs_fs_ctrl_reg0" inline="yes">
 		<!--
