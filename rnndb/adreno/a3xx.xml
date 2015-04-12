@@ -307,7 +307,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a3xx_repl_mode">
 	<value name="S" value="1"/>
 	<value name="T" value="2"/>
-	<value name="1_T" value="3"/>
+	<value name="ONE_T" value="3"/>
 </enum>
 
 <domain name="A3XX" width="32">
