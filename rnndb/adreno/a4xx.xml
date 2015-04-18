@@ -1106,6 +1106,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<doc>in groups of 4x vec4, blob only uses values
 			0, 1, 2, 4, 6, 8</doc>
 		</bitfield>
+		<bitfield name="PRIMITIVE_RESTART" pos="20" type="boolean"/>
 		<bitfield name="PROVOKING_VTX_LAST" pos="25" type="boolean"/>
 		<!-- PSIZE bit set if gl_PointSize written: -->
 		<bitfield name="PSIZE" pos="26" type="boolean"/>
