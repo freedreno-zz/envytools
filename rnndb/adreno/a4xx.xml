@@ -1045,7 +1045,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="RESERVED1" pos="9" type="boolean"/>
 		<bitfield name="COORDREGID" low="16" high="23" type="a3xx_regid"/>
 		<!-- set if gl_FragCoord.[zw] used in frag shader: -->
-		<bitfield name="ZWCOORD" pos="25" type="boolean"/>
+		<bitfield name="ZWCOORDREGID" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0x23c2" name="HLSQ_CONTROL_2_REG">
 		<bitfield name="PRIMALLOCTHRESHOLD" low="26" high="31" type="uint"/>
