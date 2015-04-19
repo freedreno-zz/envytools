@@ -951,6 +951,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0f00" name="TPL1_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0f0b" name="TPL1_PERFCTR_TP_SEL_7"/>
 	<reg32 offset="0x2380" name="TPL1_TP_TEX_OFFSET"/>
+	<reg32 offset="0x2384" name="TPL1_TP_VS_BORDER_COLOR_BASE_ADDR"/>
+	<reg32 offset="0x2387" name="TPL1_TP_HS_BORDER_COLOR_BASE_ADDR"/>
+	<reg32 offset="0x238a" name="TPL1_TP_DS_BORDER_COLOR_BASE_ADDR"/>
+	<reg32 offset="0x238d" name="TPL1_TP_GS_BORDER_COLOR_BASE_ADDR"/>
+	<reg32 offset="0x23a1" name="TPL1_TP_FS_BORDER_COLOR_BASE_ADDR"/>
 	<reg32 offset="0x23a6" name="TPL1_TP_CS_TEXMEMOBJ_BASE_ADDR"/>
 
 	<!-- GRAS registers -->
