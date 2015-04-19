@@ -242,6 +242,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DEPTH4_24_8" value="2"/>
 </enum>
 
+<enum name="a4xx_tess_spacing">
+	<value name="EQUAL_SPACING" value="0"/>
+	<value name="ODD_SPACING" value="2"/>
+	<value name="EVEN_SPACING" value="3"/>
+</enum>
+
 <domain name="A4XX" width="32">
 	<!-- RB registers -->
 	<reg32 offset="0x0cc0" name="RB_GMEM_BASE_ADDR"/>
@@ -809,10 +815,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
 	</reg32>
+	<reg32 offset="0x230e" name="SP_HS_OBJ_START"/>
+	<reg32 offset="0x230f" name="SP_HS_PVT_MEM_PARAM"/>"
+	<reg32 offset="0x2310" name="SP_HS_PVT_MEM_ADDR"/>
+	<reg32 offset="0x2312" name="SP_HS_LENGTH_REG" type="uint"/>
+
 	<reg32 offset="0x2334" name="SP_DS_OBJ_OFFSET_REG">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
 	</reg32>
+	<reg32 offset="0x2335" name="SP_DS_OBJ_START"/>
+	<reg32 offset="0x2336" name="SP_DS_PVT_MEM_PARAM"/>"
+	<reg32 offset="0x2337" name="SP_DS_PVT_MEM_ADDR"/>
+	<reg32 offset="0x2339" name="SP_DS_LENGTH_REG" type="uint"/>
+
 	<reg32 offset="0x235b" name="SP_GS_OBJ_OFFSET_REG">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
@@ -1062,17 +1078,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- register loaded with position (bary.f, gl_FragCoord, etc) -->
 		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
+	<!-- 0x23c4 3 regids, lowest one goes to 0 when *not* per-sample shading -->
 
 	<!-- TODO probably a bitset for HLSQ_*S_CONTROL.. -->
 	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="ENABLED" pos="16"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x23c6" name="HLSQ_FS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="ENABLED" pos="16"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
@@ -1080,18 +1099,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x23c7" name="HLSQ_HS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="ENABLED" pos="16"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x23c8" name="HLSQ_DS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="ENABLED" pos="16"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x23c9" name="HLSQ_GS_CONTROL_REG">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="ENABLED" pos="16"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
@@ -1120,9 +1142,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x21c6" name="PC_RESTART_INDEX"/>
 	<reg32 offset="0x21e5" name="PC_GS_PARAM">
 		<bitfield name="MAX_VERTICES" low="0" high="9" type="uint"/><!-- +1, i.e. max is 1024 -->
+		<bitfield name="INVOCATIONS" low="11" high="15" type="uint"/><!-- +1, i.e. max is 32 -->
+		<bitfield name="PRIMTYPE" low="23" high="24" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="LAYER" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x21e7" name="PC_HS_PARAM">
+		<bitfield name="VERTICES_OUT" low="0" high="5" type="uint"/>
+		<bitfield name="SPACING" low="21" high="22" type="a4xx_tess_spacing"/>
 		<bitfield name="PRIMTYPE" low="23" high="24" type="adreno_pa_su_sc_draw"/>
 	</reg32>
-	<reg32 offset="0x21e7" name="PC_HS_PARAM"/>
 
 	<!-- VBIF registers -->
 	<reg32 offset="0x3000" name="VBIF_VERSION"/>
