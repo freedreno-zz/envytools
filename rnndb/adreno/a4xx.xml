@@ -1253,12 +1253,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- always 00000000: -->
 	<reg32 offset="0x22d7" name="UNKNOWN_22D7"/>
 
-	<!-- always 00000010: -->
-	<reg32 offset="0x2381" name="UNKNOWN_2381"/>
-
-	<!-- always 00000010: -->
-	<reg32 offset="0x23a0" name="UNKNOWN_23A0"/>
-
 </domain>
 
 
