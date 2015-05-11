@@ -185,4 +185,55 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0598" name="GLB_PHY_STATUS"/>
 </domain>
 
+<domain name="EDP_28nm_PHY_PLL" width="32">
+	<reg32 offset="0x00000" name="REFCLK_CFG"/>
+	<reg32 offset="0x00004" name="POSTDIV1_CFG"/>
+	<reg32 offset="0x00008" name="CHGPUMP_CFG"/>
+	<reg32 offset="0x0000C" name="VCOLPF_CFG"/>
+	<reg32 offset="0x00010" name="VREG_CFG"/>
+	<reg32 offset="0x00014" name="PWRGEN_CFG"/>
+	<reg32 offset="0x00018" name="DMUX_CFG"/>
+	<reg32 offset="0x0001C" name="AMUX_CFG"/>
+	<reg32 offset="0x00020" name="GLB_CFG">
+		<bitfield name="PLL_PWRDN_B" pos="0" type="boolean"/>
+		<bitfield name="PLL_LDO_PWRDN_B" pos="1" type="boolean"/>
+		<bitfield name="PLL_PWRGEN_PWRDN_B" pos="2" type="boolean"/>
+		<bitfield name="PLL_ENABLE" pos="3" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x00024" name="POSTDIV2_CFG"/>
+	<reg32 offset="0x00028" name="POSTDIV3_CFG"/>
+	<reg32 offset="0x0002C" name="LPFR_CFG"/>
+	<reg32 offset="0x00030" name="LPFC1_CFG"/>
+	<reg32 offset="0x00034" name="LPFC2_CFG"/>
+	<reg32 offset="0x00038" name="SDM_CFG0"/>
+	<reg32 offset="0x0003C" name="SDM_CFG1"/>
+	<reg32 offset="0x00040" name="SDM_CFG2"/>
+	<reg32 offset="0x00044" name="SDM_CFG3"/>
+	<reg32 offset="0x00048" name="SDM_CFG4"/>
+	<reg32 offset="0x0004C" name="SSC_CFG0"/>
+	<reg32 offset="0x00050" name="SSC_CFG1"/>
+	<reg32 offset="0x00054" name="SSC_CFG2"/>
+	<reg32 offset="0x00058" name="SSC_CFG3"/>
+	<reg32 offset="0x0005C" name="LKDET_CFG0"/>
+	<reg32 offset="0x00060" name="LKDET_CFG1"/>
+	<reg32 offset="0x00064" name="LKDET_CFG2"/>
+	<reg32 offset="0x00068" name="TEST_CFG">
+		<bitfield name="PLL_SW_RESET" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x0006C" name="CAL_CFG0"/>
+	<reg32 offset="0x00070" name="CAL_CFG1"/>
+	<reg32 offset="0x00074" name="CAL_CFG2"/>
+	<reg32 offset="0x00078" name="CAL_CFG3"/>
+	<reg32 offset="0x0007C" name="CAL_CFG4"/>
+	<reg32 offset="0x00080" name="CAL_CFG5"/>
+	<reg32 offset="0x00084" name="CAL_CFG6"/>
+	<reg32 offset="0x00088" name="CAL_CFG7"/>
+	<reg32 offset="0x0008C" name="CAL_CFG8"/>
+	<reg32 offset="0x00090" name="CAL_CFG9"/>
+	<reg32 offset="0x00094" name="CAL_CFG10"/>
+	<reg32 offset="0x00098" name="CAL_CFG11"/>
+	<reg32 offset="0x0009C" name="EFUSE_CFG"/>
+	<reg32 offset="0x000A0" name="DEBUG_BUS_SEL"/>
+</domain>
+
 </database>
