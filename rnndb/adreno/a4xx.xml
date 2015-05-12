@@ -693,6 +693,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- SP registers -->
 	<reg32 offset="0x0ec0" name="SP_VS_STATUS"/>
+	<reg32 offset="0x0ec3" name="SP_MODE_CONTROL"/>
 	<reg32 offset="0x0ecf" name="SP_PERFCTR_SP_SEL_11"/>
 	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
 		<bitfield name="BINNING_PASS" pos="19" type="boolean"/>
@@ -811,6 +812,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="MRTFORMAT" low="12" high="17" type="a4xx_color_fmt"/>
 		</reg32>
 	</array>
+	<reg32 offset="0x2300" name="SP_CS_CTRL_REG0"/>
+	<reg32 offset="0x2301" name="SP_CS_OBJ_OFFSET_REG"/>
+	<reg32 offset="0x2302" name="SP_CS_OBJ_START"/>
+	<reg32 offset="0x2303" name="SP_CS_PVT_MEM_PARAM"/>
+	<reg32 offset="0x2304" name="SP_CS_PVT_MEM_ADDR"/>
+	<reg32 offset="0x2305" name="SP_CS_PVT_MEM_SIZE"/>
+	<reg32 offset="0x2306" name="SP_CS_LENGTH_REG" type="uint"/>
 	<reg32 offset="0x230d" name="SP_HS_OBJ_OFFSET_REG">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
@@ -965,6 +973,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- TPL1 registers -->
 	<reg32 offset="0x0f00" name="TPL1_DEBUG_ECO_CONTROL"/>
+	<!-- always 0000003a: -->
+	<reg32 offset="0x0f03" name="TPL1_TP_MODE_CONTROL"/>
 	<reg32 offset="0x0f0b" name="TPL1_PERFCTR_TP_SEL_7"/>
 	<reg32 offset="0x2380" name="TPL1_TP_TEX_OFFSET"/>
 	<reg32 offset="0x2381" name="TPL1_TP_TEX_COUNT">
@@ -979,6 +989,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x238d" name="TPL1_TP_GS_BORDER_COLOR_BASE_ADDR"/>
 	<reg32 offset="0x23a0" name="TPL1_TP_FS_TEX_COUNT"/>
 	<reg32 offset="0x23a1" name="TPL1_TP_FS_BORDER_COLOR_BASE_ADDR"/>
+	<reg32 offset="0x23a4" name="TPL1_TP_CS_BORDER_COLOR_BASE_ADDR"/>
+	<reg32 offset="0x23a5" name="TPL1_TP_CS_SAMPLER_BASE_ADDR"/>
 	<reg32 offset="0x23a6" name="TPL1_TP_CS_TEXMEMOBJ_BASE_ADDR"/>
 
 	<!-- GRAS registers -->
@@ -1053,6 +1065,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- HLSQ registers -->
 	<reg32 offset="0x0e00" name="HLSQ_TIMEOUT_THRESHOLD"/>
 	<reg32 offset="0x0e04" name="HLSQ_DEBUG_ECO_CONTROL"/>
+	<!-- always 00000000: -->
+	<reg32 offset="0x0e05" name="HLSQ_MODE_CONTROL"/>
 	<reg32 offset="0x0e0e" name="HLSQ_PERF_PIPE_MASK"/>
 	<reg32 offset="0x23c0" name="HLSQ_CONTROL_0_REG">
 		<!-- I guess same as a3xx, but so far only seen 08000050 -->
@@ -1086,6 +1100,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
 	<!-- 0x23c4 3 regids, lowest one goes to 0 when *not* per-sample shading -->
+	<reg32 offset="0x23c4" name="HLSQ_CONTROL_4_REG"/>
 
 	<!-- TODO probably a bitset for HLSQ_*S_CONTROL.. -->
 	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL_REG">
@@ -1124,6 +1139,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
+	<reg32 offset="0x23ca" name="HLSQ_CS_CONTROL"/>
+	<reg32 offset="0x23cd" name="HLSQ_CL_NDRANGE_0"/>
+	<reg32 offset="0x23ce" name="HLSQ_CL_NDRANGE_1"/>
+	<reg32 offset="0x23cf" name="HLSQ_CL_NDRANGE_2"/>
+	<reg32 offset="0x23d0" name="HLSQ_CL_NDRANGE_3"/>
+	<reg32 offset="0x23d1" name="HLSQ_CL_NDRANGE_4"/>
+	<reg32 offset="0x23d2" name="HLSQ_CL_NDRANGE_5"/>
+	<reg32 offset="0x23d3" name="HLSQ_CL_NDRANGE_6"/>
+	<reg32 offset="0x23d4" name="HLSQ_CL_CONTROL_0"/>
+	<reg32 offset="0x23d5" name="HLSQ_CL_CONTROL_1"/>
+	<reg32 offset="0x23d6" name="HLSQ_CL_KERNEL_CONST"/>
+	<reg32 offset="0x23d7" name="HLSQ_CL_KERNEL_GROUP_X"/>
+	<reg32 offset="0x23d8" name="HLSQ_CL_KERNEL_GROUP_Y"/>
+	<reg32 offset="0x23d9" name="HLSQ_CL_KERNEL_GROUP_Z"/>
+	<reg32 offset="0x23da" name="HLSQ_CL_WG_OFFSET"/>
 	<reg32 offset="0x23db" name="HLSQ_UPDATE_CONTROL"/>
 
 	<!-- PC registers -->
@@ -1188,19 +1218,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0d01" name="UNKNOWN_0D01"/>
 
 	<!-- always 00000000: -->
-	<reg32 offset="0x0e05" name="UNKNOWN_0E05"/>
-
-	<!-- always 00000000: -->
 	<reg32 offset="0x0e42" name="UNKNOWN_0E42"/>
 
 	<!-- always 00040000: -->
 	<reg32 offset="0x0ec2" name="UNKNOWN_0EC2"/>
-
-	<!-- always 00000006: -->
-	<reg32 offset="0x0ec3" name="UNKNOWN_0EC3"/>
-
-	<!-- always 0000003a: -->
-	<reg32 offset="0x0f03" name="UNKNOWN_0F03"/>
 
 	<!-- always 00000000: -->
 	<reg32 offset="0x2001" name="UNKNOWN_2001"/>
