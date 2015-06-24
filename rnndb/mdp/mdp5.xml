@@ -211,19 +211,24 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <!-- check length/index.. -->
 	<array doffsets="mdp5_cfg->ctl.base[0],mdp5_cfg->ctl.base[1],mdp5_cfg->ctl.base[2],mdp5_cfg->ctl.base[3],mdp5_cfg->ctl.base[4]" name="CTL" length="5" stride="0x400">
 		<array offsets="0x000,0x004,0x008,0x00C,0x010,0x024" name="LAYER" length="6" stride="4">
+			<!--
+			NOTE: for backwards compat (from when there were fewer stages),
+			this register has the low three bits of mdp_mixer_stage_id, with
+			the high bit coming from LAYER_EXT
+			 -->
 			<reg32 offset="0" name="REG">
-				<bitfield name="VIG0"  low="0"  high="2"  type="mdp_mixer_stage_id"/>
-				<bitfield name="VIG1"  low="3"  high="5"  type="mdp_mixer_stage_id"/>
-				<bitfield name="VIG2"  low="6"  high="8"  type="mdp_mixer_stage_id"/>
-				<bitfield name="RGB0"  low="9"  high="11" type="mdp_mixer_stage_id"/>
-				<bitfield name="RGB1"  low="12" high="14" type="mdp_mixer_stage_id"/>
-				<bitfield name="RGB2"  low="15" high="17" type="mdp_mixer_stage_id"/>
-				<bitfield name="DMA0"  low="18" high="20" type="mdp_mixer_stage_id"/>
-				<bitfield name="DMA1"  low="21" high="23" type="mdp_mixer_stage_id"/>
+				<bitfield name="VIG0"  low="0"  high="2"  type="uint"/>
+				<bitfield name="VIG1"  low="3"  high="5"  type="uint"/>
+				<bitfield name="VIG2"  low="6"  high="8"  type="uint"/>
+				<bitfield name="RGB0"  low="9"  high="11" type="uint"/>
+				<bitfield name="RGB1"  low="12" high="14" type="uint"/>
+				<bitfield name="RGB2"  low="15" high="17" type="uint"/>
+				<bitfield name="DMA0"  low="18" high="20" type="uint"/>
+				<bitfield name="DMA1"  low="21" high="23" type="uint"/>
 				<bitfield name="BORDER_COLOR" pos="24" type="boolean"/>
 				<bitfield name="CURSOR_OUT"   pos="25" type="boolean"/>
-				<bitfield name="VIG3"  low="26"  high="28"  type="mdp_mixer_stage_id"/>
-				<bitfield name="RGB3"  low="29" high="31" type="mdp_mixer_stage_id"/>
+				<bitfield name="VIG3"  low="26"  high="28"  type="uint"/>
+				<bitfield name="RGB3"  low="29" high="31" type="uint"/>
 			</reg32>
 		</array>
 		<reg32 offset="0x014" name="OP">
@@ -266,6 +271,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		</reg32>
 		<reg32 offset="0x01C" name="START"/>
 		<reg32 offset="0x020" name="PACK_3D"/>
+		<array offsets="0x040,0x044,0x048,0x04C,0x050,0x054" name="LAYER_EXT" length="6" stride="4">
+			<reg32 offset="0" name="REG">
+				<bitfield name="VIG0_BIT3"  pos="0"  type="boolean"/>
+				<bitfield name="VIG1_BIT3"  pos="2"  type="boolean"/>
+				<bitfield name="VIG2_BIT3"  pos="4"  type="boolean"/>
+				<bitfield name="VIG3_BIT3"  pos="6"  type="boolean"/>
+				<bitfield name="RGB0_BIT3"  pos="8"  type="boolean"/>
+				<bitfield name="RGB1_BIT3"  pos="10"  type="boolean"/>
+				<bitfield name="RGB2_BIT3"  pos="12"  type="boolean"/>
+				<bitfield name="RGB3_BIT3"  pos="14"  type="boolean"/>
+				<bitfield name="DMA0_BIT3"  pos="16"  type="boolean"/>
+				<bitfield name="DMA1_BIT3"  pos="18"  type="boolean"/>
+				<bitfield name="CURSOR0" low="20"  high="23"  type="mdp_mixer_stage_id"/>
+				<bitfield name="CURSOR1" low="26"  high="29"  type="mdp_mixer_stage_id"/>
+			</reg32>
+		</array>
 	</array>
 
 	<enum name="mdp5_data_format">
@@ -414,7 +435,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x004" name="OUT_SIZE" type="reg_wh"/>
 		<reg32 offset="0x008" name="BORDER_COLOR_0"/>
 		<reg32 offset="0x010" name="BORDER_COLOR_1"/>
-		<array offset="0x020" name="BLEND" length="4" stride="0x30">
+		<array offsets="0x020,0x050,0x080,0x0B0,0x230,0x260,0x290" name="BLEND" length="7" stride="0x30">
 			<reg32 offset="0x00" name="OP_MODE">
 				<bitfield name="FG_ALPHA" low="0" high="1" type="mdp_alpha_type"/>
 				<bitfield name="FG_INV_ALPHA"     pos="2"  type="boolean"/>

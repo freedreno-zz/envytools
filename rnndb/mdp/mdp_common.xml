@@ -26,6 +26,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="STAGE1" value="3"/>   <!-- zorder 1 -->
 	<value name="STAGE2" value="4"/>   <!-- zorder 2 -->
 	<value name="STAGE3" value="5"/>   <!-- zorder 3 -->
+	<value name="STAGE4" value="6"/>   <!-- zorder 4 -->
+	<value name="STAGE5" value="7"/>   <!-- zorder 5 -->
+	<value name="STAGE6" value="8"/>   <!-- zorder 6 -->
+	<value name="STAGE_MAX" value="8"/> <!-- maximum zorder -->
 </enum>
 
 <enum name="mdp_alpha_type">
