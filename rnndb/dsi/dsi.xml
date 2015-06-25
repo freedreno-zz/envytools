@@ -177,7 +177,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="TE" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x0008c" name="TRIG_DMA"/>
-	<reg32 offset="0x000b0" name="DLN0_PHY_ERR"/>
+	<reg32 offset="0x000b0" name="DLN0_PHY_ERR">
+		<bitfield name="DLN0_ERR_ESC" pos="0" type="boolean"/>
+		<bitfield name="DLN0_ERR_SYNC_ESC" pos="4" type="boolean"/>
+		<bitfield name="DLN0_ERR_CONTROL" pos="8" type="boolean"/>
+		<bitfield name="DLN0_ERR_CONTENTION_LP0" pos="12" type="boolean"/>
+		<bitfield name="DLN0_ERR_CONTENTION_LP1" pos="16" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x000bc" name="TIMEOUT_STATUS"/>
 	<reg32 offset="0x000c0" name="CLKOUT_TIMING_CTRL">
 		<bitfield name="T_CLK_PRE" low="0" high="5" type="uint"/>
