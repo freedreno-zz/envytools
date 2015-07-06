@@ -7,7 +7,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <!-- random bits that seem same between mdp4 and mdp5 (ie. not much) -->
 
 <enum name="mdp_chroma_samp_type">
-    <value name="CHROMA_RGB"  value="0"/>
+    <value name="CHROMA_FULL"  value="0"/>
     <value name="CHROMA_H2V1" value="1"/>
     <value name="CHROMA_H1V2" value="2"/>
     <value name="CHROMA_420"  value="3"/>
