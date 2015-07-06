@@ -376,7 +376,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="UNPACK_COUNT" low="12" high="13" type="uint"/>
 			<bitfield name="UNPACK_TIGHT" pos="17" type="boolean"/>
 			<bitfield name="UNPACK_ALIGN_MSB" pos="18" type="boolean"/>
-			<bitfield name="NUM_PLANES" low="19" high="20" type="mdp_fetch_type"/>
+			<bitfield name="FETCH_TYPE" low="19" high="20" type="mdp_fetch_type"/>
 			<bitfield name="CHROMA_SAMP" low="23" high="24" type="mdp_chroma_samp_type"/>
 		</reg32>
 		<reg32 offset="0x034" name="SRC_UNPACK" type="mdp_unpack_pattern"/>
@@ -409,13 +409,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x204" name="SCALE_CONFIG">
 			<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
 			<bitfield name="SCALEY_EN" pos="1" type="boolean"/>
-			<!-- guessing about min/max.. see mdss_mdp_scale_setup() -->
-			<bitfield name="SCALEX_MIN_FILTER" low="8"  high="9"  type="mdp5_scale_filter"/>
-			<bitfield name="SCALEY_MIN_FILTER" low="10" high="11" type="mdp5_scale_filter"/>
-			<bitfield name="SCALEX_CR_FILTER"  low="12" high="13" type="mdp5_scale_filter"/>
-			<bitfield name="SCALEY_CR_FILTER"  low="14" high="15" type="mdp5_scale_filter"/>
-			<bitfield name="SCALEX_MAX_FILTER" low="16" high="17" type="mdp5_scale_filter"/>
-			<bitfield name="SCALEY_MAX_FILTER" low="18" high="19" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEX_FILTER_COMP_0" low="8"  high="9"  type="mdp5_scale_filter"/>
+			<bitfield name="SCALEY_FILTER_COMP_0" low="10" high="11" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEX_FILTER_COMP_1_2"  low="12" high="13" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEY_FILTER_COMP_1_2"  low="14" high="15" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEX_FILTER_COMP_3" low="16" high="17" type="mdp5_scale_filter"/>
+			<bitfield name="SCALEY_FILTER_COMP_3" low="18" high="19" type="mdp5_scale_filter"/>
 		</reg32>
 		<reg32 offset="0x210" name="SCALE_PHASE_STEP_X"/>
 		<reg32 offset="0x214" name="SCALE_PHASE_STEP_Y"/>
