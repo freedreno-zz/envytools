@@ -376,6 +376,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- a guess? -->
 		<bitfield name="SAMPLE_MASK" low="16" high="31"/>
 	</reg32>
+	<reg32 offset="0x20fa" name="RB_SAMPLE_COUNT_ADDR"/>
 	<!-- always 00000000 for binning pass, else 0000000f: -->
 	<reg32 offset="0x20fb" name="RB_RENDER_COMPONENTS">
 		<bitfield name="RT0" low="0" high="3"/>
