@@ -29,7 +29,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="pc_di_primtype">
 	<value name="DI_PT_NONE" value="0"/>
-	<value name="DI_PT_POINTLIST_A2XX" value="1"/>
+	<!-- POINTLIST_PSIZE is used on a3xx/a4xx when gl_PointSize is written: -->
+	<value name="DI_PT_POINTLIST_PSIZE" value="1"/>
 	<value name="DI_PT_LINELIST" value="2"/>
 	<value name="DI_PT_LINESTRIP" value="3"/>
 	<value name="DI_PT_TRILIST" value="4"/>
@@ -37,7 +38,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DI_PT_TRISTRIP" value="6"/>
 	<value name="DI_PT_LINELOOP" value="7"/>  <!-- a22x, a3xx -->
 	<value name="DI_PT_RECTLIST" value="8"/>
-	<value name="DI_PT_POINTLIST_A3XX" value="9"/>
+	<value name="DI_PT_POINTLIST" value="9"/>
 	<value name="DI_PT_LINE_ADJ" value="0xa"/>
 	<value name="DI_PT_LINESTRIP_ADJ" value="0xb"/>
 	<value name="DI_PT_TRI_ADJ" value="0xc"/>
