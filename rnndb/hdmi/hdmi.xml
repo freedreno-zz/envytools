@@ -445,6 +445,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00284" name="HDCP_SW_UPPER_AKSV"/>
 	<reg32 offset="0x00288" name="HDCP_SW_LOWER_AKSV"/>
 
+	<reg32 offset="0x0028c" name="CEC_CTRL"/>
+	<reg32 offset="0x00290" name="CEC_WR_DATA"/>
+	<reg32 offset="0x00294" name="CEC_CEC_RETRANSMIT"/>
 	<reg32 offset="0x00298" name="CEC_STATUS"/>
 	<reg32 offset="0x0029c" name="CEC_INT"/>
 	<reg32 offset="0x002a0" name="CEC_ADDR"/>
