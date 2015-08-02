@@ -841,6 +841,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2337" name="SP_DS_PVT_MEM_ADDR"/>
 	<reg32 offset="0x2339" name="SP_DS_LENGTH_REG" type="uint"/>
 
+	<reg32 offset="0x2341" name="SP_GS_PARAM_REG">
+		<bitfield name="POSREGID" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="PRIMREGID" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="TOTALGSOUTVAR" low="20" high="31" type="uint"/>
+	</reg32>
+	<array offset="0x2342" name="SP_GS_OUT" stride="1" length="16">
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="A_REGID" low="0" high="8" type="a3xx_regid"/>
+			<bitfield name="A_COMPMASK" low="9" high="12" type="hex"/>
+			<bitfield name="B_REGID" low="16" high="24" type="a3xx_regid"/>
+			<bitfield name="B_COMPMASK" low="25" high="28" type="hex"/>
+		</reg32>
+	</array>
+	<array offset="0x2353" name="SP_GS_VPC_DST" stride="1" length="8">
+		<reg32 offset="0x0" name="REG">
+			<doc>
+				These seem to be offsets for storage of the varyings.
+				Always seems to start from 8, possibly loc 0 and 4
+				are for gl_Position and gl_PointSize?
+			</doc>
+			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
+			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
+			<bitfield name="OUTLOC2" low="16" high="23" type="uint"/>
+			<bitfield name="OUTLOC3" low="24" high="31" type="uint"/>
+		</reg32>
+	</array>
 	<reg32 offset="0x235b" name="SP_GS_OBJ_OFFSET_REG">
 		<bitfield name="CONSTOBJECTOFFSET" low="16" high="24" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="25" high="31" type="uint"/>
@@ -1277,6 +1303,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- always 00000000: -->
 	<reg32 offset="0x22d7" name="UNKNOWN_22D7"/>
+
+        <!-- always 00fcfc00: -->
+        <reg32 offset="0x2352" name="UNKNOWN_2352"/>
 
 </domain>
 
