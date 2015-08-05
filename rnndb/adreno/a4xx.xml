@@ -240,6 +240,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DEPTH4_NONE" value="0"/>
 	<value name="DEPTH4_16" value="1"/>
 	<value name="DEPTH4_24_8" value="2"/>
+	<value name="DEPTH4_32" value="3"/>
 </enum>
 
 <enum name="a4xx_tess_spacing">
@@ -479,7 +480,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		-->
 		<bitfield name="STENCIL_BUFFER" pos="0" type="boolean"/>
 	</reg32>
-	<!-- 0x2108 - something MRT-related -->
+	<reg32 offset="0x2108" name="RB_STENCIL_INFO">
+		<bitfield name="SEPARATE_STENCIL" pos="0" type="boolean"/>
+		<doc>Base address for stencil when not using interleaved depth/stencil</doc>
+		<bitfield name="STENCIL_BASE" low="12" high="31" shr="12" type="hex"/>
+	</reg32>
+	<reg32 offset="0x2109" name="RB_STENCIL_PITCH" shr="5" type="uint">
+		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
+	</reg32>
+
 	<reg32 offset="0x210b" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210c" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210d" name="RB_BIN_OFFSET" type="adreno_reg_xy"/>
