@@ -217,6 +217,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x00128" name="PHY_RESET">
 		<bitfield name="RESET" pos="0" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x0017c" name="T_CLK_PRE_EXTEND">
+		<bitfield name="INC_BY_2_BYTECLK" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x001d0" name="RDBK_DATA_CTRL">
 		<bitfield name="COUNT" low="16" high="23" type="uint"/>
 		<bitfield name="CLR" pos="0" type="boolean"/>
@@ -437,7 +440,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x001c4" name="BIST_CTRL_4"/>
 	<reg32 offset="0x001c8" name="BIST_CTRL_5"/>
 
-	<reg32 offset="0x001d4" name="GLBL_TEST_CTRL"/>
+	<reg32 offset="0x001d4" name="GLBL_TEST_CTRL">
+		<bitfield name="BITCLK_HS_SEL" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x001dc" name="LDO_CNTRL"/>
 </domain>
 
@@ -608,7 +613,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x001c4" name="BIST_CTRL_4"/>
 	<reg32 offset="0x001c8" name="BIST_CTRL_5"/>
 
-	<reg32 offset="0x001d4" name="GLBL_TEST_CTRL"/>
+	<reg32 offset="0x001d4" name="GLBL_TEST_CTRL">
+		<bitfield name="BITCLK_HS_SEL" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x001dc" name="LDO_CNTRL"/>
 </domain>
 
