@@ -823,6 +823,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 			<bitfield name="HALF_PRECISION" pos="8" type="boolean"/>
 			<bitfield name="MRTFORMAT" low="12" high="17" type="a4xx_color_fmt"/>
+			<bitfield name="COLOR_SRGB" pos="18" type="boolean"/>
 		</reg32>
 	</array>
 	<reg32 offset="0x2300" name="SP_CS_CTRL_REG0"/>
