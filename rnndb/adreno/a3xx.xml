@@ -1371,6 +1371,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A3XX_TEX_ANISO_16" value="4"/>
 	</enum>
 	<reg32 offset="0" name="0">
+		<bitfield name="CLAMPENABLE" pos="0" type="boolean"/>
 		<bitfield name="MIPFILTER_LINEAR" pos="1" type="boolean"/>
 		<bitfield name="XY_MAG" low="2" high="3" type="a3xx_tex_filter"/>
 		<bitfield name="XY_MIN" low="4" high="5" type="a3xx_tex_filter"/>
@@ -1379,6 +1380,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WRAP_R" low="12" high="14" type="a3xx_tex_clamp"/>
 		<bitfield name="ANISO" low="15" high="17" type="a3xx_tex_aniso"/>
 		<bitfield name="COMPARE_FUNC" low="20" high="22" type="adreno_compare_func"/>
+		<bitfield name="CUBEMAPSEAMLESSFILTOFF" pos="24" type="boolean"/>
 		<!-- UNNORM_COORDS == CLK_NORMALIZED_COORDS_FALSE -->
 		<bitfield name="UNNORM_COORDS" pos="31" type="boolean"/>
 	</reg32>
@@ -1406,6 +1408,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A3XX_TEX_CUBE" value="2"/>
 		<value name="A3XX_TEX_3D" value="3"/>
 	</enum>
+	<enum name="a3xx_tex_msaa">
+		<value name="A3XX_TPL1_MSAA1X" value="0"/>
+		<value name="A3XX_TPL1_MSAA2X" value="1"/>
+		<value name="A3XX_TPL1_MSAA4X" value="2"/>
+		<value name="A3XX_TPL1_MSAA8X" value="3"/>
+	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="TILED" pos="0" type="boolean"/>
 		<bitfield name="SRGB" pos="2" type="boolean"/>
@@ -1414,6 +1422,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a3xx_tex_swiz"/>
 		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
+		<bitfield name="MSAATEX" low="20" high="21" type="a3xx_tex_msaa"/>
 		<bitfield name="FMT" low="22" high="28" type="a3xx_tex_fmt"/>
 		<bitfield name="NOCONVERT" pos="29" type="boolean"/>
 		<bitfield name="TYPE" low="30" high="31" type="a3xx_tex_type"/>
@@ -1425,7 +1434,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="2" name="2">
 		<doc>INDX is index of texture address(es) in MIPMAP state block</doc>
-		<bitfield name="INDX" low="0" high="7" type="uint"/>
+		<bitfield name="INDX" low="0" high="8" type="uint"/>
 		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="12" high="29" type="uint"/>
 		<doc>SWAP bit is set for BGRA instead of RGBA</doc>
@@ -1437,7 +1446,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		According to Ilia's experimentation the first one goes up
 		to at *least* bit 14..
 		 -->
-		<bitfield name="LAYERSZ1" low="0" high="14" shr="12" type="uint"/>
+		<bitfield name="LAYERSZ1" low="0" high="16" shr="12" type="uint"/>
 		<bitfield name="DEPTH" low="17" high="27" type="uint"/>
 		<bitfield name="LAYERSZ2" low="28" high="31" shr="12" type="uint"/>
 	</reg32>
