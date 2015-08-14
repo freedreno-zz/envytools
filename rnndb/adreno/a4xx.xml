@@ -329,13 +329,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 				Pitch (actually, appears to be pitch in bytes, so really is a stride)
 				in GMEM, so pitch of the current tile.
 			</doc>
-			<bitfield name="COLOR_BUF_PITCH" low="14" high="22" shr="4" type="uint"/>
+			<bitfield name="COLOR_BUF_PITCH" low="14" high="31" shr="4" type="uint"/>
 		</reg32>
 		<reg32 offset="0x2" name="BASE"/>
 		<reg32 offset="0x3" name="CONTROL3">
 			<!-- probably missing some lsb's.. and guessing upper size -->
 			<!-- pitch * cpp * msaa: -->
-			<bitfield name="STRIDE" low="3" high="16" type="uint"/>
+			<bitfield name="STRIDE" low="3" high="25" type="uint"/>
 		</reg32>
 		<reg32 offset="0x4" name="BLEND_CONTROL">
 			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="adreno_rb_blend_factor"/>
