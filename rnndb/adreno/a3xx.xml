@@ -301,7 +301,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a3xx_intp_mode">
 	<value name="SMOOTH" value="0"/>
 	<value name="FLAT" value="1"/>
-	<!-- two more values?? -->
+	<value name="ZERO" value="2"/>
+	<value name="ONE" value="3"/>
 </enum>
 
 <enum name="a3xx_repl_mode">
@@ -540,11 +541,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="VP_CLIP_CODE_IGNORE" pos="19" type="boolean"/>
 		<bitfield name="VP_XFORM_DISABLE" pos="20" type="boolean"/>
 		<bitfield name="PERSP_DIVISION_DISABLE" pos="21" type="boolean"/>
+		<bitfield name="ZERO_GB_SCALE_Z" pos="22" type="boolean">
+			<doc>aka clip_halfz</doc>
+		</bitfield>
 		<!-- set when gl_FragCoord.z is enabled in frag shader: -->
 		<bitfield name="ZCOORD" pos="23" type="boolean"/>
 		<bitfield name="WCOORD" pos="24" type="boolean"/>
 		<!-- set when frag shader writes z (so early z test disabled: -->
 		<bitfield name="ZCLIP_DISABLE" pos="25" type="boolean"/>
+		<bitfield name="NUM_USER_CLIP_PLANES" low="26" high="28" type="uint"/>
 	</reg32>
 	<reg32 offset="0x2044" name="GRAS_CL_GB_CLIP_ADJ">
 		<bitfield name="HORZ" low="0" high="9" type="uint"/>
@@ -562,7 +567,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2069" name="GRAS_SU_POINT_SIZE" type="fixed" radix="4"/>
 	<reg32 offset="0x206c" name="GRAS_SU_POLY_OFFSET_SCALE">
-		<bitfield name="VAL" low="0" high="23" type="fixed" radix="14"/>
+		<bitfield name="VAL" low="0" high="23" type="fixed" radix="20"/>
 		<doc>range of -8.0 to 8.0</doc>
 	</reg32>
 	<reg32 offset="0x206d" name="GRAS_SU_POLY_OFFSET_OFFSET" radix="6" type="fixed">
