@@ -47,6 +47,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FACTOR_CONSTANT_ALPHA" value="14"/>
 	<value name="FACTOR_ONE_MINUS_CONSTANT_ALPHA" value="15"/>
 	<value name="FACTOR_SRC_ALPHA_SATURATE" value="16"/>
+	<value name="FACTOR_SRC1_COLOR" value="20"/>
+	<value name="FACTOR_ONE_MINUS_SRC1_COLOR" value="21"/>
+	<value name="FACTOR_SRC1_ALPHA" value="22"/>
+	<value name="FACTOR_ONE_MINUS_SRC1_ALPHA" value="23"/>
 </enum>
 
 <bitset name="adreno_rb_stencilrefmask" inline="yes">

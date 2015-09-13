@@ -607,6 +607,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="PACKER_TIMER_ENABLE" pos="16" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x20c1" name="RB_RENDER_CONTROL">
+		<bitfield name="DUAL_COLOR_IN_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="YUV_IN_ENABLE" pos="1" type="boolean"/>
+		<bitfield name="COV_VALUE_INPUT_ENABLE" pos="2" type="boolean"/>
 		<!-- set when gl_FrontFacing is accessed in frag shader: -->
 		<bitfield name="FACENESS" pos="3" type="boolean"/>
 		<bitfield name="BIN_WIDTH" low="4" high="11" shr="5" type="uint"/>
@@ -620,8 +623,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="YCOORD" pos="15" type="boolean"/>
 		<bitfield name="ZCOORD" pos="16" type="boolean"/>
 		<bitfield name="WCOORD" pos="17" type="boolean"/>
+		<bitfield name="I_CLAMP_ENABLE" pos="19" type="boolean"/>
+		<bitfield name="COV_VALUE_OUTPUT_ENABLE" pos="20" type="boolean"/>
 		<bitfield name="ALPHA_TEST" pos="22" type="boolean"/>
 		<bitfield name="ALPHA_TEST_FUNC" low="24" high="26" type="adreno_compare_func"/>
+		<bitfield name="ALPHA_TO_COVERAGE" pos="30" type="boolean"/>
+		<bitfield name="ALPHA_TO_ONE" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x20c2" name="RB_MSAA_CONTROL">
 		<bitfield name="DISABLE" pos="10" type="boolean"/>
