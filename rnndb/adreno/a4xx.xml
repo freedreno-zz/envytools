@@ -1361,7 +1361,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A4XX_TEX_REPEAT" value="0"/>
 		<value name="A4XX_TEX_CLAMP_TO_EDGE" value="1"/>
 		<value name="A4XX_TEX_MIRROR_REPEAT" value="2"/>
-		<value name="A4XX_TEX_CLAMP_NONE" value="3"/>
+		<value name="A4XX_TEX_CLAMP_TO_BORDER" value="3"/>
+		<value name="A4XX_TEX_MIRROR_CLAMP" value="4"/>
 	</enum>
 	<enum name="a4xx_tex_aniso">
 		<value name="A4XX_TEX_ANISO_1" value="0"/>
