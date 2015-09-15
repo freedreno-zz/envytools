@@ -390,6 +390,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="IGC_ROM_1" pos="18" type="boolean"/>
 			<bitfield name="DEINTERLACE" pos="22" type="boolean"/>
 			<bitfield name="DEINTERLACE_ODD" pos="23" type="boolean"/>
+			<bitfield name="SW_PIX_EXT_OVERRIDE" pos="31" type="boolean"/>
 		</reg32>
 		<reg32 offset="0x03c" name="SRC_CONSTANT_COLOR"/>
 		<reg32 offset="0x048" name="FETCH_CONFIG"/>
@@ -406,6 +407,29 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="VERT" low="0" high="7" type="uint"/>
 			<bitfield name="HORZ" low="8" high="15" type="uint"/>
 		</reg32>
+		<array offsets="0x100,0x110,0x120" name="SW_PIX_EXT" length="3" stride="0x10" index="mdp_component_type">
+			<!--
+				Notes:
+				o These value only take effect if SW_PIX_EXT_OVERRIDE is set in SRC_OP_MODE register
+				o For signed values (int): + indicates overfetch, - indicates line drop
+			-->
+                        <reg32 offset="0x00" name="LR">
+				<bitfield name="LEFT_RPT" low="0" high="7" type="uint"/>
+				<bitfield name="LEFT_OVF" low="8" high="15" type="int"/>
+				<bitfield name="RIGHT_RPT" low="16" high="23" type="uint"/>
+				<bitfield name="RIGHT_OVF" low="24" high="31" type="int"/>
+			</reg32>
+			<reg32 offset="0x04" name="TB">
+				<bitfield name="TOP_RPT" low="0" high="7" type="uint"/>
+				<bitfield name="TOP_OVF" low="8" high="15" type="int"/>
+				<bitfield name="BOTTOM_RPT" low="16" high="23" type="uint"/>
+				<bitfield name="BOTTOM_OVF" low="24" high="31" type="int"/>
+			</reg32>
+			<reg32 offset="0x08" name="REQ_PIXELS">
+				<bitfield name="LEFT_RIGHT" low="0" high="15" type="uint"/>
+				<bitfield name="TOP_BOTTOM" low="16" high="31" type="uint"/>
+			</reg32>
+		</array>
 		<reg32 offset="0x204" name="SCALE_CONFIG">
 			<bitfield name="SCALEX_EN" pos="0" type="boolean"/>
 			<bitfield name="SCALEY_EN" pos="1" type="boolean"/>
