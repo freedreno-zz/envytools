@@ -33,7 +33,7 @@
 #include <getopt.h>
 
 struct domain {
-	char name[16];
+	char name[32];
 	struct rnndomain *dom;
 	uint32_t base, size;
 	int shift;
