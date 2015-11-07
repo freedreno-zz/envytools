@@ -81,10 +81,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="VFMT_8_8_SNORM" value="0x35"/>
 	<value name="VFMT_8_8_8_SNORM" value="0x36"/>
 	<value name="VFMT_8_8_8_8_SNORM" value="0x37"/>
-	<value name="VFMT_10_10_10_2_UINT" value="0x3c"/>
-	<value name="VFMT_10_10_10_2_UNORM" value="0x3d"/>
-	<value name="VFMT_10_10_10_2_SINT" value="0x3e"/>
-	<value name="VFMT_10_10_10_2_SNORM" value="0x3f"/>
+	<value name="VFMT_10_10_10_2_UINT" value="0x38"/>
+	<value name="VFMT_10_10_10_2_UNORM" value="0x39"/>
+	<value name="VFMT_10_10_10_2_SINT" value="0x3a"/>
+	<value name="VFMT_10_10_10_2_SNORM" value="0x3b"/>
+	<value name="VFMT_2_10_10_10_UINT" value="0x3c"/>
+	<value name="VFMT_2_10_10_10_UNORM" value="0x3d"/>
+	<value name="VFMT_2_10_10_10_SINT" value="0x3e"/>
+	<value name="VFMT_2_10_10_10_SNORM" value="0x3f"/>
 </enum>
 
 <enum name="a3xx_tex_fmt">
@@ -120,10 +124,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_DXT3" value="0x25"/>
 	<value name="TFMT_DXT5" value="0x26"/>
 
+	<value name="TFMT_2_10_10_10_UNORM" value="0x28"/>
 	<value name="TFMT_10_10_10_2_UNORM" value="0x29"/>
 	<value name="TFMT_9_9_9_E5_FLOAT" value="0x2a"/>
 	<value name="TFMT_11_11_10_FLOAT" value="0x2b"/>
 	<value name="TFMT_A8_UNORM" value="0x2c"/>    <!-- GL_ALPHA -->
+	<value name="TFMT_L8_UNORM" value="0x2d"/>
 	<value name="TFMT_L8_A8_UNORM" value="0x2f"/> <!-- GL_LUMINANCE_ALPHA -->
 
 	<!--
@@ -190,6 +196,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_32_32_SINT" value="0x5d"/>
 	<value name="TFMT_32_32_32_32_SINT" value="0x5f"/>
 
+	<value name="TFMT_2_10_10_10_UINT" value="0x60"/>
+	<value name="TFMT_10_10_10_2_UINT" value="0x61"/>
+
 	<value name="TFMT_ETC2_RG11_SNORM" value="0x70"/>
 	<value name="TFMT_ETC2_RG11_UNORM" value="0x71"/>
 	<value name="TFMT_ETC2_R11_SNORM" value="0x72"/>
@@ -226,6 +235,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB_R8_UINT"	    value="0x0e"/> <!-- also used for R8G8_UINT? -->
 	<value name="RB_R8_SINT"	    value="0x0f"/> <!-- also used for R8G8_SINT? -->
 	<value name="RB_R10G10B10A2_UNORM"  value="0x10"/>
+	<value name="RB_A2R10G10B10_UNORM"  value="0x11"/>
+	<value name="RB_R10G10B10A2_UINT"   value="0x12"/>
+	<value name="RB_A2R10G10B10_UINT"   value="0x13"/>
 
 	<value name="RB_A8_UNORM"	    value="0x14"/>
 	<value name="RB_R8_UNORM"	    value="0x15"/>
