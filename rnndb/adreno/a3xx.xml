@@ -920,12 +920,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x2241" name="VFD_CONTROL_1">
 		<doc>MAXSTORAGE could be # of attributes/vbo's</doc>
-		<bitfield name="MAXSTORAGE" low="0" high="15" type="uint"/>
-		<!--
-			always seem to be 252 except when entire register is zero'd,
-			but in these cases it is overwritten with non-zero value
-			before the next DRAW_INDX
-		 -->
+		<bitfield name="MAXSTORAGE" low="0" high="3" type="uint"/>
+		<bitfield name="MAXTHRESHOLD" low="4" high="7" type="uint"/>
+		<bitfield name="MINTHRESHOLD" low="8" high="11" type="uint"/>
 		<bitfield name="REGID4VTX" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="REGID4INST" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
