@@ -134,7 +134,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="a4xx_tex_fmt">
 	<value name="TFMT4_5_6_5_UNORM" value="0x0b"/>
-	<value name="TFMT4_5_5_5_1_UNORM" value="0x0a"/>
+	<value name="TFMT4_5_5_5_1_UNORM" value="0x09"/>
 	<value name="TFMT4_4_4_4_4_UNORM" value="0x08"/>
 	<value name="TFMT4_X8Z24_UNORM" value="0x47"/>
 
