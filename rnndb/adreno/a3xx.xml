@@ -855,21 +855,24 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- HLSQ registers -->
 	<bitset name="a3xx_hlsq_vs_fs_control_reg" inline="yes">
-		<bitfield name="CONSTLENGTH" low="0" high="11" type="uint"/>
-		<bitfield name="CONSTSTARTOFFSET" low="12" high="23" type="uint"/>
+		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
+		<bitfield name="CONSTSTARTOFFSET" low="12" high="20" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</bitset>
 	<bitset name="a3xx_hlsq_const_vs_fs_presv_range_reg" inline="yes">
 		<!-- are these a3xx_regid?? -->
-		<bitfield name="STARTENTRY" low="0" high="15"/>
-		<bitfield name="ENDENTRY" low="16" high="31"/>
+		<bitfield name="STARTENTRY" low="0" high="8"/>
+		<bitfield name="ENDENTRY" low="16" high="24"/>
 	</bitset>
 
 	<reg32 offset="0x2200" name="HLSQ_CONTROL_0_REG">
-		<bitfield name="FSTHREADSIZE" pos="4" type="a3xx_threadsize"/>
+		<bitfield name="FSTHREADSIZE" low="4" high="5" type="a3xx_threadsize"/>
 		<bitfield name="FSSUPERTHREADENABLE" pos="6" type="boolean"/>
+		<bitfield name="COMPUTEMODE" pos="8" type="boolean"/>
 		<bitfield name="SPSHADERRESTART" pos="9" type="boolean"/>
 		<bitfield name="RESERVED2" pos="10" type="boolean"/>
+		<bitfield name="CYCLETIMEOUTLIMITVPC" low="12" high="23" type="uint"/>
+		<bitfield name="FSONLYTEX" pos="25" type="boolean"/>
 		<bitfield name="CHUNKDISABLE" pos="26" type="boolean"/>
 		<bitfield name="CONSTMODE" pos="27" type="uint"/>
 		<bitfield name="LAZYUPDATEDISABLE" pos="28" type="boolean"/>
@@ -878,13 +881,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SINGLECONTEXT" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2201" name="HLSQ_CONTROL_1_REG">
-		<bitfield name="VSTHREADSIZE" pos="6" type="a3xx_threadsize"/>
+		<bitfield name="VSTHREADSIZE" low="6" high="7" type="a3xx_threadsize"/>
 		<bitfield name="VSSUPERTHREADENABLE" pos="8" type="boolean"/>
-		<bitfield name="RESERVED1" pos="9" type="boolean"/>
-		<!-- set if gl_FragCoord.[zw] used in frag shader: -->
-		<bitfield name="ZWCOORD" pos="25" type="boolean"/>
+		<bitfield name="FRAGCOORDXYREGID" low="16" high="23" type="a3xx_regid"/>
+		<bitfield name="FRAGCOORDZWREGID" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0x2202" name="HLSQ_CONTROL_2_REG">
+		<bitfield name="FACENESSREGID" low="2" high="9" type="a3xx_regid"/>
+		<bitfield name="COVVALUEREGID" low="18" high="25" type="a3xx_regid"/>
 		<bitfield name="PRIMALLOCTHRESHOLD" low="26" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x2203" name="HLSQ_CONTROL_3_REG">
@@ -1041,41 +1045,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitset name="a3xx_vs_fs_length_reg" inline="yes">
 		<bitfield name="SHADERLENGTH" low="0" high="31" type="uint"/>
 	</bitset>
-	<bitset name="a3xx_sp_vs_fs_ctrl_reg0" inline="yes">
-		<!--
-			NOTE that SP_{VS,FS}_CTRL_REG1 are different, but so far REG0
-			appears to be the same..
-		-->
-		<bitfield name="THREADMODE" pos="0" type="a3xx_threadmode"/>
-		<bitfield name="INSTRBUFFERMODE" pos="1" type="a3xx_instrbuffermode"/>
-		<!-- maybe CACHEINVALID is two bits?? -->
-		<bitfield name="CACHEINVALID" pos="2" type="boolean"/>
-		<doc>
-			The full/half register footprint is in units of four components,
-			so if r0.x is used, that counts as all of r0.[xyzw] as used.
-			There are separate full/half register footprint values as the
-			full and half registers are independent (not overlapping).
-			Presumably the thread scheduler hardware allocates the full/half
-			register names from the actual physical register file and
-			handles the register renaming.
-		</doc>
-		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
-		<bitfield name="FULLREGFOOTPRINT" low="10" high="17" type="uint"/>
-		<!-- maybe INOUTREGOVERLAP is a bitflag? -->
-		<bitfield name="INOUTREGOVERLAP" low="18" high="19" type="uint"/>
-		<bitfield name="THREADSIZE" pos="20" type="a3xx_threadsize"/>
-		<bitfield name="SUPERTHREADMODE" pos="21" type="boolean"/>
-		<bitfield name="PIXLODENABLE" pos="22" type="boolean"/>
-		<bitfield name="COMPUTEMODE" pos="23" type="boolean"/>
-		<doc>
-			From regspec:
-			SP_FS_CTRL_REG0.FS_LENGTH [31:24]: FS length, unit = 256bits.
-			If bit31 is 1, it means overflow
-			or any long shader.
-		</doc>
-		<bitfield name="LENGTH" low="24" high="31" type="uint"/>
-	</bitset>
+
 	<bitset name="sp_vs_fs_obj_offset_reg" inline="yes">
+		<bitfield name="FIRSTEXECINSTROFFSET" low="0" high="15" type="uint"/>
 		<doc>
 			From register spec:
 			SP_FS_OBJ_OFFSET_REG.CONSTOBJECTSTARTOFFSET [16:24]: Constant object
@@ -1095,7 +1067,33 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- L0MODE==1 when oxiliForceSpL0ModeBuffer=1 -->
 		<bitfield name="L0MODE" low="22" high="23" type="uint"/>
 	</reg32>
-	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0" type="a3xx_sp_vs_fs_ctrl_reg0"/>
+	<reg32 offset="0x22c4" name="SP_VS_CTRL_REG0">
+		<bitfield name="THREADMODE" pos="0" type="a3xx_threadmode"/>
+		<bitfield name="INSTRBUFFERMODE" pos="1" type="a3xx_instrbuffermode"/>
+		<!-- maybe CACHEINVALID is two bits?? -->
+		<bitfield name="CACHEINVALID" pos="2" type="boolean"/>
+		<bitfield name="ALUSCHMODE" pos="3" type="boolean"/>
+		<doc>
+			The full/half register footprint is in units of four components,
+			so if r0.x is used, that counts as all of r0.[xyzw] as used.
+			There are separate full/half register footprint values as the
+			full and half registers are independent (not overlapping).
+			Presumably the thread scheduler hardware allocates the full/half
+			register names from the actual physical register file and
+			handles the register renaming.
+		</doc>
+		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
+		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
+		<bitfield name="THREADSIZE" pos="20" type="a3xx_threadsize"/>
+		<bitfield name="SUPERTHREADMODE" pos="21" type="boolean"/>
+		<doc>
+			From regspec:
+			SP_FS_CTRL_REG0.FS_LENGTH [31:24]: FS length, unit = 256bits.
+			If bit31 is 1, it means overflow
+			or any long shader.
+		</doc>
+		<bitfield name="LENGTH" low="24" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x22c5" name="SP_VS_CTRL_REG1">
 		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
 		<!--
@@ -1108,13 +1106,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x22c6" name="SP_VS_PARAM_REG">
 		<bitfield name="POSREGID" low="0" high="7" type="a3xx_regid"/>
 		<bitfield name="PSIZEREGID" low="8" high="15" type="a3xx_regid"/>
-		<bitfield name="TOTALVSOUTVAR" low="20" high="31" type="uint"/>
+		<bitfield name="POS2DMODE" pos="16" type="boolean"/>
+		<bitfield name="TOTALVSOUTVAR" low="20" high="24" type="uint"/>
 	</reg32>
 	<array offset="0x22c7" name="SP_VS_OUT" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
-			<bitfield name="A_REGID" low="0" high="8" type="a3xx_regid"/>
+			<bitfield name="A_REGID" low="0" high="7" type="a3xx_regid"/>
+			<bitfield name="A_HALF" pos="8" type="boolean"/>
 			<bitfield name="A_COMPMASK" low="9" high="12" type="hex"/>
-			<bitfield name="B_REGID" low="16" high="24" type="a3xx_regid"/>
+			<bitfield name="B_REGID" low="16" high="23" type="a3xx_regid"/>
+			<bitfield name="B_HALF" pos="24" type="boolean"/>
 			<bitfield name="B_COMPMASK" low="25" high="28" type="hex"/>
 		</reg32>
 	</array>
@@ -1125,10 +1126,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 				Always seems to start from 8, possibly loc 0 and 4
 				are for gl_Position and gl_PointSize?
 			</doc>
-			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
-			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
-			<bitfield name="OUTLOC2" low="16" high="23" type="uint"/>
-			<bitfield name="OUTLOC3" low="24" high="31" type="uint"/>
+			<bitfield name="OUTLOC0" low="0" high="6" type="uint"/>
+			<bitfield name="OUTLOC1" low="8" high="14" type="uint"/>
+			<bitfield name="OUTLOC2" low="16" high="22" type="uint"/>
+			<bitfield name="OUTLOC3" low="24" high="30" type="uint"/>
 		</reg32>
 	</array>
 	<reg32 offset="0x22d4" name="SP_VS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
@@ -1138,31 +1139,67 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		guess that is probably just re-using the same gpu buffer)
 	</doc>
 	<reg32 offset="0x22d5" name="SP_VS_OBJ_START_REG"/>
-	<!--
-		SP_VS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl.. and
-		unused for opencl
-	 -->
-	<reg32 offset="0x22d6" name="SP_VS_PVT_MEM_PARAM_REG"/>
-	<reg32 offset="0x22d7" name="SP_VS_PVT_MEM_ADDR_REG"/>
+	<reg32 offset="0x22d6" name="SP_VS_PVT_MEM_PARAM_REG">
+		<bitfield name="MEMSIZEPERITEM" low="0" high="7" type="uint"/>
+		<bitfield name="HWSTACKOFFSET" low="8" high="23" type="uint"/>
+		<bitfield name="HWSTACKSIZEPERTHREAD" low="24" high="41" type="uint"/>
+	</reg32>
+	<reg32 offset="0x22d7" name="SP_VS_PVT_MEM_ADDR_REG">
+		<bitfield name="BURSTLEN" low="0" high="4"/>
+		<bitfield name="SHADERSTARTADDRESS" shr="5" low="5" high="31"/>
+	</reg32>
 	<reg32 offset="0x22d8" name="SP_VS_PVT_MEM_SIZE_REG"/>
 	<reg32 offset="0x22df" name="SP_VS_LENGTH_REG" type="a3xx_vs_fs_length_reg"/>
-	<reg32 offset="0x22e0" name="SP_FS_CTRL_REG0" type="a3xx_sp_vs_fs_ctrl_reg0"/>
+	<reg32 offset="0x22e0" name="SP_FS_CTRL_REG0">
+		<bitfield name="THREADMODE" pos="0" type="a3xx_threadmode"/>
+		<bitfield name="INSTRBUFFERMODE" pos="1" type="a3xx_instrbuffermode"/>
+		<!-- maybe CACHEINVALID is two bits?? -->
+		<bitfield name="CACHEINVALID" pos="2" type="boolean"/>
+		<bitfield name="ALUSCHMODE" pos="3" type="boolean"/>
+		<doc>
+			The full/half register footprint is in units of four components,
+			so if r0.x is used, that counts as all of r0.[xyzw] as used.
+			There are separate full/half register footprint values as the
+			full and half registers are independent (not overlapping).
+			Presumably the thread scheduler hardware allocates the full/half
+			register names from the actual physical register file and
+			handles the register renaming.
+		</doc>
+		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
+		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
+		<bitfield name="FSBYPASSENABLE" pos="17" type="boolean"/>
+		<bitfield name="INOUTREGOVERLAP" pos="18" type="boolean"/>
+		<bitfield name="OUTORDERED" pos="19" type="boolean"/>
+		<bitfield name="THREADSIZE" pos="20" type="a3xx_threadsize"/>
+		<bitfield name="SUPERTHREADMODE" pos="21" type="boolean"/>
+		<bitfield name="PIXLODENABLE" pos="22" type="boolean"/>
+		<bitfield name="COMPUTEMODE" pos="23" type="boolean"/>
+		<doc>
+			From regspec:
+			SP_FS_CTRL_REG0.FS_LENGTH [31:24]: FS length, unit = 256bits.
+			If bit31 is 1, it means overflow
+			or any long shader.
+		</doc>
+		<bitfield name="LENGTH" low="24" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x22e1" name="SP_FS_CTRL_REG1">
 		<bitfield name="CONSTLENGTH" low="0" high="9" type="uint"/>
 		<bitfield name="CONSTFOOTPRINT" low="10" high="19" type="uint"/>
 		<bitfield name="INITIALOUTSTANDING" low="20" high="23" type="uint"/>
-		<!-- probably HALFPRECVAROFFSET goes to bit 31?? -->
-		<bitfield name="HALFPRECVAROFFSET" low="24" high="29" type="uint"/>
+		<bitfield name="HALFPRECVAROFFSET" low="24" high="30" type="uint"/>
 	</reg32>
 	<reg32 offset="0x22e2" name="SP_FS_OBJ_OFFSET_REG" type="sp_vs_fs_obj_offset_reg"/>
 	<doc>SP_FS_OBJ_START_REG contains pointer to fragment shader program</doc>
 	<reg32 offset="0x22e3" name="SP_FS_OBJ_START_REG"/>
-	<!--
-		SP_FS_PVT_MEM_CTRL_REG seems to always be 0x8000001 for gl..  so
-		probably only matters for opencl
-	 -->
-	<reg32 offset="0x22e4" name="SP_FS_PVT_MEM_PARAM_REG"/>
-	<reg32 offset="0x22e5" name="SP_FS_PVT_MEM_ADDR_REG"/>
+	<reg32 offset="0x22e4" name="SP_FS_PVT_MEM_PARAM_REG">
+		<bitfield name="MEMSIZEPERITEM" low="0" high="7" type="uint"/>
+		<bitfield name="HWSTACKOFFSET" low="8" high="23" type="uint"/>
+		<bitfield name="HWSTACKSIZEPERTHREAD" low="24" high="41" type="uint"/>
+	</reg32>
+	<reg32 offset="0x22e5" name="SP_FS_PVT_MEM_ADDR_REG">
+		<bitfield name="BURSTLEN" low="0" high="4"/>
+		<bitfield name="SHADERSTARTADDRESS" shr="5" low="5" high="31"/>
+	</reg32>
 	<reg32 offset="0x22e6" name="SP_FS_PVT_MEM_SIZE_REG"/>
 	<reg32 offset="0x22e8" name="SP_FS_FLAT_SHAD_MODE_REG_0">
 		<doc>seems to be one bit per scalar, '1' for flat, '0' for smooth</doc>

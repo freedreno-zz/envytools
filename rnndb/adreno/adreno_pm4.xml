@@ -262,15 +262,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="SS_DIRECT" value="0">
 			<doc>inline with the CP_LOAD_STATE packet</doc>
 		</value>
+		<value name="SS_INVALID_ALL_IC" value="2"/>
+		<value name="SS_INVALID_PART_IC" value="3"/>
 		<value name="SS_INDIRECT" value="4">
 			<doc>in buffer pointed to by EXT_SRC_ADDR</doc>
 		</value>
+		<value name="SS_INDIRECT_TCM" value="5"/>
+		<value name="SS_INDIRECT_STM" value="6"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="DST_OFF" low="0" high="15" type="uint"/>
 		<bitfield name="STATE_SRC" low="16" high="18" type="adreno_state_src"/>
 		<bitfield name="STATE_BLOCK" low="19" high="21" type="adreno_state_block"/>
-		<bitfield name="NUM_UNIT" low="22" high="30" type="uint"/>
+		<bitfield name="NUM_UNIT" low="22" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="STATE_TYPE" low="0" high="1" type="adreno_state_type"/>
