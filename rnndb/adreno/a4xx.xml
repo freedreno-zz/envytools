@@ -1079,7 +1079,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0c81" name="GRAS_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0c88" name="GRAS_PERFCTR_TSE_SEL_0"/>
 	<reg32 offset="0x0c8b" name="GRAS_PERFCTR_TSE_SEL_3"/>
-	<reg32 offset="0x2000" name="GRAS_CL_CLIP_CNTL"/>
+	<reg32 offset="0x2000" name="GRAS_CL_CLIP_CNTL">
+		<bitfield name="CLIP_DISABLE" pos="15" type="boolean"/>
+		<bitfield name="ZERO_GB_SCALE_Z" pos="22" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x2003" name="GRAS_CLEAR_CNTL">
 		<!-- probably not the right name, but.. -->
 		<!-- bit0 set for everything *but* fastclear -->
