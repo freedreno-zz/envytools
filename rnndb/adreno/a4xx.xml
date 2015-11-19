@@ -1378,6 +1378,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="WRAP_T" low="8" high="10" type="a4xx_tex_clamp"/>
 		<bitfield name="WRAP_R" low="11" high="13" type="a4xx_tex_clamp"/>
 		<bitfield name="ANISO" low="14" high="16" type="a4xx_tex_aniso"/>
+		<bitfield name="LOD_BIAS" low="19" high="31" type="fixed" radix="8"/><!-- no idea how many bits for real -->
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
