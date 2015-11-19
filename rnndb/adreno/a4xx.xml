@@ -1382,6 +1382,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="COMPARE_FUNC" low="1" high="3" type="adreno_compare_func"/>
+		<bitfield name="CUBEMAPSEAMLESSFILTOFF" pos="4" type="boolean"/>
 		<bitfield name="UNNORM_COORDS" pos="5" type="boolean"/>
 		<bitfield name="MIPFILTER_LINEAR_FAR" pos="6" type="boolean"/>
 		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="8"/>
