@@ -201,6 +201,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_DXT3" value="0x57"/>
 	<value name="TFMT4_DXT5" value="0x58"/>
 
+	<value name="TFMT4_RGTC1_UNORM" value="0x5a"/>
+	<value name="TFMT4_RGTC1_SNORM" value="0x5b"/>
+	<value name="TFMT4_RGTC2_UNORM" value="0x5e"/>
+	<value name="TFMT4_RGTC2_SNORM" value="0x5f"/>
+
 	<value name="TFMT4_BPTC_UFLOAT" value="0x61"/>
 	<value name="TFMT4_BPTC_FLOAT" value="0x62"/>
 	<value name="TFMT4_BPTC" value="0x63"/>
