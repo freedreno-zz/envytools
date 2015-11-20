@@ -168,6 +168,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_8_8_SINT" value="0x11"/>
 	<value name="TFMT4_8_8_8_8_SINT" value="0x1f"/>
 
+	<value name="TFMT4_16_UNORM" value="0x12"/>
+	<value name="TFMT4_16_16_UNORM" value="0x26"/>
+	<value name="TFMT4_16_16_16_16_UNORM" value="0x33"/>
+
+	<value name="TFMT4_16_SNORM" value="0x13"/>
+	<value name="TFMT4_16_16_SNORM" value="0x27"/>
+	<value name="TFMT4_16_16_16_16_SNORM" value="0x34"/>
+
 	<value name="TFMT4_16_UINT" value="0x15"/>
 	<value name="TFMT4_16_16_UINT" value="0x29"/>
 	<value name="TFMT4_16_16_16_16_UINT" value="0x36"/>
