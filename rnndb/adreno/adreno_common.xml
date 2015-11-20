@@ -225,6 +225,25 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	Common between A3xx and A4xx:
  -->
 
+<enum name="a3xx_rop_code">
+	<value name="ROP_CLEAR"         value="0"/>
+	<value name="ROP_NOR"           value="1"/>
+	<value name="ROP_AND_INVERTED"  value="2"/>
+	<value name="ROP_COPY_INVERTED" value="3"/>
+	<value name="ROP_AND_REVERSE"   value="4"/>
+	<value name="ROP_INVERT"        value="5"/>
+	<value name="ROP_XOR"           value="6"/>
+	<value name="ROP_NAND"          value="7"/>
+	<value name="ROP_AND"           value="8"/>
+	<value name="ROP_EQUIV"         value="9"/>
+	<value name="ROP_NOOP"          value="10"/>
+	<value name="ROP_OR_INVERTED"   value="11"/>
+	<value name="ROP_COPY"          value="12"/>
+	<value name="ROP_OR_REVERSE"    value="13"/>
+	<value name="ROP_OR"            value="14"/>
+	<value name="ROP_SET"           value="15"/>
+</enum>
+
 <enum name="a3xx_render_mode">
 	<value name="RB_RENDERING_PASS" value="0"/>
 	<value name="RB_TILING_PASS" value="1"/>

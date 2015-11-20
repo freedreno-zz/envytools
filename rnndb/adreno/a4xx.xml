@@ -338,10 +338,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<!-- both these bits seem to get set when enabling GL_BLEND.. -->
 			<bitfield name="BLEND" pos="4" type="boolean"/>
 			<bitfield name="BLEND2" pos="5" type="boolean"/>
-			<!-- bit10 set when RB_RESOLVE_PASS+RB_COPY_CLEAR -->
-			<bitfield name="FASTCLEAR" pos="10" type="boolean"/>
-			<!-- bit11 set for everything bit binning pass? -->
-			<bitfield name="B11" pos="11" type="boolean"/>
+			<bitfield name="ROP_ENABLE" pos="6" type="boolean"/>
+			<bitfield name="ROP_CODE" low="8" high="11" type="a3xx_rop_code"/>
 			<bitfield name="COMPONENT_ENABLE" low="24" high="27" type="hex"/>
 		</reg32>
 		<reg32 offset="0x1" name="BUF_INFO">
