@@ -17,6 +17,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB4_R8G8_SNORM" value="0x10"/>
 	<value name="RB4_R8G8_UINT" value="0x11"/>
 	<value name="RB4_R8G8_SINT" value="0x12"/>
+	<value name="RB4_R16_UNORM" value="0x13"/>
+	<value name="RB4_R16_SNORM" value="0x14"/>
 	<value name="RB4_R16_FLOAT" value="0x15"/>
 	<value name="RB4_R16_UINT" value="0x16"/>
 	<value name="RB4_R16_SINT" value="0x17"/>
@@ -30,6 +32,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB4_R10G10B10A2_UNORM" value="0x1f"/>
 	<value name="RB4_R10G10B10A2_UINT" value="0x22"/>
 	<value name="RB4_R11G11B10_FLOAT" value="0x27"/>
+	<value name="RB4_R16G16_UNORM" value="0x28"/>
+	<value name="RB4_R16G16_SNORM" value="0x29"/>
 	<value name="RB4_R16G16_FLOAT" value="0x2a"/>
 	<value name="RB4_R16G16_UINT" value="0x2b"/>
 	<value name="RB4_R16G16_SINT" value="0x2c"/>
@@ -37,6 +41,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB4_R32_UINT" value="0x2e"/>
 	<value name="RB4_R32_SINT" value="0x2f"/>
 
+	<value name="RB4_R16G16B16A16_UNORM" value="0x34"/>
+	<value name="RB4_R16G16B16A16_SNORM" value="0x35"/>
 	<value name="RB4_R16G16B16A16_FLOAT" value="0x36"/>
 	<value name="RB4_R16G16B16A16_UINT" value="0x37"/>
 	<value name="RB4_R16G16B16A16_SINT" value="0x38"/>
