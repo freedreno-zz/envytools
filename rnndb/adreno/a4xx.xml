@@ -12,7 +12,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<value name="RB4_R4G4B4A4_UNORM" value="0x08"/>
 	<value name="RB4_R5G5B5A1_UNORM" value="0x0a"/>
-	<value name="RB4_R5G6R5_UNORM" value="0x0e"/>
+	<value name="RB4_R5G6B5_UNORM" value="0x0e"/>
 	<value name="RB4_R8G8_UNORM" value="0x0f"/>
 	<value name="RB4_R8G8_SNORM" value="0x10"/>
 	<value name="RB4_R8G8_UINT" value="0x11"/>
