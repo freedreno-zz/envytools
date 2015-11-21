@@ -412,8 +412,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x20f9" name="RB_FS_OUTPUT">
 		<!-- per-mrt enable bit -->
 		<bitfield name="ENABLE_BLEND" low="0" high="7"/>
-		<!-- else bit8 set when RB_RESOLVE_PASS+RB_COPY_CLEAR -->
-		<bitfield name="FAST_CLEAR" pos="8" type="boolean"/>
+		<bitfield name="INDEPENDENT_BLEND" pos="8" type="boolean"/>
 		<!-- a guess? -->
 		<bitfield name="SAMPLE_MASK" low="16" high="31"/>
 	</reg32>
