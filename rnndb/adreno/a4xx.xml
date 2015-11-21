@@ -131,11 +131,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="VFMT4_8_8_8_SNORM" value="0x36"/>
 	<value name="VFMT4_8_8_8_8_SNORM" value="0x37"/>
 
-	<!-- note: these also have bit 22 set in VFD_DECODE -->
-	<value name="VFMT4_10_10_10_2_UINT" value="0x3c"/>
-	<value name="VFMT4_10_10_10_2_UNORM" value="0x3d"/>
-	<value name="VFMT4_10_10_10_2_SINT" value="0x3e"/>
-	<value name="VFMT4_10_10_10_2_SNORM" value="0x3f"/>
+	<value name="VFMT4_10_10_10_2_UINT" value="0x38"/>
+	<value name="VFMT4_10_10_10_2_UNORM" value="0x39"/>
+	<value name="VFMT4_10_10_10_2_SINT" value="0x3a"/>
+	<value name="VFMT4_10_10_10_2_SNORM" value="0x3b"/>
+	<value name="VFMT4_2_10_10_10_UINT" value="0x3c"/>
+	<value name="VFMT4_2_10_10_10_UNORM" value="0x3d"/>
+	<value name="VFMT4_2_10_10_10_SINT" value="0x3e"/>
+	<value name="VFMT4_2_10_10_10_SNORM" value="0x3f"/>
 </enum>
 
 <enum name="a4xx_tex_fmt">
