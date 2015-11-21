@@ -1284,7 +1284,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- PSIZE bit set if gl_PointSize written: -->
 		<bitfield name="PSIZE" pos="26" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x21c5" name="UNKNOWN_21C5"/>
+	<reg32 offset="0x21c5" name="PC_PRIM_VTX_CNTL2">
+		<bitfield name="POLYMODE_FRONT_PTYPE" low="0" high="2" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="POLYMODE_BACK_PTYPE" low="3" high="5" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="POLYMODE_ENABLE" pos="6" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x21c6" name="PC_RESTART_INDEX"/>
 	<reg32 offset="0x21e5" name="PC_GS_PARAM">
 		<bitfield name="MAX_VERTICES" low="0" high="9" type="uint"/><!-- +1, i.e. max is 1024 -->
