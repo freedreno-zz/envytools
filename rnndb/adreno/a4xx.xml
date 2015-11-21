@@ -87,6 +87,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="VFMT4_32_32_32_FIXED" value="0xb"/>
 	<value name="VFMT4_32_32_32_32_FIXED" value="0xc"/>
 
+	<value name="VFMT4_11_11_10_FLOAT" value="0xd"/>
+
 	<!-- beyond here it does not appear to be shifted -->
 	<value name="VFMT4_16_SINT" value="0x10"/>
 	<value name="VFMT4_16_16_SINT" value="0x11"/>
