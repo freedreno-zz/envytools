@@ -144,121 +144,123 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a4xx_tex_fmt">
-	<value name="TFMT4_5_6_5_UNORM" value="0x0b"/>
-	<value name="TFMT4_5_5_5_1_UNORM" value="0x09"/>
+	<!-- 0x00 .. 0x02 -->
+
+	<!-- 8-bit formats -->
+	<value name="TFMT4_A8_UNORM" value="0x03"/>
+	<value name="TFMT4_8_UNORM"  value="0x04"/>
+	<value name="TFMT4_8_SNORM"  value="0x05"/>
+	<value name="TFMT4_8_UINT"   value="0x06"/>
+	<value name="TFMT4_8_SINT"   value="0x07"/>
+
+	<!-- 16-bit formats -->
 	<value name="TFMT4_4_4_4_4_UNORM" value="0x08"/>
-	<value name="TFMT4_X8Z24_UNORM" value="0x47"/>
+	<value name="TFMT4_5_5_5_1_UNORM" value="0x09"/>
+	<!-- 0x0a -->
+	<value name="TFMT4_5_6_5_UNORM"   value="0x0b"/>
 
-	<value name="TFMT4_10_10_10_2_UNORM" value="0x21"/>
-	<value name="TFMT4_10_10_10_2_UINT" value="0x22"/>
+	<!-- 0x0c -->
 
-	<value name="TFMT4_A8_UNORM" value="0x03"/>    <!-- GL_ALPHA -->
-	<value name="TFMT4_L8_A8_UNORM" value="0xd"/> <!-- GL_LUMINANCE_ALPHA -->
-
-	<!--
-		NOTE: GL_ALPHA and GL_LUMINANCE_ALPHA aren't handled in a similar way
-		to float16, float32.. but they seem to use non-standard swizzle too..
-		perhaps we can ditch that if the pattern follows of 0xn0, 0xn1, 0xn2,
-		0xn3 for 1, 2, 3, 4 components respectively..
-
-		Only formats filled in below are the ones that have been observed by
-		the blob or tested.. you can guess what the missing ones are..
-	 -->
-
-	<value name="TFMT4_8_UNORM" value="0x04"/>     <!-- GL_LUMINANCE -->
-	<value name="TFMT4_8_8_UNORM" value="0xe"/>
-	<value name="TFMT4_8_8_8_8_UNORM" value="0x1c"/>
-
-	<value name="TFMT4_8_SNORM" value="0x05"/>
-	<value name="TFMT4_8_8_SNORM" value="0x0f"/>
-	<value name="TFMT4_8_8_8_8_SNORM" value="0x1d"/>
-
-	<value name="TFMT4_8_UINT" value="0x06"/>
-	<value name="TFMT4_8_8_UINT" value="0x10"/>
-	<value name="TFMT4_8_8_8_8_UINT" value="0x1e"/>
-
-	<value name="TFMT4_8_SINT" value="0x07"/>
-	<value name="TFMT4_8_8_SINT" value="0x11"/>
-	<value name="TFMT4_8_8_8_8_SINT" value="0x1f"/>
+	<value name="TFMT4_L8_A8_UNORM" value="0x0d"/>
+	<value name="TFMT4_8_8_UNORM"   value="0x0e"/>
+	<value name="TFMT4_8_8_SNORM"   value="0x0f"/>
+	<value name="TFMT4_8_8_UINT"    value="0x10"/>
+	<value name="TFMT4_8_8_SINT"    value="0x11"/>
 
 	<value name="TFMT4_16_UNORM" value="0x12"/>
-	<value name="TFMT4_16_16_UNORM" value="0x26"/>
-	<value name="TFMT4_16_16_16_16_UNORM" value="0x33"/>
-
 	<value name="TFMT4_16_SNORM" value="0x13"/>
-	<value name="TFMT4_16_16_SNORM" value="0x27"/>
-	<value name="TFMT4_16_16_16_16_SNORM" value="0x34"/>
-
-	<value name="TFMT4_16_UINT" value="0x15"/>
-	<value name="TFMT4_16_16_UINT" value="0x29"/>
-	<value name="TFMT4_16_16_16_16_UINT" value="0x36"/>
-
-	<value name="TFMT4_16_SINT" value="0x16"/>
-	<value name="TFMT4_16_16_SINT" value="0x2a"/>
-	<value name="TFMT4_16_16_16_16_SINT" value="0x37"/>
-
-	<value name="TFMT4_32_UINT" value="0x2c"/>
-	<value name="TFMT4_32_32_UINT" value="0x39"/>
-	<value name="TFMT4_32_32_32_32_UINT" value="0x40"/>
-
-	<value name="TFMT4_32_SINT" value="0x2d"/>
-	<value name="TFMT4_32_32_SINT" value="0x3a"/>
-	<value name="TFMT4_32_32_32_32_SINT" value="0x41"/>
-
 	<value name="TFMT4_16_FLOAT" value="0x14"/>
+	<value name="TFMT4_16_UINT"  value="0x15"/>
+	<value name="TFMT4_16_SINT"  value="0x16"/>
+
+	<!-- 0x17 .. 0x1b -->
+
+	<!-- 32-bit formats -->
+	<value name="TFMT4_8_8_8_8_UNORM" value="0x1c"/>
+	<value name="TFMT4_8_8_8_8_SNORM" value="0x1d"/>
+	<value name="TFMT4_8_8_8_8_UINT"  value="0x1e"/>
+	<value name="TFMT4_8_8_8_8_SINT"  value="0x1f"/>
+
+	<value name="TFMT4_9_9_9_E5_FLOAT"   value="0x20"/>
+	<value name="TFMT4_10_10_10_2_UNORM" value="0x21"/>
+	<value name="TFMT4_10_10_10_2_UINT"  value="0x22"/>
+	<!-- 0x23 .. 0x24 -->
+	<value name="TFMT4_11_11_10_FLOAT"   value="0x25"/>
+
+	<value name="TFMT4_16_16_UNORM" value="0x26"/>
+	<value name="TFMT4_16_16_SNORM" value="0x27"/>
 	<value name="TFMT4_16_16_FLOAT" value="0x28"/>
-	<!-- TFMT_16_16_16_FLOAT -->
-	<value name="TFMT4_16_16_16_16_FLOAT" value="0x35"/>
+	<value name="TFMT4_16_16_UINT"  value="0x29"/>
+	<value name="TFMT4_16_16_SINT"  value="0x2a"/>
 
 	<value name="TFMT4_32_FLOAT" value="0x2b"/>
+	<value name="TFMT4_32_UINT"  value="0x2c"/>
+	<value name="TFMT4_32_SINT"  value="0x2d"/>
+
+	<!-- 0x2e .. 0x32 -->
+
+	<!-- 64-bit formats -->
+	<value name="TFMT4_16_16_16_16_UNORM" value="0x33"/>
+	<value name="TFMT4_16_16_16_16_SNORM" value="0x34"/>
+	<value name="TFMT4_16_16_16_16_FLOAT" value="0x35"/>
+	<value name="TFMT4_16_16_16_16_UINT"  value="0x36"/>
+	<value name="TFMT4_16_16_16_16_SINT"  value="0x37"/>
+
 	<value name="TFMT4_32_32_FLOAT" value="0x38"/>
-	<!-- TFMT_32_32_32_FLOAT -->
+	<value name="TFMT4_32_32_UINT"  value="0x39"/>
+	<value name="TFMT4_32_32_SINT"  value="0x3a"/>
+
+	<!-- 0x3b .. 0x3e -->
+
+	<!-- 128-bit formats -->
 	<value name="TFMT4_32_32_32_32_FLOAT" value="0x3f"/>
+	<value name="TFMT4_32_32_32_32_UINT"  value="0x40"/>
+	<value name="TFMT4_32_32_32_32_SINT"  value="0x41"/>
 
-	<value name="TFMT4_9_9_9_E5_FLOAT" value="0x20"/>
-	<value name="TFMT4_11_11_10_FLOAT" value="0x25"/>
+	<!-- 0x42 .. 0x46 -->
+	<value name="TFMT4_X8Z24_UNORM" value="0x47"/>
+	<!-- 0x48 .. 0x55 -->
 
-	<value name="TFMT4_DXT1" value="0x56"/>
-	<value name="TFMT4_DXT3" value="0x57"/>
-	<value name="TFMT4_DXT5" value="0x58"/>
-
-	<value name="TFMT4_RGTC1_UNORM" value="0x5a"/>
-	<value name="TFMT4_RGTC1_SNORM" value="0x5b"/>
-	<value name="TFMT4_RGTC2_UNORM" value="0x5e"/>
-	<value name="TFMT4_RGTC2_SNORM" value="0x5f"/>
-
-	<value name="TFMT4_BPTC_UFLOAT" value="0x61"/>
-	<value name="TFMT4_BPTC_FLOAT" value="0x62"/>
-	<value name="TFMT4_BPTC" value="0x63"/>
-
-	<value name="TFMT4_ATC_RGB" value="0x64"/>
-	<value name="TFMT4_ATC_RGBA_EXPLICIT" value="0x65"/>
+	<!-- compressed formats -->
+	<value name="TFMT4_DXT1"                  value="0x56"/>
+	<value name="TFMT4_DXT3"                  value="0x57"/>
+	<value name="TFMT4_DXT5"                  value="0x58"/>
+	<!-- 0x59 -->
+	<value name="TFMT4_RGTC1_UNORM"           value="0x5a"/>
+	<value name="TFMT4_RGTC1_SNORM"           value="0x5b"/>
+	<!-- 0x5c .. 0x5d -->
+	<value name="TFMT4_RGTC2_UNORM"           value="0x5e"/>
+	<value name="TFMT4_RGTC2_SNORM"           value="0x5f"/>
+	<!-- 0x60 -->
+	<value name="TFMT4_BPTC_UFLOAT"           value="0x61"/>
+	<value name="TFMT4_BPTC_FLOAT"            value="0x62"/>
+	<value name="TFMT4_BPTC"                  value="0x63"/>
+	<value name="TFMT4_ATC_RGB"               value="0x64"/>
+	<value name="TFMT4_ATC_RGBA_EXPLICIT"     value="0x65"/>
 	<value name="TFMT4_ATC_RGBA_INTERPOLATED" value="0x66"/>
-
-	<value name="TFMT4_ETC2_RG11_UNORM" value="0x67"/>
-	<value name="TFMT4_ETC2_RG11_SNORM" value="0x68"/>
-	<value name="TFMT4_ETC2_R11_UNORM" value="0x69"/>
-	<value name="TFMT4_ETC2_R11_SNORM" value="0x6a"/>
-	<value name="TFMT4_ETC1" value="0x6b"/>
-	<value name="TFMT4_ETC2_RGB8" value="0x6c"/>
-	<value name="TFMT4_ETC2_RGBA8" value="0x6d"/>
-	<value name="TFMT4_ETC2_RGB8A1" value="0x6e"/>
-
-	<value name="TFMT4_ASTC_4x4" value="0x6f"/>
-	<value name="TFMT4_ASTC_5x4" value="0x70"/>
-	<value name="TFMT4_ASTC_5x5" value="0x71"/>
-	<value name="TFMT4_ASTC_6x5" value="0x72"/>
-	<value name="TFMT4_ASTC_6x6" value="0x73"/>
-	<value name="TFMT4_ASTC_8x5" value="0x74"/>
-	<value name="TFMT4_ASTC_8x6" value="0x75"/>
-	<value name="TFMT4_ASTC_8x8" value="0x76"/>
-	<value name="TFMT4_ASTC_10x5" value="0x77"/>
-	<value name="TFMT4_ASTC_10x6" value="0x78"/>
-	<value name="TFMT4_ASTC_10x8" value="0x79"/>
-	<value name="TFMT4_ASTC_10x10" value="0x7a"/>
-	<value name="TFMT4_ASTC_12x10" value="0x7b"/>
-	<value name="TFMT4_ASTC_12x12" value="0x7c"/>
-
+	<value name="TFMT4_ETC2_RG11_UNORM"       value="0x67"/>
+	<value name="TFMT4_ETC2_RG11_SNORM"       value="0x68"/>
+	<value name="TFMT4_ETC2_R11_UNORM"        value="0x69"/>
+	<value name="TFMT4_ETC2_R11_SNORM"        value="0x6a"/>
+	<value name="TFMT4_ETC1"                  value="0x6b"/>
+	<value name="TFMT4_ETC2_RGB8"             value="0x6c"/>
+	<value name="TFMT4_ETC2_RGBA8"            value="0x6d"/>
+	<value name="TFMT4_ETC2_RGB8A1"           value="0x6e"/>
+	<value name="TFMT4_ASTC_4x4"              value="0x6f"/>
+	<value name="TFMT4_ASTC_5x4"              value="0x70"/>
+	<value name="TFMT4_ASTC_5x5"              value="0x71"/>
+	<value name="TFMT4_ASTC_6x5"              value="0x72"/>
+	<value name="TFMT4_ASTC_6x6"              value="0x73"/>
+	<value name="TFMT4_ASTC_8x5"              value="0x74"/>
+	<value name="TFMT4_ASTC_8x6"              value="0x75"/>
+	<value name="TFMT4_ASTC_8x8"              value="0x76"/>
+	<value name="TFMT4_ASTC_10x5"             value="0x77"/>
+	<value name="TFMT4_ASTC_10x6"             value="0x78"/>
+	<value name="TFMT4_ASTC_10x8"             value="0x79"/>
+	<value name="TFMT4_ASTC_10x10"            value="0x7a"/>
+	<value name="TFMT4_ASTC_12x10"            value="0x7b"/>
+	<value name="TFMT4_ASTC_12x12"            value="0x7c"/>
+	<!-- 0x7d .. 0x7f -->
 </enum>
 
 <enum name="a4xx_tex_fetchsize">
