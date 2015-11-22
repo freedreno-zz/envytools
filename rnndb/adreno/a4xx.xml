@@ -150,6 +150,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_X8Z24_UNORM" value="0x47"/>
 
 	<value name="TFMT4_10_10_10_2_UNORM" value="0x21"/>
+	<value name="TFMT4_10_10_10_2_UINT" value="0x22"/>
+
 	<value name="TFMT4_A8_UNORM" value="0x03"/>    <!-- GL_ALPHA -->
 	<value name="TFMT4_L8_A8_UNORM" value="0xd"/> <!-- GL_LUMINANCE_ALPHA -->
 
