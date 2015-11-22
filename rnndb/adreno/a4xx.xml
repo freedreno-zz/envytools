@@ -210,7 +210,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT4_32_32_UINT"  value="0x39"/>
 	<value name="TFMT4_32_32_SINT"  value="0x3a"/>
 
-	<!-- 0x3b .. 0x3e -->
+	<!-- 96-bit formats -->
+	<value name="TFMT4_32_32_32_FLOAT" value="0x3b"/>
+	<value name="TFMT4_32_32_32_UINT"  value="0x3c"/>
+	<value name="TFMT4_32_32_32_SINT"  value="0x3d"/>
+
+	<!-- 0x3e -->
 
 	<!-- 128-bit formats -->
 	<value name="TFMT4_32_32_32_32_FLOAT" value="0x3f"/>
