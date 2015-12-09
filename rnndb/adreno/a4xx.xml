@@ -596,6 +596,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x004b" name="RBBM_CFG_DEBBUS_SEL_B"/>
 	<reg32 offset="0x004c" name="RBBM_CFG_DEBBUS_SEL_C"/>
 	<reg32 offset="0x004d" name="RBBM_CFG_DEBBUS_SEL_D"/>
+	<reg32 offset="0x0098" name="RBBM_POWER_CNTL_IP">
+		<bitfield name="SW_COLLAPSE" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x009c" name="RBBM_PERFCTR_CP_0_LO"/>
 	<array offset="0x0068" name="RBBM_CLOCK_CTL_SP" stride="1" length="4">
 		<reg32 offset="0x0" name="REG"/>
@@ -660,6 +663,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="UCHE_OOB_ACCESS" pos="25"/>
 	</bitset>
 
+	<reg32 offset="0x0099" name="RBBM_SP_REGFILE_SLEEP_CNTL_0"/>
+	<reg32 offset="0x009a" name="RBBM_SP_REGFILE_SLEEP_CNTL_1"/>
 	<reg32 offset="0x0168" name="RBBM_PERFCTR_PWR_1_LO"/>
 	<reg32 offset="0x0170" name="RBBM_PERFCTR_CTL"/>
 	<reg32 offset="0x0171" name="RBBM_PERFCTR_LOAD_CMD0"/>
@@ -698,6 +703,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="GPU_BUSY" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x019f" name="RBBM_INTERFACE_RRDY_STATUS5"/>
+	<reg32 offset="0x01b0" name="RBBM_POWER_STATUS">
+		<bitfield name="SP_TP_PWR_ON" pos="20" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x01b8" name="RBBM_WAIT_IDLE_CLOCKS_CTL2"/>
 
 	<!-- CP registers -->
 	<reg32 offset="0x0228" name="CP_SCRATCH_UMASK"/>
@@ -755,7 +764,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- SP registers -->
 	<reg32 offset="0x0ec0" name="SP_VS_STATUS"/>
 	<reg32 offset="0x0ec3" name="SP_MODE_CONTROL"/>
+
+	<reg32 offset="0x0ec4" name="SP_PERFCTR_SP_SEL_0"/>
+	<reg32 offset="0x0ec5" name="SP_PERFCTR_SP_SEL_1"/>
+	<reg32 offset="0x0ec6" name="SP_PERFCTR_SP_SEL_2"/>
+	<reg32 offset="0x0ec7" name="SP_PERFCTR_SP_SEL_3"/>
+	<reg32 offset="0x0ec8" name="SP_PERFCTR_SP_SEL_4"/>
+	<reg32 offset="0x0ec9" name="SP_PERFCTR_SP_SEL_5"/>
+	<reg32 offset="0x0eca" name="SP_PERFCTR_SP_SEL_6"/>
+	<reg32 offset="0x0ecb" name="SP_PERFCTR_SP_SEL_7"/>
+	<reg32 offset="0x0ecc" name="SP_PERFCTR_SP_SEL_8"/>
+	<reg32 offset="0x0ecd" name="SP_PERFCTR_SP_SEL_9"/>
+	<reg32 offset="0x0ece" name="SP_PERFCTR_SP_SEL_10"/>
 	<reg32 offset="0x0ecf" name="SP_PERFCTR_SP_SEL_11"/>
+
 	<reg32 offset="0x22c0" name="SP_SP_CTRL_REG">
 		<bitfield name="BINNING_PASS" pos="19" type="boolean"/>
 	</reg32>
