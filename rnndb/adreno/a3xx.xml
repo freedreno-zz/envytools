@@ -309,7 +309,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x30" name="CP_CSF_RBI1I2_FETCHING"/>
 </enum>
 
-<enum name="a3xx_gras_perfcounter_select">
+<enum name="a3xx_gras_tse_perfcounter_select">
 	<value value="0x00" name="GRAS_TSEPERF_INPUT_PRIM"/>
 	<value value="0x01" name="GRAS_TSEPERF_INPUT_NULL_PRIM"/>
 	<value value="0x02" name="GRAS_TSEPERF_TRIVAL_REJ_PRIM"/>
@@ -325,6 +325,16 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x0c" name="GRAS_TSEPERF_WORKING_CYCLES"/>
 	<value value="0x0d" name="GRAS_TSEPERF_PC_STARVE"/>
 	<value value="0x0e" name="GRAS_TSERASPERF_STALL"/>
+</enum>
+
+<enum name="a3xx_gras_ras_perfcounter_select">
+	<value value="0x00" name="GRAS_RASPERF_16X16_TILES"/>
+	<value value="0x01" name="GRAS_RASPERF_8X8_TILES"/>
+	<value value="0x02" name="GRAS_RASPERF_4X4_TILES"/>
+	<value value="0x03" name="GRAS_RASPERF_WORKING_CYCLES"/>
+	<value value="0x04" name="GRAS_RASPERF_STALL_CYCLES_BY_RB"/>
+	<value value="0x05" name="GRAS_RASPERF_STALL_CYCLES_BY_VSC"/>
+	<value value="0x06" name="GRAS_RASPERF_STARVE_CYCLES_BY_TSE"/>
 </enum>
 
 <enum name="a3xx_hlsq_perfcounter_select">
@@ -1515,10 +1525,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<doc>seems to be always set to 0x00000001</doc>
 	</reg32>
 
-	<reg32 offset="0x0c88" name="GRAS_PERFCOUNTER0_SELECT" type="a3xx_gras_perfcounter_select"/>
-	<reg32 offset="0x0c89" name="GRAS_PERFCOUNTER1_SELECT" type="a3xx_gras_perfcounter_select"/>
-	<reg32 offset="0x0c8a" name="GRAS_PERFCOUNTER2_SELECT" type="a3xx_gras_perfcounter_select"/>
-	<reg32 offset="0x0c8b" name="GRAS_PERFCOUNTER3_SELECT" type="a3xx_gras_perfcounter_select"/>
+	<reg32 offset="0x0c88" name="GRAS_PERFCOUNTER0_SELECT" type="a3xx_gras_tse_perfcounter_select"/>
+	<reg32 offset="0x0c89" name="GRAS_PERFCOUNTER1_SELECT" type="a3xx_gras_tse_perfcounter_select"/>
+	<reg32 offset="0x0c8a" name="GRAS_PERFCOUNTER2_SELECT" type="a3xx_gras_ras_perfcounter_select"/>
+	<reg32 offset="0x0c8b" name="GRAS_PERFCOUNTER3_SELECT" type="a3xx_gras_ras_perfcounter_select"/>
 	<array offset="0x0ca0" name="GRAS_CL_USER_PLANE" stride="4" length="6">
 		<reg32 offset="0x0" name="X"/>
 		<reg32 offset="0x1" name="Y"/>
