@@ -418,7 +418,7 @@ resample(void)
 
 static int w, h;
 static int ctr_width;
-static int nctrs, current_cntr;
+static int max_rows, current_cntr = 1;
 
 static void
 redraw_footer(WINDOW *win)
@@ -530,7 +530,7 @@ redraw_counter(WINDOW *win, int row, struct counter_group *group,
 static void
 redraw(WINDOW *win)
 {
-	int row = 0, n = 0;
+	int row = 0;
 
 	w = getmaxx(win);
 	h = getmaxy(win);
@@ -549,8 +549,7 @@ redraw(WINDOW *win)
 		}
 
 		for (; j < group->ncounters; j++) {
-			redraw_counter(win, row, group, j, n == current_cntr);
-			n++;
+			redraw_counter(win, row, group, j, row == current_cntr);
 			row++;
 		}
 	}
@@ -581,9 +580,21 @@ current_counter(int *ctr)
 		if (i == 0)
 			j++;
 
+		/* account for group header: */
+		if (j < group->ncounters) {
+			/* cannot select group header.. return null to indicate this
+			 * main_ui():
+			 */
+			if (n == current_cntr)
+				return NULL;
+			n++;
+		}
+
+
 		for (; j < group->ncounters; j++) {
 			if (n == current_cntr) {
-				*ctr = j;
+				if (ctr)
+					*ctr = j;
 				return group;
 			}
 			n++;
@@ -706,10 +717,14 @@ main_ui(void)
 	while (true) {
 		switch (wgetch(mainwin)) {
 		case KEY_UP:
-			current_cntr = MAX2(0, current_cntr - 1);
+			current_cntr = MAX2(1, current_cntr - 1);
+			if (current_counter(NULL) == NULL)
+				current_cntr = MAX2(1, current_cntr - 1);
 			break;
 		case KEY_DOWN:
-			current_cntr = MIN2(nctrs - 1, current_cntr + 1);
+			current_cntr = MIN2(max_rows - 1, current_cntr + 1);
+			if (current_counter(NULL) == NULL)
+				current_cntr = MIN2(max_rows - 1, current_cntr + 1);
 			break;
 		case KEY_RIGHT:
 			counter_dialog();
@@ -735,14 +750,16 @@ out:
 static void
 setup_counter_groups(void)
 {
-	nctrs = 0;
 	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
-		nctrs += group->ncounters;
+		max_rows += group->ncounters + 1;
 
 		/* the first CP counter is hidden: */
-		if (i == 0)
-			nctrs--;
+		if (i == 0) {
+			max_rows--;
+			if (group->ncounters <= 1)
+				max_rows--;
+		}
 
 		for (unsigned j = 0; j < group->ncounters; j++) {
 			group->reg[j].select_off = regelem(dev.dom, group->counter[j].select)->offset;
