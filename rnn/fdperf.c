@@ -632,7 +632,11 @@ counter_dialog(void)
 		int max = MIN2(dh - 2, en->valsnum);
 		struct rnnvalue *val = NULL;
 
-		scroll = MAX2(0, current - dh + 4);
+		if ((current - scroll) >= (dh - 3)) {
+			scroll = current - (dh - 3);
+		} else if (current < scroll) {
+			scroll = current;
+		}
 
 		for (int i = 0; i < max; i++) {
 			int n = scroll + i;
