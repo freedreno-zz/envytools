@@ -535,14 +535,20 @@ redraw(WINDOW *win)
 	w = getmaxx(win);
 	h = getmaxy(win);
 
-	/* NOTE skip CP (the first row) */
-	for (unsigned i = 1; i < dev.ngroups; i++) {
+	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
+		unsigned j = 0;
 
-		redraw_group_header(win, row, group->name);
-		row++;
+		/* NOTE skip CP the first CP counter */
+		if (i == 0)
+			j++;
 
-		for (unsigned j = 0; j < group->ncounters; j++) {
+		if (j < group->ncounters) {
+			redraw_group_header(win, row, group->name);
+			row++;
+		}
+
+		for (; j < group->ncounters; j++) {
 			redraw_counter(win, row, group, j, n == current_cntr);
 			n++;
 			row++;
@@ -567,10 +573,15 @@ current_counter(int *ctr)
 {
 	int n = 0;
 
-	/* NOTE skip CP (the first row) */
-	for (unsigned i = 1; i < dev.ngroups; i++) {
+	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
-		for (unsigned j = 0; j < group->ncounters; j++) {
+		unsigned j = 0;
+
+		/* NOTE skip CP the first CP counter */
+		if (i == 0)
+			j++;
+
+		for (; j < group->ncounters; j++) {
 			if (n == current_cntr) {
 				*ctr = j;
 				return group;
@@ -723,9 +734,12 @@ setup_counter_groups(void)
 	nctrs = 0;
 	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
-		/* the CP counter is hidden: */
-		if (i > 0)
-			nctrs += group->ncounters;
+		nctrs += group->ncounters;
+
+		/* the first CP counter is hidden: */
+		if (i == 0)
+			nctrs--;
+
 		for (unsigned j = 0; j < group->ncounters; j++) {
 			group->reg[j].select_off = regelem(dev.dom, group->counter[j].select)->offset;
 			group->reg[j].val_hi = dev.io + (regelem(dev.dom, group->counter[j].val_hi)->offset * 4);
@@ -747,10 +761,15 @@ static config_setting_t *setting;
 static void
 config_save(void)
 {
-	for (unsigned i = 1; i < dev.ngroups; i++) {
+	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
+		unsigned j = 0;
 
-		for (unsigned j = 0; j < group->ncounters; j++) {
+		/* NOTE skip CP the first CP counter */
+		if (i == 0)
+			j++;
+
+		for (; j < group->ncounters; j++) {
 			config_setting_t *s =
 				config_setting_lookup(setting, group->counter[j].select);
 			config_setting_set_int(s, group->reg[j].select_val);
@@ -781,10 +800,15 @@ config_restore(void)
 		setting = config_setting_add(root, str, CONFIG_TYPE_GROUP);
 	free(str);
 
-	for (unsigned i = 1; i < dev.ngroups; i++) {
+	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
+		unsigned j = 0;
 
-		for (unsigned j = 0; j < group->ncounters; j++) {
+		/* NOTE skip CP the first CP counter */
+		if (i == 0)
+			j++;
+
+		for (; j < group->ncounters; j++) {
 			config_setting_t *s =
 				config_setting_lookup(setting, group->counter[j].select);
 			if (!s) {
