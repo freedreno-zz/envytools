@@ -293,49 +293,590 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="EVEN_SPACING" value="3"/>
 </enum>
 
+<!--
+NOTE counters extracted from test-perf log with the following awful
+script:
+##################
+#!/bin/bash
+
+log=$1
+
+grep -F "counter
+countable
+group" $log | grep -v gl > shortlist.txt
+
+countable=""
+IFS=$'\n'; for line in $(cat shortlist.txt); do
+	# parse ######### group[$n]: $name
+	l=${line########### group}
+	if [ $l != $line ];  then
+		group=`echo $line | awk '{print $3}'`
+		echo "Group: $group"
+		continue
+	fi
+	# parse #########   counter[$n]: $name
+	l=${line###########   counter}
+	if [ $l != $line ]; then
+		countable=`echo $line | awk '{print $3}'`
+		#echo "  Countable: $countable"
+		continue
+	fi
+	# parse 		countable:
+	l=${line##		countable:}
+	if [ $l != $line ]; then
+		val=`echo $line | awk '{print $2}'`
+		echo "<value value=\"$val\" name=\"$countable\"/>"
+	fi
+
+done
+##################
+ -->
 <enum name="a4xx_ccu_perfcounter_select">
+	<value value="0" name="CCU_BUSY_CYCLES"/>
+	<value value="2" name="CCU_RB_DEPTH_RETURN_STALL"/>
+	<value value="3" name="CCU_RB_COLOR_RETURN_STALL"/>
+	<value value="6" name="CCU_DEPTH_BLOCKS"/>
+	<value value="7" name="CCU_COLOR_BLOCKS"/>
+	<value value="8" name="CCU_DEPTH_BLOCK_HIT"/>
+	<value value="9" name="CCU_COLOR_BLOCK_HIT"/>
+	<value value="10" name="CCU_DEPTH_FLAG1_COUNT"/>
+	<value value="11" name="CCU_DEPTH_FLAG2_COUNT"/>
+	<value value="12" name="CCU_DEPTH_FLAG3_COUNT"/>
+	<value value="13" name="CCU_DEPTH_FLAG4_COUNT"/>
+	<value value="14" name="CCU_COLOR_FLAG1_COUNT"/>
+	<value value="15" name="CCU_COLOR_FLAG2_COUNT"/>
+	<value value="16" name="CCU_COLOR_FLAG3_COUNT"/>
+	<value value="17" name="CCU_COLOR_FLAG4_COUNT"/>
+	<value value="18" name="CCU_PARTIAL_BLOCK_READ"/>
 </enum>
 
+<!--
+NOTE other than CP_ALWAYS_COUNT (which is the only one we use so far),
+on a3xx the countable #'s from AMD_performance_monitor disagreed with
+TRM.  All these #'s for a4xx come from AMD_performance_monitor, so
+perhaps they should be taken with a grain of salt
+-->
 <enum name="a4xx_cp_perfcounter_select">
 	<!-- first ctr at least seems same as a3xx, so we can measure freq -->
-	<value value="0x00" name="CP_ALWAYS_COUNT"/>
+	<value value="0" name="CP_ALWAYS_COUNT"/>
+	<value value="1" name="CP_BUSY"/>
+	<value value="2" name="CP_PFP_IDLE"/>
+	<value value="3" name="CP_PFP_BUSY_WORKING"/>
+	<value value="4" name="CP_PFP_STALL_CYCLES_ANY"/>
+	<value value="5" name="CP_PFP_STARVE_CYCLES_ANY"/>
+	<value value="6" name="CP_PFP_STARVED_PER_LOAD_ADDR"/>
+	<value value="7" name="CP_PFP_STALLED_PER_STORE_ADDR"/>
+	<value value="8" name="CP_PFP_PC_PROFILE"/>
+	<value value="9" name="CP_PFP_MATCH_PM4_PKT_PROFILE"/>
+	<value value="10" name="CP_PFP_COND_INDIRECT_DISCARDED"/>
+	<value value="11" name="CP_LONG_RESUMPTIONS"/>
+	<value value="12" name="CP_RESUME_CYCLES"/>
+	<value value="13" name="CP_RESUME_TO_BOUNDARY_CYCLES"/>
+	<value value="14" name="CP_LONG_PREEMPTIONS"/>
+	<value value="15" name="CP_PREEMPT_CYCLES"/>
+	<value value="16" name="CP_PREEMPT_TO_BOUNDARY_CYCLES"/>
+	<value value="17" name="CP_ME_FIFO_EMPTY_PFP_IDLE"/>
+	<value value="18" name="CP_ME_FIFO_EMPTY_PFP_BUSY"/>
+	<value value="19" name="CP_ME_FIFO_NOT_EMPTY_NOT_FULL"/>
+	<value value="20" name="CP_ME_FIFO_FULL_ME_BUSY"/>
+	<value value="21" name="CP_ME_FIFO_FULL_ME_NON_WORKING"/>
+	<value value="22" name="CP_ME_WAITING_FOR_PACKETS"/>
+	<value value="23" name="CP_ME_BUSY_WORKING"/>
+	<value value="24" name="CP_ME_STARVE_CYCLES_ANY"/>
+	<value value="25" name="CP_ME_STARVE_CYCLES_PER_PROFILE"/>
+	<value value="26" name="CP_ME_STALL_CYCLES_PER_PROFILE"/>
+	<value value="27" name="CP_ME_PC_PROFILE"/>
+	<value value="28" name="CP_RCIU_FIFO_EMPTY"/>
+	<value value="29" name="CP_RCIU_FIFO_NOT_EMPTY_NOT_FULL"/>
+	<value value="30" name="CP_RCIU_FIFO_FULL"/>
+	<value value="31" name="CP_RCIU_FIFO_FULL_NO_CONTEXT"/>
+	<value value="32" name="CP_RCIU_FIFO_FULL_AHB_MASTER"/>
+	<value value="33" name="CP_RCIU_FIFO_FULL_OTHER"/>
+	<value value="34" name="CP_AHB_IDLE"/>
+	<value value="35" name="CP_AHB_STALL_ON_GRANT_NO_SPLIT"/>
+	<value value="36" name="CP_AHB_STALL_ON_GRANT_SPLIT"/>
+	<value value="37" name="CP_AHB_STALL_ON_GRANT_SPLIT_PROFILE"/>
+	<value value="38" name="CP_AHB_BUSY_WORKING"/>
+	<value value="39" name="CP_AHB_BUSY_STALL_ON_HRDY"/>
+	<value value="40" name="CP_AHB_BUSY_STALL_ON_HRDY_PROFILE"/>
 </enum>
 
 <enum name="a4xx_gras_ras_perfcounter_select">
+	<value value="0" name="RAS_SUPER_TILES"/>
+	<value value="1" name="RAS_8X8_TILES"/>
+	<value value="2" name="RAS_4X4_TILES"/>
+	<value value="3" name="RAS_BUSY_CYCLES"/>
+	<value value="4" name="RAS_STALL_CYCLES_BY_RB"/>
+	<value value="5" name="RAS_STALL_CYCLES_BY_VSC"/>
+	<value value="6" name="RAS_STARVE_CYCLES_BY_TSE"/>
+	<value value="7" name="RAS_SUPERTILE_CYCLES"/>
+	<value value="8" name="RAS_TILE_CYCLES"/>
+	<value value="9" name="RAS_FULLY_COVERED_SUPER_TILES"/>
+	<value value="10" name="RAS_FULLY_COVERED_8X8_TILES"/>
+	<value value="11" name="RAS_4X4_PRIM"/>
+	<value value="12" name="RAS_8X4_4X8_PRIM"/>
+	<value value="13" name="RAS_8X8_PRIM"/>
 </enum>
 
 <enum name="a4xx_gras_tse_perfcounter_select">
+	<value value="0" name="TSE_INPUT_PRIM"/>
+	<value value="1" name="TSE_INPUT_NULL_PRIM"/>
+	<value value="2" name="TSE_TRIVAL_REJ_PRIM"/>
+	<value value="3" name="TSE_CLIPPED_PRIM"/>
+	<value value="4" name="TSE_NEW_PRIM"/>
+	<value value="5" name="TSE_ZERO_AREA_PRIM"/>
+	<value value="6" name="TSE_FACENESS_CULLED_PRIM"/>
+	<value value="7" name="TSE_ZERO_PIXEL_PRIM"/>
+	<value value="8" name="TSE_OUTPUT_NULL_PRIM"/>
+	<value value="9" name="TSE_OUTPUT_VISIBLE_PRIM"/>
+	<value value="10" name="TSE_PRE_CLIP_PRIM"/>
+	<value value="11" name="TSE_POST_CLIP_PRIM"/>
+	<value value="12" name="TSE_BUSY_CYCLES"/>
+	<value value="13" name="TSE_PC_STARVE"/>
+	<value value="14" name="TSE_RAS_STALL"/>
+	<value value="15" name="TSE_STALL_BARYPLANE_FIFO_FULL"/>
+	<value value="16" name="TSE_STALL_ZPLANE_FIFO_FULL"/>
 </enum>
 
 <enum name="a4xx_hlsq_perfcounter_select">
+	<value value="0" name="HLSQ_SP_VS_STAGE_CONSTANT"/>
+	<value value="1" name="HLSQ_SP_VS_STAGE_INSTRUCTIONS"/>
+	<value value="2" name="HLSQ_SP_FS_STAGE_CONSTANT"/>
+	<value value="3" name="HLSQ_SP_FS_STAGE_INSTRUCTIONS"/>
+	<value value="4" name="HLSQ_TP_STATE"/>
+	<value value="5" name="HLSQ_QUADS"/>
+	<value value="6" name="HLSQ_PIXELS"/>
+	<value value="7" name="HLSQ_VERTICES"/>
+	<value value="13" name="HLSQ_SP_VS_STAGE_DATA_BYTES"/>
+	<value value="14" name="HLSQ_SP_FS_STAGE_DATA_BYTES"/>
+	<value value="15" name="HLSQ_BUSY_CYCLES"/>
+	<value value="16" name="HLSQ_STALL_CYCLES_SP_STATE"/>
+	<value value="17" name="HLSQ_STALL_CYCLES_SP_VS_STAGE"/>
+	<value value="18" name="HLSQ_STALL_CYCLES_SP_FS_STAGE"/>
+	<value value="19" name="HLSQ_STALL_CYCLES_UCHE"/>
+	<value value="20" name="HLSQ_RBBM_LOAD_CYCLES"/>
+	<value value="21" name="HLSQ_DI_TO_VS_START_SP"/>
+	<value value="22" name="HLSQ_DI_TO_FS_START_SP"/>
+	<value value="23" name="HLSQ_VS_STAGE_START_TO_DONE_SP"/>
+	<value value="24" name="HLSQ_FS_STAGE_START_TO_DONE_SP"/>
+	<value value="25" name="HLSQ_SP_STATE_COPY_CYCLES_VS_STAGE"/>
+	<value value="26" name="HLSQ_SP_STATE_COPY_CYCLES_FS_STAGE"/>
+	<value value="27" name="HLSQ_UCHE_LATENCY_CYCLES"/>
+	<value value="28" name="HLSQ_UCHE_LATENCY_COUNT"/>
+	<value value="29" name="HLSQ_STARVE_CYCLES_VFD"/>
 </enum>
 
-
 <enum name="a4xx_pc_perfcounter_select">
+	<value value="0" name="PC_VIS_STREAMS_LOADED"/>
+	<value value="2" name="PC_VPC_PRIMITIVES"/>
+	<value value="3" name="PC_DEAD_PRIM"/>
+	<value value="4" name="PC_LIVE_PRIM"/>
+	<value value="5" name="PC_DEAD_DRAWCALLS"/>
+	<value value="6" name="PC_LIVE_DRAWCALLS"/>
+	<value value="7" name="PC_VERTEX_MISSES"/>
+	<value value="9" name="PC_STALL_CYCLES_VFD"/>
+	<value value="10" name="PC_STALL_CYCLES_TSE"/>
+	<value value="11" name="PC_STALL_CYCLES_UCHE"/>
+	<value value="12" name="PC_WORKING_CYCLES"/>
+	<value value="13" name="PC_IA_VERTICES"/>
+	<value value="14" name="PC_GS_PRIMITIVES"/>
+	<value value="15" name="PC_HS_INVOCATIONS"/>
+	<value value="16" name="PC_DS_INVOCATIONS"/>
+	<value value="17" name="PC_DS_PRIMITIVES"/>
+	<value value="20" name="PC_STARVE_CYCLES_FOR_INDEX"/>
+	<value value="21" name="PC_STARVE_CYCLES_FOR_TESS_FACTOR"/>
+	<value value="22" name="PC_STARVE_CYCLES_FOR_VIZ_STREAM"/>
+	<value value="23" name="PC_STALL_CYCLES_TESS"/>
+	<value value="24" name="PC_STARVE_CYCLES_FOR_POSITION"/>
+	<value value="25" name="PC_MODE0_DRAWCALL"/>
+	<value value="26" name="PC_MODE1_DRAWCALL"/>
+	<value value="27" name="PC_MODE2_DRAWCALL"/>
+	<value value="28" name="PC_MODE3_DRAWCALL"/>
+	<value value="29" name="PC_MODE4_DRAWCALL"/>
+	<value value="30" name="PC_PREDICATED_DEAD_DRAWCALL"/>
+	<value value="31" name="PC_STALL_CYCLES_BY_TSE_ONLY"/>
+	<value value="32" name="PC_STALL_CYCLES_BY_VPC_ONLY"/>
+	<value value="33" name="PC_VPC_POS_DATA_TRANSACTION"/>
+	<value value="34" name="PC_BUSY_CYCLES"/>
+	<value value="35" name="PC_STARVE_CYCLES_DI"/>
+	<value value="36" name="PC_STALL_CYCLES_VPC"/>
+	<value value="37" name="TESS_WORKING_CYCLES"/>
+	<value value="38" name="TESS_NUM_CYCLES_SETUP_WORKING"/>
+	<value value="39" name="TESS_NUM_CYCLES_PTGEN_WORKING"/>
+	<value value="40" name="TESS_NUM_CYCLES_CONNGEN_WORKING"/>
+	<value value="41" name="TESS_BUSY_CYCLES"/>
+	<value value="42" name="TESS_STARVE_CYCLES_PC"/>
+	<value value="43" name="TESS_STALL_CYCLES_PC"/>
+	<value value="44" name="TP_L1_REQUESTS"/>
+</enum>
+
+<enum name="a4xx_pwr_perfcounter_select">
+	<!-- NOTE not actually used.. see RBBM_RBBM_CTL.RESET_PWR_CTR0/1 -->
+	<value value="0" name="PWR_CORE_CLOCK_CYCLES"/>
+	<value value="1" name="PWR_BUSY_CLOCK_CYCLES"/>
 </enum>
 
 <enum name="a4xx_rb_perfcounter_select">
+	<value value="0" name="RB_BUSY_CYCLES"/>
+	<value value="1" name="RB_BUSY_CYCLES_BINNING"/>
+	<value value="2" name="RB_BUSY_CYCLES_RENDERING"/>
+	<value value="3" name="RB_BUSY_CYCLES_RESOLVE"/>
+	<value value="4" name="RB_STARVE_CYCLES_BY_SP"/>
+	<value value="5" name="RB_STARVE_CYCLES_BY_RAS"/>
+	<value value="6" name="RB_STARVE_CYCLES_BY_MARB"/>
+	<value value="7" name="RB_STALL_CYCLES_BY_MARB"/>
+	<value value="8" name="RB_STALL_CYCLES_BY_HLSQ"/>
+	<value value="9" name="RB_RB_RB_MARB_DATA"/>
+	<value value="10" name="RB_SP_RB_QUAD"/>
+	<value value="11" name="RB_RAS_RB_Z_QUADS"/>
+	<value value="12" name="RB_GMEM_CH0_READ"/>
+	<value value="13" name="RB_GMEM_CH1_READ"/>
+	<value value="14" name="RB_GMEM_CH0_WRITE"/>
+	<value value="15" name="RB_GMEM_CH1_WRITE"/>
+	<value value="16" name="RB_CP_CONTEXT_DONE"/>
+	<value value="17" name="RB_CP_CACHE_FLUSH"/>
+	<value value="18" name="RB_CP_ZPASS_DONE"/>
+	<value value="19" name="RB_STALL_FIFO0_FULL"/>
+	<value value="20" name="RB_STALL_FIFO1_FULL"/>
+	<value value="21" name="RB_STALL_FIFO2_FULL"/>
+	<value value="22" name="RB_STALL_FIFO3_FULL"/>
+	<value value="23" name="RB_RB_HLSQ_TRANSACTIONS"/>
+	<value value="24" name="RB_Z_READ"/>
+	<value value="25" name="RB_Z_WRITE"/>
+	<value value="26" name="RB_C_READ"/>
+	<value value="27" name="RB_C_WRITE"/>
+	<value value="28" name="RB_C_READ_LATENCY"/>
+	<value value="29" name="RB_Z_READ_LATENCY"/>
+	<value value="30" name="RB_STALL_BY_UCHE"/>
+	<value value="31" name="RB_MARB_UCHE_TRANSACTIONS"/>
+	<value value="32" name="RB_CACHE_STALL_MISS"/>
+	<value value="33" name="RB_CACHE_STALL_FIFO_FULL"/>
+	<value value="34" name="RB_8BIT_BLENDER_UNITS_ACTIVE"/>
+	<value value="35" name="RB_16BIT_BLENDER_UNITS_ACTIVE"/>
+	<value value="36" name="RB_SAMPLER_UNITS_ACTIVE"/>
+	<value value="38" name="RB_TOTAL_PASS"/>
+	<value value="39" name="RB_Z_PASS"/>
+	<value value="40" name="RB_Z_FAIL"/>
+	<value value="41" name="RB_S_FAIL"/>
+	<value value="42" name="RB_POWER0"/>
+	<value value="43" name="RB_POWER1"/>
+	<value value="44" name="RB_POWER2"/>
+	<value value="45" name="RB_POWER3"/>
+	<value value="46" name="RB_POWER4"/>
+	<value value="47" name="RB_POWER5"/>
+	<value value="48" name="RB_POWER6"/>
+	<value value="49" name="RB_POWER7"/>
 </enum>
 
 <enum name="a4xx_rbbm_perfcounter_select">
+	<value value="0" name="RBBM_ALWAYS_ON"/>
+	<value value="1" name="RBBM_VBIF_BUSY"/>
+	<value value="2" name="RBBM_TSE_BUSY"/>
+	<value value="3" name="RBBM_RAS_BUSY"/>
+	<value value="4" name="RBBM_PC_DCALL_BUSY"/>
+	<value value="5" name="RBBM_PC_VSD_BUSY"/>
+	<value value="6" name="RBBM_VFD_BUSY"/>
+	<value value="7" name="RBBM_VPC_BUSY"/>
+	<value value="8" name="RBBM_UCHE_BUSY"/>
+	<value value="9" name="RBBM_VSC_BUSY"/>
+	<value value="10" name="RBBM_HLSQ_BUSY"/>
+	<value value="11" name="RBBM_ANY_RB_BUSY"/>
+	<value value="12" name="RBBM_ANY_TPL1_BUSY"/>
+	<value value="13" name="RBBM_ANY_SP_BUSY"/>
+	<value value="14" name="RBBM_ANY_MARB_BUSY"/>
+	<value value="15" name="RBBM_ANY_ARB_BUSY"/>
+	<value value="16" name="RBBM_AHB_STATUS_BUSY"/>
+	<value value="17" name="RBBM_AHB_STATUS_STALLED"/>
+	<value value="18" name="RBBM_AHB_STATUS_TXFR"/>
+	<value value="19" name="RBBM_AHB_STATUS_TXFR_SPLIT"/>
+	<value value="20" name="RBBM_AHB_STATUS_TXFR_ERROR"/>
+	<value value="21" name="RBBM_AHB_STATUS_LONG_STALL"/>
+	<value value="22" name="RBBM_STATUS_MASKED"/>
+	<value value="23" name="RBBM_CP_BUSY_GFX_CORE_IDLE"/>
+	<value value="24" name="RBBM_TESS_BUSY"/>
+	<value value="25" name="RBBM_COM_BUSY"/>
+	<value value="32" name="RBBM_DCOM_BUSY"/>
+	<value value="33" name="RBBM_ANY_CCU_BUSY"/>
+	<value value="34" name="RBBM_DPM_BUSY"/>
 </enum>
 
 <enum name="a4xx_sp_perfcounter_select">
+	<value value="0" name="SP_LM_LOAD_INSTRUCTIONS"/>
+	<value value="1" name="SP_LM_STORE_INSTRUCTIONS"/>
+	<value value="2" name="SP_LM_ATOMICS"/>
+	<value value="3" name="SP_GM_LOAD_INSTRUCTIONS"/>
+	<value value="4" name="SP_GM_STORE_INSTRUCTIONS"/>
+	<value value="5" name="SP_GM_ATOMICS"/>
+	<value value="6" name="SP_VS_STAGE_TEX_INSTRUCTIONS"/>
+	<value value="7" name="SP_VS_STAGE_CFLOW_INSTRUCTIONS"/>
+	<value value="8" name="SP_VS_STAGE_EFU_INSTRUCTIONS"/>
+	<value value="9" name="SP_VS_STAGE_FULL_ALU_INSTRUCTIONS"/>
+	<value value="10" name="SP_VS_STAGE_HALF_ALU_INSTRUCTIONS"/>
+	<value value="11" name="SP_FS_STAGE_TEX_INSTRUCTIONS"/>
+	<value value="12" name="SP_FS_STAGE_CFLOW_INSTRUCTIONS"/>
+	<value value="13" name="SP_FS_STAGE_EFU_INSTRUCTIONS"/>
+	<value value="14" name="SP_FS_STAGE_FULL_ALU_INSTRUCTIONS"/>
+	<value value="15" name="SP_FS_STAGE_HALF_ALU_INSTRUCTIONS"/>
+	<value value="17" name="SP_VS_INSTRUCTIONS"/>
+	<value value="18" name="SP_FS_INSTRUCTIONS"/>
+	<value value="19" name="SP_ADDR_LOCK_COUNT"/>
+	<value value="20" name="SP_UCHE_READ_TRANS"/>
+	<value value="21" name="SP_UCHE_WRITE_TRANS"/>
+	<value value="22" name="SP_EXPORT_VPC_TRANS"/>
+	<value value="23" name="SP_EXPORT_RB_TRANS"/>
+	<value value="24" name="SP_PIXELS_KILLED"/>
+	<value value="25" name="SP_ICL1_REQUESTS"/>
+	<value value="26" name="SP_ICL1_MISSES"/>
+	<value value="27" name="SP_ICL0_REQUESTS"/>
+	<value value="28" name="SP_ICL0_MISSES"/>
+	<value value="29" name="SP_ALU_WORKING_CYCLES"/>
+	<value value="30" name="SP_EFU_WORKING_CYCLES"/>
+	<value value="31" name="SP_STALL_CYCLES_BY_VPC"/>
+	<value value="32" name="SP_STALL_CYCLES_BY_TP"/>
+	<value value="33" name="SP_STALL_CYCLES_BY_UCHE"/>
+	<value value="34" name="SP_STALL_CYCLES_BY_RB"/>
+	<value value="35" name="SP_BUSY_CYCLES"/>
+	<value value="36" name="SP_HS_INSTRUCTIONS"/>
+	<value value="37" name="SP_DS_INSTRUCTIONS"/>
+	<value value="38" name="SP_GS_INSTRUCTIONS"/>
+	<value value="39" name="SP_CS_INSTRUCTIONS"/>
+	<value value="40" name="SP_SCHEDULER_NON_WORKING"/>
+	<value value="41" name="SP_WAVE_CONTEXTS"/>
+	<value value="42" name="SP_WAVE_CONTEXT_CYCLES"/>
+	<value value="43" name="SP_POWER0"/>
+	<value value="44" name="SP_POWER1"/>
+	<value value="45" name="SP_POWER2"/>
+	<value value="46" name="SP_POWER3"/>
+	<value value="47" name="SP_POWER4"/>
+	<value value="48" name="SP_POWER5"/>
+	<value value="49" name="SP_POWER6"/>
+	<value value="50" name="SP_POWER7"/>
+	<value value="51" name="SP_POWER8"/>
+	<value value="52" name="SP_POWER9"/>
+	<value value="53" name="SP_POWER10"/>
+	<value value="54" name="SP_POWER11"/>
+	<value value="55" name="SP_POWER12"/>
+	<value value="56" name="SP_POWER13"/>
+	<value value="57" name="SP_POWER14"/>
+	<value value="58" name="SP_POWER15"/>
 </enum>
 
 <enum name="a4xx_tp_perfcounter_select">
+	<value value="0" name="TP_L1_REQUESTS"/>
+	<value value="1" name="TP_L1_MISSES"/>
+	<value value="8" name="TP_QUADS_OFFSET"/>
+	<value value="9" name="TP_QUAD_SHADOW"/>
+	<value value="10" name="TP_QUADS_ARRAY"/>
+	<value value="11" name="TP_QUADS_GRADIENT"/>
+	<value value="12" name="TP_QUADS_1D2D"/>
+	<value value="13" name="TP_QUADS_3DCUBE"/>
+	<value value="16" name="TP_BUSY_CYCLES"/>
+	<value value="17" name="TP_STALL_CYCLES_BY_ARB"/>
+	<value value="20" name="TP_STATE_CACHE_REQUESTS"/>
+	<value value="21" name="TP_STATE_CACHE_MISSES"/>
+	<value value="22" name="TP_POWER0"/>
+	<value value="23" name="TP_POWER1"/>
+	<value value="24" name="TP_POWER2"/>
+	<value value="25" name="TP_POWER3"/>
+	<value value="26" name="TP_POWER4"/>
+	<value value="27" name="TP_POWER5"/>
+	<value value="28" name="TP_POWER6"/>
+	<value value="29" name="TP_POWER7"/>
 </enum>
 
 <enum name="a4xx_uche_perfcounter_select">
+	<value value="0" name="UCHE_VBIF_READ_BEATS_TP"/>
+	<value value="1" name="UCHE_VBIF_READ_BEATS_VFD"/>
+	<value value="2" name="UCHE_VBIF_READ_BEATS_HLSQ"/>
+	<value value="3" name="UCHE_VBIF_READ_BEATS_MARB"/>
+	<value value="4" name="UCHE_VBIF_READ_BEATS_SP"/>
+	<value value="5" name="UCHE_READ_REQUESTS_TP"/>
+	<value value="6" name="UCHE_READ_REQUESTS_VFD"/>
+	<value value="7" name="UCHE_READ_REQUESTS_HLSQ"/>
+	<value value="8" name="UCHE_READ_REQUESTS_MARB"/>
+	<value value="9" name="UCHE_READ_REQUESTS_SP"/>
+	<value value="10" name="UCHE_WRITE_REQUESTS_MARB"/>
+	<value value="11" name="UCHE_WRITE_REQUESTS_SP"/>
+	<value value="12" name="UCHE_TAG_CHECK_FAILS"/>
+	<value value="13" name="UCHE_EVICTS"/>
+	<value value="14" name="UCHE_FLUSHES"/>
+	<value value="15" name="UCHE_VBIF_LATENCY_CYCLES"/>
+	<value value="16" name="UCHE_VBIF_LATENCY_SAMPLES"/>
+	<value value="17" name="UCHE_BUSY_CYCLES"/>
+	<value value="18" name="UCHE_VBIF_READ_BEATS_PC"/>
+	<value value="19" name="UCHE_READ_REQUESTS_PC"/>
+	<value value="20" name="UCHE_WRITE_REQUESTS_VPC"/>
+	<value value="21" name="UCHE_STALL_BY_VBIF"/>
+	<value value="22" name="UCHE_WRITE_REQUESTS_VSC"/>
+	<value value="23" name="UCHE_POWER0"/>
+	<value value="24" name="UCHE_POWER1"/>
+	<value value="25" name="UCHE_POWER2"/>
+	<value value="26" name="UCHE_POWER3"/>
+	<value value="27" name="UCHE_POWER4"/>
+	<value value="28" name="UCHE_POWER5"/>
+	<value value="29" name="UCHE_POWER6"/>
+	<value value="30" name="UCHE_POWER7"/>
+</enum>
+
+<enum name="a4xx_vbif_perfcounter_select">
+	<value value="0" name="AXI_READ_REQUESTS_ID_0"/>
+	<value value="1" name="AXI_READ_REQUESTS_ID_1"/>
+	<value value="2" name="AXI_READ_REQUESTS_ID_2"/>
+	<value value="3" name="AXI_READ_REQUESTS_ID_3"/>
+	<value value="4" name="AXI_READ_REQUESTS_ID_4"/>
+	<value value="5" name="AXI_READ_REQUESTS_ID_5"/>
+	<value value="6" name="AXI_READ_REQUESTS_ID_6"/>
+	<value value="7" name="AXI_READ_REQUESTS_ID_7"/>
+	<value value="8" name="AXI_READ_REQUESTS_ID_8"/>
+	<value value="9" name="AXI_READ_REQUESTS_ID_9"/>
+	<value value="10" name="AXI_READ_REQUESTS_ID_10"/>
+	<value value="11" name="AXI_READ_REQUESTS_ID_11"/>
+	<value value="12" name="AXI_READ_REQUESTS_ID_12"/>
+	<value value="13" name="AXI_READ_REQUESTS_ID_13"/>
+	<value value="14" name="AXI_READ_REQUESTS_ID_14"/>
+	<value value="15" name="AXI_READ_REQUESTS_ID_15"/>
+	<value value="16" name="AXI0_READ_REQUESTS_TOTAL"/>
+	<value value="17" name="AXI1_READ_REQUESTS_TOTAL"/>
+	<value value="18" name="AXI2_READ_REQUESTS_TOTAL"/>
+	<value value="19" name="AXI3_READ_REQUESTS_TOTAL"/>
+	<value value="20" name="AXI_READ_REQUESTS_TOTAL"/>
+	<value value="21" name="AXI_WRITE_REQUESTS_ID_0"/>
+	<value value="22" name="AXI_WRITE_REQUESTS_ID_1"/>
+	<value value="23" name="AXI_WRITE_REQUESTS_ID_2"/>
+	<value value="24" name="AXI_WRITE_REQUESTS_ID_3"/>
+	<value value="25" name="AXI_WRITE_REQUESTS_ID_4"/>
+	<value value="26" name="AXI_WRITE_REQUESTS_ID_5"/>
+	<value value="27" name="AXI_WRITE_REQUESTS_ID_6"/>
+	<value value="28" name="AXI_WRITE_REQUESTS_ID_7"/>
+	<value value="29" name="AXI_WRITE_REQUESTS_ID_8"/>
+	<value value="30" name="AXI_WRITE_REQUESTS_ID_9"/>
+	<value value="31" name="AXI_WRITE_REQUESTS_ID_10"/>
+	<value value="32" name="AXI_WRITE_REQUESTS_ID_11"/>
+	<value value="33" name="AXI_WRITE_REQUESTS_ID_12"/>
+	<value value="34" name="AXI_WRITE_REQUESTS_ID_13"/>
+	<value value="35" name="AXI_WRITE_REQUESTS_ID_14"/>
+	<value value="36" name="AXI_WRITE_REQUESTS_ID_15"/>
+	<value value="37" name="AXI0_WRITE_REQUESTS_TOTAL"/>
+	<value value="38" name="AXI1_WRITE_REQUESTS_TOTAL"/>
+	<value value="39" name="AXI2_WRITE_REQUESTS_TOTAL"/>
+	<value value="40" name="AXI3_WRITE_REQUESTS_TOTAL"/>
+	<value value="41" name="AXI_WRITE_REQUESTS_TOTAL"/>
+	<value value="42" name="AXI_TOTAL_REQUESTS"/>
+	<value value="43" name="AXI_READ_DATA_BEATS_ID_0"/>
+	<value value="44" name="AXI_READ_DATA_BEATS_ID_1"/>
+	<value value="45" name="AXI_READ_DATA_BEATS_ID_2"/>
+	<value value="46" name="AXI_READ_DATA_BEATS_ID_3"/>
+	<value value="47" name="AXI_READ_DATA_BEATS_ID_4"/>
+	<value value="48" name="AXI_READ_DATA_BEATS_ID_5"/>
+	<value value="49" name="AXI_READ_DATA_BEATS_ID_6"/>
+	<value value="50" name="AXI_READ_DATA_BEATS_ID_7"/>
+	<value value="51" name="AXI_READ_DATA_BEATS_ID_8"/>
+	<value value="52" name="AXI_READ_DATA_BEATS_ID_9"/>
+	<value value="53" name="AXI_READ_DATA_BEATS_ID_10"/>
+	<value value="54" name="AXI_READ_DATA_BEATS_ID_11"/>
+	<value value="55" name="AXI_READ_DATA_BEATS_ID_12"/>
+	<value value="56" name="AXI_READ_DATA_BEATS_ID_13"/>
+	<value value="57" name="AXI_READ_DATA_BEATS_ID_14"/>
+	<value value="58" name="AXI_READ_DATA_BEATS_ID_15"/>
+	<value value="59" name="AXI0_READ_DATA_BEATS_TOTAL"/>
+	<value value="60" name="AXI1_READ_DATA_BEATS_TOTAL"/>
+	<value value="61" name="AXI2_READ_DATA_BEATS_TOTAL"/>
+	<value value="62" name="AXI3_READ_DATA_BEATS_TOTAL"/>
+	<value value="63" name="AXI_READ_DATA_BEATS_TOTAL"/>
+	<value value="64" name="AXI_WRITE_DATA_BEATS_ID_0"/>
+	<value value="65" name="AXI_WRITE_DATA_BEATS_ID_1"/>
+	<value value="66" name="AXI_WRITE_DATA_BEATS_ID_2"/>
+	<value value="67" name="AXI_WRITE_DATA_BEATS_ID_3"/>
+	<value value="68" name="AXI_WRITE_DATA_BEATS_ID_4"/>
+	<value value="69" name="AXI_WRITE_DATA_BEATS_ID_5"/>
+	<value value="70" name="AXI_WRITE_DATA_BEATS_ID_6"/>
+	<value value="71" name="AXI_WRITE_DATA_BEATS_ID_7"/>
+	<value value="72" name="AXI_WRITE_DATA_BEATS_ID_8"/>
+	<value value="73" name="AXI_WRITE_DATA_BEATS_ID_9"/>
+	<value value="74" name="AXI_WRITE_DATA_BEATS_ID_10"/>
+	<value value="75" name="AXI_WRITE_DATA_BEATS_ID_11"/>
+	<value value="76" name="AXI_WRITE_DATA_BEATS_ID_12"/>
+	<value value="77" name="AXI_WRITE_DATA_BEATS_ID_13"/>
+	<value value="78" name="AXI_WRITE_DATA_BEATS_ID_14"/>
+	<value value="79" name="AXI_WRITE_DATA_BEATS_ID_15"/>
+	<value value="80" name="AXI0_WRITE_DATA_BEATS_TOTAL"/>
+	<value value="81" name="AXI1_WRITE_DATA_BEATS_TOTAL"/>
+	<value value="82" name="AXI2_WRITE_DATA_BEATS_TOTAL"/>
+	<value value="83" name="AXI3_WRITE_DATA_BEATS_TOTAL"/>
+	<value value="84" name="AXI_WRITE_DATA_BEATS_TOTAL"/>
+	<value value="85" name="AXI_DATA_BEATS_TOTAL"/>
+	<value value="86" name="CYCLES_HELD_OFF_ID_0"/>
+	<value value="87" name="CYCLES_HELD_OFF_ID_1"/>
+	<value value="88" name="CYCLES_HELD_OFF_ID_2"/>
+	<value value="89" name="CYCLES_HELD_OFF_ID_3"/>
+	<value value="90" name="CYCLES_HELD_OFF_ID_4"/>
+	<value value="91" name="CYCLES_HELD_OFF_ID_5"/>
+	<value value="92" name="CYCLES_HELD_OFF_ID_6"/>
+	<value value="93" name="CYCLES_HELD_OFF_ID_7"/>
+	<value value="94" name="CYCLES_HELD_OFF_ID_8"/>
+	<value value="95" name="CYCLES_HELD_OFF_ID_9"/>
+	<value value="96" name="CYCLES_HELD_OFF_ID_10"/>
+	<value value="97" name="CYCLES_HELD_OFF_ID_11"/>
+	<value value="98" name="CYCLES_HELD_OFF_ID_12"/>
+	<value value="99" name="CYCLES_HELD_OFF_ID_13"/>
+	<value value="100" name="CYCLES_HELD_OFF_ID_14"/>
+	<value value="101" name="CYCLES_HELD_OFF_ID_15"/>
+	<value value="102" name="AXI_READ_REQUEST_HELD_OFF"/>
+	<value value="103" name="AXI_WRITE_REQUEST_HELD_OFF"/>
+	<value value="104" name="AXI_REQUEST_HELD_OFF"/>
+	<value value="105" name="AXI_WRITE_DATA_HELD_OFF"/>
+	<value value="106" name="OCMEM_AXI_READ_REQUEST_HELD_OFF"/>
+	<value value="107" name="OCMEM_AXI_WRITE_REQUEST_HELD_OFF"/>
+	<value value="108" name="OCMEM_AXI_REQUEST_HELD_OFF"/>
+	<value value="109" name="OCMEM_AXI_WRITE_DATA_HELD_OFF"/>
+	<value value="110" name="ELAPSED_CYCLES_DDR"/>
+	<value value="111" name="ELAPSED_CYCLES_OCMEM"/>
 </enum>
 
 <enum name="a4xx_vfd_perfcounter_select">
+	<value value="0" name="VFD_UCHE_BYTE_FETCHED"/>
+	<value value="1" name="VFD_UCHE_TRANS"/>
+	<value value="3" name="VFD_FETCH_INSTRUCTIONS"/>
+	<value value="5" name="VFD_BUSY_CYCLES"/>
+	<value value="6" name="VFD_STALL_CYCLES_UCHE"/>
+	<value value="7" name="VFD_STALL_CYCLES_HLSQ"/>
+	<value value="8" name="VFD_STALL_CYCLES_VPC_BYPASS"/>
+	<value value="9" name="VFD_STALL_CYCLES_VPC_ALLOC"/>
+	<value value="13" name="VFD_MODE_0_FIBERS"/>
+	<value value="14" name="VFD_MODE_1_FIBERS"/>
+	<value value="15" name="VFD_MODE_2_FIBERS"/>
+	<value value="16" name="VFD_MODE_3_FIBERS"/>
+	<value value="17" name="VFD_MODE_4_FIBERS"/>
+	<value value="18" name="VFD_BFIFO_STALL"/>
+	<value value="19" name="VFD_NUM_VERTICES_TOTAL"/>
+	<value value="20" name="VFD_PACKER_FULL"/>
+	<value value="21" name="VFD_UCHE_REQUEST_FIFO_FULL"/>
+	<value value="22" name="VFD_STARVE_CYCLES_PC"/>
+	<value value="23" name="VFD_STARVE_CYCLES_UCHE"/>
 </enum>
 
 <enum name="a4xx_vpc_perfcounter_select">
+	<value value="2" name="VPC_SP_LM_COMPONENTS"/>
+	<value value="3" name="VPC_SP0_LM_BYTES"/>
+	<value value="4" name="VPC_SP1_LM_BYTES"/>
+	<value value="5" name="VPC_SP2_LM_BYTES"/>
+	<value value="6" name="VPC_SP3_LM_BYTES"/>
+	<value value="7" name="VPC_WORKING_CYCLES"/>
+	<value value="8" name="VPC_STALL_CYCLES_LM"/>
+	<value value="9" name="VPC_STARVE_CYCLES_RAS"/>
+	<value value="10" name="VPC_STREAMOUT_CYCLES"/>
+	<value value="12" name="VPC_UCHE_TRANSACTIONS"/>
+	<value value="13" name="VPC_STALL_CYCLES_UCHE"/>
+	<value value="14" name="VPC_BUSY_CYCLES"/>
+	<value value="15" name="VPC_STARVE_CYCLES_SP"/>
 </enum>
 
 <enum name="a4xx_vsc_perfcounter_select">
+	<value value="0" name="VSC_BUSY_CYCLES"/>
+	<value value="1" name="VSC_WORKING_CYCLES"/>
+	<value value="2" name="VSC_STALL_CYCLES_UCHE"/>
+	<value value="3" name="VSC_STARVE_CYCLES_RAS"/>
+	<value value="4" name="VSC_EOT_NUM"/>
 </enum>
 
 <domain name="A4XX" width="32">
