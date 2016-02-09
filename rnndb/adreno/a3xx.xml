@@ -405,6 +405,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x10" name="RB_RBPERF_CP_ZPASS_DONE"/>
 </enum>
 
+<enum name="a3xx_rbbm_perfcounter_select">
+	<value value="0" name="RBBM_ALAWYS_ON"/>
+	<value value="1" name="RBBM_VBIF_BUSY"/>
+	<value value="2" name="RBBM_TSE_BUSY"/>
+	<value value="3" name="RBBM_RAS_BUSY"/>
+	<value value="4" name="RBBM_PC_DCALL_BUSY"/>
+	<value value="5" name="RBBM_PC_VSD_BUSY"/>
+	<value value="6" name="RBBM_VFD_BUSY"/>
+	<value value="7" name="RBBM_VPC_BUSY"/>
+	<value value="8" name="RBBM_UCHE_BUSY"/>
+	<value value="9" name="RBBM_VSC_BUSY"/>
+	<value value="10" name="RBBM_HLSQ_BUSY"/>
+	<value value="11" name="RBBM_ANY_RB_BUSY"/>
+	<value value="12" name="RBBM_ANY_TEX_BUSY"/>
+	<value value="13" name="RBBM_ANY_USP_BUSY"/>
+	<value value="14" name="RBBM_ANY_MARB_BUSY"/>
+	<value value="15" name="RBBM_ANY_ARB_BUSY"/>
+	<value value="16" name="RBBM_AHB_STATUS_BUSY"/>
+	<value value="17" name="RBBM_AHB_STATUS_STALLED"/>
+	<value value="18" name="RBBM_AHB_STATUS_TXFR"/>
+	<value value="19" name="RBBM_AHB_STATUS_TXFR_SPLIT"/>
+	<value value="20" name="RBBM_AHB_STATUS_TXFR_ERROR"/>
+	<value value="21" name="RBBM_AHB_STATUS_LONG_STALL"/>
+	<value value="22" name="RBBM_RBBM_STATUS_MASKED"/>
+</enum>
+
 <enum name="a3xx_sp_perfcounter_select">
 	<value value="0x00" name="SP_LM_LOAD_INSTRUCTIONS"/>
 	<value value="0x01" name="SP_LM_STORE_INSTRUCTIONS"/>
@@ -477,7 +503,25 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <enum name="a3xx_vfd_perfcounter_select">
-	<!-- unknown -->
+	<value value="0" name="VFD_PERF_UCHE_BYTE_FETCHED"/>
+	<value value="1" name="VFD_PERF_UCHE_TRANS"/>
+	<value value="2" name="VFD_PERF_VPC_BYPASS_COMPONENTS"/>
+	<value value="3" name="VFD_PERF_FETCH_INSTRUCTIONS"/>
+	<value value="4" name="VFD_PERF_DECODE_INSTRUCTIONS"/>
+	<value value="5" name="VFD_PERF_ACTIVE_CYCLES"/>
+	<value value="6" name="VFD_PERF_STALL_CYCLES_UCHE"/>
+	<value value="7" name="VFD_PERF_STALL_CYCLES_HLSQ"/>
+	<value value="8" name="VFD_PERF_STALL_CYCLES_VPC_BYPASS"/>
+	<value value="9" name="VFD_PERF_STALL_CYCLES_VPC_ALLOC"/>
+</enum>
+
+<enum name="a3xx_vpc_perfcounter_select">
+	<value value="0" name="VPC_PERF_SP_LM_PRIMITIVES"/>
+	<value value="1" name="VPC_PERF_COMPONENTS_FROM_SP"/>
+	<value value="2" name="VPC_PERF_SP_LM_COMPONENTS"/>
+	<value value="3" name="VPC_PERF_ACTIVE_CYCLES"/>
+	<value value="4" name="VPC_PERF_STALL_CYCLES_LM"/>
+	<value value="5" name="VPC_PERF_STALL_CYCLES_RAS"/>
 </enum>
 
 <enum name="a3xx_uche_perfcounter_select">
@@ -611,8 +655,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0082" name="RBBM_PERFCTR_LOAD_CMD1"/>
 	<reg32 offset="0x0084" name="RBBM_PERFCTR_LOAD_VALUE_LO"/>
 	<reg32 offset="0x0085" name="RBBM_PERFCTR_LOAD_VALUE_HI"/>
-	<reg32 offset="0x0086" name="RBBM_PERFCOUNTER0_SELECT"/>
-	<reg32 offset="0x0087" name="RBBM_PERFCOUNTER1_SELECT"/>
+	<reg32 offset="0x0086" name="RBBM_PERFCOUNTER0_SELECT" type="a3xx_rbbm_perfcounter_select"/>
+	<reg32 offset="0x0087" name="RBBM_PERFCOUNTER1_SELECT" type="a3xx_rbbm_perfcounter_select"/>
 	<reg32 offset="0x0088" name="RBBM_GPU_BUSY_MASKED"/>
 	<reg32 offset="0x0090" name="RBBM_PERFCTR_CP_0_LO"/>
 	<reg32 offset="0x0091" name="RBBM_PERFCTR_CP_0_HI"/>
@@ -1556,8 +1600,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e45" name="VFD_PERFCOUNTER1_SELECT" type="a3xx_vfd_perfcounter_select"/>
 	<reg32 offset="0x0e61" name="VPC_VPC_DEBUG_RAM_SEL"/>
 	<reg32 offset="0x0e62" name="VPC_VPC_DEBUG_RAM_READ"/>
-	<reg32 offset="0x0e64" name="VPC_PERFCOUNTER0_SELECT"/>
-	<reg32 offset="0x0e65" name="VPC_PERFCOUNTER1_SELECT"/>
+	<reg32 offset="0x0e64" name="VPC_PERFCOUNTER0_SELECT" type="a3xx_vpc_perfcounter_select"/>
+	<reg32 offset="0x0e65" name="VPC_PERFCOUNTER1_SELECT" type="a3xx_vpc_perfcounter_select"/>
 	<reg32 offset="0x0e82" name="UCHE_CACHE_MODE_CONTROL_REG"/>
 	<reg32 offset="0x0e84" name="UCHE_PERFCOUNTER0_SELECT" type="a3xx_uche_perfcounter_select"/>
 	<reg32 offset="0x0e85" name="UCHE_PERFCOUNTER1_SELECT" type="a3xx_uche_perfcounter_select"/>
