@@ -530,10 +530,19 @@ redraw_counter(WINDOW *win, int row, struct counter_group *group,
 static void
 redraw(WINDOW *win)
 {
-	int row = 0;
+	static int scroll = 0;
+	int max, row = 0;
 
 	w = getmaxx(win);
 	h = getmaxy(win);
+
+	max = h - 3;
+
+	if ((current_cntr - scroll) > (max - 1)) {
+		scroll = current_cntr - (max - 1);
+	} else if ((current_cntr - 1) < scroll) {
+		scroll = current_cntr - 1;
+	}
 
 	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
@@ -544,15 +553,20 @@ redraw(WINDOW *win)
 			j++;
 
 		if (j < group->ncounters) {
-			redraw_group_header(win, row, group->name);
+			if ((scroll <= row) && ((row - scroll) < max))
+				redraw_group_header(win, row - scroll, group->name);
 			row++;
 		}
 
 		for (; j < group->ncounters; j++) {
-			redraw_counter(win, row, group, j, row == current_cntr);
+			if ((scroll <= row) && ((row - scroll) < max))
+				redraw_counter(win, row - scroll, group, j, row == current_cntr);
 			row++;
 		}
 	}
+
+	/* convert back to physical (unscrolled) offset: */
+	row = max;
 
 	redraw_group_header(win, row, "Status");
 	row++;
