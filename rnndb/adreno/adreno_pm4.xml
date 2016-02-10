@@ -391,5 +391,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 </domain>
 
+<domain name="CP_REG_TO_MEM" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="REG" low="0" high="15" type="hex"/>
+		<!--
+		number of regsiters/dwords copied is CNT+1.. unsure
+		about # of bits
+		 -->
+		<bitfield name="CNT" low="19" high="29" type="uint"/>
+		<!-- high bits unknown -->
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="DEST" low="0" high="31"/>
+	</reg32>
+</domain>
+
 </database>
 
