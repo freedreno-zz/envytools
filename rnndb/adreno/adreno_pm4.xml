@@ -211,6 +211,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		objects in GPU memory, and on state change only emit pointer
 		(via CP_SET_DRAW_STATE), which should be nice for reducing CPU
 		overhead:
+
+		(A4x) save PM4 stream pointers to execute upon a visible draw
 	</doc>
 	<value name="CP_SET_DRAW_STATE" value="0x43"/>
 	<value name="CP_DRAW_INDX_OFFSET" value="0x38"/>
@@ -230,6 +232,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		Write to register with address that does not fit into type-0 pkt
 	</doc>
 	<value name="CP_WIDE_REG_WRITE" value="0x74"/>
+
+	<doc>copy from ME scratch RAM to a register</doc>
+	<value name="CP_SCRATCH_TO_REG" value="0x4d"/>
+
+	<doc>Copy from REG to ME scratch RAM</doc>
+	<value name="CP_REG_TO_SCRATCH" value="0x4a"/>
+
+	<doc>Wait for memory writes to complete</doc>
+	<value name="CP_WAIT_MEM_WRITES" value="0x12"/>
+
+	<doc>Conditional execution based on register comparison</doc>
+	<value name="CP_COND_REG_EXEC" value="0x47"/>
+
+	<doc>Memory to REG copy</doc>
+	<value name="CP_MEM_TO_REG" value="0x42"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
