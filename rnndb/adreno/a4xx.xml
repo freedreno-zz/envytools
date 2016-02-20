@@ -1187,6 +1187,7 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x004d" name="RBBM_CFG_DEBBUS_SEL_D"/>
 	<reg32 offset="0x0098" name="RBBM_POWER_CNTL_IP">
 		<bitfield name="SW_COLLAPSE" pos="0" type="boolean"/>
+		<bitfield name="SP_TP_PWR_ON" pos="20" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x009c" name="RBBM_PERFCTR_CP_0_LO"/>
 	<reg32 offset="0x009d" name="RBBM_PERFCTR_CP_0_HI"/>
