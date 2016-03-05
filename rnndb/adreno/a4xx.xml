@@ -910,6 +910,7 @@ perhaps they should be taken with a grain of salt
 		-->
 		<bitfield name="WIDTH" low="0" high="5" shr="5" type="uint"/>
 		<bitfield name="HEIGHT" low="8" high="13" shr="5" type="uint"/>
+		<bitfield name="ENABLE_GMEM" pos="16" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x20a1" name="RB_RENDER_CONTROL">
 		<bitfield name="BINNING_PASS" pos="0" type="boolean"/>
@@ -2138,6 +2139,15 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x0d16" name="PC_PERFCTR_PC_SEL_6" type="a4xx_pc_perfcounter_select"/>
 	<reg32 offset="0x0d17" name="PC_PERFCTR_PC_SEL_7" type="a4xx_pc_perfcounter_select"/>
 	<reg32 offset="0x21c0" name="PC_BIN_BASE"/>
+	<reg32 offset="0x21c2" name="PC_VSTREAM_CONTROL">
+		<doc>SIZE is current pipe width * height (in tiles)</doc>
+		<bitfield name="SIZE" low="16" high="21" type="uint"/>
+		<doc>
+			N is some sort of slot # between 0..(SIZE-1).  In case
+			multiple tiles use same pipe, each tile gets unique slot #
+		</doc>
+		<bitfield name="N" low="22" high="26" type="uint"/>
+	</reg32>
 	<reg32 offset="0x21c4" name="PC_PRIM_VTX_CNTL">
 		<!-- bit0 set if there is >= 1 varying (actually used by FS) -->
 		<bitfield name="VAROUT" low="0" high="3" type="uint">
