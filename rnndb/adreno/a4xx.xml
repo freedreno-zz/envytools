@@ -979,25 +979,29 @@ perhaps they should be taken with a grain of salt
 	</array>
 
 	<reg32 offset="0x20f0" name="RB_BLEND_RED">
-		<bitfield name="UINT" low="0" high="15" type="hex"/>
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="SINT" low="8" high="15" type="hex"/>
 		<bitfield name="FLOAT" low="16" high="31" type="float"/>
 	</reg32>
 	<reg32 offset="0x20f1" name="RB_BLEND_RED_F32" type="float"/>
 
 	<reg32 offset="0x20f2" name="RB_BLEND_GREEN">
-		<bitfield name="UINT" low="0" high="15" type="hex"/>
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="SINT" low="8" high="15" type="hex"/>
 		<bitfield name="FLOAT" low="16" high="31" type="float"/>
 	</reg32>
 	<reg32 offset="0x20f3" name="RB_BLEND_GREEN_F32" type="float"/>
 
 	<reg32 offset="0x20f4" name="RB_BLEND_BLUE">
-		<bitfield name="UINT" low="0" high="15" type="hex"/>
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="SINT" low="8" high="15" type="hex"/>
 		<bitfield name="FLOAT" low="16" high="31" type="float"/>
 	</reg32>
 	<reg32 offset="0x20f5" name="RB_BLEND_BLUE_F32" type="float"/>
 
 	<reg32 offset="0x20f6" name="RB_BLEND_ALPHA">
-		<bitfield name="UINT" low="0" high="15" type="hex"/>
+		<bitfield name="UINT" low="0" high="7" type="hex"/>
+		<bitfield name="SINT" low="8" high="15" type="hex"/>
 		<bitfield name="FLOAT" low="16" high="31" type="float"/>
 	</reg32>
 	<reg32 offset="0x20f7" name="RB_BLEND_ALPHA_F32" type="float"/>
