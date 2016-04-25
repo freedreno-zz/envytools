@@ -9,6 +9,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a4xx_color_fmt">
 	<value name="RB4_A8_UNORM" value="0x01"/>
 	<value name="RB4_R8_UNORM" value="0x02"/>
+	<value name="RB4_R8_SNORM" value="0x03"/>
+	<value name="RB4_R8_UINT" value="0x04"/>
+	<value name="RB4_R8_SINT" value="0x05"/>
 
 	<value name="RB4_R4G4B4A4_UNORM" value="0x08"/>
 	<value name="RB4_R5G5B5A1_UNORM" value="0x0a"/>
