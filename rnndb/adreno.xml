@@ -7,6 +7,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/a2xx.xml"/>
 <import file="adreno/a3xx.xml"/>
 <import file="adreno/a4xx.xml"/>
+<import file="adreno/a5xx.xml"/>
 <import file="adreno/ocmem.xml"/>
 
 </database>

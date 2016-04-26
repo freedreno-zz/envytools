@@ -71,6 +71,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_TYPE1_PKT" value="0x40000000"/>
 	<value name="CP_TYPE2_PKT" value="0x80000000"/>
 	<value name="CP_TYPE3_PKT" value="0xc0000000"/>
+	<value name="CP_TYPE4_PKT" value="0x40000000"/>
+	<value name="CP_TYPE7_PKT" value="0x70000000"/>
 </enum>
 
 <enum name="adreno_pm4_type3_packets">
@@ -82,6 +84,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		indirect buffer dispatch.  prefetch parser uses this packet
 		type to determine whether to pre-fetch the IB
 	</doc>
+	<value name="CP_PREEMPT_ENABLE" value="0x1c"/>
+	<value name="CP_PREEMPT_TOKEN" value="0x1e"/>
 	<value name="CP_INDIRECT_BUFFER" value="0x3f"/>
 	<doc>indirect buffer dispatch.  same as IB, but init is pipelined</doc>
 	<value name="CP_INDIRECT_BUFFER_PFD" value="0x37"/>
@@ -200,6 +204,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>Record the real-time when this packet is processed by PFP</doc>
 	<value name="CP_RECORD_PFP_TIMESTAMP" value="0x11"/>
 
+	<!-- Used to switch GPU between secure and non-secure modes -->
+	<value name="CP_SET_SECURE_MODE" value="0x66"/>
 
 	<doc>PFP waits until the FIFO between the PFP and the ME is empty</doc>
 	<value name="CP_WAIT_FOR_ME" value="0x13"/>
@@ -247,6 +253,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<doc>Memory to REG copy</doc>
 	<value name="CP_MEM_TO_REG" value="0x42"/>
+
+	<doc>
+		for a5xx
+	</doc>
+	<!-- switches SMMU pagetable, used on a5xx only -->
+	<value name="CP_SMMU_TABLE_UPDATE" value="0x53"/>
+	<!-- A5XX Enable yield in RB only -->
+	<value name="CP_YIELD_ENABLE" value="0x1c"/>
+	<!-- Enable/Disable/Defer A5x global preemption model -->
+	<value name="CP_PREEMPT_ENABLE_GLOBAL" value="0x69"/>
+	<!-- Enable/Disable A5x local preemption model -->
+	<value name="CP_PREEMPT_ENABLE_LOCAL" value="0x6a"/>
+	<!-- Yield token on a5xx similar to CP_PREEMPT on a4xx -->
+	<value name="CP_CONTEXT_SWITCH_YIELD" value="0x6b"/>
+	<!-- Inform CP about current render mode (needed for a5xx preemption) -->
+	<value name="CP_SET_RENDER_MODE" value="0x6c"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
