@@ -290,5 +290,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="XYZW" value="3"/>
 </enum>
 
+<enum name="a3xx_rb_blend_opcode">
+	<value name="BLEND_DST_PLUS_SRC" value="0"/>
+	<value name="BLEND_SRC_MINUS_DST" value="1"/>
+	<value name="BLEND_DST_MINUS_SRC" value="2"/>
+	<value name="BLEND_MIN_DST_SRC" value="3"/>
+	<value name="BLEND_MAX_DST_SRC" value="4"/>
+</enum>
+
 </database>
 
