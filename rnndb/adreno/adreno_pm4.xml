@@ -18,6 +18,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RST_PIX_CNT" value="13"/>
 	<value name="RST_VTX_CNT" value="14"/>
 	<value name="TILE_FLUSH" value="15"/>
+	<value name="STAT_EVENT" value="16"/>
 	<value name="CACHE_FLUSH_AND_INV_TS_EVENT" value="20"/>
 	<value name="ZPASS_DONE" value="21"/>
 	<value name="CACHE_FLUSH_AND_INV_EVENT" value="22"/>
