@@ -44,7 +44,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DI_PT_LINESTRIP_ADJ" value="0xb"/>
 	<value name="DI_PT_TRI_ADJ" value="0xc"/>
 	<value name="DI_PT_TRISTRIP_ADJ" value="0xd"/>
-	<value name="DI_PT_PATCHES" value="0x22"/>
 </enum>
 
 <enum name="pc_di_src_sel">
@@ -344,6 +343,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </enum>
 
 <bitset name="vgt_draw_initiator_a4xx" inline="yes">
+	<!-- When the 0x20 bit is set, it's the number of patch vertices - 1 -->
 	<bitfield name="PRIM_TYPE" low="0" high="5" type="pc_di_primtype"/>
 	<bitfield name="SOURCE_SELECT" low="6" high="7" type="pc_di_src_sel"/>
 	<bitfield name="VIS_CULL" low="8" high="9" type="pc_di_vis_cull_mode"/>
