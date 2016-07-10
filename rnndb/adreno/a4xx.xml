@@ -2172,7 +2172,8 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x21e7" name="PC_HS_PARAM">
 		<bitfield name="VERTICES_OUT" low="0" high="5" type="uint"/>
 		<bitfield name="SPACING" low="21" high="22" type="a4xx_tess_spacing"/>
-		<bitfield name="PRIMTYPE" low="23" high="24" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="CW" pos="23" type="boolean"/>
+		<bitfield name="CONNECTED" pos="24" type="boolean"/>
 	</reg32>
 
 	<!-- VBIF registers -->
