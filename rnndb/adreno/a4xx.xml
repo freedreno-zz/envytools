@@ -2127,6 +2127,7 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x0d00" name="PC_BINNING_COMMAND">
 		<bitfield name="BINNING_ENABLE" pos="0" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x0d08" name="PC_TESSFACTOR_ADDR"/>
 	<reg32 offset="0x0d0c" name="PC_DRAWCALL_SETUP_OVERRIDE"/>
 	<reg32 offset="0x0d10" name="PC_PERFCTR_PC_SEL_0" type="a4xx_pc_perfcounter_select"/>
 	<reg32 offset="0x0d11" name="PC_PERFCTR_PC_SEL_1" type="a4xx_pc_perfcounter_select"/>
