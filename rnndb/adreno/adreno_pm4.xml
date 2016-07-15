@@ -255,6 +255,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>Memory to REG copy</doc>
 	<value name="CP_MEM_TO_REG" value="0x42"/>
 
+	<value name="CP_DISPATCH_COMPUTE" value="0x33"/>
+
 	<doc>
 		for a5xx
 	</doc>
@@ -293,6 +295,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="SB_VERT_SHADER" value="4"/>
 		<value name="SB_GEOM_SHADER" value="5"/>
 		<value name="SB_FRAG_SHADER" value="6"/>
+		<value name="SB_COMPUTE_SHADER" value="7"/>
 	</enum>
 	<enum name="adreno_state_type">
 		<value name="ST_SHADER" value="0"/>
