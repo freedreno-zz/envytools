@@ -1599,7 +1599,7 @@ perhaps they should be taken with a grain of salt
 			handles the register renaming.
 		</doc>
 		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
-		<bitfield name="FULLREGFOOTPRINT" low="10" high="17" type="uint"/>
+		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
 		<!-- maybe INOUTREGOVERLAP is a bitflag? -->
 		<bitfield name="INOUTREGOVERLAP" low="18" high="19" type="uint"/>
 		<bitfield name="THREADSIZE" pos="20" type="a3xx_threadsize"/>
