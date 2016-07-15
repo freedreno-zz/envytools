@@ -103,11 +103,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		Size pixel to fetch, in bytes.  Doesn't seem to be required, setting
 		it to 0x0 seems to work ok, but may be less optimal.
 	</doc>
-	<value name="TFETCH4_1_BYTE"  value="0"/>
-	<value name="TFETCH4_2_BYTE"  value="1"/>
-	<value name="TFETCH4_4_BYTE"  value="2"/>
-	<value name="TFETCH4_8_BYTE"  value="3"/>
-	<value name="TFETCH4_16_BYTE" value="4"/>
+	<value name="TFETCH5_1_BYTE"  value="0"/>
+	<value name="TFETCH5_2_BYTE"  value="1"/>
+	<value name="TFETCH5_4_BYTE"  value="2"/>
+	<value name="TFETCH5_8_BYTE"  value="3"/>
+	<value name="TFETCH5_16_BYTE" value="4"/>
 </enum>
 
 <domain name="A5XX" width="32">
