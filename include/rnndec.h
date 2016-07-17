@@ -54,5 +54,6 @@ char *rnndec_decode_enum(struct rnndeccontext *ctx, const char *enumname, uint64
 char *rnndec_decodeval(struct rnndeccontext *ctx, struct rnntypeinfo *ti, uint64_t value, int width);
 int rnndec_checkaddr(struct rnndeccontext *ctx, struct rnndomain *domain, uint64_t addr, int write);
 struct rnndecaddrinfo *rnndec_decodeaddr(struct rnndeccontext *ctx, struct rnndomain *domain, uint64_t addr, int write);
+uint64_t rnndec_decodereg(struct rnndeccontext *ctx, struct rnndomain *domain, const char *name);
 
 #endif

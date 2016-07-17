@@ -25,6 +25,7 @@
 
 #define _GNU_SOURCE // for asprintf
 #include "rnndec.h"
+#include <assert.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -428,4 +429,54 @@ struct rnndecaddrinfo *rnndec_decodeaddr(struct rnndeccontext *ctx, struct rnndo
 	res = calloc (sizeof *res, 1);
 	asprintf (&res->name, "%s%#"PRIx64"%s", ctx->colors->err, addr, ctx->colors->reset);
 	return res;
+}
+
+static uint64_t tryreg(struct rnndeccontext *ctx, struct rnndelem **elems, int elemsnum,
+		int dwidth, const char *name)
+{
+	int i;
+	const char *suffix = strchr(name, '[');
+	unsigned n = suffix ? (suffix - name) : strlen(name);
+
+	const char *child = NULL;
+	unsigned idx = 0;
+
+	if (suffix) {
+		const char *tmp = strchr(suffix, ']');
+		idx = strtol(suffix+1, NULL, 0);
+		child = tmp+2;
+	}
+
+	for (i = 0; i < elemsnum; i++) {
+		struct rnndelem *elem = elems[i];
+		if (!rnndec_varmatch(ctx, &elem->varinfo))
+			continue;
+		int match = (strlen(elem->name) == n) && !strncmp(elem->name, name, n);
+		switch (elem->type) {
+			case RNN_ETYPE_REG:
+				if (match) {
+					assert(!suffix);
+					return elem->offset;
+				}
+				break;
+			case RNN_ETYPE_STRIPE:
+				assert(0); // TODO
+				break;
+			case RNN_ETYPE_ARRAY:
+				if (match) {
+					assert(suffix);
+					return elem->offset + (idx * elem->stride) +
+						tryreg(ctx, elem->subelems, elem->subelemsnum, dwidth, child);
+				}
+				break;
+			default:
+				break;
+		}
+	}
+	return 0;
+}
+
+uint64_t rnndec_decodereg(struct rnndeccontext *ctx, struct rnndomain *domain, const char *name)
+{
+	return tryreg(ctx, domain->subelems, domain->subelemsnum, domain->width, name);
 }
