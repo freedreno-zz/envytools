@@ -948,8 +948,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="MSAA_RESOLVE" low="0" high="1" type="a3xx_msaa_samples"/>
 		<bitfield name="DEPTHCLEAR" pos="3" type="boolean"/>
 		<bitfield name="MODE" low="4" high="6" type="adreno_rb_copy_control_mode"/>
+		<bitfield name="MSAA_SRGB_DOWNSAMPLE" pos="7" type="boolean"/>
 		<bitfield name="FASTCLEAR" low="8" high="11" type="hex"/>
-		<bitfield name="UNK12" pos="12" type="boolean"/> <!-- enabled on a Z32F copy -->
+		<bitfield name="DEPTH32_RESOLVE" pos="12" type="boolean"/> <!-- enabled on a Z32F copy -->
 		<bitfield name="GMEM_BASE" low="14" high="31" shr="14" type="hex"/>
 	</reg32>
 	<reg32 offset="0x20ed" name="RB_COPY_DEST_BASE">
