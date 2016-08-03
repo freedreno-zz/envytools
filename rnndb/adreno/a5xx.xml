@@ -6,6 +6,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_common.xml"/>
 <import file="adreno/adreno_pm4.xml"/>
 
+<enum name="a5xx_color_fmt">
+	<value name="RB5_R8_UNORM" value="0x03"/>
+	<value name="RB5_R5G5B5A1_UNORM" value="0x0a"/>
+	<value name="RB5_R8G8B8A8_UNORM" value="0x30"/>
+	<value name="RB5_R8G8B8_UNORM" value="0x31"/>
+	<value name="RB5_R8G8B8A8_UINT" value="0x33"/>
+	<value name="RB5_R10G10B10A2_UINT" value="0x3a"/>
+	<value name="RB5_R16G16B16A16_FLOAT" value="0x62"/>
+</enum>
+
+<enum name="a5xx_tile_mode">
+	<value name="TILE5_LINEAR" value="0"/>
+	<value name="TILE5_2" value="2"/>
+	<value name="TILE5_3" value="3"/>
+</enum>
 
 <enum name="a5xx_vtx_fmt" prefix="chipset">
 	<value value="0x03" name="VFMT5_8_UNORM"/>
@@ -108,6 +123,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFETCH5_4_BYTE"  value="2"/>
 	<value name="TFETCH5_8_BYTE"  value="3"/>
 	<value name="TFETCH5_16_BYTE" value="4"/>
+</enum>
+
+<enum name="a5xx_depth_format">
+	<value name="DEPTH5_NONE" value="0"/>
+	<value name="DEPTH5_16" value="1"/>
+	<value name="DEPTH5_24_8" value="2"/>
+	<value name="DEPTH5_32" value="4"/>
 </enum>
 
 <domain name="A5XX" width="32">
@@ -640,6 +662,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- VSC registers -->
 	<reg32 offset="0x0c60" name="VSC_PERFCTR_VSC_SEL_0"/>
 	<reg32 offset="0x0c61" name="VSC_PERFCTR_VSC_SEL_1"/>
+	<reg32 offset="0x0cdd" name="VSC_BIN_SIZE" type="adreno_reg_xy"/>
+
+	<!-- Probably VSC, and probably binning related? -->
+	<reg32 offset="0x0cc4" name="UNKNOWN_0CC4"/> <!-- always 00100000? -->
+	<reg32 offset="0x0cc6" name="UNKNOWN_0CC6"/> <!-- always 00000044? -->
+	<reg32 offset="0x0cc7" name="UNKNOWN_0CC7"/> <!-- always b0056080 or 10000000? -->
 
 	<!-- GRAS registers -->
 	<reg32 offset="0x0c81" name="GRAS_ADDR_MODE_CNTL"/>
@@ -682,6 +710,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x0d00" name="PC_DBG_ECO_CNTL"/>
 	<reg32 offset="0x0d01" name="PC_ADDR_MODE_CNTL"/>
+	<reg32 offset="0x0d02" name="UNKNOWN_0D02"/> <!-- always 0000001f? -->
+	<reg32 offset="0x0d08" name="UNKNOWN_0D08"/> <!-- always 00000000? -->
+	<reg32 offset="0x0d09" name="UNKNOWN_0D09"/> <!-- always 00000000? -->
 	<reg32 offset="0x0d10" name="PC_PERFCTR_PC_SEL_0"/>
 	<reg32 offset="0x0d11" name="PC_PERFCTR_PC_SEL_1"/>
 	<reg32 offset="0x0d12" name="PC_PERFCTR_PC_SEL_2"/>
@@ -692,7 +723,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0d17" name="PC_PERFCTR_PC_SEL_7"/>
 
 	<reg32 offset="0x0e00" name="HLSQ_TIMEOUT_THRESHOLD"/>
+	<reg32 offset="0x0e01" name="UNKNOWN_0E01"/> <!-- always 00000000? -->
 	<reg32 offset="0x0e05" name="HLSQ_ADDR_MODE_CNTL"/>
+	<reg32 offset="0x0e06" name="UNKNOWN_0E06"/> <!-- always 00000001? -->
 	<reg32 offset="0x0e10" name="HLSQ_PERFCTR_HLSQ_SEL_0"/>
 	<reg32 offset="0x0e11" name="HLSQ_PERFCTR_HLSQ_SEL_1"/>
 	<reg32 offset="0x0e12" name="HLSQ_PERFCTR_HLSQ_SEL_2"/>
@@ -706,6 +739,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xa000" name="HLSQ_DBG_AHB_READ_APERTURE"/>
 
 	<reg32 offset="0x0e41" name="VFD_ADDR_MODE_CNTL"/>
+	<reg32 offset="0x0e42" name="UNKNOWN_0E42"/> <!-- always 00000000? -->
 	<reg32 offset="0x0e50" name="VFD_PERFCTR_VFD_SEL_0"/>
 	<reg32 offset="0x0e51" name="VFD_PERFCTR_VFD_SEL_1"/>
 	<reg32 offset="0x0e52" name="VFD_PERFCTR_VFD_SEL_2"/>
@@ -714,6 +748,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e55" name="VFD_PERFCTR_VFD_SEL_5"/>
 	<reg32 offset="0x0e56" name="VFD_PERFCTR_VFD_SEL_6"/>
 	<reg32 offset="0x0e57" name="VFD_PERFCTR_VFD_SEL_7"/>
+	<reg32 offset="0x0e60" name="UNKNOWN_0E60"/> <!-- always 00000400? -->
 	<reg32 offset="0x0e61" name="VPC_ADDR_MODE_CNTL"/>
 	<reg32 offset="0x0e64" name="VPC_PERFCTR_VPC_SEL_0"/>
 	<reg32 offset="0x0e65" name="VPC_PERFCTR_VPC_SEL_1"/>
@@ -730,6 +765,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e8c" name="UCHE_GMEM_RANGE_MIN_HI"/>
 	<reg32 offset="0x0e8d" name="UCHE_GMEM_RANGE_MAX_LO"/>
 	<reg32 offset="0x0e8e" name="UCHE_GMEM_RANGE_MAX_HI"/>
+	<reg32 offset="0x0e91" name="UNKNOWN_0E91"/> <!-- always 00000000? -->
+	<reg32 offset="0x0e92" name="UNKNOWN_0E92"/> <!-- always 00000000? -->
+	<reg32 offset="0x0e93" name="UNKNOWN_0E93"/> <!-- always 00000000? -->
+	<reg32 offset="0x0e94" name="UNKNOWN_0E94"/> <!-- always 00000000? -->
 	<reg32 offset="0x0e95" name="UCHE_INVALIDATE0"/>
 	<reg32 offset="0x0e96" name="UCHE_CACHE_WAYS"/>
 	<reg32 offset="0x0ea0" name="UCHE_PERFCTR_UCHE_SEL_0"/>
@@ -747,6 +786,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x0ec0" name="SP_DBG_ECO_CNTL"/>
 	<reg32 offset="0x0ec1" name="SP_ADDR_MODE_CNTL"/>
+	<reg32 offset="0x0ec2" name="UNKNOWN_0EC2"/> <!-- always 0000001e? -->
 	<reg32 offset="0x0ed0" name="SP_PERFCTR_SP_SEL_0"/>
 	<reg32 offset="0x0ed1" name="SP_PERFCTR_SP_SEL_1"/>
 	<reg32 offset="0x0ed2" name="SP_PERFCTR_SP_SEL_2"/>
@@ -765,6 +805,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0edf" name="SP_POWERCTR_SP_SEL_3"/>
 
 	<reg32 offset="0x0f01" name="TPL1_ADDR_MODE_CNTL"/>
+	<reg32 offset="0x0f02" name="UNKNOWN_0F02"/> <!-- always 00000544? -->
 	<reg32 offset="0x0f10" name="TPL1_PERFCTR_TP_SEL_0"/>
 	<reg32 offset="0x0f11" name="TPL1_PERFCTR_TP_SEL_1"/>
 	<reg32 offset="0x0f12" name="TPL1_PERFCTR_TP_SEL_2"/>
@@ -957,6 +998,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xc557" name="GPU_CS_AMP_CALIBRATION_CONTROL1"/>
 
 
+	<reg32 offset="0xe000" name="UNKNOWN_E000"/> <!-- always 00000080? -->
+	<reg32 offset="0xe001" name="UNKNOWN_E001"/> <!-- always 00000000? -->
+	<reg32 offset="0xe004" name="UNKNOWN_E004"/> <!-- always 00000000? -->
 	<reg32 offset="0xe005" name="GRAS_CLEAR_CNTL">
 		<!-- probably not the right name, but.. -->
 		<!-- bit0 set for everything *but* fastclear -->
@@ -983,16 +1027,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="MAX" low="16" high="31" type="ufixed" radix="4"/>
 	</reg32>
 	<reg32 offset="0xe092" name="GRAS_SU_POINT_SIZE" type="fixed" radix="4"/>
+	<reg32 offset="0xe093" name="UNKNOWN_E093"/> <!-- always 00000000? -->
 	<reg32 offset="0xe094" name="GRAS_ALPHA_CONTROL">
 		<bitfield name="ALPHA_TEST_ENABLE" pos="0" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe095" name="GRAS_SU_POLY_OFFSET_SCALE" type="float"/>
 	<reg32 offset="0xe096" name="GRAS_SU_POLY_OFFSET_OFFSET" type="float"/>
 	<reg32 offset="0xe097" name="GRAS_SU_POLY_OFFSET_CLAMP" type="float"/>
+	<!-- duplicates RB_DEPTH_INFO0: -->
+	<reg32 offset="0xe098" name="GRAS_DEPTH_INFO">
+		<bitfield name="DEPTH_FORMAT" low="0" high="2" type="a5xx_depth_format"/>
+	</reg32>
+	<reg32 offset="0xe099" name="UNKNOWN_E099"/> <!-- always 00000000? -->
 	<!--
 	guessing about window/screen/extent, I think they can in the end be
 	used interchangeably?
 	 -->
+	<reg32 offset="0xe0a0" name="GRAS_RENDER_CONTROL"/> <!-- looks similar to a4xx RB_RENDER_CONTROL -->
+	<reg32 offset="0xe0a1" name="UNKNOWN_E0A1"/> <!-- always 00000000? -->
+	<reg32 offset="0xe0a2" name="GRAS_MSAA_CONTROL">
+		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+	</reg32>
+	<reg32 offset="0xe0a3" name="GRAS_SC_CONTROL">
+		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
+	</reg32>
+	<reg32 offset="0xe0a4" name="UNKNOWN_E0A4"/> <!-- always 00000000? -->
 	<reg32 offset="0xe0aa" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0xe0ab" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
 	<reg32 offset="0xe0ca" name="GRAS_SC_EXTENT_SCISSOR_TL" type="adreno_reg_xy"/>
@@ -1000,6 +1060,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe0ea" name="GRAS_SC_SCREEN_WINDOW_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0xe0eb" name="GRAS_SC_SCREEN_WINDOW_BR" type="adreno_reg_xy"/>
 
+	<reg32 offset="0xe100" name="UNKNOWN_E100"/> <!-- always 00000000? -->
+	<reg32 offset="0xe142" name="RB_MSAA_CONTROL">
+		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+	</reg32>
+	<reg32 offset="0xe143" name="RB_SC_CONTROL">
+		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe144" name="RB_RENDER_CONTROL0">
 		<bitfield name="XCOORD" pos="6" type="boolean"/>
 		<bitfield name="YCOORD" pos="7" type="boolean"/>
@@ -1011,6 +1079,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0xe146" name="RB_RENDER_CONTROL2">
 		<bitfield name="VARYING" pos="0" type="boolean"/>
+		<bitfield name="EARLY_Z_DISABLE" pos="5" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe146" name="RB_FS_OUTPUT_REG">
 		<!-- bit0 set except for binning pass.. -->
@@ -1018,6 +1087,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FRAG_WRITES_Z" pos="5" type="boolean"/>
 	</reg32>
 	<array offset="0xe150" name="RB_MRT" stride="7" length="8">
+		<reg32 offset="0x0" name="CONTROL">
+			<bitfield name="BLEND" pos="0" type="boolean"/>
+			<bitfield name="BLEND2" pos="1" type="boolean"/>
+			<bitfield name="COMPONENT_ENABLE" low="7" high="10" type="hex"/>
+		</reg32>
 		<reg32 offset="0x1" name="BLEND_CONTROL">
 			<bitfield name="RGB_SRC_FACTOR" low="0" high="4" type="adreno_rb_blend_factor"/>
 			<bitfield name="RGB_BLEND_OPCODE" low="5" high="7" type="a3xx_rb_blend_opcode"/>
@@ -1026,15 +1100,26 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="ALPHA_BLEND_OPCODE" low="21" high="23" type="a3xx_rb_blend_opcode"/>
 			<bitfield name="ALPHA_DEST_FACTOR" low="24" high="28" type="adreno_rb_blend_factor"/>
 		</reg32>
+		<reg32 offset="0x2" name="BUF_INFO">
+			<!--
+			not sure if there is a separate COLOR_SWAP field like on a3xx/a4xx,
+			or if it is inherent in the format.  Will have to play with bits
+			once we get things working and see what happens.  If it is a diff
+			field, it doesn't seem to have the same encoding as a3xx/a4xx.
+			 -->
+			<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
+			<bitfield name="COLOR_TILE_MODE" low="8" high="9" type="a5xx_tile_mode"/>
+			<bitfield name="COLOR_SRGB" pos="15" type="boolean"/>
+		</reg32>
 		<!--
 		at least in gmem, things seem to be aligned to pitch of 64..
 		maybe an artifact of tiled format used in gmem?
 		 -->
-		<reg32 offset="0x3" name="BUF_INFO">
+		<reg32 offset="0x3" name="BUF_INFO2">
 			<!-- guess on upper bounds.. -->
 			<bitfield name="COLOR_BUF_PITCH" low="0" high="18" shr="4" type="uint"/>
 		</reg32>
-		<reg32 offset="0x4" name="BUF_INFO2">
+		<reg32 offset="0x4" name="BUF_INFO3">
 			<!-- guess on upper bounds.. -->
 			<bitfield name="COLOR_BUF_SIZE" low="0" high="24" shr="6" type="uint"/>
 		</reg32>
@@ -1077,11 +1162,28 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- a guess? -->
 		<bitfield name="SAMPLE_MASK" low="16" high="31"/>
 	</reg32>
+	<reg32 offset="0xe1b0" name="RB_FS_OUTPUT2">
+		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe1b1" name="RB_DEPTH_CONTROL">
-		<bitfield name="Z_WRITE_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="Z_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="Z_WRITE_ENABLE" pos="1" type="boolean"/>
 		<bitfield name="ZFUNC" low="2" high="4" type="adreno_compare_func"/>
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
 		<bitfield name="Z_TEST_ENABLE" pos="6" type="boolean"/>
+	</reg32>
+	<reg32 offset="0xe1b2" name="RB_DEPTH_INFO0">
+		<bitfield name="DEPTH_FORMAT" low="0" high="2" type="a5xx_depth_format"/>
+	</reg32>
+	<reg32 offset="0xe1b3" name="RB_DEPTH_INFO1">
+		<bitfield name="DEPTH_BASE" low="12" high="31" shr="12" type="hex"/>
+	</reg32>
+	<reg32 offset="0xe1b4" name="UNKNOWN_E1B4"/> <!-- always 00000000? -->
+	<reg32 offset="0xe1b5" name="RB_DEPTH_PITCH" shr="5" type="uint">
+		<doc>stride of depth/stencil buffer</doc>
+	</reg32>
+	<reg32 offset="0xe1b6" name="RB_DEPTH_PITCH2" shr="5" type="uint">
+		<doc>???</doc>
 	</reg32>
 	<reg32 offset="0xe1c0" name="RB_STENCIL_CONTROL">
 		<bitfield name="STENCIL_ENABLE" pos="0" type="boolean"/>
@@ -1102,11 +1204,30 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ZPASS_BF" low="26" high="28" type="adreno_stencil_op"/>
 		<bitfield name="ZFAIL_BF" low="29" high="31" type="adreno_stencil_op"/>
 	</reg32>
+	<reg32 offset="0xe1c2" name="RB_STENCIL_INFO">
+		<bitfield name="SEPARATE_STENCIL" pos="0" type="boolean"/>
+		<doc>Base address for stencil when not using interleaved depth/stencil</doc>
+		<bitfield name="STENCIL_BASE" low="12" high="31" shr="12" type="hex"/>
+	</reg32>
+	<reg32 offset="0xe1c3" name="UNKNOWN_E1C3"/> <!-- always 00000000? -->
+	<reg32 offset="0xe1c4" name="RB_STENCIL_PITCH" shr="5" type="uint">
+		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
+	</reg32>
+	<reg32 offset="0xe1c5" name="RB_STENCIL_PITCH" shr="5" type="uint">
+		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
+	</reg32>
 	<reg32 offset="0xe1c6" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<!--
 	prob 0xe1c7 is RB_STENCILREFMASK_BF but blob isn't writing this unless bf
 	stencil explicitly enabled??
 	 -->
+	<array offset="0xe282" name="VPC_VARYING_INTERP" stride="1" length="8">
+		<reg32 offset="0x0" name="MODE"/>
+	</array>
+	<array offset="0xe28a" name="VPC_VARYING_PS_REPL" stride="1" length="8">
+		<reg32 offset="0x0" name="MODE"/>
+	</array>
+
 	<array offset="0xe294" name="VPC_VAR" stride="1" length="4">
 		<!-- one bit per varying component: -->
 		<reg32 offset="0" name="DISABLE"/>
@@ -1116,6 +1237,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 
 	<reg32 offset="0xe400" name="VFD_CONTROL_0">
+		<doc>STRMDECINSTRCNT is # of VFD_DECODE_INSTR registers valid</doc>
+		<bitfield name="STRMDECINSTRCNT" low="0" high="5" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe401" name="VFD_CONTROL_1">
 		<bitfield name="REGID4INST" low="8" high="15" type="a3xx_regid"/>
@@ -1227,6 +1350,22 @@ a5xx:
 		</reg32>
 	</array>
 
+	<!--
+	so these have the same info that is normally in the CP_LOAD_STATE
+	packets.. not sure if they are normally written by pm4/me or if the
+	CP_LOAD_STATE mechanism is deprecated?  Unfortunately I don't see
+	an obvious way to get NUM_UNIT other than just knowing how many
+	samplers the shader is using..
+	 -->
+	<reg32 offset="0xe72a" name="HLSQ_VS_TEX_CONST_LO"/>
+	<reg32 offset="0xe72b" name="HLSQ_VS_TEX_CONST_HI"/>
+	<reg32 offset="0xe722" name="HLSQ_VS_TEX_SAMP_LO"/>
+	<reg32 offset="0xe723" name="HLSQ_VS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe75a" name="HLSQ_FS_TEX_CONST_LO"/>
+	<reg32 offset="0xe75b" name="HLSQ_FS_TEX_CONST_HI"/>
+	<reg32 offset="0xe75e" name="HLSQ_FS_TEX_SAMP_LO"/>
+	<reg32 offset="0xe75f" name="HLSQ_FS_TEX_SAMP_HI"/>
+
 	<reg32 offset="0xe784" name="HLSQ_CONTROL_0_REG">
 	</reg32>
 	<reg32 offset="0xe785" name="HLSQ_CONTROL_1_REG">
@@ -1235,6 +1374,8 @@ a5xx:
 		<bitfield name="FACEREGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xe787" name="HLSQ_CONTROL_3_REG">
+		<!-- register loaded with position (bary.f) -->
+		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xe788" name="HLSQ_CONTROL_4_REG">
 		<bitfield name="XYCOORDREGID" low="16" high="23" type="a3xx_regid"/>
