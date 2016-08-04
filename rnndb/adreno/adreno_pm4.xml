@@ -135,9 +135,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>initiate fetch of index buffer and binIDs and draw</doc>
 	<value name="CP_DRAW_INDX_BIN" value="0x34"/>
 	<doc>initiate fetch of bin IDs and draw using supplied indices</doc>
-	<value name="CP_DRAW_INDX_2_BIN" value="0x35"/>
+	<value name="CP_DRAW_INDX_2_BIN" value="0x35"/> <!-- prior to a5xx -->
 	<doc>begin/end initiator for viz query extent processing</doc>
-	<value name="CP_VIZ_QUERY" value="0x23"/>
+	<value name="CP_VIZ_QUERY" value="0x23"/>  <!-- prior to a5xx -->
 	<doc>fetch state sub-blocks and initiate shader code DMAs</doc>
 	<value name="CP_SET_STATE" value="0x25"/>
 	<doc>load constant into chip and to memory</doc>
@@ -153,7 +153,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>dynamically changes shader instruction memory partition</doc>
 	<value name="CP_SET_SHADER_BASES" value="0x4a"/>
 	<doc>sets the 64-bit BIN_MASK register in the PFP</doc>
-	<value name="CP_SET_BIN_MASK" value="0x50"/>
+	<value name="CP_SET_BIN_MASK" value="0x50"/>  <!-- prior to a5xx -->
 	<doc>sets the 64-bit BIN_SELECT register in the PFP</doc>
 	<value name="CP_SET_BIN_SELECT" value="0x51"/>
 	<doc>updates the current context, if needed</doc>
@@ -254,15 +254,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>Memory to REG copy</doc>
 	<value name="CP_MEM_TO_REG" value="0x42"/>
 
-	<value name="CP_DISPATCH_COMPUTE" value="0x33"/>
+	<value name="CP_EXEC_CS" value="0x33"/>
 
 	<doc>
 		for a5xx
 	</doc>
 	<!-- switches SMMU pagetable, used on a5xx only -->
+	<value name="CP_PERFCOUNTER_ACTION" value="0x50"/>
 	<value name="CP_SMMU_TABLE_UPDATE" value="0x53"/>
+	<value name="CP_CONTEXT_REG_BUNCH" value="0x5c"/>
 	<!-- A5XX Enable yield in RB only -->
 	<value name="CP_YIELD_ENABLE" value="0x1c"/>
+	<value name="CP_SKIP_IB2_ENABLE_GLOBAL" value="0x1d"/>
+	<value name="CP_SKIP_IB2_ENABLE_LOCAL" value="0x23"/>
+	<value name="CP_SET_SUBDRAW_SIZE" value="0x35"/>
+	<value name="CP_SET_VISIBILITY_OVERRIDE" value="0x64"/>
 	<!-- Enable/Disable/Defer A5x global preemption model -->
 	<value name="CP_PREEMPT_ENABLE_GLOBAL" value="0x69"/>
 	<!-- Enable/Disable A5x local preemption model -->
@@ -271,6 +277,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_CONTEXT_SWITCH_YIELD" value="0x6b"/>
 	<!-- Inform CP about current render mode (needed for a5xx preemption) -->
 	<value name="CP_SET_RENDER_MODE" value="0x6c"/>
+	<value name="CP_COMPUTE_CHECKPOINT" value="0x6e"/>
+	<!-- check if this works on earlier.. -->
+	<value name="CP_MEM_TO_MEM" value="0x73"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
