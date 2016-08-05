@@ -75,6 +75,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_TYPE7_PKT" value="0x70000000"/>
 </enum>
 
+<!--
+   Note that in some cases, the same packet id is recycled on a later
+   generation, so variants attribute is used to distinguish.   They
+   may not be completely accurate, we would probably have to analyze
+   the pfp and me/pm4 firmware to verify the packet is actually
+   handled on a particular generation.  But it is at least enough to
+   disambiguate the packet-id's that were re-used for different
+   packets starting with a5xx.
+ -->
 <enum name="adreno_pm4_type3_packets">
 	<doc>initialize CP's micro-engine</doc>
 	<value name="CP_ME_INIT" value="0x48"/>
@@ -135,9 +144,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>initiate fetch of index buffer and binIDs and draw</doc>
 	<value name="CP_DRAW_INDX_BIN" value="0x34"/>
 	<doc>initiate fetch of bin IDs and draw using supplied indices</doc>
-	<value name="CP_DRAW_INDX_2_BIN" value="0x35"/> <!-- prior to a5xx -->
+	<value name="CP_DRAW_INDX_2_BIN" value="0x35" variants="A2XX,A3XX,A4XX"/>
 	<doc>begin/end initiator for viz query extent processing</doc>
-	<value name="CP_VIZ_QUERY" value="0x23"/>  <!-- prior to a5xx -->
+	<value name="CP_VIZ_QUERY" value="0x23" variants="A2XX,A3XX,A4XX"/>
 	<doc>fetch state sub-blocks and initiate shader code DMAs</doc>
 	<value name="CP_SET_STATE" value="0x25"/>
 	<doc>load constant into chip and to memory</doc>
@@ -153,7 +162,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>dynamically changes shader instruction memory partition</doc>
 	<value name="CP_SET_SHADER_BASES" value="0x4a"/>
 	<doc>sets the 64-bit BIN_MASK register in the PFP</doc>
-	<value name="CP_SET_BIN_MASK" value="0x50"/>  <!-- prior to a5xx -->
+	<value name="CP_SET_BIN_MASK" value="0x50" variants="A2XX,A3XX,A4XX"/>
 	<doc>sets the 64-bit BIN_SELECT register in the PFP</doc>
 	<value name="CP_SET_BIN_SELECT" value="0x51"/>
 	<doc>updates the current context, if needed</doc>
@@ -260,26 +269,26 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		for a5xx
 	</doc>
 	<!-- switches SMMU pagetable, used on a5xx only -->
-	<value name="CP_PERFCOUNTER_ACTION" value="0x50"/>
-	<value name="CP_SMMU_TABLE_UPDATE" value="0x53"/>
-	<value name="CP_CONTEXT_REG_BUNCH" value="0x5c"/>
+	<value name="CP_PERFCOUNTER_ACTION" value="0x50" variants="A5XX"/>
+	<value name="CP_SMMU_TABLE_UPDATE" value="0x53" variants="A5XX"/>
+	<value name="CP_CONTEXT_REG_BUNCH" value="0x5c" variants="A5XX"/>
 	<!-- A5XX Enable yield in RB only -->
-	<value name="CP_YIELD_ENABLE" value="0x1c"/>
-	<value name="CP_SKIP_IB2_ENABLE_GLOBAL" value="0x1d"/>
-	<value name="CP_SKIP_IB2_ENABLE_LOCAL" value="0x23"/>
-	<value name="CP_SET_SUBDRAW_SIZE" value="0x35"/>
-	<value name="CP_SET_VISIBILITY_OVERRIDE" value="0x64"/>
+	<value name="CP_YIELD_ENABLE" value="0x1c" variants="A5XX"/>
+	<value name="CP_SKIP_IB2_ENABLE_GLOBAL" value="0x1d" variants="A5XX"/>
+	<value name="CP_SKIP_IB2_ENABLE_LOCAL" value="0x23" variants="A5XX"/>
+	<value name="CP_SET_SUBDRAW_SIZE" value="0x35" variants="A5XX"/>
+	<value name="CP_SET_VISIBILITY_OVERRIDE" value="0x64" variants="A5XX"/>
 	<!-- Enable/Disable/Defer A5x global preemption model -->
-	<value name="CP_PREEMPT_ENABLE_GLOBAL" value="0x69"/>
+	<value name="CP_PREEMPT_ENABLE_GLOBAL" value="0x69" variants="A5XX"/>
 	<!-- Enable/Disable A5x local preemption model -->
-	<value name="CP_PREEMPT_ENABLE_LOCAL" value="0x6a"/>
+	<value name="CP_PREEMPT_ENABLE_LOCAL" value="0x6a" variants="A5XX"/>
 	<!-- Yield token on a5xx similar to CP_PREEMPT on a4xx -->
-	<value name="CP_CONTEXT_SWITCH_YIELD" value="0x6b"/>
+	<value name="CP_CONTEXT_SWITCH_YIELD" value="0x6b" variants="A5XX"/>
 	<!-- Inform CP about current render mode (needed for a5xx preemption) -->
-	<value name="CP_SET_RENDER_MODE" value="0x6c"/>
-	<value name="CP_COMPUTE_CHECKPOINT" value="0x6e"/>
+	<value name="CP_SET_RENDER_MODE" value="0x6c" variants="A5XX"/>
+	<value name="CP_COMPUTE_CHECKPOINT" value="0x6e" variants="A5XX"/>
 	<!-- check if this works on earlier.. -->
-	<value name="CP_MEM_TO_MEM" value="0x73"/>
+	<value name="CP_MEM_TO_MEM" value="0x73" variants="A5XX"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
