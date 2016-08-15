@@ -1065,7 +1065,7 @@ perhaps they should be taken with a grain of salt
 		<bitfield name="Z_ENABLE" pos="1" type="boolean"/>
 		<bitfield name="Z_WRITE_ENABLE" pos="2" type="boolean"/>
 		<bitfield name="ZFUNC" low="4" high="6" type="adreno_compare_func"/>
-		<bitfield name="BF_ENABLE" pos="7" type="boolean"/>
+		<bitfield name="Z_CLAMP_ENABLE" pos="7" type="boolean"/>
 		<bitfield name="EARLY_Z_DISABLE" pos="16" type="boolean"/>
 		<bitfield name="FORCE_FRAGZ_TO_FS" pos="17" type="boolean"/>
 		<doc>Z_TEST_ENABLE bit is set for zfunc other than GL_ALWAYS or GL_NEVER</doc>
