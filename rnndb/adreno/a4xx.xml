@@ -2107,12 +2107,12 @@ perhaps they should be taken with a grain of salt
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x23ca" name="HLSQ_CS_CONTROL"/>
-	<reg32 offset="0x23cd" name="HLSQ_CL_NDRANGE_0"/>
-	<reg32 offset="0x23ce" name="HLSQ_CL_NDRANGE_1"/>
+	<reg32 offset="0x23cd" name="HLSQ_CL_NDRANGE_0"/><!-- 0x1000 | (local size * 2 - 1) -->
+	<reg32 offset="0x23ce" name="HLSQ_CL_NDRANGE_1"/><!-- local_x * block_x -->
 	<reg32 offset="0x23cf" name="HLSQ_CL_NDRANGE_2"/>
-	<reg32 offset="0x23d0" name="HLSQ_CL_NDRANGE_3"/>
+	<reg32 offset="0x23d0" name="HLSQ_CL_NDRANGE_3"/><!-- local_y * block_y -->
 	<reg32 offset="0x23d1" name="HLSQ_CL_NDRANGE_4"/>
-	<reg32 offset="0x23d2" name="HLSQ_CL_NDRANGE_5"/>
+	<reg32 offset="0x23d2" name="HLSQ_CL_NDRANGE_5"/><!-- local_z * block_z -->
 	<reg32 offset="0x23d3" name="HLSQ_CL_NDRANGE_6"/>
 	<reg32 offset="0x23d4" name="HLSQ_CL_CONTROL_0"/>
 	<reg32 offset="0x23d5" name="HLSQ_CL_CONTROL_1"/>
