@@ -1948,6 +1948,8 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x0c8f" name="GRAS_PERFCTR_RAS_SEL_3" type="a4xx_gras_ras_perfcounter_select"/>
 	<reg32 offset="0x2000" name="GRAS_CL_CLIP_CNTL">
 		<bitfield name="CLIP_DISABLE" pos="15" type="boolean"/>
+		<bitfield name="ZNEAR_CLIP_DISABLE" pos="16" type="boolean"/>
+		<bitfield name="ZFAR_CLIP_DISABLE" pos="17" type="boolean"/>
 		<bitfield name="ZERO_GB_SCALE_Z" pos="22" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2003" name="GRAS_CLEAR_CNTL">
