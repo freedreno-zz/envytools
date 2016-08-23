@@ -1071,7 +1071,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="HEIGHT" low="9" high="16" shr="5" type="uint"/>
 		<bitfield name="BYPASS" pos="17" type="boolean"/>
 	</reg32>
-	<reg32 offset="0xe141" name="RB_RENDER_CNTL"/>
+	<reg32 offset="0xe141" name="RB_RENDER_CNTL">
+		<bitfield name="ENABLED_MRTS" low="16" high="23"/>
+		<!-- why twice?? -->
+		<bitfield name="ENABLED_MRTS2" low="24" high="31"/>
+	</reg32>
 	<reg32 offset="0xe142" name="RB_RAS_MSAA_CNTL">
 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
 	</reg32>
@@ -1080,6 +1084,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe144" name="RB_RENDER_CONTROL0">
+		<bitfield name="VARYING" pos="0" type="boolean"/>
 		<bitfield name="XCOORD" pos="6" type="boolean"/>
 		<bitfield name="YCOORD" pos="7" type="boolean"/>
 		<bitfield name="ZCOORD" pos="8" type="boolean"/>
@@ -1235,6 +1240,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe241" name="RB_DEPTH_FLAG_BUFFER_BASE_HI"/>
 	<reg32 offset="0xe242" name="RB_DEPTH_FLAG_BUFFER_PITCH"/>
 
+	<reg32 offset="0xe280" name="VPC_CNTL_0">
+		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
+		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
+	</reg32>
 	<array offset="0xe282" name="VPC_VARYING_INTERP" stride="1" length="8">
 		<reg32 offset="0x0" name="MODE"/>
 	</array>
@@ -1257,7 +1266,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe2ac" name="VPC_SO_FLUSH_BASE_LO_0"/>
 	<reg32 offset="0xe2ad" name="VPC_SO_FLUSH_BASE_HI_0"/>
 
-	<reg32 offset="0xe384" name="PC_PRIMITIVE_CNTL"/>
+	<reg32 offset="0xe384" name="PC_PRIMITIVE_CNTL">
+		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
+		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
+		<!-- bit 10 seems to almost always be set.. but not mrt-fbo, quad-textured.. also see stencil -->
+	</reg32>
 	<reg32 offset="0xe388" name="PC_RASTER_CNTL"/>
 	<reg32 offset="0xe38c" name="PC_RESTART_INDEX"/>
 	<reg32 offset="0xe38e" name="PC_GS_PARAM"/>
@@ -1283,10 +1296,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe408" name="VFD_INDEX_OFFSET"/>
 	<reg32 offset="0xe409" name="VFD_INSTANCE_START_OFFSET"/>
 	<array offset="0xe40a" name="VFD_FETCH" stride="4" length="32">
-		<reg32 offset="0x0" name="INSTR_0">
-			<!-- vbo address -->
-			<bitfield name="BASE_LO" low="0" high="31"/>
-		</reg32>
+		<reg32 offset="0x0" name="BASE_LO"/>
 		<reg32 offset="0x1" name="BASE_HI"/>
 		<reg32 offset="0x2" name="SIZE" type="uint"/>
 		<reg32 offset="0x3" name="STRIDE" type="uint"/>
@@ -1361,7 +1371,8 @@ a5xx:
 			<bitfield name="OUTLOC3" low="24" high="31" type="uint"/>
 		</reg32>
 	</array>
-	<reg32 offset="0xe5ac" name="SP_VS_OBJ_START"/>
+	<reg32 offset="0xe5ac" name="SP_VS_OBJ_START_LO"/>
+	<reg32 offset="0xe5ad" name="SP_VS_OBJ_START_HI"/>
 	<reg32 offset="0xe5c0" name="SP_FS_CTRL_REG0">
 		<!-- maybe same as SP_VS_CTRL_REG0, etc? -->
 		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
@@ -1369,7 +1380,8 @@ a5xx:
 		<bitfield name="VARYING" pos="16" type="boolean"/>
 		<bitfield name="PIXLODENABLE" pos="20" type="boolean"/>
 	</reg32>
-	<reg32 offset="0xe5c3" name="SP_FS_OBJ_START"/>
+	<reg32 offset="0xe5c3" name="SP_FS_OBJ_START_LO"/>
+	<reg32 offset="0xe5c4" name="SP_FS_OBJ_START_HI"/>
 	<reg32 offset="0xe5c9" name="SP_BLEND_CNTL"/>
 	<reg32 offset="0xe5ca" name="SP_FS_OUTPUT_CNTL">
 		<bitfield name="MRT" low="0" high="3" type="uint"/>
@@ -1383,7 +1395,11 @@ a5xx:
 			<bitfield name="HALF_PRECISION" pos="8" type="boolean"/>
 		</reg32>
 	</array>
-	<reg32 offset="0xe5d3" name="SP_FS_MRT_0"/>
+	<array offset="0xe5d3" name="SP_FS_MRT" stride="1" length="8">
+		<reg32 offset="0" name="REG">
+			<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
+		</reg32>
+	</array>
 	<reg32 offset="0xe5f0" name="SP_CS_CNTL_0"/>
 
 	<reg32 offset="0xe704" name="TPL1_TP_RAS_MSAA_CNTL"/>
@@ -1396,10 +1412,10 @@ a5xx:
 	an obvious way to get NUM_UNIT other than just knowing how many
 	samplers the shader is using..
 	 -->
-	<reg32 offset="0xe72a" name="TPL1_VS_TEX_CONST_LO"/>
-	<reg32 offset="0xe72b" name="TPL1_VS_TEX_CONST_HI"/>
 	<reg32 offset="0xe722" name="TPL1_VS_TEX_SAMP_LO"/>
 	<reg32 offset="0xe723" name="TPL1_VS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe72a" name="TPL1_VS_TEX_CONST_LO"/>
+	<reg32 offset="0xe72b" name="TPL1_VS_TEX_CONST_HI"/>
 	<reg32 offset="0xe75a" name="TPL1_FS_TEX_CONST_LO"/>
 	<reg32 offset="0xe75b" name="TPL1_FS_TEX_CONST_HI"/>
 	<reg32 offset="0xe75e" name="TPL1_FS_TEX_SAMP_LO"/>
@@ -1443,6 +1459,10 @@ a5xx:
 	<reg32 offset="0xe7b6" name="HLSQ_CS_NDRANGE_6"/>
 	<reg32 offset="0xe7b7" name="HLSQ_CS_CNTL_0"/>
 	<reg32 offset="0xe7b8" name="HLSQ_CS_CNTL_1"/>
+	<reg32 offset="0xe7c3" name="HLSQ_VS_CONSTLEN" type="uint"/>
+	<reg32 offset="0xe7c4" name="HLSQ_VS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7d7" name="HLSQ_FS_CONSTLEN" type="uint"/>
+	<reg32 offset="0xe7d8" name="HLSQ_FS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7dc" name="HLSQ_CONTEXT_SWITCH_CS_SW_3"/>
 	<reg32 offset="0xe7dd" name="HLSQ_CONTEXT_SWITCH_CS_SW_4"/>
 </domain>
