@@ -92,6 +92,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<bitfield name="Y" low="16" high="30" type="uint"/>
 </bitset>
 
+<bitset name="adreno_cp_protect" inline="yes">
+	<bitfield name="BASE_ADDR" low="0" high="16"/>
+	<bitfield name="MASK_LEN" low="24" high="28"/>
+	<bitfield name="TRAP_WRITE" pos="29"/>
+	<bitfield name="TRAP_READ" pos="30"/>
+</bitset>
+
 <domain name="AXXX" width="32">
 	<brief>Registers in common between a2xx and a3xx</brief>
 

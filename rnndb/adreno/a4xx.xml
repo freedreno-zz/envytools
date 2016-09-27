@@ -60,6 +60,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="a4xx_tile_mode">
 	<value name="TILE4_LINEAR" value="0"/>
+	<value name="TILE4_2" value="2"/>
 	<value name="TILE4_3" value="3"/>
 </enum>
 
@@ -1523,9 +1524,8 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x022e" name="CP_DEBUG"/>
 	<reg32 offset="0x0231" name="CP_DEBUG_ECO_CONTROL"/>
 	<reg32 offset="0x0232" name="CP_DRAW_STATE_ADDR"/>
-	<reg32 offset="0x0240" name="CP_PROTECT_REG_0"/>
 	<array offset="0x0240" name="CP_PROTECT" stride="1" length="16">
-		<reg32 offset="0x0" name="REG"/>
+		<reg32 offset="0x0" name="REG" type="adreno_cp_protect"/>
 	</array>
 	<reg32 offset="0x0250" name="CP_PROTECT_CTRL"/>
 	<reg32 offset="0x04c0" name="CP_ST_BASE"/>

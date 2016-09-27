@@ -233,7 +233,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0b22" name="CP_IB2_BASE"/>
 	<reg32 offset="0x0b23" name="CP_IB2_BASE_HI"/>
 	<reg32 offset="0x0b24" name="CP_IB2_BUFSZ"/>
-	<reg32 offset="0x0880" name="CP_PROTECT_REG_0"/>
+	<array offset="0x0880" name="CP_PROTECT" stride="1" length="32">
+		<reg32 offset="0x0" name="REG" type="adreno_cp_protect"/>
+	</array>
 	<reg32 offset="0x08a0" name="CP_PROTECT_CNTL"/>
 	<reg32 offset="0x0b1b" name="CP_AHB_FAULT"/>
 	<reg32 offset="0x0bb0" name="CP_PERFCTR_CP_SEL_0"/>
@@ -707,7 +709,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0cee" name="RB_PERFCTR_CMP_SEL_2"/>
 	<reg32 offset="0x0cef" name="RB_PERFCTR_CMP_SEL_3"/>
 
-	<reg32 offset="0x0d00" name="PC_DBG_ECO_CNTL"/>
+	<reg32 offset="0x0d00" name="PC_DBG_ECO_CNTL">
+		<bitfield name="TWOPASSUSEWFI" pos="8" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0d01" name="PC_ADDR_MODE_CNTL"/>
 	<reg32 offset="0x0d02" name="PC_MODE_CNTL"/> <!-- always 0000001f? -->
 	<reg32 offset="0x0d08" name="UNKNOWN_0D08"/> <!-- always 00000000? -->
@@ -882,8 +886,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xa881" name="GPMU_SP_POWER_CNTL"/>
 	<reg32 offset="0xa886" name="GPMU_RBCCU_CLOCK_CNTL"/>
 	<reg32 offset="0xa887" name="GPMU_RBCCU_POWER_CNTL"/>
-	<reg32 offset="0xa88b" name="GPMU_SP_PWR_CLK_STATUS"/>
-	<reg32 offset="0xa88d" name="GPMU_RBCCU_PWR_CLK_STATUS"/>
+	<reg32 offset="0xa88b" name="GPMU_SP_PWR_CLK_STATUS">
+		<bitfield name="PWR_ON" pos="20" type="boolean"/>
+	</reg32>
+	<reg32 offset="0xa88d" name="GPMU_RBCCU_PWR_CLK_STATUS">
+		<bitfield name="PWR_ON" pos="20" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xa891" name="GPMU_PWR_COL_STAGGER_DELAY"/>
 	<reg32 offset="0xa892" name="GPMU_PWR_COL_INTER_FRAME_CTRL"/>
 	<reg32 offset="0xa893" name="GPMU_PWR_COL_INTER_FRAME_HYST"/>
@@ -1291,7 +1299,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0xe404" name="VFD_CONTROL_4">
 	</reg32>
-	<reg32 offset="0xe405" name="VFD_CONTROL_4">
+	<reg32 offset="0xe405" name="VFD_CONTROL_5">
 	</reg32>
 	<reg32 offset="0xe408" name="VFD_INDEX_OFFSET"/>
 	<reg32 offset="0xe409" name="VFD_INSTANCE_START_OFFSET"/>
@@ -1301,7 +1309,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<reg32 offset="0x2" name="SIZE" type="uint"/>
 		<reg32 offset="0x3" name="STRIDE" type="uint"/>
 	</array>
-	<array offset="0xe48a" name="VFD_FETCH" stride="2" length="32">
+	<array offset="0xe48a" name="VFD_DECODE" stride="2" length="32">
 		<reg32 offset="0x0" name="INSTR">
 			<!-- IDX appears to index into VFD_FETCH[] -->
 			<bitfield name="IDX" low="0" high="4" type="uint"/>
