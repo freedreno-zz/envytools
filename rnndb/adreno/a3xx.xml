@@ -100,17 +100,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TFMT_Z32_FLOAT" value="0xb"/>
 
 	<!--
-		YUV formats.. the different Y plane formats (ie. NV12 vs I420)
-		should really be the same thing.  Ie. it is just a bunch of Y
-		values in both cases.  But I guess the different values tell
-		the hw what to do with the next 2 texture samplers, since the
-		blob driver appears to setup 3 texture samplers for I420, NV12,
-		and NV21
+		The NV12 tiled/linear formats seem to require gang'd sampler
+		slots (ie. sampler state N plus N+1) for Y and UV planes.
+		They fetch yuv in single sam instruction, but still require
+		colorspace conversion in the shader.
 	 -->
-	<value name="TFMT_NV12_UV_TILED" value="0x11"/>
-	<value name="TFMT_NV12_Y_TILED" value="0x13"/>
-	<value name="TFMT_NV12_UV" value="0x15"/>
-	<value name="TFMT_NV12_Y" value="0x17"/>
+	<value name="TFMT_UV_64X32" value="0x10"/>
+	<value name="TFMT_VU_64X32" value="0x11"/>
+	<value name="TFMT_Y_64X32" value="0x12"/>
+	<value name="TFMT_NV12_64X32" value="0x13"/>
+	<value name="TFMT_UV_LINEAR" value="0x14"/>
+	<value name="TFMT_VU_LINEAR" value="0x15"/>
+	<value name="TFMT_Y_LINEAR" value="0x16"/>
+	<value name="TFMT_NV12_LINEAR" value="0x17"/>
 	<value name="TFMT_I420_Y" value="0x18"/>
 	<value name="TFMT_I420_U" value="0x1a"/>
 	<value name="TFMT_I420_V" value="0x1b"/>
