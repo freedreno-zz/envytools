@@ -233,6 +233,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0b22" name="CP_IB2_BASE"/>
 	<reg32 offset="0x0b23" name="CP_IB2_BASE_HI"/>
 	<reg32 offset="0x0b24" name="CP_IB2_BUFSZ"/>
+	<array offset="0x0b78" name="CP_SCRATCH" stride="1" length="7">
+		<reg32 offset="0x0" name="REG"/>
+	</array>
 	<array offset="0x0880" name="CP_PROTECT" stride="1" length="32">
 		<reg32 offset="0x0" name="REG" type="adreno_cp_protect"/>
 	</array>
