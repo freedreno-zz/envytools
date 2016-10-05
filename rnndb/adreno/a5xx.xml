@@ -1231,12 +1231,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="STENCIL_BASE" low="12" high="31" shr="12" type="hex"/>
 	</reg32>
 	<reg32 offset="0xe1c3" name="UNKNOWN_E1C3"/> <!-- always 00000000? -->
+<!--
 	<reg32 offset="0xe1c4" name="RB_STENCIL_PITCH" shr="5" type="uint">
 		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
 	</reg32>
 	<reg32 offset="0xe1c5" name="RB_STENCIL_PITCH" shr="5" type="uint">
 		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
 	</reg32>
+ -->
 	<reg32 offset="0xe1c6" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<!--
 	prob 0xe1c7 is RB_STENCILREFMASK_BF but blob isn't writing this unless bf
