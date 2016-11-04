@@ -182,6 +182,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0800" name="CP_RB_BASE"/>
 	<reg32 offset="0x0801" name="CP_RB_BASE_HI"/>
 	<reg32 offset="0x0802" name="CP_RB_CNTL"/>
+	<reg32 offset="0x0804" name="CP_RB_RPTR_ADDR"/>
+	<reg32 offset="0x0805" name="CP_RB_RPTR_ADDR_HI"/>
 	<reg32 offset="0x0806" name="CP_RB_RPTR"/>
 	<reg32 offset="0x0807" name="CP_RB_WPTR"/>
 	<reg32 offset="0x0808" name="CP_PFP_STAT_ADDR"/>
@@ -208,12 +210,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x082f" name="CP_ME_UCODE_DBG_ADDR"/>
 	<reg32 offset="0x0830" name="CP_ME_UCODE_DBG_DATA"/>
 	<reg32 offset="0x0831" name="CP_CNTL"/>
-	<reg32 offset="0x0832" name="CP_ME_CNTL"/>
+	<reg32 offset="0x0832" name="CP_PFP_ME_CNTL"/>
 	<reg32 offset="0x0833" name="CP_CHICKEN_DBG"/>
 	<reg32 offset="0x0835" name="CP_PFP_INSTR_BASE_LO"/>
 	<reg32 offset="0x0836" name="CP_PFP_INSTR_BASE_HI"/>
-	<reg32 offset="0x0838" name="CP_PM4_INSTR_BASE_LO"/>
-	<reg32 offset="0x0839" name="CP_PM4_INSTR_BASE_HI"/>
+	<reg32 offset="0x0838" name="CP_ME_INSTR_BASE_LO"/>
+	<reg32 offset="0x0839" name="CP_ME_INSTR_BASE_HI"/>
 	<reg32 offset="0x083b" name="CP_CONTEXT_SWITCH_CNTL"/>
 	<reg32 offset="0x083c" name="CP_CONTEXT_SWITCH_RESTORE_ADDR_LO"/>
 	<reg32 offset="0x083d" name="CP_CONTEXT_SWITCH_RESTORE_ADDR_HI"/>
@@ -298,7 +300,37 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0024" name="RBBM_CFG_DBGBUS_LOADIVT"/>
 	<reg32 offset="0x002f" name="RBBM_INTERFACE_HANG_INT_CNTL"/>
 	<reg32 offset="0x0037" name="RBBM_INT_CLEAR_CMD"/>
-	<reg32 offset="0x0038" name="RBBM_INT_0_MASK"/>
+	<reg32 offset="0x0038" name="RBBM_INT_0_MASK">
+		<bitfield name="RBBM_GPU_IDLE" pos="0"/>
+		<bitfield name="RBBM_AHB_ERROR" pos="1"/>
+		<bitfield name="RBBM_TRANSFER_TIMEOUT" pos="2"/>
+		<bitfield name="RBBM_ME_MS_TIMEOUT" pos="3"/>
+		<bitfield name="RBBM_PFP_MS_TIMEOUT" pos="4"/>
+		<bitfield name="RBBM_ETS_MS_TIMEOUT" pos="5"/>
+		<bitfield name="RBBM_ATB_ASYNC_OVERFLOW" pos="6"/>
+		<bitfield name="RBBM_GPC_ERROR" pos="7"/>
+		<bitfield name="CP_SW" pos="8"/>
+		<bitfield name="CP_HW_ERROR" pos="9"/>
+		<bitfield name="CP_CCU_FLUSH_DEPTH_TS" pos="10"/>
+		<bitfield name="CP_CCU_FLUSH_COLOR_TS" pos="11"/>
+		<bitfield name="CP_CCU_RESOLVE_TS" pos="12"/>
+		<bitfield name="CP_IB2" pos="13"/>
+		<bitfield name="CP_IB1" pos="14"/>
+		<bitfield name="CP_RB" pos="15"/>
+		<bitfield name="CP_RB_DONE_TS" pos="17"/>
+		<bitfield name="CP_WT_DONE_TS" pos="18"/>
+		<bitfield name="CP_CACHE_FLUSH_TS" pos="20"/>
+		<bitfield name="RBBM_ATB_BUS_OVERFLOW" pos="22"/>
+		<bitfield name="MISC_HANG_DETECT" pos="23"/>
+		<bitfield name="UCHE_OOB_ACCESS" pos="24"/>
+		<bitfield name="UCHE_TRAP_INTR" pos="25"/>
+		<bitfield name="DEBBUS_INTR_0" pos="26"/>
+		<bitfield name="DEBBUS_INTR_1" pos="27"/>
+		<bitfield name="GPMU_VOLTAGE_DROOP" pos="28"/>
+		<bitfield name="GPMU_FIRMWARE" pos="29"/>
+		<bitfield name="ISDB_CPU_IRQ" pos="30"/>
+		<bitfield name="ISDB_UNDER_DEBUG" pos="31"/>
+	</reg32>
 	<reg32 offset="0x003f" name="RBBM_AHB_DBG_CNTL"/>
 	<reg32 offset="0x0041" name="RBBM_EXT_VBIF_DBG_CNTL"/>
 	<reg32 offset="0x0043" name="RBBM_SW_RESET_CMD"/>
@@ -617,11 +649,45 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x046e" name="RBBM_PERFCTR_RBBM_SEL_3"/>
 	<reg32 offset="0x04d2" name="RBBM_ALWAYSON_COUNTER_LO"/>
 	<reg32 offset="0x04d3" name="RBBM_ALWAYSON_COUNTER_HI"/>
-	<reg32 offset="0x04f5" name="RBBM_STATUS"/>
+	<reg32 offset="0x04f5" name="RBBM_STATUS">
+		<bitfield high="31" low="31" name="GPU_BUSY_IGN_AHB" />
+		<bitfield high="30" low="30" name="GPU_BUSY_IGN_AHB_CP" />
+		<bitfield high="29" low="29" name="HLSQ_BUSY" />
+		<bitfield high="28" low="28" name="VSC_BUSY" />
+		<bitfield high="27" low="27" name="TPL1_BUSY" />
+		<bitfield high="26" low="26" name="SP_BUSY" />
+		<bitfield high="25" low="25" name="UCHE_BUSY" />
+		<bitfield high="24" low="24" name="VPC_BUSY" />
+		<bitfield high="23" low="23" name="VFDP_BUSY" />
+		<bitfield high="22" low="22" name="VFD_BUSY" />
+		<bitfield high="21" low="21" name="TESS_BUSY" />
+		<bitfield high="20" low="20" name="PC_VSD_BUSY" />
+		<bitfield high="19" low="19" name="PC_DCALL_BUSY" />
+		<bitfield high="18" low="18" name="GPMU_SLAVE_BUSY" />
+		<bitfield high="17" low="17" name="DCOM_BUSY" />
+		<bitfield high="16" low="16" name="COM_BUSY" />
+		<bitfield high="15" low="15" name="LRZ_BUZY" />
+		<bitfield high="14" low="14" name="A2D_DSP_BUSY" />
+		<bitfield high="13" low="13" name="CCUFCHE_BUSY" />
+		<bitfield high="12" low="12" name="RB_BUSY" />
+		<bitfield high="11" low="11" name="RAS_BUSY" />
+		<bitfield high="10" low="10" name="TSE_BUSY" />
+		<bitfield high="9" low="9" name="VBIF_BUSY" />
+		<bitfield high="8" low="8" name="GPU_BUSY_IGN_AHB_HYST" />
+		<bitfield high="7" low="7" name="CP_BUSY_IGN_HYST" />
+		<bitfield high="6" low="6" name="CP_BUSY" />
+		<bitfield high="5" low="5" name="GPMU_MASTER_BUSY" />
+		<bitfield high="4" low="4" name="CP_CRASH_BUSY" />
+		<bitfield high="3" low="3" name="CP_ETS_BUSY" />
+		<bitfield high="2" low="2" name="CP_PFP_BUSY" />
+		<bitfield high="1" low="1" name="CP_ME_BUSY" />
+		<bitfield high="0" low="0" name="HI_BUSY" />
+	</reg32>
 	<reg32 offset="0x0530" name="RBBM_STATUS3"/>
 	<reg32 offset="0x04e1" name="RBBM_INT_0_STATUS"/>
 	<reg32 offset="0x04f0" name="RBBM_AHB_ME_SPLIT_STATUS"/>
 	<reg32 offset="0x04f1" name="RBBM_AHB_PFP_SPLIT_STATUS"/>
+	<reg32 offset="0x04f3" name="RBBM_AHB_ETS_SPLIT_STATUS"/>
 	<reg32 offset="0x04f4" name="RBBM_AHB_ERROR_STATUS"/>
 	<reg32 offset="0x0464" name="RBBM_PERFCTR_CNTL"/>
 	<reg32 offset="0x0465" name="RBBM_PERFCTR_LOAD_CMD0"/>
@@ -772,6 +838,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0e8c" name="UCHE_GMEM_RANGE_MIN_HI"/>
 	<reg32 offset="0x0e8d" name="UCHE_GMEM_RANGE_MAX_LO"/>
 	<reg32 offset="0x0e8e" name="UCHE_GMEM_RANGE_MAX_HI"/>
+	<reg32 offset="0x0e8f" name="UCHE_DBG_ECO_CNTL_2"/>
+	<reg32 offset="0x0e90" name="UCHE_DBG_ECO_CNTL"/>
 	<reg32 offset="0x0e91" name="UCHE_CACHE_INVALIDATE_MIN_LO"/>
 	<reg32 offset="0x0e92" name="UCHE_CACHE_INVALIDATE_MIN_HI"/>
 	<reg32 offset="0x0e93" name="UCHE_CACHE_INVALIDATE_MAX_LO"/>
@@ -790,6 +858,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0ea9" name="UCHE_POWERCTR_UCHE_SEL_1"/>
 	<reg32 offset="0x0eaa" name="UCHE_POWERCTR_UCHE_SEL_2"/>
 	<reg32 offset="0x0eab" name="UCHE_POWERCTR_UCHE_SEL_3"/>
+	<reg32 offset="0x0eb1" name="UCHE_TRAP_LOG_LO"/>
+	<reg32 offset="0x0eb2" name="UCHE_TRAP_LOG_HI"/>
 
 	<reg32 offset="0x0ec0" name="SP_DBG_ECO_CNTL"/>
 	<reg32 offset="0x0ec1" name="SP_ADDR_MODE_CNTL"/>
