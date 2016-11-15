@@ -132,6 +132,20 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DEPTH5_32" value="4"/>
 </enum>
 
+<enum name="a5xx_blit_buf">
+	<value value="0" name="BLIT_MRT0"/>
+	<value value="1" name="BLIT_MRT1"/>
+	<value value="2" name="BLIT_MRT2"/>
+	<value value="3" name="BLIT_MRT3"/>
+	<value value="4" name="BLIT_MRT4"/>
+	<value value="5" name="BLIT_MRT5"/>
+	<value value="6" name="BLIT_MRT6"/>
+	<value value="7" name="BLIT_MRT7"/>
+	<value value="8" name="BLIT_ZS"/>
+	<!-- NOTE: Z32 seen w/ z32_x24s8 but ZS used for z32 (no stencil) -->
+	<value value="9" name="BLIT_Z32"/>
+</enum>
+
 <domain name="A5XX" width="32">
 	<bitset name="A5XX_INT0">
 		<bitfield name="RBBM_GPU_IDLE" pos="0"/>
@@ -235,7 +249,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0b22" name="CP_IB2_BASE"/>
 	<reg32 offset="0x0b23" name="CP_IB2_BASE_HI"/>
 	<reg32 offset="0x0b24" name="CP_IB2_BUFSZ"/>
-	<array offset="0x0b78" name="CP_SCRATCH" stride="1" length="7">
+	<array offset="0x0b78" name="CP_SCRATCH" stride="1" length="8">
 		<reg32 offset="0x0" name="REG"/>
 	</array>
 	<array offset="0x0880" name="CP_PROTECT" stride="1" length="32">
@@ -1316,12 +1330,68 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	 -->
 	<reg32 offset="0xe1d0" name="RB_WINDOW_OFFSET" type="adreno_reg_xy"/>
 
-	<!-- also duplicated here?  (probably not GRAS.. but set per-tile..  -->
+	<doc>
+		Blits:
+		------
+		Blits are triggered by CP_EVENT_WRITE:BLIT, compared to previous
+		generations where they shared most of the gl pipeline and were
+		triggered by CP_DRAW_INDX*
+
+		For gmem->mem blob uses RB_BLIT_CNTL.BUF to specify src of
+		blit (ie MRTn, ZS, etc) and RB_BLIT_DST_LO/HI for destination
+		gpuaddr.  The gmem offset is taken from RB_MRT[n].BASE_LO/HI
+
+		For mem->gmem blob uses just MRT0 or ZS and RB_BLIT_DST_LO/HI
+		for the GMEM offset, and gpuaddr from RB_MRT[0].BASE_LO/HI
+		(I suppose this is just to avoid trashing RB_MRT[1..7]??)
+	</doc>
+	<!--
+		0xe210 and 0xe213 are diff for depth vs color resolve..
+		0xe217 diff too.. maybe related to size though??
+
+		0xe213: 0xf gmem->mem
+		        0x0 mem->gmem
+		        0x7 for some unknown "BYPASS" blits.. (flag buffer resolve??)
+		0xe21c: f2 for fastclear
+		        32 for z/s fastclear??
+		        00 for gmem->mem
+		        00 for mem->gmem
+	 -->
+	<reg32 offset="0xe210" name="RB_BLIT_CNTL">
+		<bitfield name="BUF" low="0" high="5" type="a5xx_blit_buf"/>
+	</reg32>
 	<reg32 offset="0xe211" name="RB_RESOLVE_CNTL_1" type="adreno_reg_xy"/>
 	<reg32 offset="0xe212" name="RB_RESOLVE_CNTL_2" type="adreno_reg_xy"/>
+	<!-- seems to be used during gmem2mem: -->
+	<reg32 offset="0xe214" name="RB_BLIT_DST_LO"/>
+	<reg32 offset="0xe215" name="RB_BLIT_DST_HI"/>
+	<!-- e216 and e217 seem same as RB_MRT_FLAG_BUFFER[n]+2 and +3 -->
+	<reg32 offset="0xe218" name="RB_CLEAR_COLOR_DW0"/>
+	<reg32 offset="0xe219" name="RB_CLEAR_COLOR_DW1"/>
+	<reg32 offset="0xe21a" name="RB_CLEAR_COLOR_DW2"/>
+	<reg32 offset="0xe21b" name="RB_CLEAR_COLOR_DW3"/>
 	<reg32 offset="0xe240" name="RB_DEPTH_FLAG_BUFFER_BASE_LO"/>
 	<reg32 offset="0xe241" name="RB_DEPTH_FLAG_BUFFER_BASE_HI"/>
 	<reg32 offset="0xe242" name="RB_DEPTH_FLAG_BUFFER_PITCH"/>
+
+	<doc>
+		Buffer Metadata (flag buffers):
+
+		Blob seems to stick some metadata at the front of the buffer,
+		both z/s and MRT (maybe not normal rendertarget that it expects
+		to scan out?)
+
+		Before glReadPixels() it does a pair of BYPASS blits (at least
+		if metadata is used) presumably to resolve metadata.
+	</doc>
+	<!-- so, seems to be the equiv of RB_DEPTH_FLAG_BUFFER_BASE for MRTs: -->
+	<array offset="0xe243" name="RB_MRT_FLAG_BUFFER" stride="4" length="8">
+		<reg32 offset="0" name="ADDR_LO"/>
+		<reg32 offset="1" name="ADDR_HI"/>
+	</array>
+	<reg32 offset="0xe263" name="RB_BLIT_FLAG_DST_LO"/>
+	<reg32 offset="0xe264" name="RB_BLIT_FLAG_DST_HI"/>
+	<!-- e265 and e266 seem same as RB_MRT_FLAG_BUFFER[n]+2 and +3 -->
 
 	<reg32 offset="0xe280" name="VPC_CNTL_0">
 		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
@@ -1333,6 +1403,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<array offset="0xe28a" name="VPC_VARYING_PS_REPL" stride="1" length="8">
 		<reg32 offset="0x0" name="MODE"/>
 	</array>
+	<reg32 offset="0xe292" name="UNKNOWN_E292"/>
+	<reg32 offset="0xe293" name="UNKNOWN_E293"/>
 	<array offset="0xe294" name="VPC_VAR" stride="1" length="4">
 		<!-- one bit per varying component: -->
 		<reg32 offset="0" name="DISABLE"/>
@@ -1361,8 +1433,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe3b0" name="PC_POWER_CNTL"/>
 
 	<reg32 offset="0xe400" name="VFD_CONTROL_0">
-		<doc>STRMDECINSTRCNT is # of VFD_DECODE_INSTR registers valid</doc>
-		<bitfield name="STRMDECINSTRCNT" low="0" high="5" type="uint"/>
+		<bitfield name="VTXCNT" low="0" high="5" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe401" name="VFD_CONTROL_1">
 		<bitfield name="REGID4INST" low="8" high="15" type="a3xx_regid"/>
@@ -1405,6 +1476,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ENABLED" pos="0" type="boolean"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="1" high="7" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="8" high="14" type="uint"/>
+	</bitset>
+	<bitset name="a5xx_xs_cntl" inline="yes">
+		<!--
+		no idea high bit.. could be this is amount of on-chip memory used
+		rather than total size?
+		 -->
+		<bitfield name="INSTRLEN" low="1" high="31" type="uint"/>
 	</bitset>
 	<!-- assuming things appear in same relative order as a4xx: -->
 	<!-- duplicated exactly w/ corresponding HLSQ_ regs starting at 0xe78b.. -->
@@ -1508,13 +1586,15 @@ a5xx:
 	<reg32 offset="0xe784" name="HLSQ_CONTROL_0_REG">
 	</reg32>
 	<reg32 offset="0xe785" name="HLSQ_CONTROL_1_REG">
+		<!-- I guess.. not set exactly same as a4xx, but similar: -->
+		<bitfield name="PRIMALLOCTHRESHOLD" low="0" high="5" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe786" name="HLSQ_CONTROL_2_REG">
 		<bitfield name="FACEREGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xe787" name="HLSQ_CONTROL_3_REG">
 		<!-- register loaded with position (bary.f) -->
-		<bitfield name="REGID" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="FRAGCOORDXYREGID" low="0" high="7" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xe788" name="HLSQ_CONTROL_4_REG">
 		<bitfield name="XYCOORDREGID" low="16" high="23" type="a3xx_regid"/>
@@ -1527,9 +1607,12 @@ a5xx:
 	<reg32 offset="0xe78e" name="HLSQ_DS_CONTROL_REG" type="a5xx_xs_control_reg"/>
 	<reg32 offset="0xe78f" name="HLSQ_GS_CONTROL_REG" type="a5xx_xs_control_reg"/>
 	<reg32 offset="0xe790" name="HLSQ_CS_CONFIG"/>
-	<reg32 offset="0xe791" name="HLSQ_VS_CNTL"/>
-	<reg32 offset="0xe792" name="HLSQ_FS_CNTL"/>
-	<reg32 offset="0xe796" name="HLSQ_CS_CNTL"/>
+	<reg32 offset="0xe791" name="HLSQ_VS_CNTL" type="a5xx_xs_cntl"/>
+	<reg32 offset="0xe792" name="HLSQ_FS_CNTL" type="a5xx_xs_cntl"/>
+	<reg32 offset="0xe793" name="HLSQ_HS_CNTL" type="a5xx_xs_cntl"/>
+	<reg32 offset="0xe794" name="HLSQ_DS_CNTL" type="a5xx_xs_cntl"/>
+	<reg32 offset="0xe795" name="HLSQ_GS_CNTL" type="a5xx_xs_cntl"/>
+	<reg32 offset="0xe796" name="HLSQ_CS_CNTL" type="a5xx_xs_cntl"/>
 	<reg32 offset="0xe7b9" name="HLSQ_CS_KERNEL_GROUP_X"/>
 	<reg32 offset="0xe7ba" name="HLSQ_CS_KERNEL_GROUP_Y"/>
 	<reg32 offset="0xe7bb" name="HLSQ_CS_KERNEL_GROUP_Z"/>
@@ -1546,6 +1629,12 @@ a5xx:
 	<reg32 offset="0xe7c4" name="HLSQ_VS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7d7" name="HLSQ_FS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7d8" name="HLSQ_FS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7c8" name="HLSQ_HS_CONSTLEN" type="uint"/>
+	<reg32 offset="0xe7c9" name="HLSQ_HS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7cd" name="HLSQ_DS_CONSTLEN" type="uint"/>
+	<reg32 offset="0xe7ce" name="HLSQ_DS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7d2" name="HLSQ_GS_CONSTLEN" type="uint"/>
+	<reg32 offset="0xe7d3" name="HLSQ_GS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7dc" name="HLSQ_CONTEXT_SWITCH_CS_SW_3"/>
 	<reg32 offset="0xe7dd" name="HLSQ_CONTEXT_SWITCH_CS_SW_4"/>
 </domain>

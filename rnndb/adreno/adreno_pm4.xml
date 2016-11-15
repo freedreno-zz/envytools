@@ -25,7 +25,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="PERFCOUNTER_START" value="23"/>
 	<value name="PERFCOUNTER_STOP" value="24"/>
 	<value name="VS_FETCH_DONE" value="27"/>
-	<value name="FACENESS_FLUSH" value="28"/>
+	<value name="FACENESS_FLUSH" value="28" variants="A2XX,A3XX,A4XX"/>
+
+	<!-- a5xx events -->
+	<value name="UNK_1C" value="28" variants="A5XX"/>
+	<value name="UNK_1D" value="29" variants="A5XX"/>
+	<value name="BLIT" value="30" variants="A5XX"/>
 </enum>
 
 <enum name="pc_di_primtype">
@@ -340,6 +345,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="STATE_TYPE" low="0" high="1" type="adreno_state_type"/>
 		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
 	</reg32>
+	<!-- a5xx+: -->
+	<reg32 offset="2" name="2">
+		<bitfield name="EXT_SRC_ADDR_HI" low="0" high="31" shr="0"/>
+	</reg32>
 </domain>
 
 <bitset name="vgt_draw_initiator" inline="yes">
@@ -504,6 +513,36 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="7" name="7">
 		<bitfield name="ADDR_1_HI" low="0" high="31"/>"
+	</reg32>
+</domain>
+
+<domain name="CP_PERFCOUNTER_ACTION" width="32">
+	<reg32 offset="0" name="0">
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="ADDR_0_LO" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="ADDR_0_HI" low="0" high="31"/>
+	</reg32>
+</domain>
+
+<domain name="CP_EVENT_WRITE" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="EVENT" low="0" high="7" type="vgt_event_type"/>
+	</reg32>
+	<!--
+	TODO what is gpuaddr for, seems to be all 0's.. maybe needed for
+	context switch?
+	 -->
+	<reg32 offset="1" name="1">
+		<bitfield name="ADDR_0_LO" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="ADDR_0_HI" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<!-- ??? -->
 	</reg32>
 </domain>
 
