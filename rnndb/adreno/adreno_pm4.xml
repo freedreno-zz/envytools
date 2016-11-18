@@ -175,7 +175,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>generate interrupt from the command stream</doc>
 	<value name="CP_INTERRUPT" value="0x40"/>
 	<doc>copy sequencer instruction memory to system memory</doc>
-	<value name="CP_IM_STORE" value="0x2c"/>
+	<value name="CP_IM_STORE" value="0x2c" variants="A2XX"/>
 
 	<!-- For a20x -->
 <!-- TODO handle variants..
@@ -294,6 +294,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_COMPUTE_CHECKPOINT" value="0x6e" variants="A5XX"/>
 	<!-- check if this works on earlier.. -->
 	<value name="CP_MEM_TO_MEM" value="0x73" variants="A5XX"/>
+	<value name="CP_BLIT" value="0x2c" variants="A5XX"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
@@ -492,6 +493,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <domain name="CP_SET_RENDER_MODE" width="32">
 	<reg32 offset="0" name="0">
+		<bitfield name="MODE" low="0" high="8"/>
+		<!--
+		normally 0x1/0x3, sometimes see 0x5/0x8 with unknown registers in
+		0x21xx range.. possibly (at least some) a5xx variants have a
+		2d core?
+		 -->
 	</reg32>
 	<!-- I think first buffer is for GPU to save context in case of ctx switch? -->
 	<reg32 offset="1" name="1">
@@ -543,6 +550,27 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="3" name="3">
 		<!-- ??? -->
+	</reg32>
+</domain>
+
+<domain name="CP_BLIT" width="32">
+	<reg32 offset="0" name="0">
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="SRC_X1" low="0" high="15" type="uint"/>
+		<bitfield name="SRC_Y1" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="SRC_X2" low="0" high="15" type="uint"/>
+		<bitfield name="SRC_Y2" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<bitfield name="DST_X1" low="0" high="15" type="uint"/>
+		<bitfield name="DST_Y1" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="4" name="4">
+		<bitfield name="DST_X2" low="0" high="15" type="uint"/>
+		<bitfield name="DST_Y2" low="16" high="31" type="uint"/>
 	</reg32>
 </domain>
 
