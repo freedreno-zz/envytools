@@ -1989,6 +1989,7 @@ perhaps they should be taken with a grain of salt
 		<bitfield name="FRONT_CW" pos="2" type="boolean"/>
 		<bitfield name="LINEHALFWIDTH" low="3" high="10" radix="2" type="fixed"/>
 		<bitfield name="POLY_OFFSET" pos="11" type="boolean"/>
+		<bitfield name="MSAA_ENABLE" pos="13" type="boolean"/>
 		<!-- bit20 set whenever RENDER_MODE = RB_RENDERING_PASS -->
 		<bitfield name="RENDERING_PASS" pos="20" type="boolean"/>
 	</reg32>
