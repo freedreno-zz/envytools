@@ -257,7 +257,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0b23" name="CP_IB2_BASE_HI"/>
 	<reg32 offset="0x0b24" name="CP_IB2_BUFSZ"/>
 	<array offset="0x0b78" name="CP_SCRATCH" stride="1" length="8">
-		<reg32 offset="0x0" name="REG"/>
+		<reg32 offset="0x0" name="REG" type="uint"/>
 	</array>
 	<array offset="0x0880" name="CP_PROTECT" stride="1" length="32">
 		<reg32 offset="0x0" name="REG" type="adreno_cp_protect"/>
@@ -722,6 +722,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x046d" name="RBBM_PERFCTR_RBBM_SEL_2"/>
 	<reg32 offset="0x046e" name="RBBM_PERFCTR_RBBM_SEL_3"/>
 	<reg32 offset="0x046f" name="RBBM_PERFCTR_GPU_BUSY_MASKED"/>
+	<reg32 offset="0x04ed" name="RBBM_AHB_ERROR"/>
 	<reg32 offset="0x0504" name="RBBM_CFG_DBGBUS_EVENT_LOGIC"/>
 	<reg32 offset="0x0505" name="RBBM_CFG_DBGBUS_OVER"/>
 	<reg32 offset="0x0506" name="RBBM_CFG_DBGBUS_COUNT0"/>
@@ -1103,10 +1104,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe000" name="GRAS_CL_CNTL"/> <!-- always 00000080? -->
 	<reg32 offset="0xe001" name="UNKNOWN_E001"/> <!-- always 00000000? -->
 	<reg32 offset="0xe004" name="UNKNOWN_E004"/> <!-- always 00000000? -->
-	<reg32 offset="0xe005" name="GRAS_CLEAR_CNTL">
+	<reg32 offset="0xe005" name="GRAS_CNTL">
 		<!-- probably not the right name, but.. -->
-		<!-- bit0 set for everything *but* fastclear -->
-		<bitfield name="NOT_FASTCLEAR" pos="0" type="boolean"/>
+		<bitfield name="VARYING" pos="0" type="boolean"/>
+		<!-- bits 6 & 7 set in advanced-blend-* -->
 	</reg32>
 	<reg32 offset="0xe006" name="GRAS_CL_GUARDBAND_CLIP_ADJ">
 		<bitfield name="HORZ" low="0" high="9" type="uint"/>
@@ -1120,7 +1121,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe015" name="GRAS_CL_VPORT_ZSCALE_0" type="float"/>
 	<reg32 offset="0xe090" name="GRAS_SU_CNTL">
 		<bitfield name="FRONT_CW" pos="2" type="boolean"/>
+		<bitfield name="LINEHALFWIDTH" low="3" high="10" radix="2" type="fixed"/>
 		<bitfield name="POLY_OFFSET" pos="11" type="boolean"/>
+		<bitfield name="MSAA_ENABLE" pos="13" type="boolean"/>
 		<!-- probably LINEHALFWIDTH is the same as a4xx.. -->
 	</reg32>
 	<reg32 offset="0xe091" name="GRAS_SU_POINT_MINMAX">
@@ -1144,7 +1147,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	guessing about window/screen/extent, I think they can in the end be
 	used interchangeably?
 	 -->
-	<reg32 offset="0xe0a0" name="GRAS_SC_CNTL"/> <!-- looks similar to a4xx RB_RENDER_CONTROL -->
+	<reg32 offset="0xe0a0" name="GRAS_SC_CNTL">
+		<bitfield name="SAMPLES_PASSED" pos="15" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe0a1" name="GRAS_SC_BIN_CNTL"/> <!-- always 00000000? -->
 	<reg32 offset="0xe0a2" name="GRAS_SC_RAS_MSAA_CNTL">
 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
@@ -1180,6 +1185,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	for z32 with no stencil, but maybe in that case separate z/s not used?
 	see mrt-fbo-* zs=2)
  -->
+		<bitfield name="SAMPLES_PASSED" pos="6" type="boolean"/>
 		<!-- why everything twice?? maybe read vs write? -->
 		<!-- UBWC flag buffer enabled for depth/stencil: -->
 		<bitfield name="FLAG_DEPTH" pos="14" type="boolean"/>
@@ -1214,6 +1220,16 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="MRT" low="0" high="3" type="uint"/>
 		<bitfield name="FRAG_WRITES_Z" pos="5" type="boolean"/>
 	</reg32>
+	<reg32 offset="0xe147" name="RB_RENDER_COMPONENTS">
+		<bitfield name="RT0" low="0" high="3"/>
+		<bitfield name="RT1" low="4" high="7"/>
+		<bitfield name="RT2" low="8" high="11"/>
+		<bitfield name="RT3" low="12" high="15"/>
+		<bitfield name="RT4" low="16" high="19"/>
+		<bitfield name="RT5" low="20" high="23"/>
+		<bitfield name="RT6" low="24" high="27"/>
+		<bitfield name="RT7" low="28" high="31"/>
+	</reg32>
 	<array offset="0xe150" name="RB_MRT" stride="7" length="8">
 		<reg32 offset="0x0" name="CONTROL">
 			<bitfield name="BLEND" pos="0" type="boolean"/>
@@ -1243,7 +1259,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		at least in gmem, things seem to be aligned to pitch of 64..
 		maybe an artifact of tiled format used in gmem?
 		 -->
-		<reg32 offset="0x3" name="PITCH" shr="4" type="uint"/>
+		<reg32 offset="0x3" name="PITCH" shr="6" type="uint"/>
 		<reg32 offset="0x4" name="ARRAY_PITCH" shr="6" type="uint"/>
 		<reg32 offset="0x5" name="BASE_LO"/>
 		<reg32 offset="0x6" name="BASE_HI"/>
@@ -1324,25 +1340,19 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="ZPASS_BF" low="26" high="28" type="adreno_stencil_op"/>
 		<bitfield name="ZFAIL_BF" low="29" high="31" type="adreno_stencil_op"/>
 	</reg32>
-	<reg32 offset="0xe1c2" name="RB_STENCIL_INFO">
+	<reg32 offset="0xe1c1" name="RB_STENCIL_INFO">
 		<bitfield name="SEPARATE_STENCIL" pos="0" type="boolean"/>
-		<doc>Base address for stencil when not using interleaved depth/stencil</doc>
-		<bitfield name="STENCIL_BASE" low="12" high="31" shr="12" type="hex"/>
 	</reg32>
-	<reg32 offset="0xe1c3" name="UNKNOWN_E1C3"/> <!-- always 00000000? -->
-<!--
-	<reg32 offset="0xe1c4" name="RB_STENCIL_PITCH" shr="5" type="uint">
-		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
-	</reg32>
-	<reg32 offset="0xe1c5" name="RB_STENCIL_PITCH" shr="5" type="uint">
-		<doc>pitch of stencil buffer when not using interleaved depth/stencil</doc>
-	</reg32>
- -->
+	<reg32 offset="0xe1c2" name="RB_STENCIL_BASE_LO"/>
+	<reg32 offset="0xe1c3" name="RB_STENCIL_BASE_HI"/>
+	<reg32 offset="0xe1c4" name="RB_STENCIL_PITCH" shr="6" type="uint"/>
+	<reg32 offset="0xe1c5" name="RB_STENCIL_ARRAY_PITCH" shr="6" type="uint"/>
 	<reg32 offset="0xe1c6" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<!--
 	prob 0xe1c7 is RB_STENCILREFMASK_BF but blob isn't writing this unless bf
 	stencil explicitly enabled??
 	 -->
+	<reg32 offset="0xe1c7" name="UNKNOWN_E1C7"/>
 	<reg32 offset="0xe1d0" name="RB_WINDOW_OFFSET" type="adreno_reg_xy"/>
 
 	<doc>
@@ -1373,28 +1383,29 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		        0xf gmem->mem with flag buffer (color)
 		        0x4 gmem->mem without flag buffer (color)
 		        0x7 BYPASS mode flag buffer result (ie. on readpix)
-		        0x4 - advanced-blend, cat, clear-0006, query, stencil, triangle-quad
 	-->
 	</reg32>
 	<reg32 offset="0xe214" name="RB_BLIT_DST_LO"/>
 	<reg32 offset="0xe215" name="RB_BLIT_DST_HI"/>
-	<reg32 offset="0xe216" name="RB_BLIT_DST_PITCH" shr="4" type="uint"/>
+	<reg32 offset="0xe216" name="RB_BLIT_DST_PITCH" shr="6" type="uint"/>
 	<!-- array-pitch is size of layer -->
 	<reg32 offset="0xe217" name="RB_BLIT_DST_ARRAY_PITCH" shr="6" type="uint"/>
 	<reg32 offset="0xe218" name="RB_CLEAR_COLOR_DW0"/>
 	<reg32 offset="0xe219" name="RB_CLEAR_COLOR_DW1"/>
 	<reg32 offset="0xe21a" name="RB_CLEAR_COLOR_DW2"/>
 	<reg32 offset="0xe21b" name="RB_CLEAR_COLOR_DW3"/>
-	<!--
-		0xe21c: f2 for fastclear
-		        32 for z/s fastclear??
-		        00 for gmem->mem
-		        00 for mem->gmem
-		        12 - advanced-blend, cat, clear-4, es2gears, mrt-fbo-30, query
-		        22 - clear-3..
-
-		        12/f2/32 on fastclear
-	 -->
+	<reg32 offset="0xe21c" name="RB_CLEAR_CNTL">
+		<bitfield name="FAST_CLEAR" pos="1" type="boolean"/>
+		<doc>
+			For MASK, if RB_BLIT_CNTL.BUF=BLIT_ZS:
+				1 - depth
+				2 - stencil
+				3 - depth+stencil
+			if RB_BLIT_CNTL.BUF=BLIT_MRTn
+				then probably a component mask, I always see 0xf
+		</doc>
+		<bitfield name="MASK" low="4" high="7"/>
+	</reg32>
 
 	<doc>
 		Buffer Metadata (flag buffers):
@@ -1404,9 +1415,14 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		both z/s and MRT.  I think this is same as UBWC (bandwidth
 		compression) metadata that mdp 1.7 and later supports.  See
 		1d3fae5698ce5358caab87a15383b690941697e8 in downstream kernel.
+		UBWC seems to stand for "universal bandwidth compression".
 
 		Before glReadPixels() it does a pair of BYPASS blits (at least
 		if metadata is used) presumably to resolve metadata.
+
+		NOTES: see: getUBwcBlockSize(), getUBwcMetaBufferSize() at
+		https://android.googlesource.com/platform/hardware/qcom/display/+/android-6.0.1_r40/msm8994/libgralloc/alloc_controller.cpp
+		(note that bpp in bytes, not bits (so really cpp))
 	</doc>
 	<reg32 offset="0xe240" name="RB_DEPTH_FLAG_BUFFER_BASE_LO"/>
 	<reg32 offset="0xe241" name="RB_DEPTH_FLAG_BUFFER_BASE_HI"/>
@@ -1415,19 +1431,24 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<array offset="0xe243" name="RB_MRT_FLAG_BUFFER" stride="4" length="8">
 		<reg32 offset="0" name="ADDR_LO"/>
 		<reg32 offset="1" name="ADDR_HI"/>
-		<reg32 offset="2" name="PITCH" shr="4" type="uint"/>
+		<reg32 offset="2" name="PITCH" shr="6" type="uint"/>
 		<!-- array-pitch is size of layer -->
 		<reg32 offset="3" name="ARRAY_PITCH" shr="6" type="uint"/>
 	</array>
 	<reg32 offset="0xe263" name="RB_BLIT_FLAG_DST_LO"/>
 	<reg32 offset="0xe264" name="RB_BLIT_FLAG_DST_HI"/>
-	<reg32 offset="0xe265" name="RB_BLIT_FLAG_DST_PITCH" shr="4" type="uint"/>
+	<reg32 offset="0xe265" name="RB_BLIT_FLAG_DST_PITCH" shr="6" type="uint"/>
 	<!-- array-pitch is size of layer -->
 	<reg32 offset="0xe266" name="RB_BLIT_FLAG_DST_ARRAY_PITCH" shr="6" type="uint"/>
 
 	<reg32 offset="0xe280" name="VPC_CNTL_0">
-		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
+		<doc>
+			num of varyings plus four for gl_Position (plus one if gl_PointSize)
+			plus # of transform-feedback (streamout) varyings if using the
+			hw streamout (rather than stg instructions in shader)
+		</doc>
 		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
+		<bitfield name="VARYING" pos="11" type="boolean"/>
 	</reg32>
 	<array offset="0xe282" name="VPC_VARYING_INTERP" stride="1" length="8">
 		<reg32 offset="0x0" name="MODE"/>
@@ -1442,24 +1463,36 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<reg32 offset="0" name="DISABLE"/>
 	</array>
 	<reg32 offset="0xe298" name="VPC_GS_SIV_CNTL"/>
+	<reg32 offset="0xe29a" name="UNKNOWN_E29A"/>
 	<reg32 offset="0xe29d" name="VPC_PACK">
 		<bitfield name="NUMNONPOSVAR" low="0" high="7" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe2a0" name="VPC_FS_PRIMITIVEID_CNTL"/>
+	<reg32 offset="0xe2a1" name="UNKNOWN_E2A1"/>
 	<reg32 offset="0xe2a2" name="VPC_SO_OVERRIDE"/>
 	<reg32 offset="0xe2a7" name="VPC_SO_BUFFER_BASE_LO_0"/>
 	<reg32 offset="0xe2a8" name="VPC_SO_BUFFER_BASE_HI_0"/>
 	<reg32 offset="0xe2a9" name="VPC_SO_BUFFER_SIZE_0"/>
+	<reg32 offset="0xe2ab" name="UNKNOWN_E2AB"/>
 	<reg32 offset="0xe2ac" name="VPC_SO_FLUSH_BASE_LO_0"/>
 	<reg32 offset="0xe2ad" name="VPC_SO_FLUSH_BASE_HI_0"/>
+	<reg32 offset="0xe2ae" name="UNKNOWN_E2AE"/>
+	<reg32 offset="0xe2b2" name="UNKNOWN_E2B2"/>
+	<reg32 offset="0xe2b9" name="UNKNOWN_E2B9"/>
+	<reg32 offset="0xe2c0" name="UNKNOWN_E2C0"/>
 
 	<reg32 offset="0xe384" name="PC_PRIMITIVE_CNTL">
 		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
 		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
 		<!-- bit 10 seems to almost always be set.. but not mrt-fbo, quad-textured.. also see stencil -->
 	</reg32>
+	<reg32 offset="0xe385" name="PC_PRIM_VTX_CNTL">
+		<bitfield name="PSIZE" pos="11" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe388" name="PC_RASTER_CNTL"/>
+	<reg32 offset="0xe389" name="UNKNOWN_E389"/>
 	<reg32 offset="0xe38c" name="PC_RESTART_INDEX"/>
+	<reg32 offset="0xe38d" name="UNKNOWN_E38D"/>
 	<reg32 offset="0xe38e" name="PC_GS_PARAM"/>
 	<reg32 offset="0xe38f" name="PC_HS_PARAM"/>
 	<reg32 offset="0xe3b0" name="PC_POWER_CNTL"/>
@@ -1533,6 +1566,9 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="VARYING" pos="16" type="boolean"/>
 		<bitfield name="PIXLODENABLE" pos="20" type="boolean"/>
 	</reg32>
+	<reg32 offset="0xe592" name="SP_PRIMITIVE_CNTL">
+		<bitfield name="STRIDE_IN_VPC" low="0" high="4" shr="2" type="uint"/>
+	</reg32>
 	<array offset="0xe593" name="SP_VS_OUT" stride="1" length="16">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="A_REGID" low="0" high="7" type="a3xx_regid"/>
@@ -1543,27 +1579,13 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	</array>
 	<array offset="0xe5a3" name="SP_VS_VPC_DST" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
-<!--
-NOTE: order seems scrambled/shifted by 16bits compared to a4xx.. not sure
-if that is driver bug or hw bug or if there is some other remapping going
-on somewhere?
-
-a4xx:
-1410 0c08:!   SP_VS_VPC_DST[0].REG: { OUTLOC0 = 8 | OUTLOC1 = 12 | OUTLOC2 = 16 | OUTLOC3 = 20 }
-2420 1c18:!   SP_VS_VPC_DST[0x1].REG: { OUTLOC0 = 24 | OUTLOC1 = 28 | OUTLOC2 = 32 | OUTLOC3 = 36 }
-3430 2c28:!   SP_VS_VPC_DST[0x2].REG: { OUTLOC0 = 40 | OUTLOC1 = 44 | OUTLOC2 = 48 | OUTLOC3 = 52 }
-
-a5xx:
-0c08 0400:!    SP_VS_VPC_DST[0].REG: { OUTLOC0 = 0 | OUTLOC1 = 4 | OUTLOC2 = 8 | OUTLOC3 = 12 }
-1c18 1410:!    SP_VS_VPC_DST[0x1].REG: { OUTLOC0 = 16 | OUTLOC1 = 20 | OUTLOC2 = 24 | OUTLOC3 = 28 }
-2c28 2420:!    SP_VS_VPC_DST[0x2].REG: { OUTLOC0 = 32 | OUTLOC1 = 36 | OUTLOC2 = 40 | OUTLOC3 = 44 }
- -->
 			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
 			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
 			<bitfield name="OUTLOC2" low="16" high="23" type="uint"/>
 			<bitfield name="OUTLOC3" low="24" high="31" type="uint"/>
 		</reg32>
 	</array>
+	<reg32 offset="0xe5ab" name="UNKNOWN_E5AB"/>
 	<reg32 offset="0xe5ac" name="SP_VS_OBJ_START_LO"/>
 	<reg32 offset="0xe5ad" name="SP_VS_OBJ_START_HI"/>
 	<reg32 offset="0xe5c0" name="SP_FS_CTRL_REG0">
@@ -1573,6 +1595,7 @@ a5xx:
 		<bitfield name="VARYING" pos="16" type="boolean"/>
 		<bitfield name="PIXLODENABLE" pos="20" type="boolean"/>
 	</reg32>
+	<reg32 offset="0xe5c2" name="UNKNOWN_E5C2"/>
 	<reg32 offset="0xe5c3" name="SP_FS_OBJ_START_LO"/>
 	<reg32 offset="0xe5c4" name="SP_FS_OBJ_START_HI"/>
 	<reg32 offset="0xe5c9" name="SP_BLEND_CNTL"/>
@@ -1593,26 +1616,34 @@ a5xx:
 			<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
 		</reg32>
 	</array>
+	<reg32 offset="0xe5db" name="UNKNOWN_E5DB"/>
 	<reg32 offset="0xe5f0" name="SP_CS_CNTL_0"/>
+	<reg32 offset="0xe600" name="UNKNOWN_E600"/>
+	<reg32 offset="0xe640" name="UNKNOWN_E640"/>
 
-	<reg32 offset="0xe704" name="TPL1_TP_RAS_MSAA_CNTL"/>
-	<reg32 offset="0xe705" name="TPL1_TP_DEST_MSAA_CNTL"/>
+	<reg32 offset="0xe704" name="TPL1_TP_RAS_MSAA_CNTL">
+		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+	</reg32>
+	<reg32 offset="0xe705" name="TPL1_TP_DEST_MSAA_CNTL">
+		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
+		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
+	</reg32>
 
 	<!--
 	so these have the same info that is normally in the CP_LOAD_STATE
 	packets.. not sure if they are normally written by pm4/me or if the
-	CP_LOAD_STATE mechanism is deprecated?  Unfortunately I don't see
-	an obvious way to get NUM_UNIT other than just knowing how many
-	samplers the shader is using..
+	CP_LOAD_STATE mechanism is deprecated?
 	 -->
+	<reg32 offset="0xe700" name="TPL1_VS_TEX_COUNT" type="uint"/>
 	<reg32 offset="0xe722" name="TPL1_VS_TEX_SAMP_LO"/>
 	<reg32 offset="0xe723" name="TPL1_VS_TEX_SAMP_HI"/>
 	<reg32 offset="0xe72a" name="TPL1_VS_TEX_CONST_LO"/>
 	<reg32 offset="0xe72b" name="TPL1_VS_TEX_CONST_HI"/>
-	<reg32 offset="0xe75a" name="TPL1_FS_TEX_CONST_LO"/>
-	<reg32 offset="0xe75b" name="TPL1_FS_TEX_CONST_HI"/>
-	<reg32 offset="0xe75e" name="TPL1_FS_TEX_SAMP_LO"/>
-	<reg32 offset="0xe75f" name="TPL1_FS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe750" name="TPL1_FS_TEX_COUNT" type="uint"/>
+	<reg32 offset="0xe75a" name="TPL1_FS_TEX_SAMP_LO"/>
+	<reg32 offset="0xe75b" name="TPL1_FS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe75e" name="TPL1_FS_TEX_CONST_LO"/>
+	<reg32 offset="0xe75f" name="TPL1_FS_TEX_CONST_HI"/>
 	<reg32 offset="0xe764" name="TPL1_TP_FS_ROTATION_CNTL"/>
 
 	<reg32 offset="0xe784" name="HLSQ_CONTROL_0_REG">
@@ -1657,16 +1688,22 @@ a5xx:
 	<reg32 offset="0xe7b6" name="HLSQ_CS_NDRANGE_6"/>
 	<reg32 offset="0xe7b7" name="HLSQ_CS_CNTL_0"/>
 	<reg32 offset="0xe7b8" name="HLSQ_CS_CNTL_1"/>
+	<reg32 offset="0xe7c0" name="UNKNOWN_E7C0"/>
 	<reg32 offset="0xe7c3" name="HLSQ_VS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7c4" name="HLSQ_VS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7c5" name="UNKNOWN_E7C5"/>
+	<reg32 offset="0xe7ca" name="UNKNOWN_E7CA"/>
 	<reg32 offset="0xe7d7" name="HLSQ_FS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7d8" name="HLSQ_FS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7c8" name="HLSQ_HS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7c9" name="HLSQ_HS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7cd" name="HLSQ_DS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7ce" name="HLSQ_DS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7cf" name="UNKNOWN_E7CF"/>
 	<reg32 offset="0xe7d2" name="HLSQ_GS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7d3" name="HLSQ_GS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7d4" name="UNKNOWN_E7D4"/>
+	<reg32 offset="0xe7d9" name="UNKNOWN_E7D9"/>
 	<reg32 offset="0xe7dc" name="HLSQ_CONTEXT_SWITCH_CS_SW_3"/>
 	<reg32 offset="0xe7dd" name="HLSQ_CONTEXT_SWITCH_CS_SW_4"/>
 
@@ -1759,7 +1796,7 @@ a5xx:
 		<value name="A5XX_TEX_3D" value="3"/>
 	</enum>
 	<reg32 offset="0" name="0">
-		<bitfield name="TILED" pos="0" type="boolean"/>
+		<bitfield name="TILE_MODE" low="0" high="1" type="a5xx_tile_mode"/>
 		<bitfield name="SRGB" pos="2" type="boolean"/>
 		<bitfield name="SWIZ_X" low="4" high="6" type="a5xx_tex_swiz"/>
 		<bitfield name="SWIZ_Y" low="7" high="9" type="a5xx_tex_swiz"/>
@@ -1774,12 +1811,12 @@ a5xx:
 	<reg32 offset="2" name="2">
 		<bitfield name="FETCHSIZE" low="0" high="3" type="a5xx_tex_fetchsize"/>
 		<doc>Pitch in bytes (so actually stride)</doc>
-		<bitfield name="PITCH" low="8" high="28" type="uint"/>
+		<bitfield name="PITCH" low="7" high="28" type="uint"/>
 		<bitfield name="TYPE" low="29" high="30" type="a5xx_tex_type"/>
 	</reg32>
 	<reg32 offset="3" name="3">
-		<bitfield name="LAYERSZ" low="0" high="13" shr="12" type="uint"/>
-		<bitfield name="LAYERSZ2" low="23" high="31" shr="12" type="uint"/>
+		<bitfield name="ARRAY_PITCH" low="0" high="13" shr="12" type="uint"/>
+		<bitfield name="FLAG" pos="28" type="boolean"/>
 	</reg32>
 	<reg32 offset="4" name="4">
 		<bitfield name="BASE_LO" low="5" high="31" shr="5"/>

@@ -31,6 +31,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="UNK_1C" value="28" variants="A5XX"/>
 	<value name="UNK_1D" value="29" variants="A5XX"/>
 	<value name="BLIT" value="30" variants="A5XX"/>
+	<value name="UNK_26" value="38" variants="A5XX"/>
 </enum>
 
 <enum name="pc_di_primtype">
@@ -425,17 +426,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </domain>
 
 <domain name="CP_SET_DRAW_STATE" width="32">
-	<reg32 offset="0" name="0">
-		<bitfield name="COUNT" low="0" high="15" type="uint"/>
-		<bitfield name="DIRTY" pos="16" type="boolean"/>
-		<bitfield name="DISABLE" pos="17" type="boolean"/>
-		<bitfield name="DISABLE_ALL_GROUPS" pos="18" type="boolean"/>
-		<bitfield name="LOAD_IMMED" pos="19" type="boolean"/>
-		<bitfield name="GROUP_ID" low="24" high="28" type="uint"/>
-	</reg32>
-	<reg32 offset="1" name="1">
-		<bitfield name="ADDR" low="0" high="31" type="hex"/>
-	</reg32>
+	<!-- TODO how to make this work properly on a4xx (stride=2) and a5xx? -->
+	<array offset="0" name="" stride="3" length="100">
+		<reg32 offset="0" name="0">
+			<bitfield name="COUNT" low="0" high="15" type="uint"/>
+			<bitfield name="DIRTY" pos="16" type="boolean"/>
+			<bitfield name="DISABLE" pos="17" type="boolean"/>
+			<bitfield name="DISABLE_ALL_GROUPS" pos="18" type="boolean"/>
+			<bitfield name="LOAD_IMMED" pos="19" type="boolean"/>
+			<bitfield name="GROUP_ID" low="24" high="28" type="uint"/>
+		</reg32>
+		<reg32 offset="1" name="1">
+			<bitfield name="ADDR_LO" low="0" high="31" type="hex"/>
+		</reg32>
+		<reg32 offset="2" name="2">
+			<bitfield name="ADDR_HI" low="0" high="31" type="hex"/>
+		</reg32>
+	</array>
 </domain>
 
 <domain name="CP_SET_BIN" width="32">
@@ -492,8 +499,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 </domain>
 
 <domain name="CP_SET_RENDER_MODE" width="32">
+	<enum name="render_mode_cmd">
+		<value value="1" name="BYPASS"/>
+		<value value="3" name="GMEM"/>
+		<value value="5" name="BLIT2D"/>
+		<!-- 8 set before going back to BYPASS exiting 2D -->
+	</enum>
 	<reg32 offset="0" name="0">
-		<bitfield name="MODE" low="0" high="8"/>
+		<bitfield name="MODE" low="0" high="8" type="render_mode_cmd"/>
 		<!--
 		normally 0x1/0x3, sometimes see 0x5/0x8 with unknown registers in
 		0x21xx range.. possibly (at least some) a5xx variants have a
@@ -508,6 +521,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="ADDR_0_HI" low="0" high="31"/>
 	</reg32>
 	<reg32 offset="3" name="3">
+		<!--
+		set when in GMEM.. maybe indicates GMEM contents need to be
+		preserved on ctx switch?
+		 -->
 		<bitfield name="GMEM_ENABLE" pos="4" type="boolean"/>
 	</reg32>
 	<reg32 offset="4" name="4"/>
