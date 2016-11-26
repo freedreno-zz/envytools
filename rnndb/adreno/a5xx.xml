@@ -9,6 +9,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a5xx_color_fmt">
 	<value name="RB5_R8_UNORM" value="0x03"/>
 	<value name="RB5_R5G5B5A1_UNORM" value="0x0a"/>
+	<value name="RB5_R5G6B5_UNORM" value="0x0e"/>
 	<value name="RB5_R8G8B8A8_UNORM" value="0x30"/>
 	<value name="RB5_R8G8B8_UNORM" value="0x31"/>
 	<value name="RB5_R8G8B8A8_UINT" value="0x33"/>
@@ -1253,6 +1254,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 			 -->
 			<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
 			<bitfield name="COLOR_TILE_MODE" low="8" high="9" type="a5xx_tile_mode"/>
+			<bitfield name="COLOR_SWAP" low="13" high="14" type="a3xx_color_swap"/>
 			<bitfield name="COLOR_SRGB" pos="15" type="boolean"/>
 		</reg32>
 		<!--
@@ -1525,6 +1527,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 			<!-- IDX appears to index into VFD_FETCH[] -->
 			<bitfield name="IDX" low="0" high="4" type="uint"/>
 			<bitfield name="FORMAT" low="20" high="29" type="a5xx_vtx_fmt"/>
+			<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 		</reg32>
 		<reg32 offset="0x1" name="STEP_RATE"/> <!-- ??? -->
 	</array>
@@ -1725,15 +1728,33 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		Separate this into a different domain??  Would that help to
 		restrict which registers we dump based on mode?
 	 -->
+	<reg32 offset="0x2101" name="RB_2D_DST_FILL"/>
+	<reg32 offset="0x2107" name="RB_2D_SRC_INFO">
+		<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
+		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+	</reg32>
 	<reg32 offset="0x2108" name="RB_2D_SRC_LO"/>
 	<reg32 offset="0x2109" name="RB_2D_SRC_HI"/>
+	<reg32 offset="0x2110" name="RB_2D_DST_INFO">
+		<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
+		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+	</reg32>
 	<reg32 offset="0x2140" name="RB_2D_SRC_FLAGS_LO"/>
 	<reg32 offset="0x2141" name="RB_2D_SRC_FLAGS_HI"/>
 	<reg32 offset="0x2111" name="RB_2D_DST_LO"/>
 	<reg32 offset="0x2112" name="RB_2D_DST_HI"/>
 	<reg32 offset="0x2143" name="RB_2D_DST_FLAGS_LO"/>
 	<reg32 offset="0x2144" name="RB_2D_DST_FLAGS_HI"/>
-
+	<!-- looks same as 0x2107: -->
+	<reg32 offset="0x2181" name="GRAS_2D_SRC_INFO">
+		<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
+		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+	</reg32>
+	<!-- looks same as 0x2110: -->
+	<reg32 offset="0x2182" name="GRAS_2D_DST_INFO">
+		<bitfield name="COLOR_FORMAT" low="0" high="6" type="a5xx_color_fmt"/>
+		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+	</reg32>
 </domain>
 
 <domain name="A5XX_TEX_SAMP" width="32">
@@ -1803,6 +1824,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a5xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a5xx_tex_swiz"/>
 		<bitfield name="FMT" low="22" high="29" type="a5xx_tex_fmt"/>
+		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="WIDTH" low="0" high="14" type="uint"/>
