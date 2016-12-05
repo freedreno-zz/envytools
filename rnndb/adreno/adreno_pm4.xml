@@ -573,7 +573,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <domain name="CP_BLIT" width="32">
 	<enum name="cp_blit_cmd">
 		<value value="0" name="BLIT_OP_FILL"/>
-		<value value="1" name="BLIT_OP_BLIT"/>
+		<value value="1" name="BLIT_OP_COPY"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="OP" low="0" high="3" type="cp_blit_cmd"/>

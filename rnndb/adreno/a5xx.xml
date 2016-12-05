@@ -11,6 +11,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RB5_R4G4B4A4_UNORM" value="0x08"/>
 	<value name="RB5_R5G5B5A1_UNORM" value="0x0a"/>
 	<value name="RB5_R5G6B5_UNORM" value="0x0e"/>
+	<value name="RB5_R8G8_UNORM" value="0x0f"/>
 	<value name="RB5_R16_FLOAT" value="0x17"/>
 	<value name="RB5_R8G8B8A8_UNORM" value="0x30"/>
 	<value name="RB5_R8G8B8_UNORM" value="0x31"/>
@@ -1151,7 +1152,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe092" name="GRAS_SU_POINT_SIZE" type="fixed" radix="4"/>
 	<reg32 offset="0xe093" name="UNKNOWN_E093"/> <!-- always 00000000? -->
 	<reg32 offset="0xe094" name="GRAS_SU_DEPTH_PLANE_CNTL">
-		<bitfield name="ALPHA_TEST_ENABLE" pos="0" type="boolean"/>
+		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe095" name="GRAS_SU_POLY_OFFSET_SCALE" type="float"/>
 	<reg32 offset="0xe096" name="GRAS_SU_POLY_OFFSET_OFFSET" type="float"/>
@@ -1759,21 +1760,32 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		Separate this into a different domain??  Would that help to
 		restrict which registers we dump based on mode?
 	 -->
-	<reg32 offset="0x2101" name="RB_2D_DST_FILL"/>
+	<reg32 offset="0x2101" name="RB_2D_SRC_SOLID_DW0"/>
+	<reg32 offset="0x2102" name="RB_2D_SRC_SOLID_DW1"/>
+	<reg32 offset="0x2103" name="RB_2D_SRC_SOLID_DW2"/>
+	<reg32 offset="0x2104" name="RB_2D_SRC_SOLID_DW3"/>
 	<reg32 offset="0x2107" name="RB_2D_SRC_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
 	</reg32>
 	<reg32 offset="0x2108" name="RB_2D_SRC_LO"/>
 	<reg32 offset="0x2109" name="RB_2D_SRC_HI"/>
+	<reg32 offset="0x210a" name="RB_2D_SRC_SIZE">
+		<bitfield name="PITCH" low="0" high="15" shr="6" type="uint"/>
+		<bitfield name="ARRAY_PITCH" low="16" high="31" shr="6" type="uint"/>
+	</reg32>
 	<reg32 offset="0x2110" name="RB_2D_DST_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
 	</reg32>
-	<reg32 offset="0x2140" name="RB_2D_SRC_FLAGS_LO"/>
-	<reg32 offset="0x2141" name="RB_2D_SRC_FLAGS_HI"/>
 	<reg32 offset="0x2111" name="RB_2D_DST_LO"/>
 	<reg32 offset="0x2112" name="RB_2D_DST_HI"/>
+	<reg32 offset="0x2113" name="RB_2D_DST_SIZE">
+		<bitfield name="PITCH" low="0" high="15" shr="6" type="uint"/>
+		<bitfield name="ARRAY_PITCH" low="16" high="31" shr="6" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2140" name="RB_2D_SRC_FLAGS_LO"/>
+	<reg32 offset="0x2141" name="RB_2D_SRC_FLAGS_HI"/>
 	<reg32 offset="0x2143" name="RB_2D_DST_FLAGS_LO"/>
 	<reg32 offset="0x2144" name="RB_2D_DST_FLAGS_HI"/>
 	<!-- looks same as 0x2107: -->
@@ -1786,6 +1798,15 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
 	</reg32>
+<!--
+0x2100 and 0x2180 look like same thing (RB and GRAS versions)..
+   0x86000000 for copy, 0x00000000 for fill?
+
+0x2184 0x9 for copy, 0x1 for blit (maybe bitmask of enabled src/dst???)
+ -->
+	<reg32 offset="0x2100" name="UNKNOWN_2100"/>
+	<reg32 offset="0x2180" name="UNKNOWN_2180"/>
+	<reg32 offset="0x2184" name="UNKNOWN_2184"/>
 </domain>
 
 <domain name="A5XX_TEX_SAMP" width="32">
