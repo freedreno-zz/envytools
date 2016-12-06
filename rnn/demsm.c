@@ -67,9 +67,14 @@ static int is_a4xx(const char *name)
 			!strcmp("A430", name);
 }
 
+static int is_a5xx(const char *name)
+{
+	return !strcmp("A530", name);
+}
+
 static int is_adreno(const char *name)
 {
-	return is_a2xx(name) || is_a3xx(name) || is_a4xx(name);
+	return is_a2xx(name) || is_a3xx(name) || is_a4xx(name) || is_a5xx(name);
 }
 
 static struct domain *find_domain(struct rnndeccontext *ctx, uint32_t *addrp)
@@ -155,9 +160,9 @@ static void printval(struct rnndeccontext *ctx, uint32_t addr, uint32_t val, uin
 		struct rnndecaddrinfo *ai = rnndec_decodeaddr(ctx, d->dom, off >> d->shift, op);
 		char *decoded_val = rnndec_decodeval(ctx, ai->typeinfo, val, ai->width);
 		if (origaddr != addr) {
-			printf("!%9s:%-30s %s", d->dom->name, ai->name, decoded_val);
+			printf("%08x:!%9s:%-30s %s", val, d->dom->name, ai->name, decoded_val);
 		} else {
-			printf("%10s:%-30s %s", d->dom->name, ai->name, decoded_val);
+			printf("%08x:%10s:%-30s %s", val, d->dom->name, ai->name, decoded_val);
 		}
 		free(ai->name);
 		free(ai);
@@ -232,7 +237,12 @@ int main(int argc, char **argv) {
 			printf("%s", buf);
 			/* special handling for gpu: */
 			if (is_adreno(domains[i].name)) {
-				if (is_a4xx(domains[i].name)) {
+				int axxx = 1;
+				if (is_a5xx(domains[i].name)) {
+					sprintf(domains[i].name, "A5XX");
+					domains[i].dom = rnn_finddomain(db, domains[i].name);
+					axxx = 0;
+				} else if (is_a4xx(domains[i].name)) {
 					sprintf(domains[i].name, "A4XX");
 					domains[i].dom = rnn_finddomain(db, domains[i].name);
 				} else if (is_a3xx(domains[i].name)) {
@@ -243,9 +253,11 @@ int main(int argc, char **argv) {
 					domains[i].dom = rnn_finddomain(db, domains[i].name);
 				}
 				domains[i].shift = 2;
-				i = ++domains_count;
-				domains[i] = domains[i-1];
-				sprintf(domains[i].name, "AXXX");
+				if (axxx) {
+					i = ++domains_count;
+					domains[i] = domains[i-1];
+					sprintf(domains[i].name, "AXXX");
+				}
 			}
 			domains[i].dom = rnn_finddomain(db, domains[i].name);
 			i = ++domains_count;
