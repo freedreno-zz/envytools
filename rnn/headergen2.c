@@ -183,6 +183,10 @@ static void printtypeinfo (struct rnntypeinfo *ti, struct rnnbitfield *bf,
 			fprintf(dst, ");\n");
 		}
 
+		if (ti->shr) {
+			fprintf(dst, "\tassert(!(val & 0x%x));\n", (1 << ti->shr) - 1);
+		}
+
 		fprintf(dst, "\treturn ((");
 
 		if (ti->type == RNN_TTYPE_FIXED) {
