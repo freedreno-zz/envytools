@@ -7,21 +7,45 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_pm4.xml"/>
 
 <enum name="a5xx_color_fmt">
-	<value name="RB5_R8_UNORM" value="0x03"/>
-	<value name="RB5_R4G4B4A4_UNORM" value="0x08"/>
-	<value name="RB5_R5G5B5A1_UNORM" value="0x0a"/>
-	<value name="RB5_R5G6B5_UNORM" value="0x0e"/>
-	<value name="RB5_R8G8_UNORM" value="0x0f"/>
-	<value name="RB5_R16_FLOAT" value="0x17"/>
-	<value name="RB5_R8G8B8A8_UNORM" value="0x30"/>
-	<value name="RB5_R8G8B8_UNORM" value="0x31"/>
-	<value name="RB5_R8G8B8A8_UINT" value="0x33"/>
-	<value name="RB5_R10G10B10A2_UINT" value="0x3a"/>
-	<value name="RB5_R16G16_FLOAT" value="0x45"/>
-	<value name="RB5_R32_FLOAT" value="0x4a"/>
-	<value name="RB5_R16G16B16A16_FLOAT" value="0x62"/>
-	<value name="RB5_R32G32_FLOAT" value="0x67"/>
-	<value name="RB5_R32G32B32A32_FLOAT" value="0x82"/>
+	<value value="0x03" name="RB5_R8_UNORM"/>
+	<value value="0x05" name="RB5_R8_UINT"/>
+	<value value="0x06" name="RB5_R8_SINT"/>
+	<value value="0x08" name="RB5_R4G4B4A4_UNORM"/>
+	<value value="0x0a" name="RB5_R5G5B5A1_UNORM"/>
+	<value value="0x0e" name="RB5_R5G6B5_UNORM"/>
+	<value value="0x0f" name="RB5_R8G8_UNORM"/>
+	<value value="0x10" name="RB5_R8G8_SNORM"/>
+	<value value="0x11" name="RB5_R8G8_UINT"/>
+	<value value="0x12" name="RB5_R8G8_SINT"/>
+	<value value="0x15" name="RB5_R16_UNORM"/>
+	<value value="0x16" name="RB5_R16_SNORM"/>
+	<value value="0x17" name="RB5_R16_FLOAT"/>
+	<value value="0x18" name="RB5_R16_UINT"/>
+	<value value="0x19" name="RB5_R16_SINT"/>
+	<value value="0x30" name="RB5_R8G8B8A8_UNORM"/>
+	<value value="0x31" name="RB5_R8G8B8_UNORM"/>
+	<value value="0x33" name="RB5_R8G8B8A8_UINT"/>
+	<value value="0x34" name="RB5_R8G8B8A8_SINT"/>
+	<value value="0x37" name="RB5_R10G10B10A2_UNORM"/>  <!-- GL_RGB10_A2 -->
+	<value value="0x3a" name="RB5_R10G10B10A2_UINT"/>   <!-- GL_RGB10_A2UI -->
+	<value value="0x42" name="RB5_R11G11B10_FLOAT"/>    <!-- GL_R11F_G11F_B10F -->
+	<value value="0x43" name="RB5_R16G16_UNORM"/>
+	<value value="0x44" name="RB5_R16G16_SNORM"/>
+	<value value="0x45" name="RB5_R16G16_FLOAT"/>
+	<value value="0x46" name="RB5_R16G16_UINT"/>
+	<value value="0x47" name="RB5_R16G16_SINT"/>
+	<value value="0x4a" name="RB5_R32_FLOAT"/>
+	<value value="0x4b" name="RB5_R32_UINT"/>
+	<value value="0x4c" name="RB5_R32_SINT"/>
+	<value value="0x62" name="RB5_R16G16B16A16_FLOAT"/>
+	<value value="0x63" name="RB5_R16G16B16A16_UINT"/>
+	<value value="0x64" name="RB5_R16G16B16A16_SINT"/>
+	<value value="0x67" name="RB5_R32G32_FLOAT"/>
+	<value value="0x68" name="RB5_R32G32_UINT"/>
+	<value value="0x69" name="RB5_R32G32_SINT"/>
+	<value value="0x82" name="RB5_R32G32B32A32_FLOAT"/>
+	<value value="0x83" name="RB5_R32G32B32A32_UINT"/>
+	<value value="0x84" name="RB5_R32G32B32A32_SINT"/>
 </enum>
 
 <enum name="a5xx_tile_mode">
@@ -107,24 +131,47 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a5xx_tex_fmt">
 	<value value="0x02" name="TFMT5_A8_UNORM"/>
 	<value value="0x03" name="TFMT5_8_UNORM"/>
+	<value value="0x05" name="TFMT5_8_UINT"/>
+	<value value="0x06" name="TFMT5_8_SINT"/>
 	<value value="0x08" name="TFMT5_4_4_4_4_UNORM"/>
 	<value value="0x0a" name="TFMT5_5_5_5_1_UNORM"/>
 	<value value="0x0e" name="TFMT5_5_6_5_UNORM"/>
 	<value value="0x0f" name="TFMT5_8_8_UNORM"/>
 	<value value="0x10" name="TFMT5_8_8_SNORM"/>
+	<value value="0x11" name="TFMT5_8_8_UINT"/>
+	<value value="0x12" name="TFMT5_8_8_SINT"/>
 	<value value="0x13" name="TFMT5_L8_A8_UNORM"/>
+	<value value="0x15" name="TFMT5_16_UNORM"/>
+	<value value="0x16" name="TFMT5_16_SNORM"/>
 	<value value="0x17" name="TFMT5_16_FLOAT"/>
+	<value value="0x18" name="TFMT5_16_UINT"/>
+	<value value="0x19" name="TFMT5_16_SINT"/>
 	<value value="0x30" name="TFMT5_8_8_8_8_UNORM"/>
 	<value value="0x31" name="TFMT5_8_8_8_UNORM"/>
 	<value value="0x32" name="TFMT5_8_8_8_SNORM"/>
+	<value value="0x33" name="TFMT5_8_8_8_8_UINT"/>
+	<value value="0x34" name="TFMT5_8_8_8_8_SINT"/>
 	<value value="0x35" name="TFMT5_9_9_9_E5_FLOAT"/>
 	<value value="0x36" name="TFMT5_10_10_10_2_UNORM"/>
+	<value value="0x3a" name="TFMT5_10_10_10_2_UINT"/>
 	<value value="0x42" name="TFMT5_11_11_10_FLOAT"/>
+	<value value="0x43" name="TFMT5_16_16_UNORM"/>
+	<value value="0x44" name="TFMT5_16_16_SNORM"/>
 	<value value="0x45" name="TFMT5_16_16_FLOAT"/>
+	<value value="0x46" name="TFMT5_16_16_UINT"/>
+	<value value="0x47" name="TFMT5_16_16_SINT"/>
 	<value value="0x4a" name="TFMT5_32_FLOAT"/>
+	<value value="0x4b" name="TFMT5_32_UINT"/>
+	<value value="0x4c" name="TFMT5_32_SINT"/>
 	<value value="0x62" name="TFMT5_16_16_16_16_FLOAT"/>
+	<value value="0x63" name="TFMT5_16_16_16_16_UINT"/>
+	<value value="0x64" name="TFMT5_16_16_16_16_SINT"/>
 	<value value="0x67" name="TFMT5_32_32_FLOAT"/>
+	<value value="0x68" name="TFMT5_32_32_UINT"/>
+	<value value="0x69" name="TFMT5_32_32_SINT"/>
 	<value value="0x82" name="TFMT5_32_32_32_32_FLOAT"/>
+	<value value="0x83" name="TFMT5_32_32_32_32_UINT"/>
+	<value value="0x84" name="TFMT5_32_32_32_32_SINT"/>
 	<value value="0xa0" name="TFMT5_X8Z24_UNORM"/>
 </enum>
 
@@ -1344,10 +1391,10 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	</reg32>
 	<reg32 offset="0xe1b3" name="RB_DEPTH_BUFFER_BASE_LO"/>
 	<reg32 offset="0xe1b4" name="RB_DEPTH_BUFFER_BASE_HI"/>
-	<reg32 offset="0xe1b5" name="RB_DEPTH_BUFFER_PITCH" shr="5" type="uint">
+	<reg32 offset="0xe1b5" name="RB_DEPTH_BUFFER_PITCH" shr="6" type="uint">
 		<doc>stride of depth/stencil buffer</doc>
 	</reg32>
-	<reg32 offset="0xe1b6" name="RB_DEPTH_BUFFER_ARRAY_PITCH" shr="5" type="uint">
+	<reg32 offset="0xe1b6" name="RB_DEPTH_BUFFER_ARRAY_PITCH" shr="6" type="uint">
 		<doc>size of layer</doc>
 	</reg32>
 	<reg32 offset="0xe1c0" name="RB_STENCIL_CONTROL">

@@ -28,6 +28,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FACENESS_FLUSH" value="28" variants="A2XX,A3XX,A4XX"/>
 
 	<!-- a5xx events -->
+	<value name="UNK_19" value="25" variants="A5XX"/>
 	<value name="UNK_1C" value="28" variants="A5XX"/>
 	<value name="UNK_1D" value="29" variants="A5XX"/>
 	<value name="BLIT" value="30" variants="A5XX"/>
