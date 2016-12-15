@@ -32,7 +32,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="UNK_1C" value="28" variants="A5XX"/>
 	<value name="UNK_1D" value="29" variants="A5XX"/>
 	<value name="BLIT" value="30" variants="A5XX"/>
+	<value name="UNK_25" value="37" variants="A5XX"/>
 	<value name="UNK_26" value="38" variants="A5XX"/>
+	<value name="UNK_2C" value="44" variants="A5XX"/>
+	<value name="UNK_2D" value="45" variants="A5XX"/>
 </enum>
 
 <enum name="pc_di_primtype">
@@ -298,6 +301,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_MEM_TO_MEM" value="0x73" variants="A5XX"/>
 	<value name="CP_BLIT" value="0x2c" variants="A5XX"/>
 
+	<!-- seems to be about setting current bin, or some per-tile info.. -->
+	<value name="CP_UNK_39" value="0x39" variants="A5XX"/>
+
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17"/>
 	<value name="IN_SUBBLK_PREFETCH" value="0x1f"/>
@@ -502,6 +508,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <domain name="CP_SET_RENDER_MODE" width="32">
 	<enum name="render_mode_cmd">
 		<value value="1" name="BYPASS"/>
+		<value value="2" name="BINNING"/>
 		<value value="3" name="GMEM"/>
 		<value value="5" name="BLIT2D"/>
 		<!-- 8 set before going back to BYPASS exiting 2D -->

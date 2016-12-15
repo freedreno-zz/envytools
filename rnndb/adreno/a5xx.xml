@@ -1448,7 +1448,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		(I suppose this is just to avoid trashing RB_MRT[1..7]??)
 	</doc>
 	<reg32 offset="0xe210" name="RB_BLIT_CNTL">
-		<bitfield name="BUF" low="0" high="5" type="a5xx_blit_buf"/>
+		<bitfield name="BUF" low="0" high="3" type="a5xx_blit_buf"/>
 	</reg32>
 	<reg32 offset="0xe211" name="RB_RESOLVE_CNTL_1" type="adreno_reg_xy"/>
 	<reg32 offset="0xe212" name="RB_RESOLVE_CNTL_2" type="adreno_reg_xy"/>
@@ -1459,6 +1459,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		        0xf gmem->mem with flag buffer (color)
 		        0x4 gmem->mem without flag buffer (color)
 		        0x7 BYPASS mode flag buffer result (ie. on readpix)
+		            also for gmem->mem preserving tiling
 	-->
 	</reg32>
 	<reg32 offset="0xe214" name="RB_BLIT_DST_LO"/>
@@ -1638,6 +1639,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe58b" name="SP_FS_CONFIG_MAX_CONST"/>
 	<reg32 offset="0xe590" name="SP_VS_CTRL_REG0">
 		<!-- maybe same as SP_FS_CTRL_REG0, etc? -->
+		<!-- bit1 + bit2 set for "buffer" mode (ie. shader small enough to fit internally) -->
 		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
 		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
 		<bitfield name="VARYING" pos="16" type="boolean"/>
@@ -1670,6 +1672,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe5ad" name="SP_VS_OBJ_START_HI"/>
 	<reg32 offset="0xe5c0" name="SP_FS_CTRL_REG0">
 		<!-- maybe same as SP_VS_CTRL_REG0, etc? -->
+		<!-- bit1 + bit2 set for "buffer" mode (ie. shader small enough to fit internally) -->
 		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
 		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
 		<bitfield name="VARYING" pos="16" type="boolean"/>
@@ -1709,6 +1712,9 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
 		<bitfield name="MSAA_DISABLE" pos="2" type="boolean"/>
 	</reg32>
+	<!-- either blob is doing it wrong, or this is not per-stage anymore: -->
+	<reg32 offset="0xe706" name="TPL1_TP_BORDER_COLOR_BASE_ADDR_LO"/>
+	<reg32 offset="0xe707" name="TPL1_TP_BORDER_COLOR_BASE_ADDR_HI"/>
 
 	<!--
 	so these have the same info that is normally in the CP_LOAD_STATE
@@ -1895,7 +1901,24 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="MAX_LOD" low="8" high="19" type="ufixed" radix="8"/>
 		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="8"/>
 	</reg32>
-	<reg32 offset="2" name="2"/>
+	<reg32 offset="2" name="2">
+		<!--
+		offset into border-color buffer?  Blob always uses 0x80 for FS state
+		if both VS and FS have border-color.
+Seems like when both VS and FS have bcolor, one starts 0x300 after other..
+and 0x80 in TEX_SAMP.2 ..  blob doesn't seem to be able to cope w/ multiple
+different border-color states per texture..  Looks something like:
+0000: 3f000000 00000000 00000000 3f800000 00008000 ffff0000 00004000 7fff0000
+0020: 00003800 3c000000 80100010 0000f008 ff000080 7f000040 c0000200 00800000
+0040: 00003800 3c000000 00000000 00000000 00000000 00000000 00000000 00000000
+*
+0300: 3f800000 3f800000 3f800000 3f800000 ffffffff ffffffff 7fff7fff 7fff7fff
+0320: 3c003c00 3c003c00 ffffffff 0000ffff ffffffff 7f7f7f7f ffffffff 00ffffff
+0340: 3c003c00 3c003c00 00000000 00000000 00000000 00000000 00000000 00000000
+
+		 -->
+		<bitfield name="BCOLOR_OFFSET" low="4" high="31"/>
+	</reg32>
 	<reg32 offset="3" name="3"/>
 </domain>
 
