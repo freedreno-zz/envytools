@@ -451,6 +451,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 			<bitfield name="STAGE1_FG_ALPHA" pos="2" type="boolean"/>
 			<bitfield name="STAGE2_FG_ALPHA" pos="3" type="boolean"/>
 			<bitfield name="STAGE3_FG_ALPHA" pos="4" type="boolean"/>
+			<bitfield name="STAGE4_FG_ALPHA" pos="5" type="boolean"/>
+			<bitfield name="STAGE5_FG_ALPHA" pos="6" type="boolean"/>
+			<bitfield name="STAGE6_FG_ALPHA" pos="7" type="boolean"/>
+			<bitfield name="SPLIT_LEFT_RIGHT" pos="31" type="boolean"/>
 		</reg32>
 		<reg32 offset="0x004" name="OUT_SIZE" type="reg_wh"/>
 		<reg32 offset="0x008" name="BORDER_COLOR_0"/>
