@@ -19,7 +19,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="RST_VTX_CNT" value="14"/>
 	<value name="TILE_FLUSH" value="15"/>
 	<value name="STAT_EVENT" value="16"/>
-	<value name="CACHE_FLUSH_AND_INV_TS_EVENT" value="20"/>
+	<value name="CACHE_FLUSH_AND_INV_TS_EVENT" value="20" variants="A2XX,A3XX,A4XX"/>
 	<value name="ZPASS_DONE" value="21"/>
 	<value name="CACHE_FLUSH_AND_INV_EVENT" value="22"/>
 	<value name="PERFCOUNTER_START" value="23"/>
@@ -28,6 +28,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FACENESS_FLUSH" value="28" variants="A2XX,A3XX,A4XX"/>
 
 	<!-- a5xx events -->
+	<value name="FLUSH_SO_0" value="17" variants="A5XX"/>
+	<value name="FLUSH_SO_1" value="18" variants="A5XX"/>
+	<value name="FLUSH_SO_2" value="19" variants="A5XX"/>
+	<value name="FLUSH_SO_3" value="20" variants="A5XX"/>
 	<value name="UNK_19" value="25" variants="A5XX"/>
 	<value name="UNK_1C" value="28" variants="A5XX"/>
 	<value name="UNK_1D" value="29" variants="A5XX"/>
@@ -117,7 +121,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>wait until a register location is >= a specific value</doc>
 	<value name="CP_WAIT_REG_GTE" value="0x53"/>
 	<doc>wait until a read completes</doc>
-	<value name="CP_WAIT_UNTIL_READ" value="0x5c"/>
+	<value name="CP_WAIT_UNTIL_READ" value="0x5c" variants="A2XX,A3XX,A4XX"/>
 	<doc>wait until all base/size writes from an IB_PFD packet have completed</doc>
 	<value name="CP_WAIT_IB_PFD_COMPLETE" value="0x5d"/>
 	<doc>register read/modify/write</doc>
@@ -281,6 +285,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- switches SMMU pagetable, used on a5xx only -->
 	<value name="CP_PERFCOUNTER_ACTION" value="0x50" variants="A5XX"/>
 	<value name="CP_SMMU_TABLE_UPDATE" value="0x53" variants="A5XX"/>
+	<!--
+	pairs of regid and value.. seems to be used to program some TF
+	related regs:
+	 -->
 	<value name="CP_CONTEXT_REG_BUNCH" value="0x5c" variants="A5XX"/>
 	<!-- A5XX Enable yield in RB only -->
 	<value name="CP_YIELD_ENABLE" value="0x1c" variants="A5XX"/>

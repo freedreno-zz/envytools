@@ -1545,18 +1545,74 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="NUMNONPOSVAR" low="0" high="7" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe2a0" name="VPC_FS_PRIMITIVEID_CNTL"/>
-	<reg32 offset="0xe2a1" name="UNKNOWN_E2A1"/>
-	<reg32 offset="0xe2a2" name="VPC_SO_OVERRIDE"/>
-	<reg32 offset="0xe2a7" name="VPC_SO_BUFFER_BASE_LO_0"/>
-	<reg32 offset="0xe2a8" name="VPC_SO_BUFFER_BASE_HI_0"/>
-	<reg32 offset="0xe2a9" name="VPC_SO_BUFFER_SIZE_0"/>
-	<reg32 offset="0xe2ab" name="UNKNOWN_E2AB"/>
-	<reg32 offset="0xe2ac" name="VPC_SO_FLUSH_BASE_LO_0"/>
-	<reg32 offset="0xe2ad" name="VPC_SO_FLUSH_BASE_HI_0"/>
-	<reg32 offset="0xe2ae" name="UNKNOWN_E2AE"/>
-	<reg32 offset="0xe2b2" name="UNKNOWN_E2B2"/>
-	<reg32 offset="0xe2b9" name="UNKNOWN_E2B9"/>
-	<reg32 offset="0xe2c0" name="UNKNOWN_E2C0"/>
+
+	<doc>
+		Stream-Out:
+		-----------
+
+		VPC_SO[0..3] registers setup details about streamout buffers, and
+		number of components to write to each.
+
+		VPC_SO_PROG provides the mapping between output varyings and the SO
+		buffers.  It is written multiple times (via a CP_CONTEXT_REG_BUNCH
+		packet, not sure if that matters), each write can handle up to two
+		components of stream-out output.  Order matches up to OUTLOC,
+		including padding.  So, if outputting first 3 varyings:
+
+			SP_VS_OUT[0].REG: { A_REGID = r0.w | A_COMPMASK = 0xf | B_REGID = r0.x | B_COMPMASK = 0x7 }
+			SP_VS_OUT[0x1].REG: { A_REGID = r1.w | A_COMPMASK = 0x3 | B_REGID = r2.y | B_COMPMASK = 0xf }
+			SP_VS_VPC_DST[0].REG: { OUTLOC0 = 0 | OUTLOC1 = 4 | OUTLOC2 = 8 | OUTLOC3 = 12 }
+
+		Then:
+
+			VPC_SO_PROG: { A_BUF = 0 | A_OFF = 0 | A_EN | A_BUF = 0 | B_OFF = 4 | B_EN }
+			VPC_SO_PROG: { A_BUF = 0 | A_OFF = 8 | A_EN | A_BUF = 0 | B_OFF = 12 | B_EN }
+			VPC_SO_PROG: { A_BUF = 2 | A_OFF = 0 | A_EN | A_BUF = 2 | B_OFF = 4 | B_EN }
+			VPC_SO_PROG: { A_BUF = 2 | A_OFF = 8 | A_EN | A_BUF = 0 | B_OFF = 0 }
+			VPC_SO_PROG: { A_BUF = 1 | A_OFF = 0 | A_EN | A_BUF = 1 | B_OFF = 4 | B_EN }
+
+		Note that varying order is OUTLOC0, OUTLOC2, OUTLOC1, and note
+		the padding between OUTLOC1 and OUTLOC2.
+
+		The BUF bitfield indicates which of the four streamout buffers
+		to write into at the specified offset.
+
+		The VPC_SO[n].FLUSH_BASE_LO/HI is used for hw to write back next
+		offset which gets loaded back into VPC_SO[n].BUFFER_OFFSET via a
+		CP_MEM_TO_REG.  Probably can be ignored until we have GS/etc, at
+		which point we can't calculate the offset on the CPU.
+	</doc>
+	<reg32 offset="0xe2a1" name="VPC_SO_BUF_CNTL">
+		<bitfield name="BUF0" pos="0" type="boolean"/>
+		<bitfield name="BUF1" pos="3" type="boolean"/>
+		<bitfield name="BUF2" pos="6" type="boolean"/>
+		<bitfield name="BUF3" pos="9" type="boolean"/>
+		<bitfield name="ENABLE" pos="15" type="boolean"/>
+	</reg32>
+	<reg32 offset="0xe2a2" name="VPC_SO_OVERRIDE">
+		<bitfield name="SO_DISABLE" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0xe2a3" name="VPC_SO_CNTL">
+		<!-- always 0x10000 when SO enabled.. -->
+		<bitfield name="ENABLE" pos="16" type="boolean"/>
+	</reg32>
+	<reg32 offset="0xe2a4" name="VPC_SO_PROG">
+		<bitfield name="A_BUF" low="0" high="1" type="uint"/>
+		<bitfield name="A_OFF" low="2" high="10" shr="2" type="uint"/>
+		<bitfield name="A_EN" pos="11" type="boolean"/>
+		<bitfield name="B_BUF" low="12" high="13" type="uint"/>
+		<bitfield name="B_OFF" low="14" high="22" shr="2" type="uint"/>
+		<bitfield name="B_EN" pos="23" type="boolean"/>
+	</reg32>
+	<array offset="0xe2a7" name="VPC_SO" stride="7" length="4">
+		<reg32 offset="0" name="BUFFER_BASE_LO"/>
+		<reg32 offset="1" name="BUFFER_BASE_HI"/>
+		<reg32 offset="2" name="BUFFER_SIZE"/>
+		<reg32 offset="3" name="NCOMP"/>  <!-- component count -->
+		<reg32 offset="4" name="BUFFER_OFFSET"/>
+		<reg32 offset="5" name="FLUSH_BASE_LO"/>
+		<reg32 offset="6" name="FLUSH_BASE_HI"/>
+	</array>
 
 	<reg32 offset="0xe384" name="PC_PRIMITIVE_CNTL">
 		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
@@ -1700,6 +1756,11 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 			<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
 		</reg32>
 	</array>
+	<!--
+	e5db/e5dc seems to look related to some optimization to do sample from
+	texture using varying value directly before shader thread starts?  I
+	guess that could optimize common simple frag shaders..
+	 -->
 	<reg32 offset="0xe5db" name="UNKNOWN_E5DB"/>
 	<reg32 offset="0xe5f0" name="SP_CS_CNTL_0"/>
 	<reg32 offset="0xe600" name="UNKNOWN_E600"/>
