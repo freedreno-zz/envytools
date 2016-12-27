@@ -1883,7 +1883,7 @@ perhaps they should be taken with a grain of salt
 		</reg32>
 		<reg32 offset="0x1" name="INSTR_1"/>
 		<reg32 offset="0x2" name="INSTR_2">
-			<bitfield name="SIZE" low="4" high="31" shr="4"/>
+			<bitfield name="SIZE" low="0" high="31"/>
 		</reg32>
 		<reg32 offset="0x3" name="INSTR_3">
 			<!-- might well be bigger.. -->
