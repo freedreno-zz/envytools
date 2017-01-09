@@ -1200,6 +1200,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe093" name="UNKNOWN_E093"/> <!-- always 00000000? -->
 	<reg32 offset="0xe094" name="GRAS_SU_DEPTH_PLANE_CNTL">
 		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
+		<bitfield name="UNK1" pos="1" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe095" name="GRAS_SU_POLY_OFFSET_SCALE" type="float"/>
 	<reg32 offset="0xe096" name="GRAS_SU_POLY_OFFSET_OFFSET" type="float"/>
@@ -1378,6 +1379,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	</reg32>
 	<reg32 offset="0xe1b0" name="RB_DEPTH_PLANE_CNTL">
 		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
+		<bitfield name="UNK1" pos="1" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe1b1" name="RB_DEPTH_CNTL">
 		<bitfield name="Z_ENABLE" pos="0" type="boolean"/>
@@ -1634,8 +1636,8 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="VTXCNT" low="0" high="5" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe401" name="VFD_CONTROL_1">
+		<bitfield name="REGID4VTX" low="0" high="7" type="a3xx_regid"/>
 		<bitfield name="REGID4INST" low="8" high="15" type="a3xx_regid"/>
-		<bitfield name="REGID4VTX" low="16" high="23" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xe402" name="VFD_CONTROL_2">
 	</reg32>
@@ -1659,6 +1661,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 			<bitfield name="IDX" low="0" high="4" type="uint"/>
 			<bitfield name="FORMAT" low="20" high="29" type="a5xx_vtx_fmt"/>
 			<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
+			<bitfield name="INSTANCED" pos="17" type="boolean"/>
 		</reg32>
 		<reg32 offset="0x1" name="STEP_RATE"/> <!-- ??? -->
 	</array>
@@ -2006,6 +2009,7 @@ different border-color states per texture..  Looks something like:
 		<bitfield name="SWIZ_Y" low="7" high="9" type="a5xx_tex_swiz"/>
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a5xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a5xx_tex_swiz"/>
+		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
 		<bitfield name="FMT" low="22" high="29" type="a5xx_tex_fmt"/>
 		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
