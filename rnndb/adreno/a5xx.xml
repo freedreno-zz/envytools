@@ -1186,6 +1186,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe014" name="GRAS_CL_VPORT_ZOFFSET_0" type="float"/>
 	<reg32 offset="0xe015" name="GRAS_CL_VPORT_ZSCALE_0" type="float"/>
 	<reg32 offset="0xe090" name="GRAS_SU_CNTL">
+		<bitfield name="CULL_FRONT" pos="0" type="boolean"/>
+		<bitfield name="CULL_BACK" pos="1" type="boolean"/>
 		<bitfield name="FRONT_CW" pos="2" type="boolean"/>
 		<bitfield name="LINEHALFWIDTH" low="3" high="10" radix="2" type="fixed"/>
 		<bitfield name="POLY_OFFSET" pos="11" type="boolean"/>
@@ -1659,9 +1661,10 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<reg32 offset="0x0" name="INSTR">
 			<!-- IDX appears to index into VFD_FETCH[] -->
 			<bitfield name="IDX" low="0" high="4" type="uint"/>
-			<bitfield name="FORMAT" low="20" high="29" type="a5xx_vtx_fmt"/>
-			<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 			<bitfield name="INSTANCED" pos="17" type="boolean"/>
+			<bitfield name="FORMAT" low="20" high="29" type="a5xx_vtx_fmt"/>
+			<bitfield name="UNK30" pos="30" type="boolean"/>
+			<bitfield name="FLOAT" pos="31" type="boolean"/>
 		</reg32>
 		<reg32 offset="0x1" name="STEP_RATE"/> <!-- ??? -->
 	</array>
@@ -1757,6 +1760,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<array offset="0xe5d3" name="SP_FS_MRT" stride="1" length="8">
 		<reg32 offset="0" name="REG">
 			<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
+			<bitfield name="COLOR_SRGB" pos="10" type="boolean"/>
 		</reg32>
 	</array>
 	<!--
