@@ -1547,6 +1547,12 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe29a" name="UNKNOWN_E29A"/>
 	<reg32 offset="0xe29d" name="VPC_PACK">
 		<bitfield name="NUMNONPOSVAR" low="0" high="7" type="uint"/>
+		<!--
+		This seems to be the OUTLOC for the psize output.  It could possibly
+		be the max-OUTLOC position, but it is only set when VS writes psize
+		(and blob always puts psize at highest OUTLOC)
+		 -->
+		<bitfield name="PSIZELOC" low="8" high="15" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe2a0" name="VPC_FS_PRIMITIVEID_CNTL"/>
 
@@ -1721,6 +1727,13 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 			<bitfield name="B_COMPMASK" low="24" high="27" type="hex"/>
 		</reg32>
 	</array>
+	<!--
+	Starting with a5xx, position/psize outputs from shader end up in the
+	SP_VS_OUT map, with highest OUTLOCn position.  (Generally they are
+	the last entries too, except when gl_PointCoord is used, blob inserts
+	an extra varying after, but with a lower OUTLOC position.  If present,
+	psize is last, preceeded by position.
+	 -->
 	<array offset="0xe5a3" name="SP_VS_VPC_DST" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
 			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
