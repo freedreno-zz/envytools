@@ -1708,6 +1708,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe590" name="SP_VS_CTRL_REG0">
 		<!-- maybe same as SP_FS_CTRL_REG0, etc? -->
 		<!-- bit1 + bit2 set for "buffer" mode (ie. shader small enough to fit internally) -->
+		<bitfield name="THREADSIZE" pos="3" type="a3xx_threadsize"/>
 		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
 		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
 		<bitfield name="VARYING" pos="16" type="boolean"/>
@@ -1748,6 +1749,8 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe5c0" name="SP_FS_CTRL_REG0">
 		<!-- maybe same as SP_VS_CTRL_REG0, etc? -->
 		<!-- bit1 + bit2 set for "buffer" mode (ie. shader small enough to fit internally) -->
+		<!-- 24 or more (full size) GPRS and blob uses TWO_QUADS instead of FOUR_QUADS -->
+		<bitfield name="THREADSIZE" pos="3" type="a3xx_threadsize"/>
 		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
 		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
 		<bitfield name="VARYING" pos="16" type="boolean"/>
@@ -1815,6 +1818,8 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe764" name="TPL1_TP_FS_ROTATION_CNTL"/>
 
 	<reg32 offset="0xe784" name="HLSQ_CONTROL_0_REG">
+		<!-- 24 or more (full size) GPRS and blob uses TWO_QUADS instead of FOUR_QUADS -->
+		<bitfield name="FSTHREADSIZE" pos="0" type="a3xx_threadsize"/>
 	</reg32>
 	<reg32 offset="0xe785" name="HLSQ_CONTROL_1_REG">
 		<!-- I guess.. not set exactly same as a4xx, but similar: -->
