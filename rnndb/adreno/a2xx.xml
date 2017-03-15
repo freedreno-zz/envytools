@@ -232,7 +232,40 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0397" name="RBBM_PERFCOUNTER1_LO"/>
 	<reg32 offset="0x0398" name="RBBM_PERFCOUNTER1_HI"/>
 	<reg32 offset="0x039b" name="RBBM_DEBUG"/>
-	<reg32 offset="0x039c" name="RBBM_PM_OVERRIDE1"/>
+	<reg32 offset="0x039c" name="RBBM_PM_OVERRIDE1">
+		<bitfield name="RBBM_AHBCLK_PM_OVERRIDE" pos="0"/>
+		<bitfield name="SC_REG_SCLK_PM_OVERRIDE" pos="1"/>
+		<bitfield name="SC_SCLK_PM_OVERRIDE" pos="2"/>
+		<bitfield name="SP_TOP_SCLK_PM_OVERRIDE" pos="3"/>
+		<bitfield name="SP_V0_SCLK_PM_OVERRIDE" pos="4"/>
+		<bitfield name="SQ_REG_SCLK_PM_OVERRIDE" pos="5"/>
+		<bitfield name="SQ_REG_FIFOS_SCLK_PM_OVERRIDE" pos="6"/>
+		<bitfield name="SQ_CONST_MEM_SCLK_PM_OVERRIDE" pos="7"/>
+		<bitfield name="SQ_SQ_SCLK_PM_OVERRIDE" pos="8"/>
+		<bitfield name="SX_SCLK_PM_OVERRIDE" pos="9"/>
+		<bitfield name="SX_REG_SCLK_PM_OVERRIDE" pos="10"/>
+		<bitfield name="TCM_TCO_SCLK_PM_OVERRIDE" pos="11"/>
+		<bitfield name="TCM_TCM_SCLK_PM_OVERRIDE" pos="12"/>
+		<bitfield name="TCM_TCD_SCLK_PM_OVERRIDE" pos="13"/>
+		<bitfield name="TCM_REG_SCLK_PM_OVERRIDE" pos="14"/>
+		<bitfield name="TPC_TPC_SCLK_PM_OVERRIDE" pos="15"/>
+		<bitfield name="TPC_REG_SCLK_PM_OVERRIDE" pos="16"/>
+		<bitfield name="TCF_TCA_SCLK_PM_OVERRIDE" pos="17"/>
+		<bitfield name="TCF_TCB_SCLK_PM_OVERRIDE" pos="18"/>
+		<bitfield name="TCF_TCB_READ_SCLK_PM_OVERRIDE" pos="19"/>
+		<bitfield name="TP_TP_SCLK_PM_OVERRIDE" pos="20"/>
+		<bitfield name="TP_REG_SCLK_PM_OVERRIDE" pos="21"/>
+		<bitfield name="CP_G_SCLK_PM_OVERRIDE" pos="22"/>
+		<bitfield name="CP_REG_SCLK_PM_OVERRIDE" pos="23"/>
+		<bitfield name="CP_G_REG_SCLK_PM_OVERRIDE" pos="24"/>
+		<bitfield name="SPI_SCLK_PM_OVERRIDE" pos="25"/>
+		<bitfield name="RB_REG_SCLK_PM_OVERRIDE" pos="26"/>
+		<bitfield name="RB_SCLK_PM_OVERRIDE" pos="27"/>
+		<bitfield name="MH_MH_SCLK_PM_OVERRIDE" pos="28"/>
+		<bitfield name="MH_REG_SCLK_PM_OVERRIDE" pos="29"/>
+		<bitfield name="MH_MMU_SCLK_PM_OVERRIDE" pos="30"/>
+		<bitfield name="MH_TCROQ_SCLK_PM_OVERRIDE" pos="31"/>
+	</reg32>
 	<reg32 offset="0x039d" name="RBBM_PM_OVERRIDE2"/>
 	<reg32 offset="0x03a0" name="RBBM_DEBUG_OUT"/>
 	<reg32 offset="0x03a1" name="RBBM_DEBUG_CNTL"/>
@@ -302,10 +335,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0c80" name="PA_SU_DEBUG_CNTL"/>
 	<reg32 offset="0x0c81" name="GRAS_DEBUG_DATA"/>
 	<reg32 offset="0x0c81" name="PA_SU_DEBUG_DATA"/>
-	<reg32 offset="0x0c86" name="PA_SU_FACE_DATA"/>
-	<reg32 offset="0x0d00" name="SQ_GPR_MANAGEMENT"/>
+	<reg32 offset="0x0c86" name="PA_SU_FACE_DATA">
+		<bitfield name="BASE_ADDR" low="5" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x0d00" name="SQ_GPR_MANAGEMENT">
+		<bitfield name="REG_DYNAMIC" pos="0" type="boolean"/>
+		<bitfield name="REG_SIZE_PIX" low="4" high="11" type="uint"/>
+		<bitfield name="REG_SIZE_VTX" low="12" high="19" type="uint"/>
+	</reg32>
 	<reg32 offset="0x0d01" name="SQ_FLOW_CONTROL"/>
-	<reg32 offset="0x0d02" name="SQ_INST_STORE_MANAGMENT"/>
+	<reg32 offset="0x0d02" name="SQ_INST_STORE_MANAGMENT">
+		<bitfield name="INST_BASE_PIX" low="0" high="11" type="uint"/>
+		<bitfield name="INST_BASE_VTX" low="16" high="27" type="uint"/>
+	</reg32>
 	<reg32 offset="0x0d05" name="SQ_DEBUG_MISC"/>
 	<reg32 offset="0x0d34" name="SQ_INT_CNTL"/>
 	<reg32 offset="0x0d35" name="SQ_INT_STATUS"/>
@@ -397,7 +439,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2106" name="RB_BLEND_GREEN"/>
 	<reg32 offset="0x2107" name="RB_BLEND_BLUE"/>
 	<reg32 offset="0x2108" name="RB_BLEND_ALPHA"/>
-	<reg32 offset="0x2109" name="RB_FOG_COLOR"/>
+	<reg32 offset="0x2109" name="RB_FOG_COLOR">
+		<bitfield name="FOG_RED" low="0" high="7" type="uint"/>
+		<bitfield name="FOG_GREEN" low="8" high="15" type="uint"/>
+		<bitfield name="FOG_BLUE" low="16" high="23" type="uint"/>
+	</reg32>
 	<reg32 offset="0x210c" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210d" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0x210e" name="RB_ALPHA_REF"/>
@@ -432,11 +478,38 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="YEILD_OPTIMIZE" pos="17" type="boolean"/>
 		<bitfield name="TX_CACHE_SEL" pos="18" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x2182" name="SQ_INTERPOLATOR_CNTL"/>
-	<reg32 offset="0x2183" name="SQ_WRAPPING_0"/>
-	<reg32 offset="0x2184" name="SQ_WRAPPING_1"/>
-	<reg32 offset="0x21f6" name="SQ_PS_PROGRAM"/>
-	<reg32 offset="0x21f7" name="SQ_VS_PROGRAM"/>
+	<reg32 offset="0x2182" name="SQ_INTERPOLATOR_CNTL">
+		<bitfield name="PARAM_SHADE" low="0" high="15" type="uint"/>
+		<bitfield name="SAMPLING_PATTERN" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2183" name="SQ_WRAPPING_0">
+		<bitfield name="PARAM_WRAP_0" low="0" high="3" type="uint"/>
+		<bitfield name="PARAM_WRAP_1" low="4" high="7" type="uint"/>
+		<bitfield name="PARAM_WRAP_2" low="8" high="11" type="uint"/>
+		<bitfield name="PARAM_WRAP_3" low="12" high="15" type="uint"/>
+		<bitfield name="PARAM_WRAP_4" low="16" high="19" type="uint"/>
+		<bitfield name="PARAM_WRAP_5" low="20" high="23" type="uint"/>
+		<bitfield name="PARAM_WRAP_6" low="24" high="27" type="uint"/>
+		<bitfield name="PARAM_WRAP_7" low="28" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2184" name="SQ_WRAPPING_1">
+		<bitfield name="PARAM_WRAP_8" low="0" high="3" type="uint"/>
+		<bitfield name="PARAM_WRAP_9" low="4" high="7" type="uint"/>
+		<bitfield name="PARAM_WRAP_10" low="8" high="11" type="uint"/>
+		<bitfield name="PARAM_WRAP_11" low="12" high="15" type="uint"/>
+		<bitfield name="PARAM_WRAP_12" low="16" high="19" type="uint"/>
+		<bitfield name="PARAM_WRAP_13" low="20" high="23" type="uint"/>
+		<bitfield name="PARAM_WRAP_14" low="24" high="27" type="uint"/>
+		<bitfield name="PARAM_WRAP_15" low="28" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x21f6" name="SQ_PS_PROGRAM">
+		<bitfield name="BASE" low="0" high="11" type="uint"/>
+		<bitfield name="SIZE" low="12" high="23" type="uint"/>
+	</reg32>
+	<reg32 offset="0x21f7" name="SQ_VS_PROGRAM">
+		<bitfield name="BASE" low="0" high="11" type="uint"/>
+		<bitfield name="SIZE" low="12" high="23" type="uint"/>
+	</reg32>
 	<reg32 offset="0x21f9" name="VGT_EVENT_INITIATOR"/>
 	<reg32 offset="0x21fc" name="VGT_DRAW_INITIATOR" type="vgt_draw_initiator"/>
 	<reg32 offset="0x21fd" name="VGT_IMMED_DATA"/>
@@ -559,7 +632,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="PATTERN_BIT_ORDER" pos="28" type="a2xx_pa_sc_pattern_bit_order"/>
 		<bitfield name="AUTO_RESET_CNTL" low="29" high="30" type="a2xx_pa_sc_auto_reset_cntl"/>
 	</reg32>
-	<reg32 offset="0x2293" name="PA_SC_VIZ_QUERY"/>
+	<reg32 offset="0x2293" name="PA_SC_VIZ_QUERY">
+		<bitfield name="VIZ_QUERY_ENA" pos="0" type="boolean"/>
+		<bitfield name="VIZ_QUERY_ID" low="1" high="6" type="uint"/>
+		<bitfield name="KILL_PIX_POST_EARLY_Z" pos="8" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x2294" name="VGT_ENHANCE"/>
 	<reg32 offset="0x2300" name="PA_SC_LINE_CNTL">
 		<bitfield name="BRES_CNTL" low="0" high="15" type="uint"/>
@@ -567,7 +644,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="EXPAND_LINE_WIDTH" pos="9" type="boolean"/>
 		<bitfield name="LAST_PIXEL" pos="10" type="boolean"/>
 	</reg32>
-	<reg32 offset="0x2301" name="PA_SC_AA_CONFIG"/>
+	<reg32 offset="0x2301" name="PA_SC_AA_CONFIG">
+		<bitfield name="MSAA_NUM_SAMPLES" low="0" high="2" type="uint"/>
+		<bitfield name="MAX_SAMPLE_DIST" low="13" high="16" type="uint"/>
+	</reg32>
 	<reg32 offset="0x2302" name="PA_SU_VTX_CNTL">
 		<bitfield name="PIX_CENTER" pos="0" type="a2xx_pa_pixcenter"/>
 		<bitfield name="ROUND_MODE" low="1" high="2" type="a2xx_pa_roundmode"/>
@@ -588,8 +668,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x2309" name="SQ_DEBUG_MISC_0"/>
 	<reg32 offset="0x230a" name="SQ_DEBUG_MISC_1"/>
 	<reg32 offset="0x2312" name="PA_SC_AA_MASK"/>
-	<reg32 offset="0x2316" name="VGT_VERTEX_REUSE_BLOCK_CNTL"/>
-	<reg32 offset="0x2317" name="VGT_OUT_DEALLOC_CNTL"/>
+	<reg32 offset="0x2316" name="VGT_VERTEX_REUSE_BLOCK_CNTL">
+		<bitfield name="VTX_REUSE_DEPTH" low="0" high="2" type="uint"/>
+	</reg32>
+	<reg32 offset="0x2317" name="VGT_OUT_DEALLOC_CNTL">
+		<bitfield name="DEALLOC_DIST" low="0" high="1" type="uint"/>
+	</reg32>
 	<reg32 offset="0x2318" name="RB_COPY_CONTROL">
 		<bitfield name="COPY_SAMPLE_SELECT" low="0" high="2" type="a2xx_rb_copy_sample_select"/>
 		<bitfield name="DEPTH_CLEAR_ENABLE" pos="3" type="boolean"/>
