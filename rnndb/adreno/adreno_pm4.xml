@@ -208,7 +208,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- for a3xx -->
 	<doc>load high level sequencer command</doc>
-	<value name="CP_LOAD_STATE" value="0x30"/>
+	<value name="CP_LOAD_STATE" value="0x30" variants="A3XX"/>
+	<value name="CP_LOAD_STATE4" value="0x30" variants="A4XX,A5XX"/>
 	<doc>Conditionally load a IB based on a flag, prefetch enabled</doc>
 	<value name="CP_COND_INDIRECT_BUFFER_PFE" value="0x3a"/>
 	<doc>Conditionally load a IB based on a flag, prefetch disabled</doc>
@@ -360,6 +361,85 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="STATE_TYPE" low="0" high="1" type="adreno_state_type"/>
+		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
+	</reg32>
+</domain>
+
+<domain name="CP_LOAD_STATE4" width="32">
+	<doc>Load state, a4xx+</doc>
+	<enum name="a4xx_state_block">
+		<!--
+		unknown: 0x7 and 0xf <- seen in compute shader
+
+		STATE_BLOCK = 0x6, STATE_TYPE = 0x2 possibly used for preemption?
+		Seen in some GL shaders.  Payload is NUM_UNIT dwords, and it contains
+		the gpuaddr of the following shader constants block.  DST_OFF seems
+		to specify which shader stage:
+
+		    16 -> vert
+		    36 -> tcs
+		    56 -> tes
+		    76 -> geom
+		    96 -> frag
+
+		Example:
+
+opcode: CP_LOAD_STATE4 (30) (12 dwords)
+        { DST_OFF = 16 | STATE_SRC = SS4_DIRECT | STATE_BLOCK = 0x6 | NUM_UNIT = 4 }
+        { STATE_TYPE = 0x2 | EXT_SRC_ADDR = 0 }
+        { EXT_SRC_ADDR_HI = 0 }
+                        0000: c0264100 00000000 00000000 00000000
+                0000: 70b0000b 01180010 00000002 00000000 c0264100 00000000 00000000 00000000
+
+opcode: CP_LOAD_STATE4 (30) (4 dwords)
+        { DST_OFF = 16 | STATE_SRC = SS4_INDIRECT | STATE_BLOCK = SB4_VS_SHADER | NUM_UNIT = 4 }
+        { STATE_TYPE = ST4_CONSTANTS | EXT_SRC_ADDR = 0xc0264100 }
+        { EXT_SRC_ADDR_HI = 0 }
+                        0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+                        0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+                        0000: 00000040 0000000c 00000000 00000000 00000000 00000000 00000000 00000000
+
+		STATE_BLOCK = 0x6, STATE_TYPE = 0x1, seen in compute shader.  NUM_UNITS * 2 dwords.
+
+		 -->
+		<value name="SB4_VS_TEX"    value="0x0"/>
+		<value name="SB4_HS_TEX"    value="0x1"/>    <!-- aka. TCS -->
+		<value name="SB4_DS_TEX"    value="0x2"/>    <!-- aka. TES -->
+		<value name="SB4_GS_TEX"    value="0x3"/>
+		<value name="SB4_FS_TEX"    value="0x4"/>
+		<value name="SB4_CS_TEX"    value="0x5"/>
+		<value name="SB4_VS_SHADER" value="0x8"/>
+		<value name="SB4_HS_SHADER" value="0x9"/>
+		<value name="SB4_DS_SHADER" value="0xa"/>
+		<value name="SB4_GS_SHADER" value="0xb"/>
+		<value name="SB4_FS_SHADER" value="0xc"/>
+		<value name="SB4_CS_SHADER" value="0xd"/>
+		<!--
+		for SSBO, STATE_TYPE=0 appears to be addresses (four dwords each),
+		STATE_TYPE=1 sizes, STATE_TYPE=2 addresses again (two dwords each)
+
+		Compute has it's own dedicated SSBO state, it seems, but the rest
+		of the stages share state
+		 -->
+		<value name="SB4_SSBO"   value="0xe"/>
+		<value name="SB4_CS_SSBO"   value="0xf"/>
+	</enum>
+	<enum name="a4xx_state_type">
+		<value name="ST4_SHADER" value="0"/>
+		<value name="ST4_CONSTANTS" value="1"/>
+	</enum>
+	<enum name="a4xx_state_src">
+		<value name="SS4_DIRECT" value="0"/>
+		<value name="SS4_INDIRECT" value="2"/>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="DST_OFF" low="0" high="15" type="uint"/>
+		<bitfield name="STATE_SRC" low="16" high="17" type="a4xx_state_src"/>
+		<bitfield name="STATE_BLOCK" low="18" high="21" type="a4xx_state_block"/>
+		<bitfield name="NUM_UNIT" low="22" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="STATE_TYPE" low="0" high="1" type="a4xx_state_type"/>
 		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
 	</reg32>
 	<!-- a5xx+: -->
