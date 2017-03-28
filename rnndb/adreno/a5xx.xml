@@ -1682,32 +1682,25 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	</array>
 	<reg32 offset="0xe4f0" name="VFD_POWER_CNTL"/>
 
+	<!-- 0x0 for compute, 0x10 for 3d? -->
 	<reg32 offset="0xe580" name="SP_SP_CNTL"/>
-	<bitset name="a5xx_xs_control_reg" inline="yes">
+
+	<bitset name="a5xx_xs_config" inline="yes">
 		<bitfield name="ENABLED" pos="0" type="boolean"/>
 		<bitfield name="CONSTOBJECTOFFSET" low="1" high="7" type="uint"/>
 		<bitfield name="SHADEROBJOFFSET" low="8" high="14" type="uint"/>
 	</bitset>
 	<bitset name="a5xx_xs_cntl" inline="yes">
+		<bitfield name="SSBO_ENABLE" pos="0" type="boolean"/>
 		<!--
 		no idea high bit.. could be this is amount of on-chip memory used
 		rather than total size?
 		 -->
 		<bitfield name="INSTRLEN" low="1" high="31" type="uint"/>
 	</bitset>
-	<!-- assuming things appear in same relative order as a4xx: -->
-	<!-- duplicated exactly w/ corresponding HLSQ_ regs starting at 0xe78b.. -->
-	<reg32 offset="0xe584" name="SP_VS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe585" name="SP_FS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe586" name="SP_HS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe587" name="SP_DS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe588" name="SP_GS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe589" name="SP_CS_CONFIG"/>
-	<reg32 offset="0xe58a" name="SP_VS_CONFIG_MAX_CONST"/>
-	<reg32 offset="0xe58b" name="SP_FS_CONFIG_MAX_CONST"/>
-	<reg32 offset="0xe590" name="SP_VS_CTRL_REG0">
-		<!-- maybe same as SP_FS_CTRL_REG0, etc? -->
+	<bitset name="a5xx_sp_xs_ctrl_reg0" inline="yes">
 		<!-- bit1 + bit2 set for "buffer" mode (ie. shader small enough to fit internally) -->
+		<!-- 24 or more (full size) GPRS and blob uses TWO_QUADS instead of FOUR_QUADS -->
 		<bitfield name="THREADSIZE" pos="3" type="a3xx_threadsize"/>
 		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
 		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
@@ -1715,7 +1708,18 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="PIXLODENABLE" pos="20" type="boolean"/>
 		<!-- seems to be nesting level for flow control:.. -->
 		<bitfield name="BRANCHSTACK" low="25" high="31" type="uint"/>
-	</reg32>
+	</bitset>
+	<!-- assuming things appear in same relative order as a4xx: -->
+	<!-- duplicated exactly w/ corresponding HLSQ_ regs starting at 0xe78b.. -->
+	<reg32 offset="0xe584" name="SP_VS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe585" name="SP_FS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe586" name="SP_HS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe587" name="SP_DS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe588" name="SP_GS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe589" name="SP_CS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe58a" name="SP_VS_CONFIG_MAX_CONST"/>
+	<reg32 offset="0xe58b" name="SP_FS_CONFIG_MAX_CONST"/>
+	<reg32 offset="0xe590" name="SP_VS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xe592" name="SP_PRIMITIVE_CNTL">
 		<!-- # of VS outputs including pos/psize -->
 		<bitfield name="VSOUT" low="0" high="4" type="uint"/>
@@ -1746,17 +1750,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe5ab" name="UNKNOWN_E5AB"/>
 	<reg32 offset="0xe5ac" name="SP_VS_OBJ_START_LO"/>
 	<reg32 offset="0xe5ad" name="SP_VS_OBJ_START_HI"/>
-	<reg32 offset="0xe5c0" name="SP_FS_CTRL_REG0">
-		<!-- maybe same as SP_VS_CTRL_REG0, etc? -->
-		<!-- bit1 + bit2 set for "buffer" mode (ie. shader small enough to fit internally) -->
-		<!-- 24 or more (full size) GPRS and blob uses TWO_QUADS instead of FOUR_QUADS -->
-		<bitfield name="THREADSIZE" pos="3" type="a3xx_threadsize"/>
-		<bitfield name="HALFREGFOOTPRINT" low="4" high="9" type="uint"/>
-		<bitfield name="FULLREGFOOTPRINT" low="10" high="15" type="uint"/>
-		<bitfield name="VARYING" pos="16" type="boolean"/>
-		<bitfield name="PIXLODENABLE" pos="20" type="boolean"/>
-		<bitfield name="BRANCHSTACK" low="25" high="31" type="uint"/>
-	</reg32>
+	<reg32 offset="0xe5c0" name="SP_FS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xe5c2" name="UNKNOWN_E5C2"/>
 	<reg32 offset="0xe5c3" name="SP_FS_OBJ_START_LO"/>
 	<reg32 offset="0xe5c4" name="SP_FS_OBJ_START_HI"/>
@@ -1785,9 +1779,22 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	guess that could optimize common simple frag shaders..
 	 -->
 	<reg32 offset="0xe5db" name="UNKNOWN_E5DB"/>
-	<reg32 offset="0xe5f0" name="SP_CS_CNTL_0"/>
+	<reg32 offset="0xe5f2" name="UNKNOWN_E5F2"/>
+	<reg32 offset="0xe5f3" name="SP_CS_OBJ_START_LO"/>
+	<reg32 offset="0xe5f4" name="SP_CS_OBJ_START_HI"/>
+	<reg32 offset="0xe5f0" name="SP_CS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
+
 	<reg32 offset="0xe600" name="UNKNOWN_E600"/>
+	<reg32 offset="0xe602" name="UNKNOWN_E602"/>
+	<reg32 offset="0xe603" name="SP_HS_OBJ_START_LO"/>
+	<reg32 offset="0xe604" name="SP_HS_OBJ_START_HI"/>
+	<reg32 offset="0xe62b" name="UNKNOWN_E62B"/>
+	<reg32 offset="0xe62c" name="SP_DS_OBJ_START_LO"/>
+	<reg32 offset="0xe62d" name="SP_DS_OBJ_START_HI"/>
 	<reg32 offset="0xe640" name="UNKNOWN_E640"/>
+	<reg32 offset="0xe65b" name="UNKNOWN_E65B"/>
+	<reg32 offset="0xe65c" name="SP_GS_OBJ_START_LO"/>
+	<reg32 offset="0xe65d" name="SP_GS_OBJ_START_HI"/>
 
 	<reg32 offset="0xe704" name="TPL1_TP_RAS_MSAA_CNTL">
 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
@@ -1806,20 +1813,46 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	CP_LOAD_STATE mechanism is deprecated?
 	 -->
 	<reg32 offset="0xe700" name="TPL1_VS_TEX_COUNT" type="uint"/>
+	<reg32 offset="0xe701" name="TPL1_HS_TEX_COUNT" type="uint"/>
+	<reg32 offset="0xe702" name="TPL1_DS_TEX_COUNT" type="uint"/>
+	<reg32 offset="0xe703" name="TPL1_GS_TEX_COUNT" type="uint"/>
+
 	<reg32 offset="0xe722" name="TPL1_VS_TEX_SAMP_LO"/>
 	<reg32 offset="0xe723" name="TPL1_VS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe724" name="TPL1_HS_TEX_SAMP_LO"/>
+	<reg32 offset="0xe725" name="TPL1_HS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe726" name="TPL1_DS_TEX_SAMP_LO"/>
+	<reg32 offset="0xe727" name="TPL1_DS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe728" name="TPL1_GS_TEX_SAMP_LO"/>
+	<reg32 offset="0xe729" name="TPL1_GS_TEX_SAMP_HI"/>
+
 	<reg32 offset="0xe72a" name="TPL1_VS_TEX_CONST_LO"/>
 	<reg32 offset="0xe72b" name="TPL1_VS_TEX_CONST_HI"/>
+	<reg32 offset="0xe72c" name="TPL1_HS_TEX_CONST_LO"/>
+	<reg32 offset="0xe72d" name="TPL1_HS_TEX_CONST_HI"/>
+	<reg32 offset="0xe72e" name="TPL1_DS_TEX_CONST_LO"/>
+	<reg32 offset="0xe72f" name="TPL1_DS_TEX_CONST_HI"/>
+	<reg32 offset="0xe730" name="TPL1_GS_TEX_CONST_LO"/>
+	<reg32 offset="0xe731" name="TPL1_GS_TEX_CONST_HI"/>
+
 	<reg32 offset="0xe750" name="TPL1_FS_TEX_COUNT" type="uint"/>
+	<reg32 offset="0xe751" name="TPL1_CS_TEX_COUNT" type="uint"/>
+
 	<reg32 offset="0xe75a" name="TPL1_FS_TEX_SAMP_LO"/>
 	<reg32 offset="0xe75b" name="TPL1_FS_TEX_SAMP_HI"/>
+	<reg32 offset="0xe75c" name="TPL1_CS_TEX_SAMP_LO"/>
+	<reg32 offset="0xe75d" name="TPL1_CS_TEX_SAMP_HI"/>
 	<reg32 offset="0xe75e" name="TPL1_FS_TEX_CONST_LO"/>
 	<reg32 offset="0xe75f" name="TPL1_FS_TEX_CONST_HI"/>
+	<reg32 offset="0xe760" name="TPL1_CS_TEX_CONST_LO"/>
+	<reg32 offset="0xe761" name="TPL1_CS_TEX_CONST_HI"/>
+
 	<reg32 offset="0xe764" name="TPL1_TP_FS_ROTATION_CNTL"/>
 
 	<reg32 offset="0xe784" name="HLSQ_CONTROL_0_REG">
 		<!-- 24 or more (full size) GPRS and blob uses TWO_QUADS instead of FOUR_QUADS -->
 		<bitfield name="FSTHREADSIZE" pos="0" type="a3xx_threadsize"/>
+		<bitfield name="CSTHREADSIZE" pos="2" type="a3xx_threadsize"/>
 	</reg32>
 	<reg32 offset="0xe785" name="HLSQ_CONTROL_1_REG">
 		<!-- I guess.. not set exactly same as a4xx, but similar: -->
@@ -1837,13 +1870,18 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="XYCOORDREGID" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="ZWCOORDREGID" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
+	<!--
+	0x020fffff for normal draws, 0x1f00000 for compute.. maybe what state
+	is enabled?  We could probably try disabling different bits and see
+	what breaks to figure out which is what:
+	 -->
 	<reg32 offset="0xe78a" name="HLSQ_UPDATE_CNTL"/>
-	<reg32 offset="0xe78b" name="HLSQ_VS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe78c" name="HLSQ_FS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe78d" name="HLSQ_HS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe78e" name="HLSQ_DS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe78f" name="HLSQ_GS_CONTROL_REG" type="a5xx_xs_control_reg"/>
-	<reg32 offset="0xe790" name="HLSQ_CS_CONFIG"/>
+	<reg32 offset="0xe78b" name="HLSQ_VS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe78c" name="HLSQ_FS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe78d" name="HLSQ_HS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe78e" name="HLSQ_DS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe78f" name="HLSQ_GS_CONFIG" type="a5xx_xs_config"/>
+	<reg32 offset="0xe790" name="HLSQ_CS_CONFIG" type="a5xx_xs_config"/>
 	<reg32 offset="0xe791" name="HLSQ_VS_CNTL" type="a5xx_xs_cntl"/>
 	<reg32 offset="0xe792" name="HLSQ_FS_CNTL" type="a5xx_xs_cntl"/>
 	<reg32 offset="0xe793" name="HLSQ_HS_CNTL" type="a5xx_xs_cntl"/>
@@ -1853,33 +1891,51 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe7b9" name="HLSQ_CS_KERNEL_GROUP_X"/>
 	<reg32 offset="0xe7ba" name="HLSQ_CS_KERNEL_GROUP_Y"/>
 	<reg32 offset="0xe7bb" name="HLSQ_CS_KERNEL_GROUP_Z"/>
-	<reg32 offset="0xe7b0" name="HLSQ_CS_NDRANGE_0"/>
-	<reg32 offset="0xe7b1" name="HLSQ_CS_NDRANGE_1"/>
+	<reg32 offset="0xe7b0" name="HLSQ_CS_NDRANGE_0">
+		<bitfield name="KERNELDIM" low="0" high="1" type="uint"/>
+		<!-- localsize is value minus one: -->
+		<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
+		<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
+		<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0xe7b1" name="HLSQ_CS_NDRANGE_1">
+		<bitfield name="SIZE_X" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0xe7b2" name="HLSQ_CS_NDRANGE_2"/>
-	<reg32 offset="0xe7b3" name="HLSQ_CS_NDRANGE_3"/>
+	<reg32 offset="0xe7b3" name="HLSQ_CS_NDRANGE_3">
+		<bitfield name="SIZE_Y" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0xe7b4" name="HLSQ_CS_NDRANGE_4"/>
-	<reg32 offset="0xe7b5" name="HLSQ_CS_NDRANGE_5"/>
+	<reg32 offset="0xe7b5" name="HLSQ_CS_NDRANGE_5">
+		<bitfield name="SIZE_Z" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0xe7b6" name="HLSQ_CS_NDRANGE_6"/>
-	<reg32 offset="0xe7b7" name="HLSQ_CS_CNTL_0"/>
+	<reg32 offset="0xe7b7" name="HLSQ_CS_CNTL_0">
+		<bitfield name="WGIDCONSTID" low="0" high="7" type="a3xx_regid"/>
+		<!-- possibly one of these is KERNELDIMCONSTID? -->
+		<bitfield name="UNK0" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="UNK1" low="16" high="23" type="a3xx_regid"/>
+		<bitfield name="LOCALIDREGID" low="24" high="31" type="a3xx_regid"/>
+	</reg32>
 	<reg32 offset="0xe7b8" name="HLSQ_CS_CNTL_1"/>
 	<reg32 offset="0xe7c0" name="UNKNOWN_E7C0"/>
 	<reg32 offset="0xe7c3" name="HLSQ_VS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7c4" name="HLSQ_VS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7c5" name="UNKNOWN_E7C5"/>
-	<reg32 offset="0xe7ca" name="UNKNOWN_E7CA"/>
-	<reg32 offset="0xe7d7" name="HLSQ_FS_CONSTLEN" type="uint"/>
-	<reg32 offset="0xe7d8" name="HLSQ_FS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7c8" name="HLSQ_HS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7c9" name="HLSQ_HS_INSTRLEN" type="uint"/>
+	<reg32 offset="0xe7ca" name="UNKNOWN_E7CA"/>
 	<reg32 offset="0xe7cd" name="HLSQ_DS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7ce" name="HLSQ_DS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7cf" name="UNKNOWN_E7CF"/>
 	<reg32 offset="0xe7d2" name="HLSQ_GS_CONSTLEN" type="uint"/>
 	<reg32 offset="0xe7d3" name="HLSQ_GS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7d4" name="UNKNOWN_E7D4"/>
+	<reg32 offset="0xe7d7" name="HLSQ_FS_CONSTLEN" type="uint"/>
+	<reg32 offset="0xe7d8" name="HLSQ_FS_INSTRLEN" type="uint"/>
 	<reg32 offset="0xe7d9" name="UNKNOWN_E7D9"/>
-	<reg32 offset="0xe7dc" name="HLSQ_CONTEXT_SWITCH_CS_SW_3"/>
-	<reg32 offset="0xe7dd" name="HLSQ_CONTEXT_SWITCH_CS_SW_4"/>
+	<reg32 offset="0xe7dc" name="HLSQ_CS_CONSTLEN" type="uint"/>
+	<reg32 offset="0xe7dd" name="HLSQ_CS_INSTRLEN" type="uint"/>
 
 	<!--
 		Separate blit/2d or dma engine?  Seems to get used sometimes for
