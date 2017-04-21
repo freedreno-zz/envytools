@@ -1434,6 +1434,9 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	 -->
 	<reg32 offset="0xe1c7" name="UNKNOWN_E1C7"/>
 	<reg32 offset="0xe1d0" name="RB_WINDOW_OFFSET" type="adreno_reg_xy"/>
+	<reg32 offset="0xe1d1" name="RB_SAMPLE_COUNT_CONTROL">
+		<bitfield name="COPY" pos="1" type="boolean"/>
+	</reg32>
 
 	<doc>
 		Blits:
@@ -1521,6 +1524,9 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe265" name="RB_BLIT_FLAG_DST_PITCH" shr="6" type="uint"/>
 	<!-- array-pitch is size of layer -->
 	<reg32 offset="0xe266" name="RB_BLIT_FLAG_DST_ARRAY_PITCH" shr="6" type="uint"/>
+
+	<reg32 offset="0xe267" name="RB_SAMPLE_COUNT_ADDR_LO"/>
+	<reg32 offset="0xe268" name="RB_SAMPLE_COUNT_ADDR_HI"/>
 
 	<reg32 offset="0xe280" name="VPC_CNTL_0">
 		<doc>

@@ -580,6 +580,29 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 </domain>
 
+<domain name="CP_MEM_TO_MEM" width="32">
+	<reg32 offset="0" name="0">
+		<!--
+		not sure how many src operands we have, but the low
+		bits negate the n'th src argument.
+		 -->
+		<bitfield name="NEG_A" pos="0" type="boolean"/>
+		<bitfield name="NEG_B" pos="1" type="boolean"/>
+		<bitfield name="NEG_C" pos="2" type="boolean"/>
+
+		<!-- if set treat src/dst as 64bit values -->
+		<bitfield name="DOUBLE" pos="29" type="boolean"/>
+	</reg32>
+	<!--
+	followed by sequence of addresses.. the first is the
+	destination and the rest are N src addresses which are
+	summed (after being negated if NEG_x bit set) allowing
+	to do things like 'result += end - start' (which turns
+	out to be useful for queries and accumulating results
+	across multiple tiles)
+	 -->
+</domain>
+
 <domain name="CP_DISPATCH_COMPUTE" width="32">
 	<reg32 offset="0" name="0"/>
 	<reg32 offset="1" name="1">
