@@ -173,6 +173,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x83" name="TFMT5_32_32_32_32_UINT"/>
 	<value value="0x84" name="TFMT5_32_32_32_32_SINT"/>
 	<value value="0xa0" name="TFMT5_X8Z24_UNORM"/>
+
+	<value value="0xb7" name="TFMT5_RGTC1_UNORM"/>
+	<value value="0xb8" name="TFMT5_RGTC1_SNORM"/>
+	<value value="0xbb" name="TFMT5_RGTC2_UNORM"/>
+	<value value="0xbc" name="TFMT5_RGTC2_SNORM"/>
 </enum>
 
 <enum name="a5xx_tex_fetchsize">
