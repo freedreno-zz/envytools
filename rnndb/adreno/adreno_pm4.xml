@@ -127,7 +127,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>register read/modify/write</doc>
 	<value name="CP_REG_RMW" value="0x21"/>
 	<doc>Set binning configuration registers</doc>
-	<value name="CP_SET_BIN_DATA" value="0x2f"/>
+	<value name="CP_SET_BIN_DATA" value="0x2f" variants="A2XX,A3XX,A4XX"/>
+	<value name="CP_SET_BIN_DATA5" value="0x2f" variants="A5XX"/>
 	<doc>reads register in chip and writes to memory</doc>
 	<value name="CP_REG_TO_MEM" value="0x3e"/>
 	<doc>write N 32-bit words to memory</doc>
@@ -565,6 +566,29 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 </domain>
 
+<domain name="CP_SET_BIN_DATA5" width="32">
+	<reg32 offset="0" name="0">
+		<!-- equiv to PC_VSTREAM_CONTROL.SIZE on a3xx/a4xx: -->
+		<bitfield name="VSC_SIZE" low="16" high="21" type="uint"/>
+		<!-- equiv to PC_VSTREAM_CONTROL.N on a3xx/a4xx: -->
+		<bitfield name="VSC_N" low="22" high="26" type="uint"/>
+	</reg32>
+	<!-- BIN_DATA_ADDR -> VSC_PIPE[p].DATA_ADDRESS -->
+	<reg32 offset="1" name="1">
+		<bitfield name="BIN_DATA_ADDR_LO" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="BIN_DATA_ADDR_HI" low="0" high="31" type="hex"/>
+	</reg32>
+	<!-- BIN_SIZE_ADDRESS -> VSC_SIZE_ADDRESS + (p * 4)-->
+	<reg32 offset="3" name="3">
+		<bitfield name="BIN_SIZE_ADDRESS_LO" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="4" name="4">
+		<bitfield name="BIN_SIZE_ADDRESS_HI" low="0" high="31"/>
+	</reg32>
+</domain>
+
 <domain name="CP_REG_TO_MEM" width="32">
 	<reg32 offset="0" name="0">
 		<bitfield name="REG" low="0" high="15" type="hex"/>
@@ -707,6 +731,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		set when in GMEM.. maybe indicates GMEM contents need to be
 		preserved on ctx switch?
 		 -->
+		<bitfield name="VSC_ENABLE" pos="3" type="boolean"/>
 		<bitfield name="GMEM_ENABLE" pos="4" type="boolean"/>
 	</reg32>
 	<reg32 offset="4" name="4"/>
