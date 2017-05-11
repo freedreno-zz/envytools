@@ -197,7 +197,37 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0459" name="CP_IB1_BUFSZ"/>
 	<reg32 offset="0x045a" name="CP_IB2_BASE"/>
 	<reg32 offset="0x045b" name="CP_IB2_BUFSZ"/>
-	<reg32 offset="0x047f" name="CP_STAT"/>
+	<reg32 offset="0x047f" name="CP_STAT">
+		<bitfield pos="31" name="CP_BUSY"/>
+		<bitfield pos="30" name="VS_EVENT_FIFO_BUSY"/>
+		<bitfield pos="29" name="PS_EVENT_FIFO_BUSY"/>
+		<bitfield pos="28" name="CF_EVENT_FIFO_BUSY"/>
+		<bitfield pos="27" name="RB_EVENT_FIFO_BUSY"/>
+		<bitfield pos="26" name="ME_BUSY"/>
+		<bitfield pos="25" name="MIU_WR_C_BUSY"/>
+		<bitfield pos="23" name="CP_3D_BUSY"/>
+		<bitfield pos="22" name="CP_NRT_BUSY"/>
+		<bitfield pos="21" name="RBIU_SCRATCH_BUSY"/>
+		<bitfield pos="20" name="RCIU_ME_BUSY"/>
+		<bitfield pos="19" name="RCIU_PFP_BUSY"/>
+		<bitfield pos="18" name="MEQ_RING_BUSY"/>
+		<bitfield pos="17" name="PFP_BUSY"/>
+		<bitfield pos="16" name="ST_QUEUE_BUSY"/>
+		<bitfield pos="13" name="INDIRECT2_QUEUE_BUSY"/>
+		<bitfield pos="12" name="INDIRECTS_QUEUE_BUSY"/>
+		<bitfield pos="11" name="RING_QUEUE_BUSY"/>
+		<bitfield pos="10" name="CSF_BUSY"/>
+		<bitfield pos="9"  name="CSF_ST_BUSY"/>
+		<bitfield pos="8"  name="EVENT_BUSY"/>
+		<bitfield pos="7"  name="CSF_INDIRECT2_BUSY"/>
+		<bitfield pos="6"  name="CSF_INDIRECTS_BUSY"/>
+		<bitfield pos="5"  name="CSF_RING_BUSY"/>
+		<bitfield pos="4"  name="RCIU_BUSY"/>
+		<bitfield pos="3"  name="RBIU_BUSY"/>
+		<bitfield pos="2"  name="MIU_RD_RETURN_BUSY"/>
+		<bitfield pos="1"  name="MIU_RD_REQ_BUSY"/>
+		<bitfield pos="0"  name="MIU_WR_BUSY"/>
+	</reg32>
 	<reg32 offset="0x0578" name="CP_SCRATCH_REG0" type="uint"/>
 	<reg32 offset="0x0579" name="CP_SCRATCH_REG1" type="uint"/>
 	<reg32 offset="0x057a" name="CP_SCRATCH_REG2" type="uint"/>
