@@ -137,7 +137,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>conditional execution of a sequence of packets</doc>
 	<value name="CP_COND_EXEC" value="0x44"/>
 	<doc>conditional write to memory or register</doc>
-	<value name="CP_COND_WRITE" value="0x45"/>
+	<value name="CP_COND_WRITE" value="0x45" variants="A2XX,A3XX,A4XX"/>
+	<value name="CP_COND_WRITE5" value="0x45" variants="A5XX"/>
 	<doc>generate an event that creates a write to memory when completed</doc>
 	<value name="CP_EVENT_WRITE" value="0x46"/>
 	<doc>generate a VS|PS_done event</doc>
@@ -601,6 +602,68 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	out to be useful for queries and accumulating results
 	across multiple tiles)
 	 -->
+</domain>
+
+<enum name="cp_cond_function">
+	<value value="0" name="WRITE_ALWAYS"/>
+	<value value="1" name="WRITE_LT"/>
+	<value value="2" name="WRITE_LE"/>
+	<value value="3" name="WRITE_EQ"/>
+	<value value="4" name="WRITE_NE"/>
+	<value value="5" name="WRITE_GE"/>
+	<value value="6" name="WRITE_GT"/>
+</enum>
+
+<domain name="CP_COND_WRITE" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="FUNCTION" low="0" high="2" type="cp_cond_function"/>
+		<bitfield name="POLL_MEMORY" pos="4" type="boolean"/>
+		<bitfield name="WRITE_MEMORY" pos="8" type="boolean"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="POLL_ADDR" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="REF" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<bitfield name="MASK" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="4" name="4">
+		<bitfield name="WRITE_ADDR" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="5" name="5">
+		<bitfield name="WRITE_DATA" low="0" high="31"/>
+	</reg32>
+</domain>
+
+<domain name="CP_COND_WRITE5" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="FUNCTION" low="0" high="2" type="cp_cond_function"/>
+		<bitfield name="POLL_MEMORY" pos="4" type="boolean"/>
+		<bitfield name="WRITE_MEMORY" pos="8" type="boolean"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="POLL_ADDR_LO" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="POLL_ADDR_HI" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<bitfield name="REF" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="4" name="4">
+		<bitfield name="MASK" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="5" name="5">
+		<bitfield name="WRITE_ADDR_LO" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="6" name="6">
+		<bitfield name="WRITE_ADDR_HI" low="0" high="31" type="hex"/>
+	</reg32>
+	<reg32 offset="7" name="7">
+		<bitfield name="WRITE_DATA" low="0" high="31"/>
+	</reg32>
 </domain>
 
 <domain name="CP_DISPATCH_COMPUTE" width="32">
