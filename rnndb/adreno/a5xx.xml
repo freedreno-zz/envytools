@@ -7,7 +7,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <import file="adreno/adreno_pm4.xml"/>
 
 <enum name="a5xx_color_fmt">
+	<value value="0x02" name="RB5_A8_UNORM"/>
 	<value value="0x03" name="RB5_R8_UNORM"/>
+	<value value="0x04" name="RB5_R8_SNORM"/>
 	<value value="0x05" name="RB5_R8_UINT"/>
 	<value value="0x06" name="RB5_R8_SINT"/>
 	<value value="0x08" name="RB5_R4G4B4A4_UNORM"/>
@@ -24,6 +26,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x19" name="RB5_R16_SINT"/>
 	<value value="0x30" name="RB5_R8G8B8A8_UNORM"/>
 	<value value="0x31" name="RB5_R8G8B8_UNORM"/>
+	<value value="0x32" name="RB5_R8G8B8A8_SNORM"/>
 	<value value="0x33" name="RB5_R8G8B8A8_UINT"/>
 	<value value="0x34" name="RB5_R8G8B8A8_SINT"/>
 	<value value="0x37" name="RB5_R10G10B10A2_UNORM"/>  <!-- GL_RGB10_A2 -->
@@ -37,6 +40,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x4a" name="RB5_R32_FLOAT"/>
 	<value value="0x4b" name="RB5_R32_UINT"/>
 	<value value="0x4c" name="RB5_R32_SINT"/>
+	<value value="0x60" name="RB5_R16G16B16A16_UNORM"/>
+	<value value="0x61" name="RB5_R16G16B16A16_SNORM"/>
 	<value value="0x62" name="RB5_R16G16B16A16_FLOAT"/>
 	<value value="0x63" name="RB5_R16G16B16A16_UINT"/>
 	<value value="0x64" name="RB5_R16G16B16A16_SINT"/>
@@ -131,6 +136,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <enum name="a5xx_tex_fmt">
 	<value value="0x02" name="TFMT5_A8_UNORM"/>
 	<value value="0x03" name="TFMT5_8_UNORM"/>
+	<value value="0x04" name="TFMT5_8_SNORM"/>
 	<value value="0x05" name="TFMT5_8_UINT"/>
 	<value value="0x06" name="TFMT5_8_SINT"/>
 	<value value="0x08" name="TFMT5_4_4_4_4_UNORM"/>
@@ -148,7 +154,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x19" name="TFMT5_16_SINT"/>
 	<value value="0x30" name="TFMT5_8_8_8_8_UNORM"/>
 	<value value="0x31" name="TFMT5_8_8_8_UNORM"/>
-	<value value="0x32" name="TFMT5_8_8_8_SNORM"/>
+	<value value="0x32" name="TFMT5_8_8_8_8_SNORM"/>
 	<value value="0x33" name="TFMT5_8_8_8_8_UINT"/>
 	<value value="0x34" name="TFMT5_8_8_8_8_SINT"/>
 	<value value="0x35" name="TFMT5_9_9_9_E5_FLOAT"/>
@@ -163,6 +169,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x4a" name="TFMT5_32_FLOAT"/>
 	<value value="0x4b" name="TFMT5_32_UINT"/>
 	<value value="0x4c" name="TFMT5_32_SINT"/>
+	<value value="0x60" name="TFMT5_16_16_16_16_UNORM"/>
+	<value value="0x61" name="TFMT5_16_16_16_16_SNORM"/>
 	<value value="0x62" name="TFMT5_16_16_16_16_FLOAT"/>
 	<value value="0x63" name="TFMT5_16_16_16_16_UINT"/>
 	<value value="0x64" name="TFMT5_16_16_16_16_SINT"/>
