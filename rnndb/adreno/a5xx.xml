@@ -1676,7 +1676,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe384" name="PC_PRIMITIVE_CNTL">
 		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
 		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
-		<!-- bit 10 seems to almost always be set.. but not mrt-fbo, quad-textured.. also see stencil -->
+		<bitfield name="PROVOKING_VTX_LAST" pos="10" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe385" name="PC_PRIM_VTX_CNTL">
 		<bitfield name="PSIZE" pos="11" type="boolean"/>
