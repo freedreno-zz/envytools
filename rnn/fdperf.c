@@ -315,7 +315,8 @@ find_device_fn(const char *fpath, const struct stat *sb, int typeflag, struct FT
 	if (strcmp(fname, "compatible") == 0) {
 		char *str = readfile(fpath, &sz);
 		if ((strcmp(str, "qcom,adreno-3xx") == 0) ||
-				(strcmp(str, "qcom,kgsl-3d0") == 0)) {
+				(strcmp(str, "qcom,kgsl-3d0") == 0) ||
+				(strstr(str, "qcom,adreno") == str)) {
 			int dlen = strlen(fpath) - strlen("/compatible");
 			dev.dtnode = malloc(dlen + 1);
 			memcpy(dev.dtnode, fpath, dlen);
@@ -343,9 +344,20 @@ find_device(void)
 	if (!dev.dtnode)
 		errx(1, "could not find qcom,adreno-3xx node");
 
-	buf = readdt("qcom,chipid");
-	dev.chipid = ntohl(buf[0]);
-	free(buf);
+	fd = open("/dev/dri/card0", O_RDWR);
+	if (fd < 0)
+		err(1, "could not open drm device");
+
+	dev.dev  = fd_device_new(fd);
+	dev.pipe = fd_pipe_new(dev.dev, FD_PIPE_3D);
+	dev.ring = fd_ringbuffer_new(dev.pipe, 0x1000);
+
+	uint64_t val;
+	ret = fd_pipe_get_param(dev.pipe, FD_CHIP_ID, &val);
+	if (ret) {
+		err(1, "could not get gpu-id");
+	}
+	dev.chipid = val;
 
 #define CHIP_FMT "d%d%d.%d"
 #define CHIP_ARGS(chipid) \
@@ -378,14 +390,6 @@ find_device(void)
 	dev.io = mmap(0, dev.size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, dev.base);
 	if (!dev.io)
 		err(1, "could not map device");
-
-	fd = open("/dev/dri/card0", O_RDWR);
-	if (fd < 0)
-		err(1, "could not open drm device");
-
-	dev.dev  = fd_device_new(fd);
-	dev.pipe = fd_pipe_new(dev.dev, FD_PIPE_3D);
-	dev.ring = fd_ringbuffer_new(dev.pipe, 0x1000);
 }
 
 /*
