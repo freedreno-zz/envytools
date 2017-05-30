@@ -785,6 +785,8 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 <domain name="CP_EVENT_WRITE" width="32">
 	<reg32 offset="0" name="0">
 		<bitfield name="EVENT" low="0" high="7" type="vgt_event_type"/>
+		<!-- when set, write back timestamp instead of value from packet: -->
+		<bitfield name="TIMESTAMP" pos="30" type="boolean"/>
 	</reg32>
 	<!--
 	TODO what is gpuaddr for, seems to be all 0's.. maybe needed for
