@@ -61,10 +61,14 @@ struct counter_group {
 		const char *select;   /* reg name, ex: "CP_PERFCOUNTER_SELECT" */
 		const char *val_hi;   /* reg name, ex: "RBBM_PERFCTR_CP_0_HI" */
 		const char *val_lo;   /* reg name, ex: "RBBM_PERFCTR_CP_0_LO" */
+		const char *enable;   /* optional reg name, ex: "VBIF_PERF_PWR_CNT_EN" */
+		const char *clear;    /* optional reg name */
 	} counter[MAX_CNTR_PER_GROUP];
 	struct {
 		uint16_t select_off;
 		uint16_t select_val;
+		uint16_t enable_off;
+		uint16_t clear_off;
 		volatile uint32_t *val_hi;
 		volatile uint32_t *val_lo;
 	} reg[MAX_CNTR_PER_GROUP];
@@ -416,15 +420,51 @@ select_counter(struct counter_group *group, int ctr, int n)
 		OUT_PKT3(ring, CP_WAIT_FOR_IDLE, 1);
 		OUT_RING(ring, 0x00000000);
 
+		if (group->reg[ctr].enable_off) {
+			OUT_PKT0(ring, group->reg[ctr].enable_off, 1);
+			OUT_RING(ring, 0);
+		}
+
+		if (group->reg[ctr].clear_off) {
+			OUT_PKT0(ring, group->reg[ctr].clear_off, 1);
+			OUT_RING(ring, 1);
+
+			OUT_PKT0(ring, group->reg[ctr].clear_off, 1);
+			OUT_RING(ring, 0);
+		}
+
 		OUT_PKT0(ring, group->reg[ctr].select_off, 1);
 		OUT_RING(ring, n);
+
+		if (group->reg[ctr].enable_off) {
+			OUT_PKT0(ring, group->reg[ctr].enable_off, 1);
+			OUT_RING(ring, 1);
+		}
 
 		break;
 	case 5:
 		OUT_PKT7(ring, CP_WAIT_FOR_IDLE, 0);
 
+		if (group->reg[ctr].enable_off) {
+			OUT_PKT4(ring, group->reg[ctr].enable_off, 1);
+			OUT_RING(ring, 0);
+		}
+
+		if (group->reg[ctr].clear_off) {
+			OUT_PKT4(ring, group->reg[ctr].clear_off, 1);
+			OUT_RING(ring, 1);
+
+			OUT_PKT4(ring, group->reg[ctr].clear_off, 1);
+			OUT_RING(ring, 0);
+		}
+
 		OUT_PKT4(ring, group->reg[ctr].select_off, 1);
 		OUT_RING(ring, n);
+
+		if (group->reg[ctr].enable_off) {
+			OUT_PKT4(ring, group->reg[ctr].enable_off, 1);
+			OUT_RING(ring, 1);
+		}
 
 		break;
 	}
@@ -842,6 +882,10 @@ setup_counter_groups(void)
 
 		for (unsigned j = 0; j < group->ncounters; j++) {
 			group->reg[j].select_off = regelem(dev.dom, group->counter[j].select)->offset;
+			if (group->counter[j].enable)
+				group->reg[j].enable_off = regelem(dev.dom, group->counter[j].enable)->offset;
+			if (group->counter[j].clear)
+				group->reg[j].clear_off = regelem(dev.dom, group->counter[j].clear)->offset;
 			group->reg[j].val_hi = dev.io + (regelem(dev.dom, group->counter[j].val_hi)->offset * 4);
 			group->reg[j].val_lo = dev.io + (regelem(dev.dom, group->counter[j].val_lo)->offset * 4);
 			select_counter(group, j, j);
@@ -1123,6 +1167,12 @@ static struct counter_group a4xx_counters[] = {
 		{ "VSC_PERFCTR_VSC_SEL_0", "RBBM_PERFCTR_VSC_0_HI", "RBBM_PERFCTR_VSC_0_LO" },
 		{ "VSC_PERFCTR_VSC_SEL_1", "RBBM_PERFCTR_VSC_1_HI", "RBBM_PERFCTR_VSC_1_LO" },
 	}},
+	{ "VBIF", "a4xx_vbif_perfcounter_select", 4, {
+		{ "VBIF_PERF_CNT_SEL0", "VBIF_PERF_CNT_LOW0", "VBIF_PERF_CNT_HIGH0", "VBIF_PERF_CNT_EN0" },
+		{ "VBIF_PERF_CNT_SEL1", "VBIF_PERF_CNT_LOW1", "VBIF_PERF_CNT_HIGH1", "VBIF_PERF_CNT_EN1" },
+		{ "VBIF_PERF_CNT_SEL2", "VBIF_PERF_CNT_LOW2", "VBIF_PERF_CNT_HIGH2", "VBIF_PERF_CNT_EN2" },
+		{ "VBIF_PERF_CNT_SEL3", "VBIF_PERF_CNT_LOW3", "VBIF_PERF_CNT_HIGH3", "VBIF_PERF_CNT_EN3" },
+	}},
 };
 
 static struct counter_group a5xx_counters[] = {
@@ -1246,6 +1296,12 @@ static struct counter_group a5xx_counters[] = {
 	{ "VSC", "a5xx_vsc_perfcounter_select", 2, {
 		{ "VSC_PERFCTR_VSC_SEL_0", "RBBM_PERFCTR_VSC_0_HI", "RBBM_PERFCTR_VSC_0_LO" },
 		{ "VSC_PERFCTR_VSC_SEL_1", "RBBM_PERFCTR_VSC_1_HI", "RBBM_PERFCTR_VSC_1_LO" },
+	}},
+	{ "VBIF", "a5xx_vbif_perfcounter_select", 4, {
+		{ "VBIF_PERF_CNT_SEL0", "VBIF_PERF_CNT_HIGH0", "VBIF_PERF_CNT_LOW0", "VBIF_PERF_CNT_EN0", "VBIF_PERF_CNT_CLR0" },
+		{ "VBIF_PERF_CNT_SEL1", "VBIF_PERF_CNT_HIGH1", "VBIF_PERF_CNT_LOW1", "VBIF_PERF_CNT_EN1", "VBIF_PERF_CNT_CLR1" },
+		{ "VBIF_PERF_CNT_SEL2", "VBIF_PERF_CNT_HIGH2", "VBIF_PERF_CNT_LOW2", "VBIF_PERF_CNT_EN2", "VBIF_PERF_CNT_CLR2" },
+		{ "VBIF_PERF_CNT_SEL3", "VBIF_PERF_CNT_HIGH3", "VBIF_PERF_CNT_LOW3", "VBIF_PERF_CNT_EN3", "VBIF_PERF_CNT_CLR3" },
 	}},
 };
 

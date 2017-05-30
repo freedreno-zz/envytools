@@ -1665,6 +1665,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x30c1" name="VBIF_PERF_CNT_EN1"/>
 	<reg32 offset="0x30c2" name="VBIF_PERF_CNT_EN2"/>
 	<reg32 offset="0x30c3" name="VBIF_PERF_CNT_EN3"/>
+	<reg32 offset="0x30c8" name="VBIF_PERF_CNT_CLR0"/>
+	<reg32 offset="0x30c8" name="VBIF_PERF_CNT_CLR1"/>
+	<reg32 offset="0x30c8" name="VBIF_PERF_CNT_CLR2"/>
+	<reg32 offset="0x30c8" name="VBIF_PERF_CNT_CLR3"/>
 	<reg32 offset="0x30d0" name="VBIF_PERF_CNT_SEL0" type="a5xx_vbif_perfcounter_select"/>
 	<reg32 offset="0x30d1" name="VBIF_PERF_CNT_SEL1" type="a5xx_vbif_perfcounter_select"/>
 	<reg32 offset="0x30d2" name="VBIF_PERF_CNT_SEL2" type="a5xx_vbif_perfcounter_select"/>
