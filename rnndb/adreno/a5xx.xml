@@ -1617,6 +1617,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 #define A5XX_VBIF_TEST_BUS2_CTRL1_DATA_SEL_SHIFT    0x0
  -->
 	<reg32 offset="0x308c" name="VBIF_TEST_BUS_OUT"/>
+	<reg32 offset="0x30c0" name="VBIF_PERF_CNT_EN0"/>
+	<reg32 offset="0x30c1" name="VBIF_PERF_CNT_EN1"/>
+	<reg32 offset="0x30c2" name="VBIF_PERF_CNT_EN2"/>
+	<reg32 offset="0x30c3" name="VBIF_PERF_CNT_EN3"/>
 	<reg32 offset="0x30d0" name="VBIF_PERF_CNT_SEL0" type="a5xx_vbif_perfcounter_select"/>
 	<reg32 offset="0x30d1" name="VBIF_PERF_CNT_SEL1" type="a5xx_vbif_perfcounter_select"/>
 	<reg32 offset="0x30d2" name="VBIF_PERF_CNT_SEL2" type="a5xx_vbif_perfcounter_select"/>

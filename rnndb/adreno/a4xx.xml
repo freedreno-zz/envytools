@@ -2193,6 +2193,25 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x3030" name="VBIF_IN_WR_LIM_CONF0"/>
 	<reg32 offset="0x3031" name="VBIF_IN_WR_LIM_CONF1"/>
 	<reg32 offset="0x3049" name="VBIF_ROUND_ROBIN_QOS_ARB"/>
+	<reg32 offset="0x30c0" name="VBIF_PERF_CNT_EN0"/>
+	<reg32 offset="0x30c1" name="VBIF_PERF_CNT_EN1"/>
+	<reg32 offset="0x30c2" name="VBIF_PERF_CNT_EN2"/>
+	<reg32 offset="0x30c3" name="VBIF_PERF_CNT_EN3"/>
+	<reg32 offset="0x30d0" name="VBIF_PERF_CNT_SEL0" type="a4xx_vbif_perfcounter_select"/>
+	<reg32 offset="0x30d1" name="VBIF_PERF_CNT_SEL1" type="a4xx_vbif_perfcounter_select"/>
+	<reg32 offset="0x30d2" name="VBIF_PERF_CNT_SEL2" type="a4xx_vbif_perfcounter_select"/>
+	<reg32 offset="0x30d3" name="VBIF_PERF_CNT_SEL3" type="a4xx_vbif_perfcounter_select"/>
+	<reg32 offset="0x30d8" name="VBIF_PERF_CNT_LOW0"/>
+	<reg32 offset="0x30d9" name="VBIF_PERF_CNT_LOW1"/>
+	<reg32 offset="0x30da" name="VBIF_PERF_CNT_LOW2"/>
+	<reg32 offset="0x30db" name="VBIF_PERF_CNT_LOW3"/>
+	<reg32 offset="0x30e0" name="VBIF_PERF_CNT_HIGH0"/>
+	<reg32 offset="0x30e1" name="VBIF_PERF_CNT_HIGH1"/>
+	<reg32 offset="0x30e2" name="VBIF_PERF_CNT_HIGH2"/>
+	<reg32 offset="0x30e3" name="VBIF_PERF_CNT_HIGH3"/>
+	<reg32 offset="0x3100" name="VBIF_PERF_PWR_CNT_EN0"/>
+	<reg32 offset="0x3101" name="VBIF_PERF_PWR_CNT_EN1"/>
+	<reg32 offset="0x3102" name="VBIF_PERF_PWR_CNT_EN2"/>
 
 	<!--
 	Unknown registers:
