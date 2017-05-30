@@ -451,10 +451,20 @@ resample_counter(struct counter_group *group, int ctr)
 	group->stime[ctr] = t;
 }
 
+#define REFRESH_MS 500
+
 /* sample all the counters: */
 static void
 resample(void)
 {
+	static uint64_t last_time;
+	uint64_t current_time = gettime_us();
+
+	if ((current_time - last_time) < (REFRESH_MS * 1000 / 2))
+		return;
+
+	last_time = current_time;
+
 	for (unsigned i = 0; i < dev.ngroups; i++) {
 		struct counter_group *group = &dev.groups[i];
 		for (unsigned j = 0; j < group->ncounters; j++) {
@@ -774,7 +784,7 @@ main_ui(void)
 		goto out;
 
 	cbreak();
-	wtimeout(mainwin, 500);
+	wtimeout(mainwin, REFRESH_MS);
 	noecho();
 	keypad(mainwin, TRUE);
 	curs_set(0);
