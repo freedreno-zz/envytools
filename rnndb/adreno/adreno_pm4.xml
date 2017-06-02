@@ -37,7 +37,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="UNK_1D" value="29" variants="A5XX"/>
 	<value name="BLIT" value="30" variants="A5XX"/>
 	<value name="UNK_25" value="37" variants="A5XX"/>
-	<value name="UNK_26" value="38" variants="A5XX"/>
+	<value name="LRZ_FLUSH" value="38" variants="A5XX"/>
 	<value name="UNK_2C" value="44" variants="A5XX"/>
 	<value name="UNK_2D" value="45" variants="A5XX"/>
 </enum>
@@ -709,6 +709,8 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<value value="2" name="BINNING"/>
 		<value value="3" name="GMEM"/>
 		<value value="5" name="BLIT2D"/>
+		<!-- placeholder name.. used when CP_BLIT packets with BLIT_OP_SCALE?? -->
+		<value value="7" name="BLIT2DSCALE"/>
 		<!-- 8 set before going back to BYPASS exiting 2D -->
 	</enum>
 	<reg32 offset="0" name="0">
@@ -807,6 +809,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	<enum name="cp_blit_cmd">
 		<value value="0" name="BLIT_OP_FILL"/>
 		<value value="1" name="BLIT_OP_COPY"/>
+		<value value="3" name="BLIT_OP_SCALE"/> <!-- used for mipmap generation -->
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="OP" low="0" high="3" type="cp_blit_cmd"/>

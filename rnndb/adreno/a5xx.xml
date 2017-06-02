@@ -1832,6 +1832,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="BINNING_PASS" pos="0" type="boolean"/>
 		<bitfield name="SAMPLES_PASSED" pos="15" type="boolean"/>
 	</reg32>
+	<!-- note, 0x4 for binning pass when frag writes z?? -->
 	<reg32 offset="0xe0a1" name="GRAS_SC_BIN_CNTL"/> <!-- always 00000000? -->
 	<reg32 offset="0xe0a2" name="GRAS_SC_RAS_MSAA_CNTL">
 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
@@ -1848,10 +1849,45 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xe0ea" name="GRAS_SC_WINDOW_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0xe0eb" name="GRAS_SC_WINDOW_SCISSOR_BR" type="adreno_reg_xy"/>
 
-	<reg32 offset="0xe100" name="GRAS_LRZ_CNTL"/> <!-- always 00000000? -->
+	<doc>
+		LRZ:  (Low Resolution Z ??)
+		----
+
+		I think it serves two functions, early discard of primitives in binning
+		pass without needing full resolution depth buffer, and also functions as
+		a depth-prepass, used during the GMEM draws to discard primitives that
+		would not be visible due to later draws.
+
+		The LRZ buffer always seems to be z16 format, regardless of actual
+		depth buffer format.
+
+		Note that LRZ write should be disabled when blend/stencil/etc is enabled,
+		since the occluded primitive can still contribute to final color value
+		of a fragment.
+
+		Only enabled for GL_LESS/GL_LEQUAL/GL_GREATER/GL_GEQUAL?
+	</doc>
+	<reg32 offset="0xe100" name="GRAS_LRZ_CNTL">
+		<bitfield name="ENABLE" pos="0" type="boolean"/>
+		<doc>LRZ write also disabled for blend/etc.</doc>
+		<bitfield name="LRZ_WRITE" pos="1" type="boolean"/>
+		<doc>update MAX instead of MIN value, ie. GL_GREATER/GL_GEQUAL</doc>
+		<bitfield name="GREATER" pos="2" type="boolean"/>
+		<!--
+		b3 set sometimes, when depth buffer isn't cleared.. maybe it
+		invalidates the LRZ buffer?  (Or just the covered positions?
+		 -->
+	</reg32>
 	<reg32 offset="0xe101" name="GRAS_LRZ_BUFFER_BASE_LO"/>
 	<reg32 offset="0xe102" name="GRAS_LRZ_BUFFER_BASE_HI"/>
-	<reg32 offset="0xe103" name="GRAS_LRZ_BUFFER_PITCH"/>
+	<!--
+	lzr pitch is depth pitch (in pixels) / 8 (aligned to 32)..
+	 -->
+	<doc>
+		Pitch is depth width (in pixels) / 8 (aligned to 32).  Height
+		is also divided by 8 (ie. covers 8x8 pixels)
+	</doc>
+	<reg32 offset="0xe103" name="GRAS_LRZ_BUFFER_PITCH" shr="5" type="uint"/>
 	<reg32 offset="0xe104" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE_LO"/>
 	<reg32 offset="0xe105" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE_HI"/>
 
@@ -2121,7 +2157,39 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 
 		NOTES: see: getUBwcBlockSize(), getUBwcMetaBufferSize() at
 		https://android.googlesource.com/platform/hardware/qcom/display/+/android-6.0.1_r40/msm8994/libgralloc/alloc_controller.cpp
-		(note that bpp in bytes, not bits (so really cpp))
+		(note that bpp in bytes, not bits, so really cpp)
+
+		Example Layout 2d w/ mipmap levels:
+
+			100x2000, ifmt=GL_RG, fmt=GL_RG16F, type=GL_FLOAT, meta=64x512@0x8000 (7x500)
+				base=c072e000, offset=16384, size=1703936
+
+				color		flags
+			0	c073a000	c0732000	- level 0 flags is address
+			1	c0838000	c0834000	  programmed in texture state
+			2	c0879000	c0877000
+			3	c089a000	c0899000
+			4	c08ab000	c08aa000
+			5	c08b4000	c08b3000
+			6	c08b9000	c08b8000
+			7	c08bc000	c08bb000
+			8	c08be000	c08bd000
+			9	c08c0000	c08bf000
+			10	c08c2000	c08c1000
+
+		ARRAY_PITCH is the combined size of all the levels plus flags,
+		so 0xc08c3000 - 0xc0732000 = 0x00191000 (1642496); each level
+		takes up a minimum of 2 pages (since color and flags parts are
+		each page aligned.
+
+			{ TILE_MODE = TILE5_3 | SWIZ_X = A5XX_TEX_X | SWIZ_Y = A5XX_TEX_Y | SWIZ_Z = A5XX_TEX_ZERO | SWIZ_W = A5XX_TEX_ONE | MIPLVLS = 0 | FMT = TFMT5_16_16_FLOAT | SWAP = WZYX }
+			{ WIDTH = 100 | HEIGHT = 2000 }
+			{ FETCHSIZE = TFETCH5_4_BYTE | PITCH = 512 | TYPE = A5XX_TEX_2D }
+			{ ARRAY_PITCH = 1642496 | 0x18800000 }  - NOTE c2dc always has 0x18800000 but
+			{ BASE_LO = 0xc0732000 }                  this varies for blob gles driver..
+			{ BASE_HI = 0 | DEPTH = 1 }               not sure what it is
+
+
 	</doc>
 	<reg32 offset="0xe240" name="RB_DEPTH_FLAG_BUFFER_BASE_LO"/>
 	<reg32 offset="0xe241" name="RB_DEPTH_FLAG_BUFFER_BASE_HI"/>
@@ -2375,7 +2443,10 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe5c2" name="UNKNOWN_E5C2"/>
 	<reg32 offset="0xe5c3" name="SP_FS_OBJ_START_LO"/>
 	<reg32 offset="0xe5c4" name="SP_FS_OBJ_START_HI"/>
-	<reg32 offset="0xe5c9" name="SP_BLEND_CNTL"/>
+	<reg32 offset="0xe5c9" name="SP_BLEND_CNTL">
+		<bitfield name="ENABLED" pos="0" type="boolean"/>
+		<bitfield name="UNK8" pos="8" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe5ca" name="SP_FS_OUTPUT_CNTL">
 		<bitfield name="MRT" low="0" high="3" type="uint"/>
 		<bitfield name="DEPTH_REGID" low="5" high="12" type="a3xx_regid"/>
