@@ -457,25 +457,25 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x002b0" name="CEC_RD_FILTER"/>
 
 	<reg32 offset="0x002b4" name="ACTIVE_HSYNC">
-		<bitfield name="START" low="0" high="11" type="uint"/>
+		<bitfield name="START" low="0" high="12" type="uint"/>
 		<bitfield name="END" low="16" high="27" type="uint"/>
 	</reg32>
 	<reg32 offset="0x002b8" name="ACTIVE_VSYNC">
-		<bitfield name="START" low="0" high="11" type="uint"/>
-		<bitfield name="END" low="16" high="27" type="uint"/>
+		<bitfield name="START" low="0" high="12" type="uint"/>
+		<bitfield name="END" low="16" high="28" type="uint"/>
 	</reg32>
 	<reg32 offset="0x002bc" name="VSYNC_ACTIVE_F2">
 		<!-- interlaced, frame 2 -->
-		<bitfield name="START" low="0" high="11" type="uint"/>
-		<bitfield name="END" low="16" high="27" type="uint"/>
+		<bitfield name="START" low="0" high="12" type="uint"/>
+		<bitfield name="END" low="16" high="28" type="uint"/>
 	</reg32>
 	<reg32 offset="0x002c0" name="TOTAL">
-		<bitfield name="H_TOTAL" low="0" high="11" type="uint"/>
-		<bitfield name="V_TOTAL" low="16" high="27" type="uint"/>
+		<bitfield name="H_TOTAL" low="0" high="12" type="uint"/>
+		<bitfield name="V_TOTAL" low="16" high="28" type="uint"/>
 	</reg32>
 	<reg32 offset="0x002c4" name="VSYNC_TOTAL_F2">
 		<!-- interlaced, frame 2 -->
-		<bitfield name="V_TOTAL" low="0" high="11" type="uint"/>
+		<bitfield name="V_TOTAL" low="0" high="12" type="uint"/>
 	</reg32>
 	<reg32 offset="0x002c8" name="FRAME_CTRL">
 		<bitfield name="RGB_MUX_SEL_BGR" pos="12" type="boolean"/>
