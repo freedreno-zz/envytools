@@ -94,6 +94,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="AUDIO_INFO_SOURCE" pos="6" type="boolean"/>
 		<bitfield name="AUDIO_INFO_UPDATE" pos="7" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x00030" name="INFOFRAME_CTRL1">
+		<bitfield name="AVI_INFO_LINE" low="0" high="5" type="uint"/>
+		<bitfield name="AUDIO_INFO_LINE" low="8" high="13" type="uint"/>
+		<bitfield name="MPEG_INFO_LINE" low="16" high="21" type="uint"/>
+		<bitfield name="VENSPEC_INFO_LINE" low="24" high="29" type="uint"/>
+	</reg32>
 	<reg32 offset="0x00034" name="GEN_PKT_CTRL">
 		<!--
 			0x0034 GEN_PKT_CTRL
