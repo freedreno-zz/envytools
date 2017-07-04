@@ -1806,7 +1806,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xc557" name="GPU_CS_AMP_CALIBRATION_CONTROL1"/>
 
 
-	<reg32 offset="0xe000" name="GRAS_CL_CNTL"/> <!-- always 00000080? -->
+	<reg32 offset="0xe000" name="GRAS_CL_CNTL">
+		<bitfield name="ZERO_GB_SCALE_Z" pos="6" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe001" name="UNKNOWN_E001"/> <!-- always 00000000? -->
 	<reg32 offset="0xe004" name="UNKNOWN_E004"/> <!-- always 00000000? -->
 	<reg32 offset="0xe005" name="GRAS_CNTL">
