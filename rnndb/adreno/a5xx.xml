@@ -2387,7 +2387,8 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 			<!-- IDX appears to index into VFD_FETCH[] -->
 			<bitfield name="IDX" low="0" high="4" type="uint"/>
 			<bitfield name="INSTANCED" pos="17" type="boolean"/>
-			<bitfield name="FORMAT" low="20" high="29" type="a5xx_vtx_fmt"/>
+			<bitfield name="FORMAT" low="20" high="27" type="a5xx_vtx_fmt"/>
+			<bitfield name="SWAP" low="28" high="29" type="a3xx_color_swap"/>
 			<bitfield name="UNK30" pos="30" type="boolean"/>
 			<bitfield name="FLOAT" pos="31" type="boolean"/>
 		</reg32>
