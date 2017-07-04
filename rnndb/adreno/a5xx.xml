@@ -184,6 +184,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x67" name="TFMT5_32_32_FLOAT"/>
 	<value value="0x68" name="TFMT5_32_32_UINT"/>
 	<value value="0x69" name="TFMT5_32_32_SINT"/>
+	<value value="0x72" name="TFMT5_32_32_32_UINT"/>
+	<value value="0x73" name="TFMT5_32_32_32_SINT"/>
+	<value value="0x74" name="TFMT5_32_32_32_FLOAT"/>
 	<value value="0x82" name="TFMT5_32_32_32_32_FLOAT"/>
 	<value value="0x83" name="TFMT5_32_32_32_32_UINT"/>
 	<value value="0x84" name="TFMT5_32_32_32_32_SINT"/>
