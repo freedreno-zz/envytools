@@ -86,6 +86,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x33" name="VFMT5_8_8_8_8_UINT"/>
 	<value value="0x34" name="VFMT5_8_8_8_8_SINT"/>
 
+	<value value="0x42" name="VFMT5_11_11_10_FLOAT"/>
+
 	<value value="0x43" name="VFMT5_16_16_UNORM"/>
 	<value value="0x44" name="VFMT5_16_16_SNORM"/>
 	<value value="0x45" name="VFMT5_16_16_FLOAT"/>
