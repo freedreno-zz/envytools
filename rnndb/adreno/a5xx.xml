@@ -2361,7 +2361,11 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe385" name="PC_PRIM_VTX_CNTL">
 		<bitfield name="PSIZE" pos="11" type="boolean"/>
 	</reg32>
-	<reg32 offset="0xe388" name="PC_RASTER_CNTL"/>
+	<reg32 offset="0xe388" name="PC_RASTER_CNTL">
+		<bitfield name="POLYMODE_FRONT_PTYPE" low="0" high="2" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="POLYMODE_BACK_PTYPE" low="3" high="5" type="adreno_pa_su_sc_draw"/>
+		<bitfield name="POLYMODE_ENABLE" pos="6" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe389" name="UNKNOWN_E389"/>
 	<reg32 offset="0xe38c" name="PC_RESTART_INDEX"/>
 	<reg32 offset="0xe38d" name="UNKNOWN_E38D"/>
