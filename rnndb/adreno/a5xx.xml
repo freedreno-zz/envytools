@@ -182,10 +182,38 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x84" name="TFMT5_32_32_32_32_SINT"/>
 	<value value="0xa0" name="TFMT5_X8Z24_UNORM"/>
 
+	<value value="0xab" name="TFMT5_ETC2_RG11_UNORM"/>
+	<value value="0xac" name="TFMT5_ETC2_RG11_SNORM"/>
+	<value value="0xad" name="TFMT5_ETC2_R11_UNORM"/>
+	<value value="0xae" name="TFMT5_ETC2_R11_SNORM"/>
+	<value value="0xaf" name="TFMT5_ETC1"/>
+	<value value="0xb0" name="TFMT5_ETC2_RGB8"/>
+	<value value="0xb1" name="TFMT5_ETC2_RGBA8"/>
+	<value value="0xb2" name="TFMT5_ETC2_RGB8A1"/>
+	<value value="0xb3" name="TFMT5_DXT1"/>
+	<value value="0xb4" name="TFMT5_DXT3"/>
+	<value value="0xb5" name="TFMT5_DXT5"/>
 	<value value="0xb7" name="TFMT5_RGTC1_UNORM"/>
 	<value value="0xb8" name="TFMT5_RGTC1_SNORM"/>
 	<value value="0xbb" name="TFMT5_RGTC2_UNORM"/>
 	<value value="0xbc" name="TFMT5_RGTC2_SNORM"/>
+	<value value="0xbe" name="TFMT5_BPTC_UFLOAT"/>
+	<value value="0xbf" name="TFMT5_BPTC_FLOAT"/>
+	<value value="0xc0" name="TFMT5_BPTC"/>
+	<value value="0xc1" name="TFMT5_ASTC_4x4"/>
+	<value value="0xc2" name="TFMT5_ASTC_5x4"/>
+	<value value="0xc3" name="TFMT5_ASTC_5x5"/>
+	<value value="0xc4" name="TFMT5_ASTC_6x5"/>
+	<value value="0xc5" name="TFMT5_ASTC_6x6"/>
+	<value value="0xc6" name="TFMT5_ASTC_8x5"/>
+	<value value="0xc7" name="TFMT5_ASTC_8x6"/>
+	<value value="0xc8" name="TFMT5_ASTC_8x8"/>
+	<value value="0xc9" name="TFMT5_ASTC_10x5"/>
+	<value value="0xca" name="TFMT5_ASTC_10x6"/>
+	<value value="0xcb" name="TFMT5_ASTC_10x8"/>
+	<value value="0xcc" name="TFMT5_ASTC_10x10"/>
+	<value value="0xcd" name="TFMT5_ASTC_12x10"/>
+	<value value="0xce" name="TFMT5_ASTC_12x12"/>
 </enum>
 
 <enum name="a5xx_tex_fetchsize">
