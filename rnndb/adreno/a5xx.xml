@@ -2003,6 +2003,8 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<reg32 offset="0x0" name="CONTROL">
 			<bitfield name="BLEND" pos="0" type="boolean"/>
 			<bitfield name="BLEND2" pos="1" type="boolean"/>
+			<bitfield name="ROP_ENABLE" pos="2" type="boolean"/>
+			<bitfield name="ROP_CODE" low="3" high="6" type="a3xx_rop_code"/>
 			<bitfield name="COMPONENT_ENABLE" low="7" high="10" type="hex"/>
 		</reg32>
 		<reg32 offset="0x1" name="BLEND_CONTROL">
