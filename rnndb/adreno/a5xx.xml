@@ -2121,11 +2121,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe1c4" name="RB_STENCIL_PITCH" shr="6" type="uint"/>
 	<reg32 offset="0xe1c5" name="RB_STENCIL_ARRAY_PITCH" shr="6" type="uint"/>
 	<reg32 offset="0xe1c6" name="RB_STENCILREFMASK" type="adreno_rb_stencilrefmask"/>
-	<!--
-	prob 0xe1c7 is RB_STENCILREFMASK_BF but blob isn't writing this unless bf
-	stencil explicitly enabled??
-	 -->
-	<reg32 offset="0xe1c7" name="UNKNOWN_E1C7"/>
+	<reg32 offset="0xe1c7" name="RB_STENCILREFMASK_BF" type="adreno_rb_stencilrefmask"/>
 	<reg32 offset="0xe1d0" name="RB_WINDOW_OFFSET" type="adreno_reg_xy"/>
 	<reg32 offset="0xe1d1" name="RB_SAMPLE_COUNT_CONTROL">
 		<bitfield name="COPY" pos="1" type="boolean"/>
