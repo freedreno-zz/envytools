@@ -2505,6 +2505,8 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<array offset="0xe5d3" name="SP_FS_MRT" stride="1" length="8">
 		<reg32 offset="0" name="REG">
 			<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
+			<bitfield name="COLOR_SINT" pos="8" type="boolean"/>
+			<bitfield name="COLOR_UINT" pos="9" type="boolean"/>
 			<bitfield name="COLOR_SRGB" pos="10" type="boolean"/>
 		</reg32>
 	</array>
