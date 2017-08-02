@@ -47,13 +47,12 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FMT_5_5_5_1" value="13"/>
 	<value name="FMT_8_8_8_8_A" value="14"/>
 	<value name="FMT_4_4_4_4" value="15"/>
-	<value name="FMT_10_11_11" value="16"/>
-	<value name="FMT_11_11_10" value="17"/>
+	<value name="FMT_8_8_8" value="16"/>
 	<value name="FMT_DXT1" value="18"/>
 	<value name="FMT_DXT2_3" value="19"/>
 	<value name="FMT_DXT4_5" value="20"/>
+	<value name="FMT_10_10_10_2" value="21"/>
 	<value name="FMT_24_8" value="22"/>
-	<value name="FMT_24_8_FLOAT" value="23"/>
 	<value name="FMT_16" value="24"/>
 	<value name="FMT_16_16" value="25"/>
 	<value name="FMT_16_16_16_16" value="26"/>
@@ -69,29 +68,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="FMT_32_FLOAT" value="36"/>
 	<value name="FMT_32_32_FLOAT" value="37"/>
 	<value name="FMT_32_32_32_32_FLOAT" value="38"/>
-	<value name="FMT_32_AS_8" value="39"/>
-	<value name="FMT_32_AS_8_8" value="40"/>
-	<value name="FMT_16_MPEG" value="41"/>
-	<value name="FMT_16_16_MPEG" value="42"/>
-	<value name="FMT_8_INTERLACED" value="43"/>
-	<value name="FMT_32_AS_8_INTERLACED" value="44"/>
-	<value name="FMT_32_AS_8_8_INTERLACED" value="45"/>
-	<value name="FMT_16_INTERLACED" value="46"/>
-	<value name="FMT_16_MPEG_INTERLACED" value="47"/>
-	<value name="FMT_16_16_MPEG_INTERLACED" value="48"/>
+	<value name="FMT_ATI_TC_RGB" value="39"/>
+	<value name="FMT_ATI_TC_RGBA" value="40"/>
+	<value name="FMT_ATI_TC_555_565_RGB" value="41"/>
+	<value name="FMT_ATI_TC_555_565_RGBA" value="42"/>
+	<value name="FMT_ATI_TC_RGBA_INTERP" value="43"/>
+	<value name="FMT_ATI_TC_555_565_RGBA_INTERP" value="44"/>
+	<value name="FMT_ETC1_RGBA_INTERP" value="46"/>
+	<value name="FMT_ETC1_RGB" value="47"/>
+	<value name="FMT_ETC1_RGBA" value="48"/>
 	<value name="FMT_DXN" value="49"/>
-	<value name="FMT_8_8_8_8_AS_16_16_16_16" value="50"/>
-	<value name="FMT_DXT1_AS_16_16_16_16" value="51"/>
-	<value name="FMT_DXT2_3_AS_16_16_16_16" value="52"/>
-	<value name="FMT_DXT4_5_AS_16_16_16_16" value="53"/>
+	<value name="FMT_2_3_3" value="51"/>
 	<value name="FMT_2_10_10_10_AS_16_16_16_16" value="54"/>
-	<value name="FMT_10_11_11_AS_16_16_16_16" value="55"/>
-	<value name="FMT_11_11_10_AS_16_16_16_16" value="56"/>
+	<value name="FMT_10_10_10_2_AS_16_16_16_16" value="55"/>
 	<value name="FMT_32_32_32_FLOAT" value="57"/>
 	<value name="FMT_DXT3A" value="58"/>
 	<value name="FMT_DXT5A" value="59"/>
 	<value name="FMT_CTX1" value="60"/>
-	<value name="FMT_DXT3A_AS_1_1_1_1" value="61"/>
 </enum>
 
 <enum name="a2xx_sq_ps_vtx_mode">
