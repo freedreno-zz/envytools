@@ -282,12 +282,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DEPTH4_32" value="3"/>
 </enum>
 
-<enum name="a4xx_tess_spacing">
-	<value name="EQUAL_SPACING" value="0"/>
-	<value name="ODD_SPACING" value="2"/>
-	<value name="EVEN_SPACING" value="3"/>
-</enum>
-
 <!--
 NOTE counters extracted from test-perf log with the following awful
 script:

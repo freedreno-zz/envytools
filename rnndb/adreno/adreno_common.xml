@@ -342,5 +342,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="BLEND_MAX_DST_SRC" value="4"/>
 </enum>
 
+<enum name="a4xx_tess_spacing">
+	<value name="EQUAL_SPACING" value="0"/>
+	<value name="ODD_SPACING" value="2"/>
+	<value name="EVEN_SPACING" value="3"/>
+</enum>
+
 </database>
 

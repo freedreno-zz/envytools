@@ -1503,8 +1503,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x0d01" name="PC_ADDR_MODE_CNTL"/>
 	<reg32 offset="0x0d02" name="PC_MODE_CNTL"/> <!-- always 0000001f? -->
-	<reg32 offset="0x0d08" name="UNKNOWN_0D08"/> <!-- always 00000000? -->
-	<reg32 offset="0x0d09" name="UNKNOWN_0D09"/> <!-- always 00000000? -->
+	<reg32 offset="0x0d08" name="PC_TESSFACTOR_ADDR_LO"/>
+	<reg32 offset="0x0d09" name="PC_TESSFACTOR_ADDR_HI"/>
 	<reg32 offset="0x0d10" name="PC_PERFCTR_PC_SEL_0" type="a5xx_pc_perfcounter_select"/>
 	<reg32 offset="0x0d11" name="PC_PERFCTR_PC_SEL_1" type="a5xx_pc_perfcounter_select"/>
 	<reg32 offset="0x0d12" name="PC_PERFCTR_PC_SEL_2" type="a5xx_pc_perfcounter_select"/>
@@ -1850,7 +1850,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="MAX" low="16" high="31" type="ufixed" radix="4"/>
 	</reg32>
 	<reg32 offset="0xe092" name="GRAS_SU_POINT_SIZE" type="fixed" radix="4"/>
-	<reg32 offset="0xe093" name="UNKNOWN_E093"/> <!-- always 00000000? -->
+	<reg32 offset="0xe093" name="GRAS_SU_LAYERED"/>
 	<reg32 offset="0xe094" name="GRAS_SU_DEPTH_PLANE_CNTL">
 		<bitfield name="FRAG_WRITES_Z" pos="0" type="boolean"/>
 		<bitfield name="UNK1" pos="1" type="boolean"/>
@@ -2354,6 +2354,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<!-- # of varyings plus four for gl_Position (plus one if gl_PointSize) -->
 		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
 		<bitfield name="PRIMITIVE_RESTART" pos="8" type="boolean"/>
+		<bitfield name="COUNT_PRIMITIVES" pos="9" type="boolean"/><!-- enabled when gl_PrimitiveIDIn is used -->
 		<bitfield name="PROVOKING_VTX_LAST" pos="10" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe385" name="PC_PRIM_VTX_CNTL">
@@ -2366,9 +2367,18 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	</reg32>
 	<reg32 offset="0xe389" name="UNKNOWN_E389"/>
 	<reg32 offset="0xe38c" name="PC_RESTART_INDEX"/>
-	<reg32 offset="0xe38d" name="UNKNOWN_E38D"/>
-	<reg32 offset="0xe38e" name="PC_GS_PARAM"/>
-	<reg32 offset="0xe38f" name="PC_HS_PARAM"/>
+	<reg32 offset="0xe38d" name="PC_GS_LAYERED"/>
+	<reg32 offset="0xe38e" name="PC_GS_PARAM">
+		<bitfield name="MAX_VERTICES" low="0" high="9" type="uint"/><!-- vertices - 1 -->
+		<bitfield name="INVOCATIONS" low="11" high="15" type="uint"/><!-- invoc - 1 -->
+		<bitfield name="PRIMTYPE" low="23" high="24" type="adreno_pa_su_sc_draw"/>
+	</reg32>
+	<reg32 offset="0xe38f" name="PC_HS_PARAM">
+		<bitfield name="VERTICES_OUT" low="0" high="5" type="uint"/>
+		<bitfield name="SPACING" low="21" high="22" type="a4xx_tess_spacing"/>
+		<bitfield name="CW" pos="23" type="boolean"/>
+		<bitfield name="CONNECTED" pos="24" type="boolean"/>
+	</reg32>
 	<reg32 offset="0xe3b0" name="PC_POWER_CNTL"/>
 
 	<reg32 offset="0xe400" name="VFD_CONTROL_0">
@@ -2377,10 +2387,15 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe401" name="VFD_CONTROL_1">
 		<bitfield name="REGID4VTX" low="0" high="7" type="a3xx_regid"/>
 		<bitfield name="REGID4INST" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="REGID4PRIMID" low="16" high="23" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xe402" name="VFD_CONTROL_2">
+		<bitfield name="REGID_PATCHID" low="0" high="7" type="a3xx_regid"/><!-- same as VFD_CONTROL_3.REGID_PATCHID? -->
 	</reg32>
 	<reg32 offset="0xe403" name="VFD_CONTROL_3">
+		<bitfield name="REGID_PATCHID" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="REGID_TESSX" low="16" high="23" type="a3xx_regid"/>
+		<bitfield name="REGID_TESSY" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xe404" name="VFD_CONTROL_4">
 	</reg32>
