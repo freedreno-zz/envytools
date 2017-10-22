@@ -2651,6 +2651,13 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe7b7" name="HLSQ_CS_CNTL_0">
 		<bitfield name="WGIDCONSTID" low="0" high="7" type="a3xx_regid"/>
 		<!-- possibly one of these is KERNELDIMCONSTID? -->
+		<!--
+		UNK0 appears to be NUMWGCONSTID.. but only works in certain
+		cases?  Blob doesn't appear to use it, but instead emits
+		these via const (uniform).  Which requires some shenanigans
+		for indirect draws when the offset is not strongly aligned
+		enough to use as EXT_SRC_ADDR in CP_LOAD_STATE
+		 -->
 		<bitfield name="UNK0" low="8" high="15" type="a3xx_regid"/>
 		<bitfield name="UNK1" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="LOCALIDREGID" low="24" high="31" type="a3xx_regid"/>
@@ -2856,6 +2863,49 @@ different border-color states per texture..  Looks something like:
 	<reg32 offset="9" name="9"/>
 	<reg32 offset="10" name="10"/>
 	<reg32 offset="11" name="11"/>
+</domain>
+
+<!--
+Note the "SSBO" state blocks are actually used for both images and SSBOs,
+naming is just because I r/e'd SSBOs first.  I should probably come up
+with a better name.
+-->
+<domain name="A5XX_SSBO_0" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="BASE_LO" low="5" high="31" shr="5"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<!-- no BASE_HI here?  Maybe this is only used for 32b mode? -->
+		<doc>Pitch in bytes (so actually stride)</doc>
+		<bitfield name="PITCH" low="0" high="21" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="ARRAY_PITCH" low="12" high="25" shr="12" type="uint"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<!-- bytes per pixel: -->
+		<bitfield name="CPP" low="0" high="5" type="uint"/>
+	</reg32>
+</domain>
+
+<domain name="A5XX_SSBO_1" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="FMT" low="8" high="15" type="a5xx_tex_fmt"/>
+		<bitfield name="WIDTH" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="HEIGHT" low="0" high="15" type="uint"/>
+		<bitfield name="DEPTH" low="16" high="31" type="uint"/>
+	</reg32>
+</domain>
+
+<domain name="A5XX_SSBO_2" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="BASE_LO" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="BASE_HI" low="0" high="31"/>
+	</reg32>
 </domain>
 
 </database>
