@@ -254,9 +254,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="5" name="BLIT_MRT5"/>
 	<value value="6" name="BLIT_MRT6"/>
 	<value value="7" name="BLIT_MRT7"/>
-	<value value="8" name="BLIT_ZS"/>
-	<!-- NOTE: Z32 seen w/ z32_x24s8 but ZS used for z32 (no stencil) -->
-	<value value="9" name="BLIT_Z32"/>
+	<value value="8" name="BLIT_ZS"/>       <!-- depth or combined depth+stencil -->
+	<value value="9" name="BLIT_S"/>        <!-- separate stencil -->
 </enum>
 
 <!-- see comment in a4xx.xml about script to extract countables from test-perf output -->
