@@ -3,6 +3,13 @@
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
+<enum name="chip" bare="yes">
+	<value name="A2XX"/>
+	<value name="A3XX"/>
+	<value name="A4XX"/>
+	<value name="A5XX"/>
+</enum>
+
 <enum name="adreno_pa_su_sc_draw">
 	<value name="PC_DRAW_POINTS" value="0"/>
 	<value name="PC_DRAW_LINES" value="1"/>
