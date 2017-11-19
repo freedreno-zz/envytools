@@ -64,7 +64,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="TILE4_3" value="3"/>
 </enum>
 
-
 <enum name="a4xx_vtx_fmt" prefix="chipset">
 	<!-- hmm, shifted one compared to a3xx?!?  -->
 	<value name="VFMT4_32_FLOAT" value="0x1"/>
@@ -2103,15 +2102,36 @@ perhaps they should be taken with a grain of salt
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x23ca" name="HLSQ_CS_CONTROL"/>
-	<reg32 offset="0x23cd" name="HLSQ_CL_NDRANGE_0"/><!-- 0x1000 | (local size * 2 - 1) -->
-	<reg32 offset="0x23ce" name="HLSQ_CL_NDRANGE_1"/><!-- local_x * block_x -->
+	<reg32 offset="0x23ca" name="HLSQ_CS_CONTROL_REG">
+		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
+		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="ENABLED" pos="16"/>
+		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
+		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x23cd" name="HLSQ_CL_NDRANGE_0">
+		<bitfield name="KERNELDIM" low="0" high="1" type="uint"/>
+		<!-- localsize is value minus one: -->
+		<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
+		<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
+		<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x23ce" name="HLSQ_CL_NDRANGE_1">
+		<bitfield name="SIZE_X" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x23cf" name="HLSQ_CL_NDRANGE_2"/>
-	<reg32 offset="0x23d0" name="HLSQ_CL_NDRANGE_3"/><!-- local_y * block_y -->
+	<reg32 offset="0x23d0" name="HLSQ_CL_NDRANGE_3">
+		<bitfield name="SIZE_Y" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x23d1" name="HLSQ_CL_NDRANGE_4"/>
-	<reg32 offset="0x23d2" name="HLSQ_CL_NDRANGE_5"/><!-- local_z * block_z -->
+	<reg32 offset="0x23d2" name="HLSQ_CL_NDRANGE_5">
+		<bitfield name="SIZE_Z" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0x23d3" name="HLSQ_CL_NDRANGE_6"/>
-	<reg32 offset="0x23d4" name="HLSQ_CL_CONTROL_0"/>
+	<reg32 offset="0x23d4" name="HLSQ_CL_CONTROL_0">
+		<bitfield name="WGIDCONSTID" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="LOCALIDREGID" low="24" high="31" type="a3xx_regid"/>
+	</reg32>
 	<reg32 offset="0x23d5" name="HLSQ_CL_CONTROL_1"/>
 	<reg32 offset="0x23d6" name="HLSQ_CL_KERNEL_CONST"/>
 	<reg32 offset="0x23d7" name="HLSQ_CL_KERNEL_GROUP_X"/>
