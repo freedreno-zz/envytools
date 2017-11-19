@@ -368,7 +368,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 </domain>
 
-<domain name="CP_LOAD_STATE4" width="32">
+<domain name="CP_LOAD_STATE4" width="32" varset="chip">
 	<doc>Load state, a4xx+</doc>
 	<enum name="a4xx_state_block">
 		<!--
@@ -445,8 +445,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<bitfield name="STATE_TYPE" low="0" high="1" type="a4xx_state_type"/>
 		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
 	</reg32>
-	<!-- a5xx+: -->
-	<reg32 offset="2" name="2">
+	<reg32 offset="2" name="2" variants="A5XX-">
 		<bitfield name="EXT_SRC_ADDR_HI" low="0" high="31" shr="0"/>
 	</reg32>
 </domain>
@@ -523,22 +522,19 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 </domain>
 
-<domain name="CP_DRAW_INDIRECT" width="32" varset="chip">
+<domain name="CP_DRAW_INDIRECT" width="32" varset="chip" prefix="chip" variants="A4XX-">
 	<reg32 offset="0" name="0" type="vgt_draw_initiator_a4xx"/>
-	<reg32 offset="1" name="1" variants="A4XX">
+	<reg32 offset="1" name="1">
 		<bitfield name="INDIRECT" low="0" high="31"/>
 	</reg32>
 	<stripe variants="A5XX-">
-		<reg32 offset="1" name="1">
-			<bitfield name="INDIRECT_LO" low="0" high="31"/>
-		</reg32>
 		<reg32 offset="2" name="2">
 			<bitfield name="INDIRECT_HI" low="0" high="31"/>
 		</reg32>
 	</stripe>
 </domain>
 
-<domain name="CP_DRAW_INDX_INDIRECT" width="32" varset="chip">
+<domain name="CP_DRAW_INDX_INDIRECT" width="32" varset="chip" prefix="chip" variants="A4XX-">
 	<reg32 offset="0" name="0" type="vgt_draw_initiator_a4xx"/>
 	<stripe variants="A4XX">
 		<reg32 offset="1" name="1">
@@ -572,8 +568,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</stripe>
 </domain>
 
-<domain name="CP_SET_DRAW_STATE" width="32">
-	<!-- TODO how to make this work properly on a4xx (stride=2) and a5xx? -->
+<domain name="CP_SET_DRAW_STATE" width="32" varset="chip" variants="A4XX-">
 	<array offset="0" name="" stride="3" length="100">
 		<reg32 offset="0" name="0">
 			<bitfield name="COUNT" low="0" high="15" type="uint"/>
@@ -586,7 +581,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<reg32 offset="1" name="1">
 			<bitfield name="ADDR_LO" low="0" high="31" type="hex"/>
 		</reg32>
-		<reg32 offset="2" name="2">
+		<reg32 offset="2" name="2" variants="A5XX-">
 			<bitfield name="ADDR_HI" low="0" high="31" type="hex"/>
 		</reg32>
 	</array>
@@ -882,7 +877,6 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 </domain>
 
-<!-- at least correct for a5xx, double check a4xx: -->
 <domain name="CP_EXEC_CS" width="32">
 	<reg32 offset="0" name="0">
 	</reg32>
@@ -897,21 +891,34 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 </domain>
 
-<domain name="CP_EXEC_CS_INDIRECT" width="32">
+<domain name="CP_EXEC_CS_INDIRECT" width="32" varset="chip" prefix="chip" variants="A4XX-">
 	<reg32 offset="0" name="0">
 	</reg32>
-	<reg32 offset="1" name="1">
-		<bitfield name="ADDR_LO" low="0" high="31"/>
-	</reg32>
-	<reg32 offset="2" name="2">
-		<bitfield name="ADDR_HI" low="0" high="31"/>
-	</reg32>
-	<reg32 offset="3" name="3">
-		<!-- localsize is value minus one: -->
-		<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
-		<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
-		<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
-	</reg32>
+	<stripe variants="A4XX">
+		<reg32 offset="1" name="1">
+			<bitfield name="ADDR" low="0" high="31"/>
+		</reg32>
+		<reg32 offset="2" name="2">
+			<!-- localsize is value minus one: -->
+			<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
+			<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
+			<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
+		</reg32>
+	</stripe>
+	<stripe variants="A5XX-">
+		<reg32 offset="1" name="1">
+			<bitfield name="ADDR_LO" low="0" high="31"/>
+		</reg32>
+		<reg32 offset="2" name="2">
+			<bitfield name="ADDR_HI" low="0" high="31"/>
+		</reg32>
+		<reg32 offset="3" name="3">
+			<!-- localsize is value minus one: -->
+			<bitfield name="LOCALSIZEX" low="2" high="11" type="uint"/>
+			<bitfield name="LOCALSIZEY" low="12" high="21" type="uint"/>
+			<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
+		</reg32>
+	</stripe>
 </domain>
 
 </database>
