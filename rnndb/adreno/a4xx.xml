@@ -2065,50 +2065,20 @@ perhaps they should be taken with a grain of salt
 	<!-- 0x23c4 3 regids, lowest one goes to 0 when *not* per-sample shading -->
 	<reg32 offset="0x23c4" name="HLSQ_CONTROL_4_REG"/>
 
-	<!-- TODO probably a bitset for HLSQ_*S_CONTROL.. -->
-	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL_REG">
+	<bitset name="a4xx_xs_control_reg" inline="yes">
 		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
-		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
+		<bitfield name="CONSTOBJECTOFFSET" low="8" high="14" type="uint"/>
+		<bitfield name="SSBO_ENABLE" pos="15"/>
 		<bitfield name="ENABLED" pos="16"/>
 		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
 		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
-	</reg32>
-	<reg32 offset="0x23c6" name="HLSQ_FS_CONTROL_REG">
-		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
-		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
-		<bitfield name="ENABLED" pos="16"/>
-		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
-		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
-	</reg32>
-	<!-- not quite sure the order of the remainder, so order of hull/domain/geom yet -->
-	<reg32 offset="0x23c7" name="HLSQ_HS_CONTROL_REG">
-		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
-		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
-		<bitfield name="ENABLED" pos="16"/>
-		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
-		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
-	</reg32>
-	<reg32 offset="0x23c8" name="HLSQ_DS_CONTROL_REG">
-		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
-		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
-		<bitfield name="ENABLED" pos="16"/>
-		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
-		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
-	</reg32>
-	<reg32 offset="0x23c9" name="HLSQ_GS_CONTROL_REG">
-		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
-		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
-		<bitfield name="ENABLED" pos="16"/>
-		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
-		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
-	</reg32>
-	<reg32 offset="0x23ca" name="HLSQ_CS_CONTROL_REG">
-		<bitfield name="CONSTLENGTH" low="0" high="7" type="uint"/>
-		<bitfield name="CONSTOBJECTOFFSET" low="8" high="15" type="uint"/>
-		<bitfield name="ENABLED" pos="16"/>
-		<bitfield name="SHADEROBJOFFSET" low="17" high="23" type="uint"/>
-		<bitfield name="INSTRLENGTH" low="24" high="31" type="uint"/>
-	</reg32>
+	</bitset>
+	<reg32 offset="0x23c5" name="HLSQ_VS_CONTROL_REG" type="a4xx_xs_control_reg"/>
+	<reg32 offset="0x23c6" name="HLSQ_FS_CONTROL_REG" type="a4xx_xs_control_reg"/>
+	<reg32 offset="0x23c7" name="HLSQ_HS_CONTROL_REG" type="a4xx_xs_control_reg"/>
+	<reg32 offset="0x23c8" name="HLSQ_DS_CONTROL_REG" type="a4xx_xs_control_reg"/>
+	<reg32 offset="0x23c9" name="HLSQ_GS_CONTROL_REG" type="a4xx_xs_control_reg"/>
+	<reg32 offset="0x23ca" name="HLSQ_CS_CONTROL_REG" type="a4xx_xs_control_reg"/>
 	<reg32 offset="0x23cd" name="HLSQ_CL_NDRANGE_0">
 		<bitfield name="KERNELDIM" low="0" high="1" type="uint"/>
 		<!-- localsize is value minus one: -->
@@ -2387,6 +2357,35 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="5" name="5"/>
 	<reg32 offset="6" name="6"/>
 	<reg32 offset="7" name="7"/>
+</domain>
+
+<domain name="A4XX_SSBO_0" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="BASE" low="5" high="31" shr="5"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<doc>Pitch in bytes (so actually stride)</doc>
+		<bitfield name="PITCH" low="0" high="21" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<bitfield name="ARRAY_PITCH" low="12" high="25" shr="12" type="uint"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<!-- bytes per pixel: -->
+		<bitfield name="CPP" low="0" high="5" type="uint"/>
+	</reg32>
+</domain>
+
+<domain name="A4XX_SSBO_1" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="CPP" low="0" high="4" type="uint"/>
+		<bitfield name="FMT" low="8" high="15" type="a4xx_color_fmt"/>
+		<bitfield name="WIDTH" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="HEIGHT" low="0" high="15" type="uint"/>
+		<bitfield name="DEPTH" low="16" high="31" type="uint"/>
+	</reg32>
 </domain>
 
 </database>
