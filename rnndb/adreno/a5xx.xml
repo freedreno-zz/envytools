@@ -2713,14 +2713,24 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 
 		Separate this into a different domain??  Would that help to
 		restrict which registers we dump based on mode?
+
+		regs 0x2000 to 0x2004 (plus all-zero regs 0x2005-0x2009) look
+		like 2nd source for blending?  Used in mipmap generation.. but
+		maybe layout is a bit different.  (Possibly used for reading
+		src via sampler, to enable scaling??)  0x2040 also used in this
+		case.
 	 -->
+	<reg32 offset="0x2100" name="RB_2D_BLIT_CNTL"/>  <!-- same as 0x2180 -->
 	<reg32 offset="0x2101" name="RB_2D_SRC_SOLID_DW0"/>
 	<reg32 offset="0x2102" name="RB_2D_SRC_SOLID_DW1"/>
 	<reg32 offset="0x2103" name="RB_2D_SRC_SOLID_DW2"/>
 	<reg32 offset="0x2104" name="RB_2D_SRC_SOLID_DW3"/>
 	<reg32 offset="0x2107" name="RB_2D_SRC_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
+		<bitfield name="TILE_MODE" low="8" high="9" type="a5xx_tile_mode"/>
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+		<!-- b12 seems to be set when UBWC "FLAGS" buffer enabled -->
+		<bitfield name="FLAGS" pos="12" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2108" name="RB_2D_SRC_LO"/>
 	<reg32 offset="0x2109" name="RB_2D_SRC_HI"/>
@@ -2730,7 +2740,10 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	</reg32>
 	<reg32 offset="0x2110" name="RB_2D_DST_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
+		<bitfield name="TILE_MODE" low="8" high="9" type="a5xx_tile_mode"/>
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+		<!-- b12 seems to be set when UBWC "FLAGS" buffer enabled -->
+		<bitfield name="FLAGS" pos="12" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x2111" name="RB_2D_DST_LO"/>
 	<reg32 offset="0x2112" name="RB_2D_DST_HI"/>
@@ -2742,15 +2755,22 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0x2141" name="RB_2D_SRC_FLAGS_HI"/>
 	<reg32 offset="0x2143" name="RB_2D_DST_FLAGS_LO"/>
 	<reg32 offset="0x2144" name="RB_2D_DST_FLAGS_HI"/>
+	<reg32 offset="0x2180" name="GRAS_2D_BLIT_CNTL"/> <!-- same as 0x2100 -->
 	<!-- looks same as 0x2107: -->
 	<reg32 offset="0x2181" name="GRAS_2D_SRC_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
+		<bitfield name="TILE_MODE" low="8" high="9" type="a5xx_tile_mode"/>
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+		<!-- b12 seems to be set when UBWC "FLAGS" buffer enabled -->
+		<bitfield name="FLAGS" pos="12" type="boolean"/>
 	</reg32>
 	<!-- looks same as 0x2110: -->
 	<reg32 offset="0x2182" name="GRAS_2D_DST_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
+		<bitfield name="TILE_MODE" low="8" high="9" type="a5xx_tile_mode"/>
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
+		<!-- b12 seems to be set when UBWC "FLAGS" buffer enabled -->
+		<bitfield name="FLAGS" pos="12" type="boolean"/>
 	</reg32>
 <!--
 0x2100 and 0x2180 look like same thing (RB and GRAS versions)..

@@ -757,6 +757,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<!-- placeholder name.. used when CP_BLIT packets with BLIT_OP_SCALE?? -->
 		<value value="7" name="BLIT2DSCALE"/>
 		<!-- 8 set before going back to BYPASS exiting 2D -->
+		<value value="8" name="END2D"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="MODE" low="0" high="8" type="render_mode_cmd"/>
