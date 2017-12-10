@@ -325,6 +325,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="IN_INCR_UPDT_STATE" value="0x55"/>
 	<value name="IN_INCR_UPDT_CONST" value="0x56"/>
 	<value name="IN_INCR_UPDT_INSTR" value="0x57"/>
+
+	<!-- jmptable entry used to handle type4 packet on a5xx+: -->
+	<value name="PKT4" value="0x04" variants="A5XX-"/>
 </enum>
 
 

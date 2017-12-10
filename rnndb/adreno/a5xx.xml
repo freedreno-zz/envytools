@@ -876,6 +876,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0809" name="CP_PFP_STAT_DATA"/>
 	<reg32 offset="0x080b" name="CP_DRAW_STATE_ADDR"/>
 	<reg32 offset="0x080c" name="CP_DRAW_STATE_DATA"/>
+	<reg32 offset="0x080d" name="CP_ME_NRT_ADDR_LO"/>
+	<reg32 offset="0x080e" name="CP_ME_NRT_ADDR_HI"/>
+	<reg32 offset="0x0810" name="CP_ME_NRT_DATA"/>
 	<reg32 offset="0x0817" name="CP_CRASH_SCRIPT_BASE_LO"/>
 	<reg32 offset="0x0818" name="CP_CRASH_SCRIPT_BASE_HI"/>
 	<reg32 offset="0x0819" name="CP_CRASH_DUMP_CNTL"/>
@@ -1503,6 +1506,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x0d01" name="PC_ADDR_MODE_CNTL"/>
 	<reg32 offset="0x0d02" name="PC_MODE_CNTL"/> <!-- always 0000001f? -->
+	<reg32 offset="0x0d04" name="PC_INDEX_BUF_LO"/>
+	<reg32 offset="0x0d05" name="PC_INDEX_BUF_HI"/>
+	<reg32 offset="0x0d06" name="PC_START_INDEX"/>
+	<reg32 offset="0x0d07" name="PC_MAX_INDEX"/>
 	<reg32 offset="0x0d08" name="PC_TESSFACTOR_ADDR_LO"/>
 	<reg32 offset="0x0d09" name="PC_TESSFACTOR_ADDR_HI"/>
 	<reg32 offset="0x0d10" name="PC_PERFCTR_PC_SEL_0" type="a5xx_pc_perfcounter_select"/>
@@ -2531,10 +2538,11 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	guess that could optimize common simple frag shaders..
 	 -->
 	<reg32 offset="0xe5db" name="UNKNOWN_E5DB"/>
+	<reg32 offset="0xe5f0" name="SP_CS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xe5f2" name="UNKNOWN_E5F2"/>
 	<reg32 offset="0xe5f3" name="SP_CS_OBJ_START_LO"/>
 	<reg32 offset="0xe5f4" name="SP_CS_OBJ_START_HI"/>
-	<reg32 offset="0xe5f0" name="SP_CS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
+	<!-- e5f9 something compute related.. seems to change when HLSQ_CS_CNTL_1 changes -->
 
 	<reg32 offset="0xe600" name="UNKNOWN_E600"/>
 	<reg32 offset="0xe602" name="UNKNOWN_E602"/>
