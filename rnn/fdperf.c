@@ -625,8 +625,15 @@ redraw_counter(WINDOW *win, int row, struct counter_group *group,
 	 * for those we want to present as a percentage do we
 	 * need to scale the result.. ie. is it running at some
 	 * multiple or divisor of core clk, etc)
+	 *
+	 * TODO it would be much more clever to get this from xml
+	 * Also.. in some cases I think we want to know how many
+	 * units the counter is counting for, ie. if a320 has 2x
+	 * shader as a306 we might need to scale the result..
 	 */
-	if (strstr(group->label[ctr], "CYCLE"))
+	if (strstr(group->label[ctr], "CYCLE") ||
+			strstr(group->label[ctr], "BUSY") ||
+			strstr(group->label[ctr], "IDLE"))
 		redraw_counter_value_cycles(win, group->current[ctr]);
 	else
 		redraw_counter_value_raw(win, group->current[ctr]);
