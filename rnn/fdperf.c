@@ -821,6 +821,21 @@ out:
 }
 
 static void
+scroll_cntr(int amount)
+{
+	if (amount < 0) {
+		current_cntr = MAX2(1, current_cntr + amount);
+		if (current_counter(NULL) == NULL) {
+			current_cntr = MAX2(1, current_cntr - 1);
+		}
+	} else {
+		current_cntr = MIN2(max_rows - 1, current_cntr + amount);
+		if (current_counter(NULL) == NULL)
+			current_cntr = MIN2(max_rows - 1, current_cntr + 1);
+	}
+}
+
+static void
 main_ui(void)
 {
 	WINDOW *mainwin;
@@ -843,14 +858,18 @@ main_ui(void)
 	while (true) {
 		switch (wgetch(mainwin)) {
 		case KEY_UP:
-			current_cntr = MAX2(1, current_cntr - 1);
-			if (current_counter(NULL) == NULL)
-				current_cntr = MAX2(1, current_cntr - 1);
+			scroll_cntr(-1);
 			break;
 		case KEY_DOWN:
-			current_cntr = MIN2(max_rows - 1, current_cntr + 1);
-			if (current_counter(NULL) == NULL)
-				current_cntr = MIN2(max_rows - 1, current_cntr + 1);
+			scroll_cntr(+1);
+			break;
+		case KEY_NPAGE:  /* page-down */
+			/* TODO figure out # of rows visible? */
+			scroll_cntr(+15);
+			break;
+		case KEY_PPAGE:  /* page-up */
+			/* TODO figure out # of rows visible? */
+			scroll_cntr(-15);
 			break;
 		case KEY_RIGHT:
 			counter_dialog();
