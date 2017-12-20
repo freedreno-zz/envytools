@@ -42,6 +42,7 @@ static int gpuver;
 static struct rnndeccontext *ctx;
 static struct rnndb *db;
 struct rnndomain *dom[2];
+const char *variant;
 
 /* non-verbose mode should output something suitable to feed back into
  * assembler.. verbose mode has additional output useful for debugging
@@ -155,42 +156,20 @@ static void print_alu_name(afuc_opc opc, uint32_t instr)
 
 static char *getpm4(uint32_t id)
 {
-	return rnndec_decode_enum(ctx, "adreno_pm4_type3_packets", id);
+	struct rnnenum *en = rnn_findenum(ctx->db, "adreno_pm4_type3_packets");
+	if (en) {
+		int i;
+		for (i = 0; i < en->valsnum; i++)
+			if (en->vals[i]->valvalid && en->vals[i]->value == id) {
+				const char *v = en->vals[i]->varinfo.variantsstr;
+				if (v && !strstr(v, variant))
+					continue;
+				return en->vals[i]->name;
+			}
+	}
+	return NULL;
 }
 
-
-static uint32_t label_offsets[0x512];
-static int num_label_offsets;
-
-static int label_idx(uint32_t offset, bool create)
-{
-	int i;
-	for (i = 0; i < num_label_offsets; i++)
-		if (offset == label_offsets[i])
-			return i;
-	if (!create)
-		return -1;
-	label_offsets[i] = offset;
-	num_label_offsets = i+1;
-	return i;
-}
-
-
-static uint32_t fxn_offsets[0x512];
-static int num_fxn_offsets;
-
-static int fxn_idx(uint32_t offset, bool create)
-{
-	int i;
-	for (i = 0; i < num_fxn_offsets; i++)
-		if (offset == fxn_offsets[i])
-			return i;
-	if (!create)
-		return -1;
-	fxn_offsets[i] = offset;
-	num_fxn_offsets = i+1;
-	return i;
-}
 
 static struct {
 	uint32_t offset;
@@ -228,6 +207,79 @@ static int get_jump_table_entry(uint32_t offset)
 			return i;
 
 	return -1;
+}
+
+static uint32_t label_offsets[0x512];
+static int num_label_offsets;
+
+static int label_idx(uint32_t offset, bool create)
+{
+	int i;
+	for (i = 0; i < num_label_offsets; i++)
+		if (offset == label_offsets[i])
+			return i;
+	if (!create)
+		return -1;
+	label_offsets[i] = offset;
+	num_label_offsets = i+1;
+	return i;
+}
+
+static const char *
+label_name(uint32_t offset, bool allow_jt)
+{
+	static char name[8];
+	int lidx;
+
+	if (allow_jt) {
+		lidx = get_jump_table_entry(offset);
+		if (lidx >= 0) {
+			int j;
+			for (j = 0; j < jump_labels[lidx].num_jump_labels; j++) {
+				uint32_t jump_label = jump_labels[lidx].jump_labels[j];
+				char *str = getpm4(jump_label);
+				if (str)
+					return str;
+			}
+			// if we don't find anything w/ known name, maybe we should
+			// return UNKN%d to at least make it clear that this is some
+			// sort of jump-table entry?
+		}
+	}
+
+	lidx = label_idx(offset, false);
+	if (lidx < 0)
+		return NULL;
+	sprintf(name, "l%03d", lidx);
+	return name;
+}
+
+
+static uint32_t fxn_offsets[0x512];
+static int num_fxn_offsets;
+
+static int fxn_idx(uint32_t offset, bool create)
+{
+	int i;
+	for (i = 0; i < num_fxn_offsets; i++)
+		if (offset == fxn_offsets[i])
+			return i;
+	if (!create)
+		return -1;
+	fxn_offsets[i] = offset;
+	num_fxn_offsets = i+1;
+	return i;
+}
+
+static const char *
+fxn_name(uint32_t offset)
+{
+	static char name[8];
+	int fidx = fxn_idx(offset, false);
+	if (fidx < 0)
+		return NULL;
+	sprintf(name, "fxn%02d", fidx);
+	return name;
 }
 
 static void disasm(uint32_t *buf, int sizedwords)
@@ -272,15 +324,16 @@ static void disasm(uint32_t *buf, int sizedwords)
 
 	/* print instructions: */
 	for (i = 0; i < jmptbl_start; i++) {
-		int lidx, fidx, jump_label_idx;
+		int jump_label_idx;
 		afuc_instr *instr = (void *)&instrs[i];
+		const char *fname, *lname;
 		afuc_opc opc;
 		bool flush;
 
 		afuc_get_opc(instr, &opc, &flush);
 
-		lidx = label_idx(i, false);
-		fidx = fxn_idx(i, false);
+		lname = label_name(i, false);
+		fname = fxn_name(i);
 		jump_label_idx = get_jump_table_entry(i);
 
 		if (jump_label_idx >= 0) {
@@ -298,14 +351,14 @@ static void disasm(uint32_t *buf, int sizedwords)
 			}
 		}
 
-		if (fidx >= 0) {
-			printlbl("f%02d", fidx);
+		if (fname) {
+			printlbl("%s", fname);
 			printf(":\n");
 		}
 
-		if (lidx >= 0) {
-			printlbl(" l%02d", lidx);
-			printf(": ");
+		if (lname) {
+			printlbl(" %s", lname);
+			printf(":");
 		} else {
 			printf("      ");
 		}
@@ -474,14 +527,14 @@ static void disasm(uint32_t *buf, int sizedwords)
 			}
 
 			printf(" #");
-			printlbl("l%02d", label_idx(off, false));
+			printlbl("%s", label_name(off, true));
 			if (verbose)
 				printf(" (#%d, %04x)", instr->br.ioff, off);
 			break;
 		}
 		case OPC_CALL:
 			printf("call #");
-			printlbl("f%02d", fxn_idx(instr->call.uoff, false));
+			printlbl("%s", fxn_name(instr->call.uoff));
 			if (verbose) {
 				printf(" (%04x)", instr->call.uoff);
 				if (instr->br.bit_or_imm || instr->br.src) {
@@ -572,7 +625,7 @@ static void usage(void)
 int main(int argc, char **argv)
 {
 	uint32_t *buf;
-	char *file, *name;
+	char *file;
 	bool colors = false;
 	int sz, c;
 
@@ -610,7 +663,7 @@ int main(int argc, char **argv)
 	switch (gpuver) {
 	case 5:
 		printf("; a5xx microcode\n");
-		name = "A5XX";
+		variant = "A5XX";
 		break;
 	default:
 		fprintf(stderr, "unknown GPU version!\n");
@@ -624,7 +677,7 @@ int main(int argc, char **argv)
 	ctx->colors = colors ? &envy_def_colors : &envy_null_colors;
 
 	rnn_parsefile(db, "adreno.xml");
-	dom[0] = rnn_finddomain(db, name);
+	dom[0] = rnn_finddomain(db, variant);
 	dom[1] = rnn_finddomain(db, "AXXX");
 
 	buf = (uint32_t *)readfile(file, &sz);
