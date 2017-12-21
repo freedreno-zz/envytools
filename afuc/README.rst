@@ -141,7 +141,9 @@ Simple subroutines can be implemented with ``call``/``ret``.  The
 jump instruction encodes a fixed offset.
 
   TODO not sure how many levels deep function calls can be nested.
-  There isn't really a stack.  Probably just a single level.
+  There isn't really a stack.  Definitely seems to be multiple
+  levels of fxn call, see in PFP: CP_CONTEXT_SWITCH_YIELD -> f13 ->
+  f22.
 
 
 .. _afuc-control:

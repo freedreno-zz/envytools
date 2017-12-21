@@ -170,6 +170,18 @@ static char *getpm4(uint32_t id)
 	return NULL;
 }
 
+static inline unsigned
+_odd_parity_bit(unsigned val)
+{
+	/* See: http://graphics.stanford.edu/~seander/bithacks.html#ParityParallel
+	 * note that we want odd parity so 0x6996 is inverted.
+	 */
+	val ^= val >> 16;
+	val ^= val >> 8;
+	val ^= val >> 4;
+	val &= 0xf;
+	return (~0x6996 >> val) & 1;
+}
 
 static struct {
 	uint32_t offset;
@@ -422,14 +434,45 @@ static void disasm(uint32_t *buf, int sizedwords)
 
 			break;
 		}
-		case OPC_MOVI:
+		case OPC_MOVI: {
 			printf("mov ");
 			print_dst(instr->movi.dst);
 			printf(", 0x%04x", instr->movi.uimm);
 			if (instr->movi.shift)
 				printf(" << %u", instr->movi.shift);
+
+			/* using mov w/ << 16 is popular way to construct a pkt7
+			 * header to send (for ex, from PFP to ME), so check that
+			 * case first
+			 */
+			if ((instr->movi.shift == 16) &&
+					((instr->movi.uimm & 0xff00) == 0x7000)) {
+				unsigned opc, p;
+
+				opc = instr->movi.uimm & 0x7f;
+				p = _odd_parity_bit(opc);
+
+				/* So, you'd think that checking the parity bit would be
+				 * a good way to rule out false positives, but seems like
+				 * ME doesn't really care.. at least it would filter out
+				 * things that look like actual legit packets between
+				 * PFP and ME..
+				 */
+				if (1 || p == ((instr->movi.uimm >> 7) & 0x1)) {
+					const char *name = getpm4(opc);
+					printf("\t; ");
+					if (name)
+						printlbl("%s", name);
+					else
+						printlbl("UNKN%u", opc);
+					break;
+				}
+			}
+
 			print_gpu_reg(instr->movi.uimm << instr->movi.shift);
+
 			break;
+		}
 		case OPC_ALU: {
 			bool src1 = true;
 
