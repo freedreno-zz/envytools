@@ -2159,6 +2159,8 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe211" name="RB_RESOLVE_CNTL_1" type="adreno_reg_xy"/>
 	<reg32 offset="0xe212" name="RB_RESOLVE_CNTL_2" type="adreno_reg_xy"/>
 	<reg32 offset="0xe213" name="RB_RESOLVE_CNTL_3">
+		<!-- if b0 set, output is in TILE5_3 format -->
+		<bitfield name="TILED" pos="0" type="boolean"/>
 	<!--
 		0xe213:
 		        0x0 mem->gmem
