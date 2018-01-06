@@ -606,7 +606,7 @@ static void
 redraw_counter_value_raw(WINDOW *win, float val)
 {
 	char *str;
-	asprintf(&str, "%.2f", val);
+	asprintf(&str, "%'.2f", val);
 	waddstr(win, str);
 	whline(win, ' ', w - getcurx(win));
 	free(str);
