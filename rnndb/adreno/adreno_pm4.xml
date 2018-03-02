@@ -289,6 +289,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- switches SMMU pagetable, used on a5xx only -->
 	<value name="CP_PERFCOUNTER_ACTION" value="0x50" variants="A5XX"/>
 	<value name="CP_SMMU_TABLE_UPDATE" value="0x53" variants="A5XX"/>
+	<!-- for a6xx -->
+	<doc>Tells CP the current mode of GPU operation</doc>
+	<value name="CP_SET_MARKER" value="0x65" variants="A6XX"/>
+	<doc>Instruct CP to set a few inernal CP registers</doc>
+	<value name="CP_SET_PSEUDO_REG" value="0x56" variants="A6XX"/>
 	<!--
 	pairs of regid and value.. seems to be used to program some TF
 	related regs:
