@@ -2665,17 +2665,23 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0xe7b1" name="HLSQ_CS_NDRANGE_1">
-		<bitfield name="SIZE_X" low="0" high="31" type="uint"/>
+		<bitfield name="GLOBALSIZE_X" low="0" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0xe7b2" name="HLSQ_CS_NDRANGE_2"/>
+	<reg32 offset="0xe7b2" name="HLSQ_CS_NDRANGE_2">
+		<bitfield name="GLOBALOFF_X" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0xe7b3" name="HLSQ_CS_NDRANGE_3">
-		<bitfield name="SIZE_Y" low="0" high="31" type="uint"/>
+		<bitfield name="GLOBALSIZE_Y" low="0" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0xe7b4" name="HLSQ_CS_NDRANGE_4"/>
+	<reg32 offset="0xe7b4" name="HLSQ_CS_NDRANGE_4">
+		<bitfield name="GLOBALOFF_Y" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0xe7b5" name="HLSQ_CS_NDRANGE_5">
-		<bitfield name="SIZE_Z" low="0" high="31" type="uint"/>
+		<bitfield name="GLOBALSIZE_Z" low="0" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0xe7b6" name="HLSQ_CS_NDRANGE_6"/>
+	<reg32 offset="0xe7b6" name="HLSQ_CS_NDRANGE_6">
+		<bitfield name="GLOBALOFF_Z" low="0" high="31" type="uint"/>
+	</reg32>
 	<reg32 offset="0xe7b7" name="HLSQ_CS_CNTL_0">
 		<bitfield name="WGIDCONSTID" low="0" high="7" type="a3xx_regid"/>
 		<!-- possibly one of these is KERNELDIMCONSTID? -->
