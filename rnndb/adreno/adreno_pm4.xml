@@ -22,22 +22,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CACHE_FLUSH_AND_INV_TS_EVENT" value="20" variants="A2XX,A3XX,A4XX"/>
 	<value name="ZPASS_DONE" value="21"/>
 	<value name="CACHE_FLUSH_AND_INV_EVENT" value="22"/>
-	<value name="PERFCOUNTER_START" value="23"/>
-	<value name="PERFCOUNTER_STOP" value="24"/>
+	<value name="PERFCOUNTER_START" value="23" variants="A2XX,A3XX,A4XX"/>
+	<value name="PERFCOUNTER_STOP" value="24" variants="A2XX,A3XX,A4XX"/>
 	<value name="VS_FETCH_DONE" value="27"/>
 	<value name="FACENESS_FLUSH" value="28" variants="A2XX,A3XX,A4XX"/>
 
 	<!-- a5xx events -->
-	<value name="FLUSH_SO_0" value="17" variants="A5XX"/>
-	<value name="FLUSH_SO_1" value="18" variants="A5XX"/>
-	<value name="FLUSH_SO_2" value="19" variants="A5XX"/>
-	<value name="FLUSH_SO_3" value="20" variants="A5XX"/>
-	<value name="UNK_19" value="25" variants="A5XX"/>
-	<value name="UNK_1C" value="28" variants="A5XX"/>
-	<value name="UNK_1D" value="29" variants="A5XX"/>
-	<value name="BLIT" value="30" variants="A5XX"/>
+	<value name="FLUSH_SO_0" value="17" variants="A5XX,A6XX"/>
+	<value name="FLUSH_SO_1" value="18" variants="A5XX,A6XX"/>
+	<value name="FLUSH_SO_2" value="19" variants="A5XX,A6XX"/>
+	<value name="FLUSH_SO_3" value="20" variants="A5XX,A6XX"/>
+	<value name="PC_CCU_INVALIDATE_DEPTH" value="24" variants="A5XX,A6XX"/>
+	<value name="PC_CCU_INVALIDATE_COLOR" value="25" variants="A5XX,A6XX"/>
+	<value name="UNK_1C" value="28" variants="A5XX,A6XX"/>
+	<value name="UNK_1D" value="29" variants="A5XX,A6XX"/>
+	<value name="BLIT" value="30" variants="A5XX,A6XX"/>
 	<value name="UNK_25" value="37" variants="A5XX"/>
-	<value name="LRZ_FLUSH" value="38" variants="A5XX"/>
+	<value name="LRZ_FLUSH" value="38" variants="A5XX,A6XX"/>
 	<value name="UNK_2C" value="44" variants="A5XX"/>
 	<value name="UNK_2D" value="45" variants="A5XX"/>
 </enum>
@@ -119,7 +120,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>wait until a register location is equal to a specific value</doc>
 	<value name="CP_WAIT_REG_EQ" value="0x52"/>
 	<doc>wait until a register location is >= a specific value</doc>
-	<value name="CP_WAIT_REG_GTE" value="0x53"/>
+	<value name="CP_WAIT_REG_GTE" value="0x53" variants="A2XX,A3XX,A4XX"/>
 	<doc>wait until a read completes</doc>
 	<value name="CP_WAIT_UNTIL_READ" value="0x5c" variants="A2XX,A3XX,A4XX"/>
 	<doc>wait until all base/size writes from an IB_PFD packet have completed</doc>
@@ -128,7 +129,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_REG_RMW" value="0x21"/>
 	<doc>Set binning configuration registers</doc>
 	<value name="CP_SET_BIN_DATA" value="0x2f" variants="A2XX,A3XX,A4XX"/>
-	<value name="CP_SET_BIN_DATA5" value="0x2f" variants="A5XX"/>
+	<value name="CP_SET_BIN_DATA5" value="0x2f" variants="A5XX,A6XX"/>
 	<doc>reads register in chip and writes to memory</doc>
 	<value name="CP_REG_TO_MEM" value="0x3e"/>
 	<doc>write N 32-bit words to memory</doc>
@@ -139,7 +140,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_COND_EXEC" value="0x44"/>
 	<doc>conditional write to memory or register</doc>
 	<value name="CP_COND_WRITE" value="0x45" variants="A2XX,A3XX,A4XX"/>
-	<value name="CP_COND_WRITE5" value="0x45" variants="A5XX"/>
+	<value name="CP_COND_WRITE5" value="0x45" variants="A5XX,A6XX"/>
 	<doc>generate an event that creates a write to memory when completed</doc>
 	<value name="CP_EVENT_WRITE" value="0x46"/>
 	<doc>generate a VS|PS_done event</doc>
@@ -156,9 +157,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>initiate fetch of index buffer and draw</doc>
 	<value name="CP_DRAW_INDX" value="0x22"/>
 	<doc>draw using supplied indices in packet</doc>
-	<value name="CP_DRAW_INDX_2" value="0x36"/>
+	<value name="CP_DRAW_INDX_2" value="0x36" variants="A2XX,A3XX,A4XX"/>  <!-- this is something different on a6xx and unused on a5xx -->
 	<doc>initiate fetch of index buffer and binIDs and draw</doc>
-	<value name="CP_DRAW_INDX_BIN" value="0x34"/>
+	<value name="CP_DRAW_INDX_BIN" value="0x34" variants="A2XX,A3XX,A4XX"/>
 	<doc>initiate fetch of bin IDs and draw using supplied indices</doc>
 	<value name="CP_DRAW_INDX_2_BIN" value="0x35" variants="A2XX,A3XX,A4XX"/>
 	<doc>begin/end initiator for viz query extent processing</doc>
@@ -215,7 +216,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>Conditionally load a IB based on a flag, prefetch enabled</doc>
 	<value name="CP_COND_INDIRECT_BUFFER_PFE" value="0x3a"/>
 	<doc>Conditionally load a IB based on a flag, prefetch disabled</doc>
-	<value name="CP_COND_INDIRECT_BUFFER_PFD" value="0x32"/>
+	<value name="CP_COND_INDIRECT_BUFFER_PFD" value="0x32" variants="A3XX"/>
 	<doc>Load a buffer with pre-fetch enabled</doc>
 	<value name="CP_INDIRECT_BUFFER_PFE" value="0x3f"/>
 	<doc>Set bin (?)</doc>
@@ -286,25 +287,25 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>
 		for a5xx
 	</doc>
-	<!-- switches SMMU pagetable, used on a5xx only -->
 	<value name="CP_PERFCOUNTER_ACTION" value="0x50" variants="A5XX"/>
-	<value name="CP_SMMU_TABLE_UPDATE" value="0x53" variants="A5XX"/>
+	<!-- switches SMMU pagetable, used on a5xx only -->
+	<value name="CP_SMMU_TABLE_UPDATE" value="0x53" variants="A5XX,A6XX"/>
 	<!-- for a6xx -->
 	<doc>Tells CP the current mode of GPU operation</doc>
 	<value name="CP_SET_MARKER" value="0x65" variants="A6XX"/>
-	<doc>Instruct CP to set a few inernal CP registers</doc>
+	<doc>Instruct CP to set a few internal CP registers</doc>
 	<value name="CP_SET_PSEUDO_REG" value="0x56" variants="A6XX"/>
 	<!--
 	pairs of regid and value.. seems to be used to program some TF
 	related regs:
 	 -->
-	<value name="CP_CONTEXT_REG_BUNCH" value="0x5c" variants="A5XX"/>
+	<value name="CP_CONTEXT_REG_BUNCH" value="0x5c" variants="A5XX,A6XX"/>
 	<!-- A5XX Enable yield in RB only -->
 	<value name="CP_YIELD_ENABLE" value="0x1c" variants="A5XX"/>
-	<value name="CP_SKIP_IB2_ENABLE_GLOBAL" value="0x1d" variants="A5XX"/>
-	<value name="CP_SKIP_IB2_ENABLE_LOCAL" value="0x23" variants="A5XX"/>
+	<value name="CP_SKIP_IB2_ENABLE_GLOBAL" value="0x1d" variants="A5XX,A6XX"/>
+	<value name="CP_SKIP_IB2_ENABLE_LOCAL" value="0x23" variants="A5XX,A6XX"/>
 	<value name="CP_SET_SUBDRAW_SIZE" value="0x35" variants="A5XX"/>
-	<value name="CP_SET_VISIBILITY_OVERRIDE" value="0x64" variants="A5XX"/>
+	<value name="CP_SET_VISIBILITY_OVERRIDE" value="0x64" variants="A5XX,A6XX"/>
 	<!-- Enable/Disable/Defer A5x global preemption model -->
 	<value name="CP_PREEMPT_ENABLE_GLOBAL" value="0x69" variants="A5XX"/>
 	<!-- Enable/Disable A5x local preemption model -->
@@ -315,21 +316,41 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_SET_RENDER_MODE" value="0x6c" variants="A5XX"/>
 	<value name="CP_COMPUTE_CHECKPOINT" value="0x6e" variants="A5XX"/>
 	<!-- check if this works on earlier.. -->
-	<value name="CP_MEM_TO_MEM" value="0x73" variants="A5XX"/>
-	<value name="CP_BLIT" value="0x2c" variants="A5XX"/>
+	<value name="CP_MEM_TO_MEM" value="0x73" variants="A5XX,A6XX"/>
+	<value name="CP_BLIT" value="0x2c" variants="A5XX,A6XX"/>
 
-	<!-- seems to be about setting current bin, or some per-tile info.. -->
-	<value name="CP_UNK_39" value="0x39" variants="A5XX"/>
+	<!-- Test specified bit in specified register and set predicate -->
+	<value name="CP_REG_TEST" value="0x39" variants="A5XX,A6XX"/>
+
+	<!-- payload of 0x1 for binning mode and 0x0 for normal mode? -->
+	<value name="CP_SET_MODE" value="0x63" variants="A6XX"/>
+
+	<!--
+	Seems like there are now separate blocks of state for VS vs FS/CS
+	(probably these amounts to geometry vs fragments so that geometry
+	stage of the pipeline for next draw can start while fragment stage
+	of current draw is still running.  The format of the payload of the
+	packets is the same, the only difference is the offsets of the regs
+	the firmware code that handles the packet writes.
+
+	Note that for CL, starting with a6xx, the preferred # of local
+	threads is no longer the same as the max, implying that the shader
+	core can now run warps from unrelated shaders (ie.
+	CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE vs
+	CL_KERNEL_WORK_GROUP_SIZE)
+	 -->
+	<value name="CP_LOAD_STATE6_GEOM" value="0x32" variants="A6XX"/>
+	<value name="CP_LOAD_STATE6_FRAG" value="0x34" variants="A6XX"/>
 
 	<!-- internal packets: -->
-	<value name="IN_IB_PREFETCH_END" value="0x17"/>
-	<value name="IN_SUBBLK_PREFETCH" value="0x1f"/>
-	<value name="IN_INSTR_PREFETCH" value="0x20"/>
-	<value name="IN_INSTR_MATCH" value="0x47"/>
-	<value name="IN_CONST_PREFETCH" value="0x49"/>
-	<value name="IN_INCR_UPDT_STATE" value="0x55"/>
-	<value name="IN_INCR_UPDT_CONST" value="0x56"/>
-	<value name="IN_INCR_UPDT_INSTR" value="0x57"/>
+	<value name="IN_IB_PREFETCH_END" value="0x17" variants="A2XX"/>
+	<value name="IN_SUBBLK_PREFETCH" value="0x1f" variants="A2XX"/>
+	<value name="IN_INSTR_PREFETCH" value="0x20" variants="A2XX"/>
+	<value name="IN_INSTR_MATCH" value="0x47" variants="A2XX"/>
+	<value name="IN_CONST_PREFETCH" value="0x49" variants="A2XX"/>
+	<value name="IN_INCR_UPDT_STATE" value="0x55" variants="A2XX"/>
+	<value name="IN_INCR_UPDT_CONST" value="0x56" variants="A2XX"/>
+	<value name="IN_INCR_UPDT_INSTR" value="0x57" variants="A2XX"/>
 
 	<!-- jmptable entry used to handle type4 packet on a5xx+: -->
 	<value name="PKT4" value="0x04" variants="A5XX-"/>
@@ -444,7 +465,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<value name="SS4_INDIRECT" value="2"/>
 	</enum>
 	<reg32 offset="0" name="0">
-		<bitfield name="DST_OFF" low="0" high="15" type="uint"/>
+		<bitfield name="DST_OFF" low="0" high="13" type="uint"/>
 		<bitfield name="STATE_SRC" low="16" high="17" type="a4xx_state_src"/>
 		<bitfield name="STATE_BLOCK" low="18" high="21" type="a4xx_state_block"/>
 		<bitfield name="NUM_UNIT" low="22" high="31" type="uint"/>
@@ -454,6 +475,55 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
 	</reg32>
 	<reg32 offset="2" name="2" variants="A5XX-">
+		<bitfield name="EXT_SRC_ADDR_HI" low="0" high="31" shr="0"/>
+	</reg32>
+</domain>
+
+<!-- looks basically same CP_LOAD_STATE4 -->
+<domain name="CP_LOAD_STATE6" width="32" varset="chip">
+	<doc>Load state, a6xx+</doc>
+	<enum name="a6xx_state_block">
+		<value name="SB6_VS_TEX"    value="0x0"/>
+		<value name="SB6_HS_TEX"    value="0x1"/>    <!-- aka. TCS -->
+		<value name="SB6_DS_TEX"    value="0x2"/>    <!-- aka. TES -->
+		<value name="SB6_GS_TEX"    value="0x3"/>
+		<value name="SB6_FS_TEX"    value="0x4"/>
+		<value name="SB6_CS_TEX"    value="0x5"/>
+		<value name="SB6_VS_SHADER" value="0x8"/>
+		<value name="SB6_HS_SHADER" value="0x9"/>
+		<value name="SB6_DS_SHADER" value="0xa"/>
+		<value name="SB6_GS_SHADER" value="0xb"/>
+		<value name="SB6_FS_SHADER" value="0xc"/>
+		<value name="SB6_CS_SHADER" value="0xd"/>
+		<!--
+		for SSBO, STATE_TYPE=0 appears to be addresses (four dwords each),
+		STATE_TYPE=1 sizes, STATE_TYPE=2 addresses again (two dwords each)
+
+		Compute has it's own dedicated SSBO state, it seems, but the rest
+		of the stages share state
+		 -->
+		<value name="SB6_SSBO"   value="0xe"/>
+		<value name="SB6_CS_SSBO"   value="0xf"/>
+	</enum>
+	<enum name="a6xx_state_type">
+		<value name="ST6_SHADER" value="0"/>
+		<value name="ST6_CONSTANTS" value="1"/>
+	</enum>
+	<enum name="a6xx_state_src">
+		<value name="SS6_DIRECT" value="0"/>
+		<value name="SS6_INDIRECT" value="2"/>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="DST_OFF" low="0" high="13" type="uint"/>
+		<bitfield name="STATE_TYPE" pos="14" type="a6xx_state_type"/>
+		<bitfield name="STATE_SRC" low="16" high="17" type="a6xx_state_src"/>
+		<bitfield name="STATE_BLOCK" low="18" high="21" type="a6xx_state_block"/>
+		<bitfield name="NUM_UNIT" low="22" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="EXT_SRC_ADDR" low="2" high="31" shr="2"/>
+	</reg32>
+	<reg32 offset="2" name="2">
 		<bitfield name="EXT_SRC_ADDR_HI" low="0" high="31" shr="0"/>
 	</reg32>
 </domain>
@@ -584,6 +654,13 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 			<bitfield name="DISABLE" pos="17" type="boolean"/>
 			<bitfield name="DISABLE_ALL_GROUPS" pos="18" type="boolean"/>
 			<bitfield name="LOAD_IMMED" pos="19" type="boolean"/>
+			<!--
+			I think this is a bitmask of states that this group applies to
+			(ie. binning/bypass/gmem)?  At least starting w/ a6xx blob
+			emits different VS state at the same time, with ENABLE_MASK=0x1
+			for binning pass VS state, and ENABLE_MASK=0x6 for full VS.
+			-->
+			<bitfield name="ENABLE_MASK" low="20" high="23" variants="A6XX-"/>
 			<bitfield name="GROUP_ID" low="24" high="28" type="uint"/>
 		</reg32>
 		<reg32 offset="1" name="1">
@@ -640,6 +717,13 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	<reg32 offset="4" name="4">
 		<bitfield name="BIN_SIZE_ADDRESS_HI" low="0" high="31"/>
 	</reg32>
+	<!-- what is this new address? -->
+	<reg32 offset="5" name="5">
+		<bitfield name="XXX_ADDRESS_LO" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="6" name="6">
+		<bitfield name="XXX_ADDRESS_HI" low="0" high="31"/>
+	</reg32>
 </domain>
 
 <domain name="CP_REG_TO_MEM" width="32">
@@ -655,6 +739,28 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 	<reg32 offset="1" name="1">
 		<bitfield name="DEST" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="2" name="2" variant="A5XX-">
+		<bitfield name="DEST_HI" low="0" high="31"/>
+	</reg32>
+</domain>
+
+<domain name="CP_MEM_TO_REG" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="REG" low="0" high="15" type="hex"/>
+		<!--
+		number of regsiters/dwords copied is CNT+1.. unsure
+		about # of bits
+		 -->
+		<bitfield name="CNT" low="19" high="29" type="uint"/>
+		<bitfield name="64B" pos="30" type="boolean"/>
+		<bitfield name="ACCUMULATE" pos="31" type="boolean"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="DEST" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="2" name="2" variant="A5XX-">
+		<bitfield name="DEST_HI" low="0" high="31"/>
 	</reg32>
 </domain>
 
@@ -814,17 +920,18 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 	<reg32 offset="2" name="2">
 	</reg32>
-	<reg32 offset="3" name="3"/>
 	<!-- second buffer looks like some cmdstream.. length in dwords: -->
-	<reg32 offset="4" name="4">
+	<reg32 offset="3" name="3">
 		<bitfield name="ADDR_1_LEN" low="0" high="31" type="uint"/>
 	</reg32>
+	<reg32 offset="4" name="4"/>
 	<reg32 offset="5" name="5">
 		<bitfield name="ADDR_1_LO" low="0" high="31"/>
 	</reg32>
 	<reg32 offset="6" name="6">
 		<bitfield name="ADDR_1_HI" low="0" high="31"/>"
 	</reg32>
+	<reg32 offset="7" name="7"/>
 </domain>
 
 <domain name="CP_PERFCOUNTER_ACTION" width="32">
@@ -928,6 +1035,69 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 			<bitfield name="LOCALSIZEZ" low="22" high="31" type="uint"/>
 		</reg32>
 	</stripe>
+</domain>
+
+<domain name="CP_SET_MARKER" width="32" varset="chip" prefix="chip" variant="A6XX-">
+	<doc>Tell CP the current operation mode, indicates save and restore procedure</doc>
+	<enum name="a6xx_render_mode">
+		<value value="1" name="BYPASS"/>
+		<value value="2" name="BINNING"/>
+		<value value="4" name="GMEM"/>
+		<value value="6" name="RESOLVE"/>
+		<value value="12" name="BLIT2DSCALE"/>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="MARKER" low="0" high="3"/>
+		<bitfield name="MODE" low="0" high="3" type="a6xx_render_mode"/>
+		<!-- IFPC - inter-frame power collapse -->
+		<bitfield name="IFPC" pos="8" type="boolean"/>
+	</reg32>
+</domain>
+
+<domain name="CP_SET_PSEUDO_REG" width="32" varset="chip" prefix="chip" variant="A6XX-">
+	<doc>Set internal CP registers, used to indicate context save data addresses</doc>
+	<enum name="pseudo_reg">
+		<value value="0" name="SMMU_INFO"/>
+		<value value="1" name="NON_SECURE_SAVE_ADDR"/>
+		<value value="2" name="SECURE_SAVE_ADDR"/>
+		<value value="3" name="NON_PRIV_SAVE_ADDR"/>
+		<value value="4" name="COUNTER"/>
+	</enum>
+	<array offset="0" name="" stride="3" length="100">
+		<reg32 offset="0" name="0">
+			<bitfield name="PSEUDO_REG" low="0" high="2" type="pseudo_reg"/>
+		</reg32>
+		<reg32 offset="1" name="1">
+			<bitfield name="LO" low="0" high="31"/>
+		</reg32>
+		<reg32 offset="2" name="2">
+			<bitfield name="HI" low="0" high="31"/>
+		</reg32>
+	</array>
+</domain>
+
+<domain name="CP_REG_TEST" width="32" varset="chip" prefix="chip" variant="A6XX-">
+	<doc>
+		Tests bit in specified register and sets predicate for CP_COND_REG_EXEC.
+		So:
+
+			opcode: CP_REG_TEST (39) (2 dwords)
+			        { REG = 0xc10 | BIT = 0 }
+			               0000: 70b90001 00000c10
+			opcode: CP_COND_REG_EXEC (47) (3 dwords)
+			               0000: 70c70002 10000000 00000004
+			opcode: CP_INDIRECT_BUFFER (3f) (4 dwords)
+
+		Will execute the CP_INDIRECT_BUFFER only if b0 in the register at
+		offset 0x0c10 is 1
+	</doc>
+	<reg32 offset="0" name="0">
+		<!-- the register to test -->
+		<bitfield name="REG" low="0" high="11"/>
+		<!-- the bit to test -->
+		<bitfield name="BIT" low="20" high="24" type="uint"/>
+		<bitfield name="UNK25" pos="25" type="boolean"/>
+	</reg32>
 </domain>
 
 </database>

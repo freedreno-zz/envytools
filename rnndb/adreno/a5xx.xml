@@ -2500,7 +2500,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	SP_VS_OUT map, with highest OUTLOCn position.  (Generally they are
 	the last entries too, except when gl_PointCoord is used, blob inserts
 	an extra varying after, but with a lower OUTLOC position.  If present,
-	psize is last, preceeded by position.
+	psize is last, preceded by position.
 	 -->
 	<array offset="0xe5a3" name="SP_VS_VPC_DST" stride="1" length="8">
 		<reg32 offset="0x0" name="REG">
