@@ -297,7 +297,7 @@ fxn_name(uint32_t offset)
 static void disasm(uint32_t *buf, int sizedwords)
 {
 	uint32_t *instrs = buf;
-	const int jmptbl_start = instrs[1];
+	const int jmptbl_start = instrs[1] & 0xffff;
 	uint32_t *jmptbl = &buf[jmptbl_start];
 	afuc_opc opc;
 	bool flush;
@@ -700,10 +700,16 @@ int main(int argc, char **argv)
 	if (!gpuver) {
 		if (strstr(file, "a5")) {
 			gpuver = 5;
+		} else if (strstr(file, "a6")) {
+			gpuver = 6;
 		}
 	}
 
 	switch (gpuver) {
+	case 6:
+		printf("; a6xx microcode\n");
+		variant = "A6XX";
+		break;
 	case 5:
 		printf("; a5xx microcode\n");
 		variant = "A5XX";
