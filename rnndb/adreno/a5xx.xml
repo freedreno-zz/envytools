@@ -2550,14 +2550,15 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe5f4" name="SP_CS_OBJ_START_HI"/>
 	<!-- e5f9 something compute related.. seems to change when HLSQ_CS_CNTL_1 changes -->
 
-	<reg32 offset="0xe600" name="UNKNOWN_E600"/>
+	<reg32 offset="0xe600" name="SP_HS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xe602" name="UNKNOWN_E602"/>
 	<reg32 offset="0xe603" name="SP_HS_OBJ_START_LO"/>
 	<reg32 offset="0xe604" name="SP_HS_OBJ_START_HI"/>
+	<reg32 offset="0xe610" name="SP_DS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xe62b" name="UNKNOWN_E62B"/>
 	<reg32 offset="0xe62c" name="SP_DS_OBJ_START_LO"/>
 	<reg32 offset="0xe62d" name="SP_DS_OBJ_START_HI"/>
-	<reg32 offset="0xe640" name="UNKNOWN_E640"/>
+	<reg32 offset="0xe640" name="SP_GS_CTRL_REG0" type="a5xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xe65b" name="UNKNOWN_E65B"/>
 	<reg32 offset="0xe65c" name="SP_GS_OBJ_START_LO"/>
 	<reg32 offset="0xe65d" name="SP_GS_OBJ_START_HI"/>
