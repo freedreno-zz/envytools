@@ -255,6 +255,11 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0" name="PERF_CP_ALWAYS_COUNT"/>
 </enum>
 
+<enum name="a6xx_event_write">
+	<value value="24" name="PC_CCU_INVALIDATE_DEPTH"/>
+	<value value="25" name="PC_CCU_INVALIDATE_COLOR"/>
+</enum>
+
 <domain name="A6XX" width="32">
 	<bitset name="A6XX_RBBM_INT_0_MASK">
 		<bitfield name="RBBM_GPU_IDLE" pos="0"/>
@@ -311,6 +316,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x08C3" name="CP_MEM_POOL_SIZE"/>
 	<reg32 offset="0x0841" name="CP_CHICKEN_DBG"/>
 	<reg32 offset="0x0842" name="CP_ADDR_MODE_CNTL"/>
+	<reg32 offset="0x0843" name="CP_DBG_ECO_CNTL"/>
 	<reg32 offset="0x084F" name="CP_PROTECT_CNTL"/>
 
 	<array offset="0x0883" name="CP_SCRATCH" stride="1" length="8">
@@ -367,6 +373,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0981" name="CP_ALWAYS_ON_COUNTER_HI"/>
 	<reg32 offset="0x098D" name="CP_AHB_CNTL"/>
 	<reg32 offset="0x0A00" name="CP_APERTURE_CNTL_HOST"/>
+	<reg32 offset="0x0A03" name="CP_APERTURE_CNTL_CD"/>
 	<reg32 offset="0x0C01" name="VSC_ADDR_MODE_CNTL"/>
 	<reg32 offset="0x0201" name="RBBM_INT_0_STATUS"/>
 	<reg32 offset="0x0210" name="RBBM_STATUS">
@@ -790,15 +797,18 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0600" name="DBGC_CFG_DBGBUS_SEL_A"/>
 	<reg32 offset="0x0601" name="DBGC_CFG_DBGBUS_SEL_B"/>
 	<reg32 offset="0x0602" name="DBGC_CFG_DBGBUS_SEL_C"/>
-	<reg32 offset="0x0603" name="DBGC_CFG_DBGBUS_SEL_D"/>
-	<reg32 offset="0x0" name="DBGC_CFG_DBGBUS_SEL_PING_INDEX_SHIFT"/>
-	<reg32 offset="0x8" name="DBGC_CFG_DBGBUS_SEL_PING_BLK_SEL_SHIFT"/>
-	<reg32 offset="0x0604" name="DBGC_CFG_DBGBUS_CNTLT"/>
-	<reg32 offset="0x0" name="DBGC_CFG_DBGBUS_CNTLT_TRACEEN_SHIFT"/>
-	<reg32 offset="0xC" name="DBGC_CFG_DBGBUS_CNTLT_GRANU_SHIFT"/>
-	<reg32 offset="0x1C" name="DBGC_CFG_DBGBUS_CNTLT_SEGT_SHIFT"/>
-	<reg32 offset="0x0605" name="DBGC_CFG_DBGBUS_CNTLM"/>
-	<reg32 offset="0x18" name="DBGC_CFG_DBGBUS_CTLTM_ENABLE_SHIFT"/>
+	<reg32 offset="0x0603" name="DBGC_CFG_DBGBUS_SEL_D">
+		<bitfield high="7" low="0" name="PING_INDEX"/>
+		<bitfield high="15" low="8" name="PING_BLK_SEL"/>
+	</reg32>
+	<reg32 offset="0x0604" name="DBGC_CFG_DBGBUS_CNTLT">
+		<bitfield high="5" low="0" name="TRACEEN"/>
+		<bitfield high="14" low="12" name="GRANU"/>
+		<bitfield high="31" low="28" name="SEGT"/>
+	</reg32>
+	<reg32 offset="0x0605" name="DBGC_CFG_DBGBUS_CNTLM">
+		<bitfield high="27" low="24" name="ENABLE"/>
+	</reg32>
 	<reg32 offset="0x0608" name="DBGC_CFG_DBGBUS_IVTL_0"/>
 	<reg32 offset="0x0609" name="DBGC_CFG_DBGBUS_IVTL_1"/>
 	<reg32 offset="0x060a" name="DBGC_CFG_DBGBUS_IVTL_2"/>
@@ -807,24 +817,26 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x060d" name="DBGC_CFG_DBGBUS_MASKL_1"/>
 	<reg32 offset="0x060e" name="DBGC_CFG_DBGBUS_MASKL_2"/>
 	<reg32 offset="0x060f" name="DBGC_CFG_DBGBUS_MASKL_3"/>
-	<reg32 offset="0x0610" name="DBGC_CFG_DBGBUS_BYTEL_0"/>
-	<reg32 offset="0x0611" name="DBGC_CFG_DBGBUS_BYTEL_1"/>
-	<reg32 offset="0x0" name="DBGC_CFG_DBGBUS_BYTEL0_SHIFT"/>
-	<reg32 offset="0x4" name="DBGC_CFG_DBGBUS_BYTEL1_SHIFT"/>
-	<reg32 offset="0x8" name="DBGC_CFG_DBGBUS_BYTEL2_SHIFT"/>
-	<reg32 offset="0xC" name="DBGC_CFG_DBGBUS_BYTEL3_SHIFT"/>
-	<reg32 offset="0x10" name="DBGC_CFG_DBGBUS_BYTEL4_SHIFT"/>
-	<reg32 offset="0x14" name="DBGC_CFG_DBGBUS_BYTEL5_SHIFT"/>
-	<reg32 offset="0x18" name="DBGC_CFG_DBGBUS_BYTEL6_SHIFT"/>
-	<reg32 offset="0x1C" name="DBGC_CFG_DBGBUS_BYTEL7_SHIFT"/>
-	<reg32 offset="0x0" name="DBGC_CFG_DBGBUS_BYTEL8_SHIFT"/>
-	<reg32 offset="0x4" name="DBGC_CFG_DBGBUS_BYTEL9_SHIFT"/>
-	<reg32 offset="0x8" name="DBGC_CFG_DBGBUS_BYTEL10_SHIFT"/>
-	<reg32 offset="0xC" name="DBGC_CFG_DBGBUS_BYTEL11_SHIFT"/>
-	<reg32 offset="0x10" name="DBGC_CFG_DBGBUS_BYTEL12_SHIFT"/>
-	<reg32 offset="0x14" name="DBGC_CFG_DBGBUS_BYTEL13_SHIFT"/>
-	<reg32 offset="0x18" name="DBGC_CFG_DBGBUS_BYTEL14_SHIFT"/>
-	<reg32 offset="0x1C" name="DBGC_CFG_DBGBUS_BYTEL15_SHIFT"/>
+	<reg32 offset="0x0610" name="DBGC_CFG_DBGBUS_BYTEL_0">
+		<bitfield high="3" low="0" name="BYTEL0"/>
+		<bitfield high="7" low="4" name="BYTEL1"/>
+		<bitfield high="11" low="8" name="BYTEL2"/>
+		<bitfield high="15" low="12" name="BYTEL3"/>
+		<bitfield high="19" low="16" name="BYTEL4"/>
+		<bitfield high="23" low="20" name="BYTEL5"/>
+		<bitfield high="27" low="24" name="BYTEL6"/>
+		<bitfield high="31" low="28" name="BYTEL7"/>
+	</reg32>
+	<reg32 offset="0x0611" name="DBGC_CFG_DBGBUS_BYTEL_1">
+		<bitfield high="3" low="0" name="BYTEL8"/>
+		<bitfield high="7" low="4" name="BYTEL9"/>
+		<bitfield high="11" low="8" name="BYTEL10"/>
+		<bitfield high="15" low="12" name="BYTEL11"/>
+		<bitfield high="19" low="16" name="BYTEL12"/>
+		<bitfield high="23" low="20" name="BYTEL13"/>
+		<bitfield high="27" low="24" name="BYTEL14"/>
+		<bitfield high="31" low="28" name="BYTEL15"/>
+	</reg32>
 	<reg32 offset="0x062f" name="DBGC_CFG_DBGBUS_TRACE_BUF1"/>
 	<reg32 offset="0x0630" name="DBGC_CFG_DBGBUS_TRACE_BUF2"/>
 	<reg32 offset="0x0CD8" name="VSC_PERFCTR_VSC_SEL_0"/>
@@ -861,6 +873,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x8E2D" name="RB_PERFCTR_CMP_SEL_1"/>
 	<reg32 offset="0x8E2E" name="RB_PERFCTR_CMP_SEL_2"/>
 	<reg32 offset="0x8E2F" name="RB_PERFCTR_CMP_SEL_3"/>
+	<reg32 offset="0x8E3D" name="RB_RB_SUB_BLOCK_SEL_CNTL_CD"/>
 	<reg32 offset="0x8E50" name="RB_CONTEXT_SWITCH_GMEM_SAVE_RESTORE"/>
 	<reg32 offset="0x9E00" name="PC_DBG_ECO_CNTL"/>
 	<reg32 offset="0x9E01" name="PC_ADDR_MODE_CNTL"/>
@@ -911,8 +924,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0E0E" name="UCHE_GMEM_RANGE_MAX_HI"/>
 	<reg32 offset="0x0E17" name="UCHE_CACHE_WAYS"/>
 	<reg32 offset="0x0E18" name="UCHE_FILTER_CNTL"/>
-	<reg32 offset="0x0E19" name="UCHE_CLIENT_PF"/>
-	<reg32 offset="0x7" name="UCHE_CLIENT_PF_CLIENT_ID_MASK"/>
+	<reg32 offset="0x0E19" name="UCHE_CLIENT_PF">
+		<bitfield high="7" low="0" name="PERFSEL"/>
+	</reg32>
 	<reg32 offset="0x0E1C" name="UCHE_PERFCTR_UCHE_SEL_0"/>
 	<reg32 offset="0x0E1D" name="UCHE_PERFCTR_UCHE_SEL_1"/>
 	<reg32 offset="0x0E1E" name="UCHE_PERFCTR_UCHE_SEL_2"/>
@@ -968,7 +982,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x3000" name="VBIF_VERSION"/>
 	<reg32 offset="0x302A" name="VBIF_GATE_OFF_WRREQ_EN"/>
 	<reg32 offset="0x3080" name="VBIF_XIN_HALT_CTRL0"/>
-	<reg32 offset="0xF" name="VBIF_XIN_HALT_CTRL0_MASK"/>
 	<reg32 offset="0x3081" name="VBIF_XIN_HALT_CTRL1"/>
 	<reg32 offset="0x30d0" name="VBIF_PERF_CNT_SEL0"/>
 	<reg32 offset="0x30d1" name="VBIF_PERF_CNT_SEL1"/>
@@ -994,13 +1007,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x18400" name="CX_DBGC_CFG_DBGBUS_SEL_A"/>
 	<reg32 offset="0x18401" name="CX_DBGC_CFG_DBGBUS_SEL_B"/>
 	<reg32 offset="0x18402" name="CX_DBGC_CFG_DBGBUS_SEL_C"/>
-	<reg32 offset="0x18403" name="CX_DBGC_CFG_DBGBUS_SEL_D"/>
-	<reg32 offset="0x18404" name="CX_DBGC_CFG_DBGBUS_CNTLT"/>
-	<reg32 offset="0x0" name="CX_DBGC_CFG_DBGBUS_CNTLT_TRACEEN_SHIFT"/>
-	<reg32 offset="0xC" name="CX_DBGC_CFG_DBGBUS_CNTLT_GRANU_SHIFT"/>
-	<reg32 offset="0x1C" name="CX_DBGC_CFG_DBGBUS_CNTLT_SEGT_SHIFT"/>
-	<reg32 offset="0x18405" name="CX_DBGC_CFG_DBGBUS_CNTLM"/>
-	<reg32 offset="0x18" name="CX_DBGC_CFG_DBGBUS_CNTLM_ENABLE_SHIFT"/>
+	<reg32 offset="0x18403" name="CX_DBGC_CFG_DBGBUS_SEL_D">
+		<bitfield high="7" low="0" name="PING_INDEX"/>
+		<bitfield high="15" low="8" name="PING_BLK_SEL"/>
+	</reg32>
+
+	<reg32 offset="0x18404" name="CX_DBGC_CFG_DBGBUS_CNTLT">
+		<bitfield high="5" low="0" name="TRACEEN"/>
+		<bitfield high="14" low="12" name="GRANU"/>
+		<bitfield high="31" low="28" name="SEGT"/>
+	</reg32>
+	<reg32 offset="0x18405" name="CX_DBGC_CFG_DBGBUS_CNTLM">
+		<bitfield high="27" low="24" name="ENABLE"/>
+	</reg32>
 	<reg32 offset="0x18408" name="CX_DBGC_CFG_DBGBUS_IVTL_0"/>
 	<reg32 offset="0x18409" name="CX_DBGC_CFG_DBGBUS_IVTL_1"/>
 	<reg32 offset="0x1840A" name="CX_DBGC_CFG_DBGBUS_IVTL_2"/>
@@ -1009,28 +1028,29 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x1840D" name="CX_DBGC_CFG_DBGBUS_MASKL_1"/>
 	<reg32 offset="0x1840E" name="CX_DBGC_CFG_DBGBUS_MASKL_2"/>
 	<reg32 offset="0x1840F" name="CX_DBGC_CFG_DBGBUS_MASKL_3"/>
-	<reg32 offset="0x18410" name="CX_DBGC_CFG_DBGBUS_BYTEL_0"/>
-	<reg32 offset="0x18411" name="CX_DBGC_CFG_DBGBUS_BYTEL_1"/>
-	<reg32 offset="0x0" name="CX_DBGC_CFG_DBGBUS_BYTEL0_SHIFT"/>
-	<reg32 offset="0x4" name="CX_DBGC_CFG_DBGBUS_BYTEL1_SHIFT"/>
-	<reg32 offset="0x8" name="CX_DBGC_CFG_DBGBUS_BYTEL2_SHIFT"/>
-	<reg32 offset="0xC" name="CX_DBGC_CFG_DBGBUS_BYTEL3_SHIFT"/>
-	<reg32 offset="0x10" name="CX_DBGC_CFG_DBGBUS_BYTEL4_SHIFT"/>
-	<reg32 offset="0x14" name="CX_DBGC_CFG_DBGBUS_BYTEL5_SHIFT"/>
-	<reg32 offset="0x18" name="CX_DBGC_CFG_DBGBUS_BYTEL6_SHIFT"/>
-	<reg32 offset="0x1C" name="CX_DBGC_CFG_DBGBUS_BYTEL7_SHIFT"/>
-	<reg32 offset="0x0" name="CX_DBGC_CFG_DBGBUS_BYTEL8_SHIFT"/>
-	<reg32 offset="0x4" name="CX_DBGC_CFG_DBGBUS_BYTEL9_SHIFT"/>
-	<reg32 offset="0x8" name="CX_DBGC_CFG_DBGBUS_BYTEL10_SHIFT"/>
-	<reg32 offset="0xC" name="CX_DBGC_CFG_DBGBUS_BYTEL11_SHIFT"/>
-	<reg32 offset="0x10" name="CX_DBGC_CFG_DBGBUS_BYTEL12_SHIFT"/>
-	<reg32 offset="0x14" name="CX_DBGC_CFG_DBGBUS_BYTEL13_SHIFT"/>
-	<reg32 offset="0x18" name="CX_DBGC_CFG_DBGBUS_BYTEL14_SHIFT"/>
-	<reg32 offset="0x1C" name="CX_DBGC_CFG_DBGBUS_BYTEL15_SHIFT"/>
+	<reg32 offset="0x18410" name="CX_DBGC_CFG_DBGBUS_BYTEL_0">
+		<bitfield high="3" low="0" name="BYTEL0"/>
+		<bitfield high="7" low="4" name="BYTEL1"/>
+		<bitfield high="11" low="8" name="BYTEL2"/>
+		<bitfield high="15" low="12" name="BYTEL3"/>
+		<bitfield high="19" low="16" name="BYTEL4"/>
+		<bitfield high="23" low="20" name="BYTEL5"/>
+		<bitfield high="27" low="24" name="BYTEL6"/>
+		<bitfield high="31" low="28" name="BYTEL7"/>
+	</reg32>
+	<reg32 offset="0x18411" name="CX_DBGC_CFG_DBGBUS_BYTEL_1">
+		<bitfield high="3" low="0" name="BYTEL8"/>
+		<bitfield high="7" low="4" name="BYTEL9"/>
+		<bitfield high="11" low="8" name="BYTEL10"/>
+		<bitfield high="15" low="12" name="BYTEL11"/>
+		<bitfield high="19" low="16" name="BYTEL12"/>
+		<bitfield high="23" low="20" name="BYTEL13"/>
+		<bitfield high="27" low="24" name="BYTEL14"/>
+		<bitfield high="31" low="28" name="BYTEL15"/>
+	</reg32>
+
 	<reg32 offset="0x1842F" name="CX_DBGC_CFG_DBGBUS_TRACE_BUF1"/>
 	<reg32 offset="0x18430" name="CX_DBGC_CFG_DBGBUS_TRACE_BUF2"/>
-	<reg32 offset="0x0" name="CX_DBGC_CFG_DBGBUS_SEL_PING_INDEX_SHIFT"/>
-	<reg32 offset="0x8" name="CX_DBGC_CFG_DBGBUS_SEL_PING_BLK_SEL_SHIFT"/>
 	<reg32 offset="0x21140" name="PDC_GPU_ENABLE_PDC"/>
 	<reg32 offset="0x21148" name="PDC_GPU_SEQ_START_ADDR"/>
 	<reg32 offset="0x21540" name="PDC_GPU_TCS0_CONTROL"/>
