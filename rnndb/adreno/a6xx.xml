@@ -1747,33 +1747,33 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 <!-- Seems basically the same as a5xx, maybe move to common.xml.. -->
 <domain name="A6XX_TEX_SAMP" width="32">
 	<doc>Texture sampler dwords</doc>
-	<enum name="a5xx_tex_filter"> <!-- same as a4xx? -->
-		<value name="A5XX_TEX_NEAREST" value="0"/>
-		<value name="A5XX_TEX_LINEAR" value="1"/>
-		<value name="A5XX_TEX_ANISO" value="2"/>
+	<enum name="a6xx_tex_filter"> <!-- same as a4xx? -->
+		<value name="A6XX_TEX_NEAREST" value="0"/>
+		<value name="A6XX_TEX_LINEAR" value="1"/>
+		<value name="A6XX_TEX_ANISO" value="2"/>
 	</enum>
-	<enum name="a5xx_tex_clamp"> <!-- same as a4xx? -->
-		<value name="A5XX_TEX_REPEAT" value="0"/>
-		<value name="A5XX_TEX_CLAMP_TO_EDGE" value="1"/>
-		<value name="A5XX_TEX_MIRROR_REPEAT" value="2"/>
-		<value name="A5XX_TEX_CLAMP_TO_BORDER" value="3"/>
-		<value name="A5XX_TEX_MIRROR_CLAMP" value="4"/>
+	<enum name="a6xx_tex_clamp"> <!-- same as a4xx? -->
+		<value name="A6XX_TEX_REPEAT" value="0"/>
+		<value name="A6XX_TEX_CLAMP_TO_EDGE" value="1"/>
+		<value name="A6XX_TEX_MIRROR_REPEAT" value="2"/>
+		<value name="A6XX_TEX_CLAMP_TO_BORDER" value="3"/>
+		<value name="A6XX_TEX_MIRROR_CLAMP" value="4"/>
 	</enum>
-	<enum name="a5xx_tex_aniso"> <!-- same as a4xx? -->
-		<value name="A5XX_TEX_ANISO_1" value="0"/>
-		<value name="A5XX_TEX_ANISO_2" value="1"/>
-		<value name="A5XX_TEX_ANISO_4" value="2"/>
-		<value name="A5XX_TEX_ANISO_8" value="3"/>
-		<value name="A5XX_TEX_ANISO_16" value="4"/>
+	<enum name="a6xx_tex_aniso"> <!-- same as a4xx? -->
+		<value name="A6XX_TEX_ANISO_1" value="0"/>
+		<value name="A6XX_TEX_ANISO_2" value="1"/>
+		<value name="A6XX_TEX_ANISO_4" value="2"/>
+		<value name="A6XX_TEX_ANISO_8" value="3"/>
+		<value name="A6XX_TEX_ANISO_16" value="4"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="MIPFILTER_LINEAR_NEAR" pos="0" type="boolean"/>
-		<bitfield name="XY_MAG" low="1" high="2" type="a5xx_tex_filter"/>
-		<bitfield name="XY_MIN" low="3" high="4" type="a5xx_tex_filter"/>
-		<bitfield name="WRAP_S" low="5" high="7" type="a5xx_tex_clamp"/>
-		<bitfield name="WRAP_T" low="8" high="10" type="a5xx_tex_clamp"/>
-		<bitfield name="WRAP_R" low="11" high="13" type="a5xx_tex_clamp"/>
-		<bitfield name="ANISO" low="14" high="16" type="a5xx_tex_aniso"/>
+		<bitfield name="XY_MAG" low="1" high="2" type="a6xx_tex_filter"/>
+		<bitfield name="XY_MIN" low="3" high="4" type="a6xx_tex_filter"/>
+		<bitfield name="WRAP_S" low="5" high="7" type="a6xx_tex_clamp"/>
+		<bitfield name="WRAP_T" low="8" high="10" type="a6xx_tex_clamp"/>
+		<bitfield name="WRAP_R" low="11" high="13" type="a6xx_tex_clamp"/>
+		<bitfield name="ANISO" low="14" high="16" type="a6xx_tex_aniso"/>
 		<bitfield name="LOD_BIAS" low="19" high="31" type="fixed" radix="8"/><!-- no idea how many bits for real -->
 	</reg32>
 	<reg32 offset="1" name="1">
