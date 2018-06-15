@@ -2081,6 +2081,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 		<!-- per-mrt enable bit -->
 		<bitfield name="ENABLE_BLEND" low="0" high="7"/>
 		<bitfield name="INDEPENDENT_BLEND" pos="8" type="boolean"/>
+		<bitfield name="ALPHA_TO_COVERAGE" pos="10" type="boolean"/>
 		<!-- a guess? -->
 		<bitfield name="SAMPLE_MASK" low="16" high="31"/>
 	</reg32>
@@ -2183,6 +2184,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe21b" name="RB_CLEAR_COLOR_DW3"/>
 	<reg32 offset="0xe21c" name="RB_CLEAR_CNTL">
 		<bitfield name="FAST_CLEAR" pos="1" type="boolean"/>
+		<bitfield name="MSAA_RESOLVE" pos="2" type="boolean"/>
 		<doc>
 			For MASK, if RB_BLIT_CNTL.BUF=BLIT_ZS:
 				1 - depth
@@ -2520,6 +2522,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 	<reg32 offset="0xe5c9" name="SP_BLEND_CNTL">
 		<bitfield name="ENABLED" pos="0" type="boolean"/>
 		<bitfield name="UNK8" pos="8" type="boolean"/>
+		<bitfield name="ALPHA_TO_COVERAGE" pos="10" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xe5ca" name="SP_FS_OUTPUT_CNTL">
 		<bitfield name="MRT" low="0" high="3" type="uint"/>
@@ -2893,6 +2896,7 @@ different border-color states per texture..  Looks something like:
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a5xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a5xx_tex_swiz"/>
 		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
+		<bitfield name="SAMPLES" low="20" high="21" type="a3xx_msaa_samples"/>
 		<bitfield name="FMT" low="22" high="29" type="a5xx_tex_fmt"/>
 		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
