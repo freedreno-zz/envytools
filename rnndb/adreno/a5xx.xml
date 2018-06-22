@@ -2036,6 +2036,7 @@ bit 7 for RECTLIST (clear) when z32s8 (used for clear of depth32?  not set
 			 -->
 			<bitfield name="COLOR_FORMAT" low="0" high="7" type="a5xx_color_fmt"/>
 			<bitfield name="COLOR_TILE_MODE" low="8" high="9" type="a5xx_tile_mode"/>
+			<bitfield name="DITHER_MODE" low="11" high="12" type="adreno_rb_dither_mode"/>
 			<bitfield name="COLOR_SWAP" low="13" high="14" type="a3xx_color_swap"/>
 			<bitfield name="COLOR_SRGB" pos="15" type="boolean"/>
 		</reg32>

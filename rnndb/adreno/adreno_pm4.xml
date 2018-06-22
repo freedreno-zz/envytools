@@ -354,6 +354,36 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<!-- jmptable entry used to handle type4 packet on a5xx+: -->
 	<value name="PKT4" value="0x04" variants="A5XX-"/>
+<!--
+unknown a6xx opcodes:
+
+opcode: (null) (14) (5 dwords)
+opcode: (null) (36) (4 dwords)
+opcode: (null) (55) (4 dwords)
+opcode: (null) (6d) (4 dwords)
+ -->
+	<value name="CP_UNK_A6XX_14" value="0x14" variants="A6XX"/>
+	<value name="CP_UNK_A6XX_36" value="0x36" variants="A6XX"/>
+	<value name="CP_UNK_A6XX_55" value="0x55" variants="A6XX"/>
+
+	<!--
+	Seems to always have the payload:
+	  00000002 00008801 00004010
+	or:
+	  00000002 00008801 00004090
+	or:
+	  00000002 00008801 00000010
+	  00000002 00008801 00010010
+	  00000002 00008801 00d64010
+	  ...
+	Note set for compute shaders..
+	Is 0x8801 a register offset?
+	This appears to be a special sort of register write packet
+	more or less, but the firmware has some special handling..
+
+	 -->
+	<value name="UNK_A6XX_6D" value="0x6d" variants="A6XX"/>
+
 </enum>
 
 
@@ -757,10 +787,10 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<bitfield name="ACCUMULATE" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="1" name="1">
-		<bitfield name="DEST" low="0" high="31"/>
+		<bitfield name="SRC" low="0" high="31"/>
 	</reg32>
 	<reg32 offset="2" name="2" variant="A5XX-">
-		<bitfield name="DEST_HI" low="0" high="31"/>
+		<bitfield name="SRC_HI" low="0" high="31"/>
 	</reg32>
 </domain>
 
@@ -1040,11 +1070,11 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 <domain name="CP_SET_MARKER" width="32" varset="chip" prefix="chip" variant="A6XX-">
 	<doc>Tell CP the current operation mode, indicates save and restore procedure</doc>
 	<enum name="a6xx_render_mode">
-		<value value="1" name="BYPASS"/>
-		<value value="2" name="BINNING"/>
-		<value value="4" name="GMEM"/>
-		<value value="6" name="RESOLVE"/>
-		<value value="12" name="BLIT2DSCALE"/>
+		<value value="1" name="RM6_BYPASS"/>
+		<value value="2" name="RM6_BINNING"/>
+		<value value="4" name="RM6_GMEM"/>
+		<value value="5" name="RM6_BLIT2D"/>
+		<value value="6" name="RM6_RESOLVE"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="MARKER" low="0" high="3"/>
