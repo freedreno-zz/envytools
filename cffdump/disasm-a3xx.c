@@ -214,7 +214,7 @@ static void print_reg_stats(int level)
 	fullreg = print_regs(&regs.used, true);
 	printf("\n");
 	printf("%s- used (merged):", levels[level]);
-	halfreg = print_regs(&regs.used_merged, false);
+	print_regs(&regs.used_merged, false);
 	printf("\n");
 	printf("%s- input (half):", levels[level]);
 	print_regs(&regs.rbw, false);
