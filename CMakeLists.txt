@@ -17,6 +17,7 @@ add_subdirectory(vdpow)
 add_subdirectory(nvhw)
 add_subdirectory(hwtest)
 add_subdirectory(afuc)
+add_subdirectory(cffdump)
 
 install(DIRECTORY include/ DESTINATION include/envytools)
 install(DIRECTORY rnndb DESTINATION share)
