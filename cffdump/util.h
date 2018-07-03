@@ -45,7 +45,7 @@ static inline float d2f(uint32_t d)
 	return u.f;
 }
 
-static inline void dump_hex(char *buf, int sz)
+static inline void dump_hex(void *buf, int sz)
 {
 	uint8_t *ptr = (uint8_t *)buf;
 	uint8_t *end = ptr + sz;
@@ -75,7 +75,8 @@ static inline void dump_hex(char *buf, int sz)
 	}
 }
 
-static inline void dump_float(char *buf, int sz)
+static inline void
+dump_float(void *buf, int sz)
 {
 	uint8_t *ptr = (uint8_t *)buf;
 	uint8_t *end = ptr + sz - 3;
@@ -108,7 +109,8 @@ static inline void dump_float(char *buf, int sz)
 #define is_ok_ascii(c) \
 	(isascii(c) && ((c == '\t') || !iscntrl(c)))
 
-static void clean_ascii(char *buf, int sz)
+static inline void
+clean_ascii(char *buf, int sz)
 {
 	uint8_t *ptr = (uint8_t *)buf;
 	uint8_t *end = ptr + sz;
@@ -117,7 +119,8 @@ static void clean_ascii(char *buf, int sz)
 	}
 }
 
-static void dump_ascii(char *buf, int sz)
+static inline void
+dump_ascii(void *buf, int sz)
 {
 	uint8_t *ptr = (uint8_t *)buf;
 	uint8_t *end = ptr + sz;
@@ -137,7 +140,8 @@ static void dump_ascii(char *buf, int sz)
 	printf("\n");
 }
 
-static void dump_hex_ascii(char *buf, int sz)
+static inline void
+dump_hex_ascii(void *buf, int sz)
 {
 	uint8_t *ptr = (uint8_t *)buf;
 	uint8_t *end = ptr + sz;
@@ -174,7 +178,6 @@ static void dump_hex_ascii(char *buf, int sz)
 	}
 
 	if (i % 8) {
-		int j;
 		printf("\t|");
 		while (ascii < end) {
 			uint8_t c = *(ascii++);

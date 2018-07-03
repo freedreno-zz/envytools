@@ -71,7 +71,7 @@ struct state {
 
 #define OFF(field) do {                                               \
 		if (dump_offsets)                                             \
-			printf("%08x: ", (char *)&field - state->buf);            \
+			printf("%08x: ", (uint32_t)((char *)&field - state->buf));\
 	} while (0)
 
 /* decode field as hex */
@@ -89,7 +89,7 @@ struct state {
 /* decode field as float/hex */
 #define F(s, field)  do {                                             \
 		OFF(s->field);                                                \
-		printf("%s%12s:\t%f\n", tab(state->lvl), #field,              \
+		printf("%s%12s:\t%f (0x%0x)\n", tab(state->lvl), #field,      \
 				d2f(s->field), s->field);                             \
 	} while (0)
 
@@ -135,7 +135,7 @@ static void dump_unknown(struct state *state, void *buf, unsigned start, unsigne
 		uint32_t d = ptr[i];
 
 		if (dump_offsets)
-			printf("%08x:", (char *)&ptr[i] - state->buf);
+			printf("%08x:", (uint32_t)((char *)&ptr[i] - state->buf));
 
 		printf("%s        %04x:\t%08x", tab(state->lvl), start + i * 4, d);
 
@@ -359,7 +359,7 @@ int main(int argc, char **argv)
 	enum rd_sect_type type = RD_NONE;
 	enum debug_t debug = 0;
 	void *buf = NULL;
-	int sz, i;
+	int sz;
 	struct io *io;
 	int raw_program = 0;
 

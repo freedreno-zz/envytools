@@ -264,7 +264,7 @@ static char *find_sect_end(char *buf, int sz)
 
 		/* someone at QC likes baseball */
 		if (d == 0xba5eba11)
-			return ptr;
+			return (char *)ptr;
 
 		ptr++;
 	}
@@ -303,12 +303,14 @@ static int valid_type(uint32_t type_info)
 	}
 }
 
+#if 0
 static int valid_uniformblock(uint32_t type_info)
 {
 	if (type_info == 0x128)
 		return 1;
 	return 0;
 }
+#endif
 
 static void dump_attribute(struct attribute *attrib)
 {
@@ -401,7 +403,7 @@ static void dump_raw_shader(uint32_t *dwords, uint32_t sizedwords, int n, char *
 	if (!dump_shaders)
 		return;
 
-	sprintf(filename, "%.*s-%d.%s", strlen(infile)-3, infile, n, ext);
+	sprintf(filename, "%.*s-%d.%s", (int)strlen(infile)-3, infile, n, ext);
 	fd = open(filename, O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	write(fd, dwords, sizedwords * 4);
 }
@@ -560,7 +562,7 @@ printf("hdr_size=%d\n", hdr_size);
 			printf("######## VS%d HEADER: (size %d)\n", i, hdr_size);
 			dump_hex((void *)vs_hdr, hdr_size);
 			for (j = 0; j < nconsts; j++) {
-				printf("######## VS%d CONST: (size=%d)\n", i, sizeof(constants[i]));
+				printf("######## VS%d CONST: (size=%d)\n", i, (int)sizeof(constants[i]));
 				dump_constant(constants[j]);
 				dump_hex((char *)constants[j], sizeof(constants[j]));
 			}
@@ -639,7 +641,7 @@ printf("hdr_size=%d\n", hdr_size);
 			printf("######## FS%d HEADER: (size %d)\n", i, hdr_size);
 			dump_hex((void *)fs_hdr, hdr_size);
 			for (j = 0; j < nconsts; j++) {
-				printf("######## FS%d CONST: (size=%d)\n", i, sizeof(constants[i]));
+				printf("######## FS%d CONST: (size=%d)\n", i, (int)sizeof(constants[i]));
 				dump_constant(constants[j]);
 				dump_hex((char *)constants[j], sizeof(constants[j]));
 			}
@@ -891,7 +893,7 @@ int main(int argc, char **argv)
 	enum rd_sect_type type = RD_NONE;
 	enum debug_t debug = 0;
 	void *buf = NULL;
-	int sz, i;
+	int sz;
 	struct io *io;
 	int raw_program = 0;
 
@@ -1043,6 +1045,8 @@ int main(int argc, char **argv)
 		case RD_GPU_ID:
 			gpu_id = *((unsigned int *)buf);
 			printf("gpu_id: %d\n", gpu_id);
+			break;
+		default:
 			break;
 		}
 	}

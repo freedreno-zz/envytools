@@ -28,6 +28,7 @@
 
 #include "disasm.h"
 #include "instr-a2xx.h"
+#include "rnnutil.h"
 
 static const char *levels[] = {
 		"",

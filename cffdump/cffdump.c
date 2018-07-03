@@ -1097,12 +1097,7 @@ static void dump_domain(uint32_t *dwords, uint32_t sizedwords, int level,
 
 static uint32_t bin_x1, bin_x2, bin_y1, bin_y2;
 static unsigned mode;
-static char *render_mode;
-
-static const char *mode_name(unsigned render_mode)
-{
-	return rnn_enumname(rnn, "render_mode_cmd", render_mode);
-}
+static const char *render_mode;
 
 /* well, actually query and script..
  * NOTE: call this before dump_register_summary()
@@ -1171,7 +1166,9 @@ static void cp_im_loadi(uint32_t *dwords, uint32_t sizedwords, int level)
 		disasm_type = SHADER_FRAGMENT;
 		break;
 	default:
-		type = "<unknown>"; break;
+		type = "<unknown>";
+		disasm_type = 0;
+		break;
 	}
 
 	printf("%s%s shader, start=%04x, size=%04x\n", levels[level], type, start, size);
@@ -1418,7 +1415,7 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 			void *ptr = hostptr(addrs[i]);
 			printf("%s%2d: %08x\n", levels[level+1], i, addrs[i]);
 			if (dump_textures) {
-				printf("base=%08x\n", gpubaseaddr(addrs[i]));
+				printf("base=%08x\n", (uint32_t)gpubaseaddr(addrs[i]));
 				dump_hex(ptr, hostlen(addrs[i])/4, level+1);
 			}
 		}
@@ -2288,7 +2285,7 @@ static void cp_set_render_mode(uint32_t *dwords, uint32_t sizedwords, int level)
 
 	assert(gpu_id >= 500);
 
-	render_mode = mode_name(dwords[0]);
+	render_mode = rnn_enumname(rnn, "render_mode_cmd", dwords[0]);
 
 	if (sizedwords == 1)
 		return;
@@ -2297,9 +2294,6 @@ static void cp_set_render_mode(uint32_t *dwords, uint32_t sizedwords, int level)
 	addr |= ((uint64_t)dwords[2]) << 32;
 
 	mode = dwords[3];
-
-	printl(3, "%saddr: 0x%016lx\n", levels[level], addr);
-	printl(3, "%slen:  0x%x\n", levels[level], len);
 
 	dump_gpuaddr(addr, level+1);
 
@@ -2434,7 +2428,7 @@ static void noop_fxn(uint32_t *dwords, uint32_t sizedwords, int level)
 {
 }
 
-static struct type3_op *get_type3_op(unsigned opc)
+static const struct type3_op *get_type3_op(unsigned opc)
 {
 	static const struct type3_op dummy_op = {
 		.fxn = noop_fxn,
@@ -2568,7 +2562,7 @@ static void dump_commands(uint32_t *dwords, uint32_t sizedwords, int level)
 		} else if (pkt_is_type3(dwords[0])) {
 			count = type3_pkt_size(dwords[0]) + 1;
 			val = cp_type3_opcode(dwords[0]);
-			struct type3_op *op = get_type3_op(val);
+			const struct type3_op *op = get_type3_op(val);
 			if (op->options.load_all_groups)
 				load_all_groups(level+1);
 			printl(3, "t3");
@@ -2588,7 +2582,7 @@ static void dump_commands(uint32_t *dwords, uint32_t sizedwords, int level)
 		} else if (pkt_is_type7(dwords[0])) {
 			count = type7_pkt_size(dwords[0]) + 1;
 			val = cp_type7_opcode(dwords[0]);
-			struct type3_op *op = get_type3_op(val);
+			const struct type3_op *op = get_type3_op(val);
 			if (op->options.load_all_groups)
 				load_all_groups(level+1);
 			printl(3, "t7");
@@ -2720,7 +2714,7 @@ static int pager_close(void)
 
 int main(int argc, char **argv)
 {
-	int ret, n = 1;
+	int ret = -1, n = 1;
 	int start = 0, end = 0x7ffffff, draw = -1;
 	int interactive = isatty(STDOUT_FILENO);
 
@@ -2872,7 +2866,7 @@ static int handle_file(const char *filename, int start, int end, int draw)
 	struct io *io;
 	int submit = 0, got_gpu_id = 0;
 	int sz, i, ret = 0;
-	bool needs_reset;
+	bool needs_reset = false;
 
 	draw_filter = draw;
 	draw_count = 0;
@@ -2941,7 +2935,7 @@ static int handle_file(const char *filename, int start, int end, int draw)
 		return 0;
 	}
 
-	struct buffer gpuaddr;
+	struct buffer gpuaddr = {0};
 
 	while (true) {
 		uint32_t arr[2];
