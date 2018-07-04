@@ -320,54 +320,6 @@ static void reg_set(uint32_t regbase, uint32_t val)
 	type0_reg_rewritten[regbase/8] |= (1 << (regbase % 8));
 }
 
-static struct {
-	uint32_t config;
-	uint32_t address;
-	uint32_t length;
-} vsc_pipe_data[7];
-
-static void reg_vsc_pipe_config(const char *name, uint32_t dword, int level)
-{
-	int idx;
-	sscanf(name, "VSC_PIPE_CONFIG_%x", &idx) ||
-		sscanf(name, "VSC_PIPE[0x%x].CONFIG", &idx) ||
-		sscanf(name, "VSC_PIPE[%d].CONFIG", &idx);
-	vsc_pipe_data[idx].config = dword;
-}
-
-static void reg_vsc_pipe_data_address(const char *name, uint32_t dword, int level)
-{
-	int idx;
-	sscanf(name, "VSC_PIPE_DATA_ADDRESS_%x", &idx) ||
-		sscanf(name, "VSC_PIPE[0x%x].DATA_ADDRESS", &idx) ||
-		sscanf(name, "VSC_PIPE[%d].DATA_ADDRESS", &idx);
-	vsc_pipe_data[idx].address = dword;
-}
-
-static void reg_vsc_pipe_data_length(const char *name, uint32_t dword, int level)
-{
-	int idx;
-	void *buf;
-
-	sscanf(name, "VSC_PIPE_DATA_LENGTH_%x", &idx) ||
-		sscanf(name, "VSC_PIPE[0x%x].DATA_LENGTH", &idx) ||
-		sscanf(name, "VSC_PIPE[%d].DATA_LENGTH", &idx);
-
-	vsc_pipe_data[idx].length = dword;
-
-	if (quiet(3))
-		return;
-
-	/* as this is the last register in the triplet written, we dump
-	 * the pipe data here..
-	 */
-	buf = hostptr(vsc_pipe_data[idx].address);
-	if (buf) {
-		/* not sure how much of this is useful: */
-		dump_hex(buf, min(vsc_pipe_data[idx].length/4, 16), level+1);
-	}
-}
-
 /*
  * A3xx registers:
  */
@@ -563,30 +515,6 @@ static struct {
 		REG(CP_SCRATCH_REG5, reg_dump_scratch),
 		REG(CP_SCRATCH_REG6, reg_dump_scratch),
 		REG(CP_SCRATCH_REG7, reg_dump_scratch),
-		REG(VSC_PIPE[0].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x1].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x1].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x1].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x2].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x2].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x2].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x3].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x3].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x3].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x4].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x4].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x4].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x5].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x5].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x5].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x6].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x6].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x6].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x7].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x7].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x7].DATA_LENGTH, reg_vsc_pipe_data_length),
 		{NULL},
 }, reg_a3xx[] = {
 		REG(CP_SCRATCH_REG0, reg_dump_scratch),
@@ -598,30 +526,6 @@ static struct {
 		REG(CP_SCRATCH_REG6, reg_dump_scratch),
 		REG(CP_SCRATCH_REG7, reg_dump_scratch),
 		REG(VSC_SIZE_ADDRESS, reg_dump_gpuaddr),
-		REG(VSC_PIPE[0].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x1].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x1].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x1].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x2].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x2].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x2].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x3].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x3].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x3].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x4].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x4].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x4].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x5].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x5].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x5].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x6].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x6].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x6].DATA_LENGTH, reg_vsc_pipe_data_length),
-		REG(VSC_PIPE[0x7].CONFIG, reg_vsc_pipe_config),
-		REG(VSC_PIPE[0x7].DATA_ADDRESS, reg_vsc_pipe_data_address),
-		REG(VSC_PIPE[0x7].DATA_LENGTH, reg_vsc_pipe_data_length),
 		REG(VFD_FETCH[0].INSTR_0, reg_vfd_fetch_instr_0_x),
 		REG(VFD_FETCH[0].INSTR_1, reg_vfd_fetch_instr_1_x),
 		REG(VFD_FETCH[0x1].INSTR_0, reg_vfd_fetch_instr_0_x),
