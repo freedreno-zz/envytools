@@ -320,60 +320,6 @@ static void reg_set(uint32_t regbase, uint32_t val)
 	type0_reg_rewritten[regbase/8] |= (1 << (regbase % 8));
 }
 
-/*
- * A3xx registers:
- */
-
-typedef struct {
-	uint32_t fetchsize  : 7;
-	uint32_t bufstride  : 10;
-	/* warning: after here differs for a4xx */
-#if 1
-	uint32_t pad : 15;
-#else
-	uint32_t switchnext : 1;
-	uint32_t indexcode  : 6;
-	uint32_t steprate   : 8;
-#endif
-} vfd_fetch_state_t;
-static vfd_fetch_state_t vfd_fetch_state[0xf];
-
-static void reg_vfd_fetch_instr_0_x(const char *name, uint32_t dword, int level)
-{
-	int idx;
-
-	/* this is a bit ugly way, but oh well.. */
-	sscanf(name, "VFD_FETCH_INSTR_0_%x", &idx) ||
-		sscanf(name, "VFD_FETCH[0x%x].INSTR_0", &idx) ||
-		sscanf(name, "VFD_FETCH[%d].INSTR_0", &idx);
-
-	vfd_fetch_state[idx] = *(vfd_fetch_state_t *)&dword;
-}
-
-static void reg_vfd_fetch_instr_1_x(const char *name, uint32_t dword, int level)
-{
-	int idx;
-	void *buf;
-
-	/* this is a bit ugly way, but oh well.. */
-	sscanf(name, "VFD_FETCH_INSTR_1_%x", &idx) ||
-		sscanf(name, "VFD_FETCH[0x%x].INSTR_1", &idx) ||
-		sscanf(name, "VFD_FETCH[%d].INSTR_1", &idx);
-
-	if (quiet(3))
-		return;
-
-	buf = hostptr(dword);
-
-	if (buf) {
-		// XXX we probably need to know min/max vtx to know the
-		// right values to dump..
-		uint32_t sizedwords = vfd_fetch_state[idx].fetchsize + 1;
-		dump_float(buf, sizedwords, level+1);
-		dump_hex(buf, sizedwords, level+1);
-	}
-}
-
 static void reg_dump_scratch(const char *name, uint32_t dword, int level)
 {
 	unsigned r;
@@ -526,38 +472,6 @@ static struct {
 		REG(CP_SCRATCH_REG6, reg_dump_scratch),
 		REG(CP_SCRATCH_REG7, reg_dump_scratch),
 		REG(VSC_SIZE_ADDRESS, reg_dump_gpuaddr),
-		REG(VFD_FETCH[0].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x2].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x2].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x3].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x3].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x4].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x4].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x5].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x5].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x6].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x6].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x7].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x7].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x8].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x8].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x9].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x9].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xa].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xa].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xb].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xb].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xc].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xc].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xd].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xd].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xe].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xe].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xf].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xf].INSTR_1, reg_vfd_fetch_instr_1_x),
 		REG(SP_VS_PVT_MEM_ADDR_REG, reg_dump_gpuaddr),
 		REG(SP_FS_PVT_MEM_ADDR_REG, reg_dump_gpuaddr),
 		REG(SP_VS_OBJ_START_REG, reg_disasm_gpuaddr),
@@ -585,70 +499,6 @@ static struct {
 		REG(SP_HS_OBJ_START, reg_disasm_gpuaddr),
 		REG(SP_DS_OBJ_START, reg_disasm_gpuaddr),
 		REG(SP_CS_OBJ_START, reg_disasm_gpuaddr),
-		REG(VFD_FETCH[0].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x2].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x2].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x3].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x3].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x4].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x4].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x5].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x5].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x6].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x6].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x7].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x7].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x8].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x8].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x9].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x9].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xa].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xa].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xb].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xb].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xc].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xc].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xd].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xd].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xe].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xe].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0xf].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0xf].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x10].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x10].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x11].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x11].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x12].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x12].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x13].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x13].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x14].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x14].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x15].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x15].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x16].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x16].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x17].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x17].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x18].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x18].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x19].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x19].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1a].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1a].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1b].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1b].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1c].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1c].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1d].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1d].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1e].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1e].INSTR_1, reg_vfd_fetch_instr_1_x),
-		REG(VFD_FETCH[0x1f].INSTR_0, reg_vfd_fetch_instr_0_x),
-		REG(VFD_FETCH[0x1f].INSTR_1, reg_vfd_fetch_instr_1_x),
 		REG(TPL1_TP_VS_BORDER_COLOR_BASE_ADDR, reg_dump_gpuaddr),
 		REG(TPL1_TP_HS_BORDER_COLOR_BASE_ADDR, reg_dump_gpuaddr),
 		REG(TPL1_TP_DS_BORDER_COLOR_BASE_ADDR, reg_dump_gpuaddr),
