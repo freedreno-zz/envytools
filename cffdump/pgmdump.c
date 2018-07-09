@@ -664,7 +664,7 @@ printf("hdr_size=%d\n", hdr_size);
 				instrs_size -= 32;
 			}
 		}
-		disasm_a3xx((uint32_t *)instrs, instrs_size / 4, level+1, SHADER_FRAGMENT);
+		disasm_a3xx((uint32_t *)instrs, instrs_size / 4, level+1, stdout);
 		dump_raw_shader((uint32_t *)instrs, instrs_size / 4, i, "fo3");
 		free(fs_hdr);
 	}
@@ -980,24 +980,15 @@ int main(int argc, char **argv)
 
 	/* figure out what sort of input we are dealing with: */
 	if (!(check_extension(infile, ".rd") || check_extension(infile, ".rd.gz"))) {
-		int (*disasm)(uint32_t *dwords, int sizedwords, int level, enum shader_t type);
-		enum shader_t shader = 0;
+		enum shader_t shader = ~0;
 		int ret;
 		if (check_extension(infile, ".vo")) {
-			disasm = disasm_a2xx;
 			shader = SHADER_VERTEX;
 		} else if (check_extension(infile, ".fo")) {
-			disasm = disasm_a2xx;
 			shader = SHADER_FRAGMENT;
 		} else if (check_extension(infile, ".vo3")) {
-			disasm = disasm_a3xx;
-			shader = SHADER_VERTEX;
 		} else if (check_extension(infile, ".fo3")) {
-			disasm = disasm_a3xx;
-			shader = SHADER_FRAGMENT;
 		} else if (check_extension(infile, ".co3")) {
-			disasm = disasm_a3xx;
-			shader = SHADER_COMPUTE;
 		} else {
 			fprintf(stderr, "invalid input file: %s\n", infile);
 			return -1;
@@ -1008,7 +999,12 @@ int main(int argc, char **argv)
 			fprintf(stderr, "error: %m");
 			return -1;
 		}
-		return disasm(buf, ret/4, 0, shader);
+		if (shader != ~0) {
+			return disasm_a2xx(buf, ret/4, 0, shader);
+		} else {
+			/* disassembly does not depend on shader stage on a3xx+: */
+			return disasm_a3xx(buf, ret/4, 0, stdout);
+		}
 	}
 
 	while ((io_readn(io, &type, sizeof(type)) > 0) && (io_readn(io, &sz, 4) > 0)) {

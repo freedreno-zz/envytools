@@ -302,7 +302,7 @@ static void decode_shader_descriptor_block(struct state *state,
 			break;
 		case SHADER:
 			printf("%sshader %u:\n", tab(state->lvl-1), i);
-			disasm_a3xx(ptr, blk->size/4, state->lvl, 0);
+			disasm_a3xx(ptr, blk->size/4, state->lvl, stdout);
 			/* this is a special case in a way, blk->count is # of
 			 * instructions but disasm_a3xx() decodes all instructions,
 			 * so just bail.
@@ -440,35 +440,14 @@ int main(int argc, char **argv)
 
 	/* figure out what sort of input we are dealing with: */
 	if (!(check_extension(infile, ".rd") || check_extension(infile, ".rd.gz"))) {
-		int (*disasm)(uint32_t *dwords, int sizedwords, int level, enum shader_t type);
-		enum shader_t shader = 0;
 		int ret;
-		if (check_extension(infile, ".vo")) {
-			disasm = disasm_a2xx;
-			shader = SHADER_VERTEX;
-		} else if (check_extension(infile, ".fo")) {
-			disasm = disasm_a2xx;
-			shader = SHADER_FRAGMENT;
-		} else if (check_extension(infile, ".vo3")) {
-			disasm = disasm_a3xx;
-			shader = SHADER_VERTEX;
-		} else if (check_extension(infile, ".fo3")) {
-			disasm = disasm_a3xx;
-			shader = SHADER_FRAGMENT;
-		} else if (check_extension(infile, ".co3")) {
-			disasm = disasm_a3xx;
-			shader = SHADER_COMPUTE;
-		} else {
-			fprintf(stderr, "invalid input file: %s\n", infile);
-			return -1;
-		}
 		buf = calloc(1, 100 * 1024);
 		ret = io_readn(io, buf, 100 * 1024);
 		if (ret < 0) {
 			fprintf(stderr, "error: %m");
 			return -1;
 		}
-		return disasm(buf, ret/4, 0, shader);
+		return disasm_a3xx(buf, ret/4, 0, stdout);
 	}
 
 	while ((io_readn(io, &type, sizeof(type)) > 0) && (io_readn(io, &sz, 4) > 0)) {

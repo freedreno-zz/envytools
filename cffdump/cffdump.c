@@ -404,7 +404,7 @@ static void disasm_gpuaddr(const char *name, uint64_t gpuaddr, int level)
 		const char *ext;
 
 		dump_hex(buf, 64, level+1);
-		disasm_a3xx(buf, sizedwords, level+2, SHADER_FRAGMENT);
+		disasm_a3xx(buf, sizedwords, level+2, stdout);
 
 		/* this is a bit ugly way, but oh well.. */
 		if (strstr(name, "SP_VS_OBJ")) {
@@ -1139,7 +1139,7 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		}
 
 		if (contents)
-			disasm_a3xx(contents, num_unit * 2, level+2, 0);
+			disasm_a3xx(contents, num_unit * 2, level+2, stdout);
 
 		/* dump raw shader: */
 		if (ext)
