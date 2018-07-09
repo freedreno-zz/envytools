@@ -423,6 +423,8 @@ static void print_instr_cat1(instr_t *instr)
 	if (cat1->src_im) {
 		if (type_float(cat1->src_type))
 			printf("(%f)", cat1->fim_val);
+		else if (type_uint(cat1->src_type))
+			printf("0x%08x", cat1->uim_val);
 		else
 			printf("%d", cat1->iim_val);
 	} else if (cat1->src_rel && !cat1->src_c) {
@@ -458,7 +460,7 @@ static void print_instr_cat2(instr_t *instr)
 			"?6?",
 	};
 
-	switch (cat2->opc) {
+	switch (_OPC(2, cat2->opc)) {
 	case OPC_CMPS_F:
 	case OPC_CMPS_U:
 	case OPC_CMPS_S:
@@ -489,7 +491,7 @@ static void print_instr_cat2(instr_t *instr)
 				cat2->src1_abs, false);
 	}
 
-	switch (cat2->opc) {
+	switch (_OPC(2, cat2->opc)) {
 	case OPC_ABSNEG_F:
 	case OPC_ABSNEG_S:
 	case OPC_CLZ_B:
@@ -528,21 +530,7 @@ static void print_instr_cat2(instr_t *instr)
 static void print_instr_cat3(instr_t *instr)
 {
 	instr_cat3_t *cat3 = &instr->cat3;
-	bool full = true;
-
-	// XXX is this based on opc or some other bit?
-	switch (cat3->opc) {
-	case OPC_MAD_F16:
-	case OPC_MAD_U16:
-	case OPC_MAD_S16:
-	case OPC_SEL_B16:
-	case OPC_SEL_S16:
-	case OPC_SEL_F16:
-	case OPC_SAD_S16:
-	case OPC_SAD_S32:  // really??
-		full = false;
-		break;
-	}
+	bool full = instr_cat3_full(cat3);
 
 	printf(" ");
 	print_reg_dst((reg_t)(cat3->dst), full ^ cat3->dst_half, false);
@@ -611,34 +599,34 @@ static void print_instr_cat5(instr_t *instr)
 	static const struct {
 		bool src1, src2, samp, tex;
 	} info[0x1f] = {
-			[OPC_ISAM]     = { true,  false, true,  true,  },
-			[OPC_ISAML]    = { true,  true,  true,  true,  },
-			[OPC_ISAMM]    = { true,  false, true,  true,  },
-			[OPC_SAM]      = { true,  false, true,  true,  },
-			[OPC_SAMB]     = { true,  true,  true,  true,  },
-			[OPC_SAML]     = { true,  true,  true,  true,  },
-			[OPC_SAMGQ]    = { true,  false, true,  true,  },
-			[OPC_GETLOD]   = { true,  false, true,  true,  },
-			[OPC_CONV]     = { true,  true,  true,  true,  },
-			[OPC_CONVM]    = { true,  true,  true,  true,  },
-			[OPC_GETSIZE]  = { true,  false, false, true,  },
-			[OPC_GETBUF]   = { false, false, false, true,  },
-			[OPC_GETPOS]   = { true,  false, false, true,  },
-			[OPC_GETINFO]  = { false, false, false, true,  },
-			[OPC_DSX]      = { true,  false, false, false, },
-			[OPC_DSY]      = { true,  false, false, false, },
-			[OPC_GATHER4R] = { true,  false, true,  true,  },
-			[OPC_GATHER4G] = { true,  false, true,  true,  },
-			[OPC_GATHER4B] = { true,  false, true,  true,  },
-			[OPC_GATHER4A] = { true,  false, true,  true,  },
-			[OPC_SAMGP0]   = { true,  false, true,  true,  },
-			[OPC_SAMGP1]   = { true,  false, true,  true,  },
-			[OPC_SAMGP2]   = { true,  false, true,  true,  },
-			[OPC_SAMGP3]   = { true,  false, true,  true,  },
-			[OPC_DSXPP_1]  = { true,  false, false, false, },
-			[OPC_DSYPP_1]  = { true,  false, false, false, },
-			[OPC_RGETPOS]  = { false, false, false, false, },
-			[OPC_RGETINFO] = { false, false, false, false, },
+			[opc_op(OPC_ISAM)]     = { true,  false, true,  true,  },
+			[opc_op(OPC_ISAML)]    = { true,  true,  true,  true,  },
+			[opc_op(OPC_ISAMM)]    = { true,  false, true,  true,  },
+			[opc_op(OPC_SAM)]      = { true,  false, true,  true,  },
+			[opc_op(OPC_SAMB)]     = { true,  true,  true,  true,  },
+			[opc_op(OPC_SAML)]     = { true,  true,  true,  true,  },
+			[opc_op(OPC_SAMGQ)]    = { true,  false, true,  true,  },
+			[opc_op(OPC_GETLOD)]   = { true,  false, true,  true,  },
+			[opc_op(OPC_CONV)]     = { true,  true,  true,  true,  },
+			[opc_op(OPC_CONVM)]    = { true,  true,  true,  true,  },
+			[opc_op(OPC_GETSIZE)]  = { true,  false, false, true,  },
+			[opc_op(OPC_GETBUF)]   = { false, false, false, true,  },
+			[opc_op(OPC_GETPOS)]   = { true,  false, false, true,  },
+			[opc_op(OPC_GETINFO)]  = { false, false, false, true,  },
+			[opc_op(OPC_DSX)]      = { true,  false, false, false, },
+			[opc_op(OPC_DSY)]      = { true,  false, false, false, },
+			[opc_op(OPC_GATHER4R)] = { true,  false, true,  true,  },
+			[opc_op(OPC_GATHER4G)] = { true,  false, true,  true,  },
+			[opc_op(OPC_GATHER4B)] = { true,  false, true,  true,  },
+			[opc_op(OPC_GATHER4A)] = { true,  false, true,  true,  },
+			[opc_op(OPC_SAMGP0)]   = { true,  false, true,  true,  },
+			[opc_op(OPC_SAMGP1)]   = { true,  false, true,  true,  },
+			[opc_op(OPC_SAMGP2)]   = { true,  false, true,  true,  },
+			[opc_op(OPC_SAMGP3)]   = { true,  false, true,  true,  },
+			[opc_op(OPC_DSXPP_1)]  = { true,  false, false, false, },
+			[opc_op(OPC_DSYPP_1)]  = { true,  false, false, false, },
+			[opc_op(OPC_RGETPOS)]  = { false, false, false, false, },
+			[opc_op(OPC_RGETINFO)] = { false, false, false, false, },
 	};
 	instr_cat5_t *cat5 = &instr->cat5;
 	int i;
@@ -652,7 +640,7 @@ static void print_instr_cat5(instr_t *instr)
 
 	printf(" ");
 
-	switch (cat5->opc) {
+	switch (_OPC(5, cat5->opc)) {
 	case OPC_DSXPP_1:
 	case OPC_DSYPP_1:
 		break;
@@ -717,7 +705,7 @@ static void print_instr_cat6(instr_t *instr)
 	memset(&src1, 0, sizeof(src1));
 	memset(&src2, 0, sizeof(src2));
 
-	switch (cat6->opc) {
+	switch (_OPC(6, cat6->opc)) {
 	case OPC_RESINFO:
 	case OPC_RESFMT:
 		dst.full  = type_size(cat6->type) == 32;
@@ -747,7 +735,7 @@ static void print_instr_cat6(instr_t *instr)
 		break;
 	}
 
-	switch (cat6->opc) {
+	switch (_OPC(6, cat6->opc)) {
 	case OPC_PREFETCH:
 		break;
 	case OPC_RESINFO:
@@ -791,7 +779,7 @@ static void print_instr_cat6(instr_t *instr)
 	}
 	printf(" ");
 
-	switch (cat6->opc) {
+	switch (_OPC(6, cat6->opc)) {
 	case OPC_STG:
 		sd = 'g';
 		break;
@@ -836,7 +824,7 @@ static void print_instr_cat6(instr_t *instr)
 		break;
 	}
 
-	if ((cat6->opc == OPC_STGB) || (cat6->opc == OPC_STIB)) {
+	if ((_OPC(6, cat6->opc) == OPC_STGB) || (_OPC(6, cat6->opc) == OPC_STIB)) {
 		struct reginfo src3;
 
 		memset(&src3, 0, sizeof(src3));
@@ -861,7 +849,7 @@ static void print_instr_cat6(instr_t *instr)
 		return;
 	}
 
-	if (is_atomic(cat6->opc)) {
+	if (is_atomic(_OPC(6, cat6->opc))) {
 
 		src1.reg = (reg_t)(cat6->ldgb.src1);
 		src1.im  = cat6->ldgb.src1_im;
@@ -910,7 +898,7 @@ static void print_instr_cat6(instr_t *instr)
 		}
 
 		return;
-	} else if (cat6->opc == OPC_RESINFO) {
+	} else if (_OPC(6, cat6->opc) == OPC_RESINFO) {
 		dst.reg  = (reg_t)(cat6->ldgb.dst);
 
 		print_src(&dst);
@@ -918,7 +906,7 @@ static void print_instr_cat6(instr_t *instr)
 		printf("g[%u]", cat6->ldgb.src_ssbo);
 
 		return;
-	} else if (cat6->opc == OPC_LDGB) {
+	} else if (_OPC(6, cat6->opc) == OPC_LDGB) {
 
 		src1.reg = (reg_t)(cat6->ldgb.src1);
 		src1.im  = cat6->ldgb.src1_im;
@@ -986,7 +974,7 @@ static void print_instr_cat6(instr_t *instr)
 	if (ss)
 		printf("]");
 
-	switch (cat6->opc) {
+	switch (_OPC(6, cat6->opc)) {
 	case OPC_RESINFO:
 	case OPC_RESFMT:
 		break;
@@ -1006,7 +994,7 @@ static void print_instr_cat7(instr_t *instr)
 	if (cat7->l)
 		printf(".l");
 
-	if (cat7->opc == OPC_FENCE) {
+	if (_OPC(7, cat7->opc) == OPC_FENCE) {
 		if (cat7->r)
 			printf(".r");
 		if (cat7->w)
@@ -1017,13 +1005,13 @@ static void print_instr_cat7(instr_t *instr)
 /* size of largest OPC field of all the instruction categories: */
 #define NOPC_BITS 6
 
-struct opc_info {
+static const struct opc_info {
 	uint16_t cat;
 	uint16_t opc;
 	const char *name;
 	void (*print)(instr_t *instr);
 } opcs[1 << (3+NOPC_BITS)] = {
-#define OPC(cat, opc, name) [((cat) << NOPC_BITS) | (opc)] = { (cat), (opc), #name, print_instr_cat##cat }
+#define OPC(cat, opc, name) [(opc)] = { (cat), (opc), #name, print_instr_cat##cat }
 	/* category 0: */
 	OPC(0, OPC_NOP,          nop),
 	OPC(0, OPC_BR,           br),
@@ -1039,7 +1027,7 @@ struct opc_info {
 	OPC(0, OPC_FLOW_REV,     flow_rev),
 
 	/* category 1: */
-	OPC(1, 0, ),
+	OPC(1, OPC_MOV, ),
 
 	/* category 2: */
 	OPC(2, OPC_ADD_F,        add.f),
