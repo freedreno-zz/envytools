@@ -1817,7 +1817,6 @@ struct draw_state {
 	uint16_t flags;
 	uint32_t count;
 	uint64_t addr;
-	void *ptr;
 };
 
 struct draw_state state[32];
@@ -1830,7 +1829,6 @@ struct draw_state state[32];
 static void disable_group(unsigned group_id)
 {
 	struct draw_state *ds = &state[group_id];
-	free(ds->ptr);
 	memset(ds, 0, sizeof(*ds));
 }
 
@@ -1877,12 +1875,13 @@ static void load_group(unsigned group_id, int level)
 		}
 	}
 
-	if (ds->ptr) {
+	void *ptr = hostptr(ds->addr);
+	if (ptr) {
 		if (!quiet(2))
-			dump_hex(ds->ptr, ds->count, level+1);
+			dump_hex(ptr, ds->count, level+1);
 
 		ib++;
-		dump_commands(ds->ptr, ds->count, level+1);
+		dump_commands(ptr, ds->count, level+1);
 		ib--;
 	}
 
@@ -1919,7 +1918,6 @@ static void cp_set_draw_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		uint32_t enable_mask = (dwords[i] >> 20) & 0xf;
 		uint32_t flags = (dwords[i] >> 16) & 0xf;
 		uint64_t addr;
-		uint32_t *ptr;
 
 		if (is_64b()) {
 			addr = dwords[i + 1];
@@ -1949,13 +1947,6 @@ static void cp_set_draw_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		ds->flags = flags;
 		ds->count = count;
 		ds->addr  = addr;
-
-		ptr = hostptr(addr);
-
-		if (ptr) {
-			ds->ptr = malloc(count * sizeof(uint32_t));
-			memcpy(ds->ptr, ptr, count * sizeof(uint32_t));
-		}
 
 		if (flags & FLAG_LOAD_IMMED) {
 			load_group(group_id, level);
