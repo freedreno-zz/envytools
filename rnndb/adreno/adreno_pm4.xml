@@ -749,10 +749,10 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</reg32>
 	<!-- what is this new address? -->
 	<reg32 offset="5" name="5">
-		<bitfield name="XXX_ADDRESS_LO" low="0" high="31"/>
+		<bitfield name="BIN_DATA_ADDR2_LO" low="0" high="31"/>
 	</reg32>
 	<reg32 offset="6" name="6">
-		<bitfield name="XXX_ADDRESS_HI" low="0" high="31"/>
+		<bitfield name="BIN_DATA_ADDR2_LO" low="0" high="31"/>
 	</reg32>
 </domain>
 
