@@ -256,6 +256,98 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0" name="PERF_CP_ALWAYS_COUNT"/>
 </enum>
 
+<enum name="a6xx_shader_id">
+	<value value="0x9" name="A6XX_TP0_TMO_DATA"/>
+	<value value="0xa" name="A6XX_TP0_SMO_DATA"/>
+	<value value="0xb" name="A6XX_TP0_MIPMAP_BASE_DATA"/>
+	<value value="0x19" name="A6XX_TP1_TMO_DATA"/>
+	<value value="0x1a" name="A6XX_TP1_SMO_DATA"/>
+	<value value="0x1b" name="A6XX_TP1_MIPMAP_BASE_DATA"/>
+	<value value="0x29" name="A6XX_SP_INST_DATA"/>
+	<value value="0x2a" name="A6XX_SP_LB_0_DATA"/>
+	<value value="0x2b" name="A6XX_SP_LB_1_DATA"/>
+	<value value="0x2c" name="A6XX_SP_LB_2_DATA"/>
+	<value value="0x2d" name="A6XX_SP_LB_3_DATA"/>
+	<value value="0x2e" name="A6XX_SP_LB_4_DATA"/>
+	<value value="0x2f" name="A6XX_SP_LB_5_DATA"/>
+	<value value="0x30" name="A6XX_SP_CB_BINDLESS_DATA"/>
+	<value value="0x31" name="A6XX_SP_CB_LEGACY_DATA"/>
+	<value value="0x32" name="A6XX_SP_UAV_DATA"/>
+	<value value="0x33" name="A6XX_SP_INST_TAG"/>
+	<value value="0x34" name="A6XX_SP_CB_BINDLESS_TAG"/>
+	<value value="0x35" name="A6XX_SP_TMO_UMO_TAG"/>
+	<value value="0x36" name="A6XX_SP_SMO_TAG"/>
+	<value value="0x37" name="A6XX_SP_STATE_DATA"/>
+	<value value="0x49" name="A6XX_HLSQ_CHUNK_CVS_RAM"/>
+	<value value="0x4a" name="A6XX_HLSQ_CHUNK_CPS_RAM"/>
+	<value value="0x4b" name="A6XX_HLSQ_CHUNK_CVS_RAM_TAG"/>
+	<value value="0x4c" name="A6XX_HLSQ_CHUNK_CPS_RAM_TAG"/>
+	<value value="0x4d" name="A6XX_HLSQ_ICB_CVS_CB_BASE_TAG"/>
+	<value value="0x4e" name="A6XX_HLSQ_ICB_CPS_CB_BASE_TAG"/>
+	<value value="0x50" name="A6XX_HLSQ_CVS_MISC_RAM"/>
+	<value value="0x51" name="A6XX_HLSQ_CPS_MISC_RAM"/>
+	<value value="0x52" name="A6XX_HLSQ_INST_RAM"/>
+	<value value="0x53" name="A6XX_HLSQ_GFX_CVS_CONST_RAM"/>
+	<value value="0x54" name="A6XX_HLSQ_GFX_CPS_CONST_RAM"/>
+	<value value="0x55" name="A6XX_HLSQ_CVS_MISC_RAM_TAG"/>
+	<value value="0x56" name="A6XX_HLSQ_CPS_MISC_RAM_TAG"/>
+	<value value="0x57" name="A6XX_HLSQ_INST_RAM_TAG"/>
+	<value value="0x58" name="A6XX_HLSQ_GFX_CVS_CONST_RAM_TAG"/>
+	<value value="0x59" name="A6XX_HLSQ_GFX_CPS_CONST_RAM_TAG"/>
+	<value value="0x5a" name="A6XX_HLSQ_PWR_REST_RAM"/>
+	<value value="0x5b" name="A6XX_HLSQ_PWR_REST_TAG"/>
+	<value value="0x60" name="A6XX_HLSQ_DATAPATH_META"/>
+	<value value="0x61" name="A6XX_HLSQ_FRONTEND_META"/>
+	<value value="0x62" name="A6XX_HLSQ_INDIRECT_META"/>
+	<value value="0x63" name="A6XX_HLSQ_BACKEND_META"/>
+</enum>
+
+<enum name="a6xx_debugbus_id">
+	<value value="0x1" name="A6XX_DBGBUS_CP"/>
+	<value value="0x2" name="A6XX_DBGBUS_RBBM"/>
+	<value value="0x3" name="A6XX_DBGBUS_VBIF"/>
+	<value value="0x4" name="A6XX_DBGBUS_HLSQ"/>
+	<value value="0x5" name="A6XX_DBGBUS_UCHE"/>
+	<value value="0x6" name="A6XX_DBGBUS_DPM"/>
+	<value value="0x7" name="A6XX_DBGBUS_TESS"/>
+	<value value="0x8" name="A6XX_DBGBUS_PC"/>
+	<value value="0x9" name="A6XX_DBGBUS_VFDP"/>
+	<value value="0xa" name="A6XX_DBGBUS_VPC"/>
+	<value value="0xb" name="A6XX_DBGBUS_TSE"/>
+	<value value="0xc" name="A6XX_DBGBUS_RAS"/>
+	<value value="0xd" name="A6XX_DBGBUS_VSC"/>
+	<value value="0xe" name="A6XX_DBGBUS_COM"/>
+	<value value="0x10" name="A6XX_DBGBUS_LRZ"/>
+	<value value="0x11" name="A6XX_DBGBUS_A2D"/>
+	<value value="0x12" name="A6XX_DBGBUS_CCUFCHE"/>
+	<value value="0x13" name="A6XX_DBGBUS_GMU_CX"/>
+	<value value="0x14" name="A6XX_DBGBUS_RBP"/>
+	<value value="0x15" name="A6XX_DBGBUS_DCS"/>
+	<value value="0x16" name="A6XX_DBGBUS_DBGC"/>
+	<value value="0x17" name="A6XX_DBGBUS_CX"/>
+	<value value="0x18" name="A6XX_DBGBUS_GMU_GX"/>
+	<value value="0x19" name="A6XX_DBGBUS_TPFCHE"/>
+	<value value="0x1a" name="A6XX_DBGBUS_GBIF_GX"/>
+	<value value="0x1d" name="A6XX_DBGBUS_GPC"/>
+	<value value="0x1e" name="A6XX_DBGBUS_LARC"/>
+	<value value="0x1f" name="A6XX_DBGBUS_HLSQ_SPTP"/>
+	<value value="0x20" name="A6XX_DBGBUS_RB_0"/>
+	<value value="0x21" name="A6XX_DBGBUS_RB_1"/>
+	<value value="0x24" name="A6XX_DBGBUS_UCHE_WRAPPER"/>
+	<value value="0x28" name="A6XX_DBGBUS_CCU_0"/>
+	<value value="0x29" name="A6XX_DBGBUS_CCU_1"/>
+	<value value="0x38" name="A6XX_DBGBUS_VFD_0"/>
+	<value value="0x39" name="A6XX_DBGBUS_VFD_1"/>
+	<value value="0x3a" name="A6XX_DBGBUS_VFD_2"/>
+	<value value="0x3b" name="A6XX_DBGBUS_VFD_3"/>
+	<value value="0x40" name="A6XX_DBGBUS_SP_0"/>
+	<value value="0x41" name="A6XX_DBGBUS_SP_1"/>
+	<value value="0x48" name="A6XX_DBGBUS_TPL1_0"/>
+	<value value="0x49" name="A6XX_DBGBUS_TPL1_1"/>
+	<value value="0x4a" name="A6XX_DBGBUS_TPL1_2"/>
+	<value value="0x4b" name="A6XX_DBGBUS_TPL1_3"/>
+</enum>
+
 <domain name="A6XX" width="32">
 	<bitset name="A6XX_RBBM_INT_0_MASK">
 		<bitfield name="RBBM_GPU_IDLE" pos="0"/>
@@ -976,9 +1068,22 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xB61A" name="TPL1_PERFCTR_TP_SEL_10"/>
 	<reg32 offset="0xB61B" name="TPL1_PERFCTR_TP_SEL_11"/>
 	<reg32 offset="0x3000" name="VBIF_VERSION"/>
+	<reg32 offset="0x3001" name="VBIF_CLKON">
+		<bitfield pos="1" name="FORCE_ON_TESTBUS"/>
+	</reg32>
 	<reg32 offset="0x302A" name="VBIF_GATE_OFF_WRREQ_EN"/>
 	<reg32 offset="0x3080" name="VBIF_XIN_HALT_CTRL0"/>
 	<reg32 offset="0x3081" name="VBIF_XIN_HALT_CTRL1"/>
+	<reg32 offset="0x3084" name="VBIF_TEST_BUS_OUT_CTRL"/>
+	<reg32 offset="0x3085" name="VBIF_TEST_BUS1_CTRL0"/>
+	<reg32 offset="0x3086" name="VBIF_TEST_BUS1_CTRL1">
+		<bitfield low="0" high="3" name="DATA_SEL"/>
+	</reg32>
+	<reg32 offset="0x3087" name="VBIF_TEST_BUS2_CTRL0"/>
+	<reg32 offset="0x3088" name="VBIF_TEST_BUS2_CTRL1">
+		<bitfield low="0" high="8" name="DATA_SEL"/>
+	</reg32>
+	<reg32 offset="0x308c" name="VBIF_TEST_BUS_OUT"/>
 	<reg32 offset="0x30d0" name="VBIF_PERF_CNT_SEL0"/>
 	<reg32 offset="0x30d1" name="VBIF_PERF_CNT_SEL1"/>
 	<reg32 offset="0x30d2" name="VBIF_PERF_CNT_SEL2"/>
@@ -1000,81 +1105,6 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x3118" name="VBIF_PERF_PWR_CNT_HIGH0"/>
 	<reg32 offset="0x3119" name="VBIF_PERF_PWR_CNT_HIGH1"/>
 	<reg32 offset="0x311a" name="VBIF_PERF_PWR_CNT_HIGH2"/>
-	<reg32 offset="0x18400" name="CX_DBGC_CFG_DBGBUS_SEL_A"/>
-	<reg32 offset="0x18401" name="CX_DBGC_CFG_DBGBUS_SEL_B"/>
-	<reg32 offset="0x18402" name="CX_DBGC_CFG_DBGBUS_SEL_C"/>
-	<reg32 offset="0x18403" name="CX_DBGC_CFG_DBGBUS_SEL_D">
-		<bitfield high="7" low="0" name="PING_INDEX"/>
-		<bitfield high="15" low="8" name="PING_BLK_SEL"/>
-	</reg32>
-
-	<reg32 offset="0x18404" name="CX_DBGC_CFG_DBGBUS_CNTLT">
-		<bitfield high="5" low="0" name="TRACEEN"/>
-		<bitfield high="14" low="12" name="GRANU"/>
-		<bitfield high="31" low="28" name="SEGT"/>
-	</reg32>
-	<reg32 offset="0x18405" name="CX_DBGC_CFG_DBGBUS_CNTLM">
-		<bitfield high="27" low="24" name="ENABLE"/>
-	</reg32>
-	<reg32 offset="0x18408" name="CX_DBGC_CFG_DBGBUS_IVTL_0"/>
-	<reg32 offset="0x18409" name="CX_DBGC_CFG_DBGBUS_IVTL_1"/>
-	<reg32 offset="0x1840A" name="CX_DBGC_CFG_DBGBUS_IVTL_2"/>
-	<reg32 offset="0x1840B" name="CX_DBGC_CFG_DBGBUS_IVTL_3"/>
-	<reg32 offset="0x1840C" name="CX_DBGC_CFG_DBGBUS_MASKL_0"/>
-	<reg32 offset="0x1840D" name="CX_DBGC_CFG_DBGBUS_MASKL_1"/>
-	<reg32 offset="0x1840E" name="CX_DBGC_CFG_DBGBUS_MASKL_2"/>
-	<reg32 offset="0x1840F" name="CX_DBGC_CFG_DBGBUS_MASKL_3"/>
-	<reg32 offset="0x18410" name="CX_DBGC_CFG_DBGBUS_BYTEL_0">
-		<bitfield high="3" low="0" name="BYTEL0"/>
-		<bitfield high="7" low="4" name="BYTEL1"/>
-		<bitfield high="11" low="8" name="BYTEL2"/>
-		<bitfield high="15" low="12" name="BYTEL3"/>
-		<bitfield high="19" low="16" name="BYTEL4"/>
-		<bitfield high="23" low="20" name="BYTEL5"/>
-		<bitfield high="27" low="24" name="BYTEL6"/>
-		<bitfield high="31" low="28" name="BYTEL7"/>
-	</reg32>
-	<reg32 offset="0x18411" name="CX_DBGC_CFG_DBGBUS_BYTEL_1">
-		<bitfield high="3" low="0" name="BYTEL8"/>
-		<bitfield high="7" low="4" name="BYTEL9"/>
-		<bitfield high="11" low="8" name="BYTEL10"/>
-		<bitfield high="15" low="12" name="BYTEL11"/>
-		<bitfield high="19" low="16" name="BYTEL12"/>
-		<bitfield high="23" low="20" name="BYTEL13"/>
-		<bitfield high="27" low="24" name="BYTEL14"/>
-		<bitfield high="31" low="28" name="BYTEL15"/>
-	</reg32>
-
-	<reg32 offset="0x1842F" name="CX_DBGC_CFG_DBGBUS_TRACE_BUF1"/>
-	<reg32 offset="0x18430" name="CX_DBGC_CFG_DBGBUS_TRACE_BUF2"/>
-	<reg32 offset="0x21140" name="PDC_GPU_ENABLE_PDC"/>
-	<reg32 offset="0x21148" name="PDC_GPU_SEQ_START_ADDR"/>
-	<reg32 offset="0x21540" name="PDC_GPU_TCS0_CONTROL"/>
-	<reg32 offset="0x21541" name="PDC_GPU_TCS0_CMD_ENABLE_BANK"/>
-	<reg32 offset="0x21542" name="PDC_GPU_TCS0_CMD_WAIT_FOR_CMPL_BANK"/>
-	<reg32 offset="0x21543" name="PDC_GPU_TCS0_CMD0_MSGID"/>
-	<reg32 offset="0x21544" name="PDC_GPU_TCS0_CMD0_ADDR"/>
-	<reg32 offset="0x21545" name="PDC_GPU_TCS0_CMD0_DATA"/>
-	<reg32 offset="0x21572" name="PDC_GPU_TCS1_CONTROL"/>
-	<reg32 offset="0x21573" name="PDC_GPU_TCS1_CMD_ENABLE_BANK"/>
-	<reg32 offset="0x21574" name="PDC_GPU_TCS1_CMD_WAIT_FOR_CMPL_BANK"/>
-	<reg32 offset="0x21575" name="PDC_GPU_TCS1_CMD0_MSGID"/>
-	<reg32 offset="0x21576" name="PDC_GPU_TCS1_CMD0_ADDR"/>
-	<reg32 offset="0x21577" name="PDC_GPU_TCS1_CMD0_DATA"/>
-	<reg32 offset="0x215A4" name="PDC_GPU_TCS2_CONTROL"/>
-	<reg32 offset="0x215A5" name="PDC_GPU_TCS2_CMD_ENABLE_BANK"/>
-	<reg32 offset="0x215A6" name="PDC_GPU_TCS2_CMD_WAIT_FOR_CMPL_BANK"/>
-	<reg32 offset="0x215A7" name="PDC_GPU_TCS2_CMD0_MSGID"/>
-	<reg32 offset="0x215A8" name="PDC_GPU_TCS2_CMD0_ADDR"/>
-	<reg32 offset="0x215A9" name="PDC_GPU_TCS2_CMD0_DATA"/>
-	<reg32 offset="0x215D6" name="PDC_GPU_TCS3_CONTROL"/>
-	<reg32 offset="0x215D7" name="PDC_GPU_TCS3_CMD_ENABLE_BANK"/>
-	<reg32 offset="0x215D8" name="PDC_GPU_TCS3_CMD_WAIT_FOR_CMPL_BANK"/>
-	<reg32 offset="0x215D9" name="PDC_GPU_TCS3_CMD0_MSGID"/>
-	<reg32 offset="0x215DA" name="PDC_GPU_TCS3_CMD0_ADDR"/>
-	<reg32 offset="0x215DB" name="PDC_GPU_TCS3_CMD0_DATA"/>
-	<reg32 offset="0xA0000" name="PDC_GPU_SEQ_MEM_0"/>
-
 	<!-- move/rename these.. -->
 
 	<reg32 offset="0x88d4" name="X1_WINDOW_OFFSET" type="adreno_reg_xy"/>
@@ -2199,6 +2229,88 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="13" name="13"/>
 	<reg32 offset="14" name="14"/>
 	<reg32 offset="15" name="15"/>
+</domain>
+
+<domain name="A6XX_PDC" width="32">
+	<reg32 offset="0x1140" name="GPU_ENABLE_PDC"/>
+	<reg32 offset="0x1148" name="GPU_SEQ_START_ADDR"/>
+	<reg32 offset="0x1540" name="GPU_TCS0_CONTROL"/>
+	<reg32 offset="0x1541" name="GPU_TCS0_CMD_ENABLE_BANK"/>
+	<reg32 offset="0x1542" name="GPU_TCS0_CMD_WAIT_FOR_CMPL_BANK"/>
+	<reg32 offset="0x1543" name="GPU_TCS0_CMD0_MSGID"/>
+	<reg32 offset="0x1544" name="GPU_TCS0_CMD0_ADDR"/>
+	<reg32 offset="0x1545" name="GPU_TCS0_CMD0_DATA"/>
+	<reg32 offset="0x1572" name="GPU_TCS1_CONTROL"/>
+	<reg32 offset="0x1573" name="GPU_TCS1_CMD_ENABLE_BANK"/>
+	<reg32 offset="0x1574" name="GPU_TCS1_CMD_WAIT_FOR_CMPL_BANK"/>
+	<reg32 offset="0x1575" name="GPU_TCS1_CMD0_MSGID"/>
+	<reg32 offset="0x1576" name="GPU_TCS1_CMD0_ADDR"/>
+	<reg32 offset="0x1577" name="GPU_TCS1_CMD0_DATA"/>
+	<reg32 offset="0x15A4" name="GPU_TCS2_CONTROL"/>
+	<reg32 offset="0x15A5" name="GPU_TCS2_CMD_ENABLE_BANK"/>
+	<reg32 offset="0x15A6" name="GPU_TCS2_CMD_WAIT_FOR_CMPL_BANK"/>
+	<reg32 offset="0x15A7" name="GPU_TCS2_CMD0_MSGID"/>
+	<reg32 offset="0x15A8" name="GPU_TCS2_CMD0_ADDR"/>
+	<reg32 offset="0x15A9" name="GPU_TCS2_CMD0_DATA"/>
+	<reg32 offset="0x15D6" name="GPU_TCS3_CONTROL"/>
+	<reg32 offset="0x15D7" name="GPU_TCS3_CMD_ENABLE_BANK"/>
+	<reg32 offset="0x15D8" name="GPU_TCS3_CMD_WAIT_FOR_CMPL_BANK"/>
+	<reg32 offset="0x15D9" name="GPU_TCS3_CMD0_MSGID"/>
+	<reg32 offset="0x15DA" name="GPU_TCS3_CMD0_ADDR"/>
+	<reg32 offset="0x15DB" name="GPU_TCS3_CMD0_DATA"/>
+</domain>
+
+<domain name="A6XX_PDC_GPU_SEQ" width="32">
+	<reg32 offset="0x0" name="MEM_0"/>
+</domain>
+
+<domain name="A6XX_CX_DBGC" width="32">
+	<reg32 offset="0x0000" name="CFG_DBGBUS_SEL_A">
+		<bitfield high="7" low="0" name="PING_INDEX"/>
+		<bitfield high="15" low="8" name="PING_BLK_SEL"/>
+	</reg32>
+	<reg32 offset="0x0001" name="CFG_DBGBUS_SEL_B"/>
+	<reg32 offset="0x0002" name="CFG_DBGBUS_SEL_C"/>
+	<reg32 offset="0x0003" name="CFG_DBGBUS_SEL_D"/>
+	<reg32 offset="0x0004" name="CFG_DBGBUS_CNTLT">
+		<bitfield high="5" low="0" name="TRACEEN"/>
+		<bitfield high="14" low="12" name="GRANU"/>
+		<bitfield high="31" low="28" name="SEGT"/>
+	</reg32>
+	<reg32 offset="0x0005" name="CFG_DBGBUS_CNTLM">
+		<bitfield high="27" low="24" name="ENABLE"/>
+	</reg32>
+	<reg32 offset="0x0008" name="CFG_DBGBUS_IVTL_0"/>
+	<reg32 offset="0x0009" name="CFG_DBGBUS_IVTL_1"/>
+	<reg32 offset="0x000a" name="CFG_DBGBUS_IVTL_2"/>
+	<reg32 offset="0x000b" name="CFG_DBGBUS_IVTL_3"/>
+	<reg32 offset="0x000c" name="CFG_DBGBUS_MASKL_0"/>
+	<reg32 offset="0x000d" name="CFG_DBGBUS_MASKL_1"/>
+	<reg32 offset="0x000e" name="CFG_DBGBUS_MASKL_2"/>
+	<reg32 offset="0x000f" name="CFG_DBGBUS_MASKL_3"/>
+	<reg32 offset="0x0010" name="CFG_DBGBUS_BYTEL_0">
+		<bitfield high="3" low="0" name="BYTEL0"/>
+		<bitfield high="7" low="4" name="BYTEL1"/>
+		<bitfield high="11" low="8" name="BYTEL2"/>
+		<bitfield high="15" low="12" name="BYTEL3"/>
+		<bitfield high="19" low="16" name="BYTEL4"/>
+		<bitfield high="23" low="20" name="BYTEL5"/>
+		<bitfield high="27" low="24" name="BYTEL6"/>
+		<bitfield high="31" low="28" name="BYTEL7"/>
+	</reg32>
+	<reg32 offset="0x0011" name="CFG_DBGBUS_BYTEL_1">
+		<bitfield high="3" low="0" name="BYTEL8"/>
+		<bitfield high="7" low="4" name="BYTEL9"/>
+		<bitfield high="11" low="8" name="BYTEL10"/>
+		<bitfield high="15" low="12" name="BYTEL11"/>
+		<bitfield high="19" low="16" name="BYTEL12"/>
+		<bitfield high="23" low="20" name="BYTEL13"/>
+		<bitfield high="27" low="24" name="BYTEL14"/>
+		<bitfield high="31" low="28" name="BYTEL15"/>
+	</reg32>
+
+	<reg32 offset="0x002f" name="CFG_DBGBUS_TRACE_BUF1"/>
+	<reg32 offset="0x0030" name="CFG_DBGBUS_TRACE_BUF2"/>
 </domain>
 
 </database>

@@ -84,8 +84,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x50d0" name="GMU_SPTPRAC_PWR_CLK_STATUS">
 		<bitfield name="SPTPRAC_GDSC_POWERING_OFF" pos="0"/>
 		<bitfield name="SPTPRAC_GDSC_POWERING_ON" pos="1"/>
-		<bitfield name="SPTPRAC_GDSC_POWER_ON" pos="2"/>
-		<bitfield name="SPTPRAC_GDSC_POWER_OFF" pos="3"/>
+		<bitfield name="SPTPRAC_GDSC_POWER_OFF" pos="2"/>
+		<bitfield name="SPTPRAC_GDSC_POWER_ON" pos="3"/>
 		<bitfield name="SP_CLOCK_OFF" pos="4"/>
 		<bitfield name="GMU_UP_POWER_STATE" pos="5"/>
 		<bitfield name="GX_HM_GDSC_POWER_OFF" pos="6"/>
