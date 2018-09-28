@@ -1692,6 +1692,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x3118" name="VBIF_PERF_PWR_CNT_HIGH0"/>
 	<reg32 offset="0x3119" name="VBIF_PERF_PWR_CNT_HIGH1"/>
 	<reg32 offset="0x311a" name="VBIF_PERF_PWR_CNT_HIGH2"/>
+
 	<!-- move/rename these.. -->
 
 	<reg32 offset="0x88d4" name="RB_WINDOW_OFFSET2" type="adreno_reg_xy"/>
@@ -1702,21 +1703,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x80a1" name="GRAS_BIN_CONTROL">
 		<bitfield name="BINW" low="0" high="7" shr="5" type="uint"/>
 		<bitfield name="BINH" low="8" high="16" shr="4" type="uint"/>
-		<!--
-			Possibly these are LRZ related?  b18 set in binning pass when
-			we have a depth buffer, b21 set during gmem pass.
-			0x6000000 almost always set except when 0xc00000 set (non-gmem
-			cases?)
-		 -->
-		<bitfield name="DEPTH" pos="18" type="boolean"/>
-		<bitfield name="USE_VIZ" pos="21" type="boolean"/>
-	</reg32>
-
-	<!-- same as GRAS_BIN_CONTROL: -->
-	<reg32 offset="0x8800" name="RB_BIN_CONTROL">
-		<bitfield name="BINW" low="0" high="7" shr="5" type="uint"/>
-		<bitfield name="BINH" low="8" high="16" shr="4" type="uint"/>
-		<bitfield name="DEPTH" pos="18" type="boolean"/>
+		<bitfield name="BINNING_PASS" pos="18" type="boolean"/>
 		<bitfield name="USE_VIZ" pos="21" type="boolean"/>
 	</reg32>
 
@@ -1924,6 +1911,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- always 0x880 ? -->
 	<reg32 offset="0x8600" name="GRAS_UNKNOWN_8600"/>
 
+	<!-- same as GRAS_BIN_CONTROL: -->
+	<reg32 offset="0x8800" name="RB_BIN_CONTROL">
+		<bitfield name="BINW" low="0" high="7" shr="5" type="uint"/>
+		<bitfield name="BINH" low="8" high="16" shr="4" type="uint"/>
+		<bitfield name="BINNING_PASS" pos="18" type="boolean"/>
+		<bitfield name="USE_VIZ" pos="21" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x8801" name="RB_RENDER_CNTL">
+		<!-- always set: ?? -->
+		<bitfield name="UNK4" pos="4" type="boolean"/>
+		<!-- set during binning pass: -->
+		<bitfield name="BINNING" pos="7" type="boolean"/>
+		<!-- bit seems to be set whenever depth buffer enabled: -->
+		<bitfield name="FLAG_DEPTH" pos="14" type="boolean"/>
+		<!-- bitmask of MRTs using UBWC flag buffer: -->
+		<bitfield name="FLAG_MRTS" low="16" high="23"/>
+	</reg32>
 	<reg32 offset="0x8802" name="RB_RAS_MSAA_CNTL">
 		<bitfield name="SAMPLES" low="0" high="1" type="a3xx_msaa_samples"/>
 	</reg32>

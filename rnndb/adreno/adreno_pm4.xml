@@ -380,9 +380,12 @@ opcode: (null) (6d) (4 dwords)
 	Is 0x8801 a register offset?
 	This appears to be a special sort of register write packet
 	more or less, but the firmware has some special handling..
-
+	Seems like it intercepts/modifies certain register offsets,
+	but others are treated like a normal PKT4 reg write.  I
+	guess there are some registers that the fw controls certain
+	bits.
 	 -->
-	<value name="UNK_A6XX_6D" value="0x6d" variants="A6XX"/>
+	<value name="CP_REG_WRITE" value="0x6d" variants="A6XX"/>
 
 </enum>
 
