@@ -1890,10 +1890,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x8110" name="GRAS_UNKNOWN_8110"/>
 
-	<!-- same as RB_2D_BLIT_CNTL -->
-	<reg32 offset="0x8400" name="GRAS_2D_BLIT_CNTL">
+	<bitset name="a6xx_2d_blit_cntl" inline="yes">
 		<bitfield name="COLOR_FORMAT" low="8" high="15" type="a6xx_color_fmt"/>
-	</reg32>
+		<bitfield name="SCISSOR" pos="16" type="boolean"/>
+		<!-- double check these:
+		<bitfield name="FLAGS" pos="18" type="boolean"/>
+		<bitfield name="TILE_MODE" low="20" high="21" type="a6xx_tile_mode"/>
+		<bitfield name="COLOR_SWAP" low="22" high="23" type="a3xx_color_swap"/>
+		-->
+	</bitset>
+
+	<reg32 offset="0x8400" name="GRAS_2D_BLIT_CNTL" type="a6xx_2d_blit_cntl"/>
 
 	<!-- could be the src coords are fixed point? -->
 	<reg32 offset="0x8401" name="GRAS_2D_SRC_TL_X">
@@ -2222,15 +2229,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x8927" name="RB_SAMPLE_COUNT_ADDR_LO"/>
 	<reg32 offset="0x8928" name="RB_SAMPLE_COUNT_ADDR_HI"/>
 
-	<reg32 offset="0x8c00" name="RB_2D_BLIT_CNTL">  <!-- same as GRAS_2D_BLIT_CNTL -->
-		<bitfield name="COLOR_FORMAT" low="8" high="15" type="a6xx_color_fmt"/>
-		<!-- double check these:
-		<bitfield name="FLAGS" pos="18" type="boolean"/>
-		<bitfield name="TILE_MODE" low="20" high="21" type="a6xx_tile_mode"/>
-		<bitfield name="COLOR_SWAP" low="22" high="23" type="a3xx_color_swap"/>
-		-->
-	</reg32>
-	<reg32 offset="0x8c01" name="RB_UNKNOWN_8C01"/>
+	<reg32 offset="0x8c00" name="RB_2D_BLIT_CNTL" type="a6xx_2d_blit_cntl"/>
 
 	<reg32 offset="0x8c17" name="RB_2D_DST_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a6xx_color_fmt"/>
@@ -2690,9 +2689,14 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
 		<!-- b12 seems to be set when UBWC "FLAGS" buffer enabled -->
 		<bitfield name="FLAGS" pos="12" type="boolean"/>
+		<bitfield name="FILTER" pos="16" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xb4c2" name="SP_PS_2D_SRC_LO"/>
 	<reg32 offset="0xb4c3" name="SP_PS_2D_SRC_HI"/>
+	<reg32 offset="0xb4c4" name="SP_PS_2D_SRC_SIZE">
+	   <bitfield name="PITCH" low="9" high="24" shr="6" type="uint"/>
+	</reg32>
+
 	<reg32 offset="0xb4ca" name="SP_PS_2D_SRC_FLAGS_LO"/>
 	<reg32 offset="0xb4cb" name="SP_PS_2D_SRC_FLAGS_HI"/>
 

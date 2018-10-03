@@ -1085,6 +1085,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<value value="4" name="RM6_GMEM"/>
 		<value value="5" name="RM6_BLIT2D"/>
 		<value value="6" name="RM6_RESOLVE"/>
+		<value value="0xc" name="RM6_BLIT2DSCALE"/>
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="MARKER" low="0" high="3"/>
