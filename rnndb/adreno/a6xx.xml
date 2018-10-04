@@ -485,7 +485,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="22" name="PERF_VFDP_VS_STAGE_WAVES"/>
 </enum>
 
-<enum name="a6xx_hslq_perfcounter_select">
+<enum name="a6xx_hlsq_perfcounter_select">
 	<value value="0" name="PERF_HLSQ_BUSY_CYCLES"/>
 	<value value="1" name="PERF_HLSQ_STALL_CYCLES_UCHE"/>
 	<value value="2" name="PERF_HLSQ_STALL_CYCLES_SP_STATE"/>
@@ -1868,6 +1868,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="LRZ_WRITE" pos="1" type="boolean"/>
 		<doc>update MAX instead of MIN value, ie. GL_GREATER/GL_GEQUAL</doc>
 		<bitfield name="GREATER" pos="2" type="boolean"/>
+		<!-- set at end of batch that had LRZ enabled (to flush/disable it?) -->
+		<bitfield name="UNK3" pos="3" type="boolean"/>
+		<!-- set when depth-test + depth-write enabled -->
+		<bitfield name="UNK4" pos="4" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x8101" name="GRAS_UNKNOWN_8101"/>
 	<reg32 offset="0x8102" name="GRAS_2D_BLIT_INFO">
@@ -1886,7 +1890,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x8110" name="GRAS_UNKNOWN_8110"/>
 
-	<reg32 offset="0x8400" name="GRAS_2D_BLIT_CNTL"/>  <!-- same as RB_2D_BLIT_CNTL -->
+	<!-- same as RB_2D_BLIT_CNTL -->
+	<reg32 offset="0x8400" name="GRAS_2D_BLIT_CNTL">
+		<bitfield name="COLOR_FORMAT" low="8" high="15" type="a6xx_color_fmt"/>
+	</reg32>
 
 	<!-- could be the src coords are fixed point? -->
 	<reg32 offset="0x8401" name="GRAS_2D_SRC_TL_X">
@@ -2145,6 +2152,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="COPY" pos="1" type="boolean"/>
 	</reg32>
 
+	<reg32 offset="0x8898" name="RB_LRZ_CNTL">
+		<bitfield name="ENABLE" pos="0" type="boolean"/>
+	</reg32>
+
 	<reg32 offset="0x88d0" name="RB_UNKNOWN_88D0"/>
 	<reg32 offset="0x88d1" name="RB_BLIT_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0x88d2" name="RB_BLIT_SCISSOR_BR" type="adreno_reg_xy"/>
@@ -2219,6 +2230,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="COLOR_SWAP" low="22" high="23" type="a3xx_color_swap"/>
 		-->
 	</reg32>
+	<reg32 offset="0x8c01" name="RB_UNKNOWN_8C01"/>
 
 	<reg32 offset="0x8c17" name="RB_2D_DST_INFO">
 		<bitfield name="COLOR_FORMAT" low="0" high="7" type="a6xx_color_fmt"/>
@@ -2632,6 +2644,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xab05" name="SP_FS_INSTRLEN" type="uint"/>
 
 	<reg32 offset="0xab20" name="SP_UNKNOWN_AB20"/>
+
+	<!-- bits 3..10 look like probably a color fmt.. possible src fmt for blit? -->
+	<reg32 offset="0xacc0" name="SP_UNKNOWN_ACC0"/>
 
 	<!-- always 0x0 -->
 	<reg32 offset="0xae00" name="SP_UNKNOWN_AE00"/>
