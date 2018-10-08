@@ -2963,4 +2963,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0030" name="CFG_DBGBUS_TRACE_BUF2"/>
 </domain>
 
+<domain name="A6XX_CX_MISC" width="32">
+	<reg32 offset="0x0001" name="SYSTEM_CACHE_CNTL_0"/>
+	<reg32 offset="0x0002" name="SYSTEM_CACHE_CNTL_1"/>
+</domain>
+
 </database>
