@@ -157,7 +157,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x01ec" name="CP_STATE_DEBUG_INDEX"/>
 	<reg32 offset="0x01ed" name="CP_STATE_DEBUG_DATA"/>
-	<reg32 offset="0x01f2" name="CP_INT_CNTL"/>
+	<reg32 offset="0x01f2" name="CP_INT_CNTL">
+		<bitfield name="SW_INT_MASK" pos="19" type="boolean"/>
+		<bitfield name="T0_PACKET_IN_IB_MASK" pos="23" type="boolean"/>
+		<bitfield name="OPCODE_ERROR_MASK" pos="24" type="boolean"/>
+		<bitfield name="PROTECTED_MODE_ERROR_MASK" pos="25" type="boolean"/>
+		<bitfield name="RESERVED_BIT_ERROR_MASK" pos="26" type="boolean"/>
+		<bitfield name="IB_ERROR_MASK" pos="27" type="boolean"/>
+		<bitfield name="IB2_INT_MASK" pos="29" type="boolean"/>
+		<bitfield name="IB1_INT_MASK" pos="30" type="boolean"/>
+		<bitfield name="RB_INT_MASK" pos="31" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x01f3" name="CP_INT_STATUS"/>
 	<reg32 offset="0x01f4" name="CP_INT_ACK"/>
 	<reg32 offset="0x01f6" name="CP_ME_CNTL">

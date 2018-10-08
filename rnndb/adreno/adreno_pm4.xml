@@ -68,6 +68,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DI_SRC_SEL_RESERVED" value="3"/>
 </enum>
 
+<enum name="pc_di_face_cull_sel">
+	<value name="DI_FACE_CULL_NONE" value="0"/>
+	<value name="DI_FACE_CULL_FETCH" value="1"/>
+	<value name="DI_FACE_BACKFACE_CULL" value="2"/>
+	<value name="DI_FACE_FRONTFACE_CULL" value="3"/>
+</enum>
+
 <enum name="pc_di_index_size">
 	<value name="INDEX_SIZE_IGN" value="0"/>
 	<value name="INDEX_SIZE_16_BIT" value="0"/>
