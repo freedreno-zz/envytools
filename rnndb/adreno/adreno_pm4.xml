@@ -329,7 +329,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<!-- Test specified bit in specified register and set predicate -->
 	<value name="CP_REG_TEST" value="0x39" variants="A5XX,A6XX"/>
 
-	<!-- payload of 0x1 for binning mode and 0x0 for normal mode? -->
+	<!--
+	Seems to set the mode flags which control which CP_SET_DRAW_STATE
+	packets are executed, based on their ENABLE_MASK values
+	
+	CP_SET_MODE w/ payload of 0x1 seems to cause CP_SET_DRAW_STATE
+	packets w/ ENABLE_MASK & 0x6 to execute immediately
+	 -->
 	<value name="CP_SET_MODE" value="0x63" variants="A6XX"/>
 
 	<!--

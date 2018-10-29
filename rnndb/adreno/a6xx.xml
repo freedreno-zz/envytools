@@ -2078,6 +2078,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<!-- per-mrt enable bit -->
 		<bitfield name="ENABLE_BLEND" low="0" high="7"/>
 		<bitfield name="INDEPENDENT_BLEND" pos="8" type="boolean"/>
+		<bitfield name="ALPHA_TO_COVERAGE" pos="10" type="boolean"/>
 		<bitfield name="SAMPLE_MASK" low="16" high="31"/>
 	</reg32>
 	<reg32 offset="0x8870" name="RB_DEPTH_PLANE_CNTL">
@@ -2167,18 +2168,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x88d1" name="RB_BLIT_SCISSOR_TL" type="adreno_reg_xy"/>
 	<reg32 offset="0x88d2" name="RB_BLIT_SCISSOR_BR" type="adreno_reg_xy"/>
 
-	<!--
-	0x88d5 always written at same time as 0x88d6, so you'd think it is a
-	LO/HI pair.. except that would make it HI/LO breaking the pattern..
-	Possibly this depends on GMEM vs BYPASS mode (ie. in BYPASS mode this
-	pair of regs is a LO/HI pair, and in GMEM mode only the HI reg is
-	used).
-	 -->
+	<reg32 offset="0x88d5" name="RB_MSAA_CNTL">
+		<bitfield name="SAMPLES" low="3" high="4" type="a3xx_msaa_samples"/>
+	</reg32>
 	<reg32 offset="0x88d6" name="RB_BLIT_BASE_GMEM"/>
 	<!-- s/DST_FORMAT/DST_INFO/ probably: -->
 	<reg32 offset="0x88d7" name="RB_BLIT_DST_INFO">
 		<bitfield name="TILE_MODE" low="0" high="1" type="a6xx_tile_mode"/>
 		<bitfield name="FLAGS" pos="2" type="boolean"/>
+		<bitfield name="SAMPLES" low="3" high="4" type="a3xx_msaa_samples"/>
 		<bitfield name="COLOR_FORMAT" low="7" high="14" type="a6xx_color_fmt"/>
 		<bitfield name="COLOR_SWAP" low="5" high="6" type="a3xx_color_swap"/>
 	</reg32>
@@ -2570,6 +2568,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0xa989" name="SP_BLEND_CNTL">
 		<bitfield name="ENABLED" pos="0" type="boolean"/>
 		<bitfield name="UNK8" pos="8" type="boolean"/>
+		<bitfield name="ALPHA_TO_COVERAGE" pos="10" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xa98a" name="SP_SRGB_CNTL">
 		<!-- Same as RB_SRGB_CNTL -->
@@ -2865,6 +2864,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="SWIZ_Z" low="10" high="12" type="a6xx_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="13" high="15" type="a6xx_tex_swiz"/>
 		<bitfield name="MIPLVLS" low="16" high="19" type="uint"/>
+		<bitfield name="SAMPLES" low="20" high="21" type="a3xx_msaa_samples"/>
 		<bitfield name="FMT" low="22" high="29" type="a6xx_tex_fmt"/>
 		<bitfield name="SWAP" low="30" high="31" type="a3xx_color_swap"/>
 	</reg32>
