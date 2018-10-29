@@ -2692,9 +2692,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FLAGS" pos="12" type="boolean"/>
 		<bitfield name="FILTER" pos="16" type="boolean"/>
 	</reg32>
+	<reg32 offset="0xb4c1" name="SP_PS_2D_SRC_SIZE">
+		<bitfield name="WIDTH" low="0" high="14" type="uint"/>
+		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
+	</reg32>
 	<reg32 offset="0xb4c2" name="SP_PS_2D_SRC_LO"/>
 	<reg32 offset="0xb4c3" name="SP_PS_2D_SRC_HI"/>
-	<reg32 offset="0xb4c4" name="SP_PS_2D_SRC_SIZE">
+	<reg32 offset="0xb4c4" name="SP_PS_2D_SRC_PITCH">
 	   <bitfield name="PITCH" low="9" high="24" shr="6" type="uint"/>
 	</reg32>
 
