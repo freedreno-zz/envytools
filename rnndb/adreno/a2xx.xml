@@ -417,14 +417,17 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0f02" name="RB_EDRAM_INFO"/>
 	<reg32 offset="0x0f26" name="RB_DEBUG_CNTL"/>
 	<reg32 offset="0x0f27" name="RB_DEBUG_DATA"/>
-	<reg32 offset="0x2000" name="RB_SURFACE_INFO" type="uint"/>
+	<reg32 offset="0x2000" name="RB_SURFACE_INFO">
+		<bitfield name="SURFACE_PITCH" low="0" high="13" shr="uint"/>
+		<bitfield name="MSAA_SAMPLES" low="14" high="15" shr="uint"/>
+	</reg32>
 	<reg32 offset="0x2001" name="RB_COLOR_INFO">
 		<bitfield name="FORMAT" low="0" high="3" type="a2xx_colorformatx"/>
 		<bitfield name="ROUND_MODE" low="4" high="5" type="uint"/>
 		<bitfield name="LINEAR" pos="6" type="boolean"/>
 		<bitfield name="ENDIAN" low="7" high="8" type="uint"/>
 		<bitfield name="SWAP" low="9" high="10" type="uint"/>
-		<bitfield name="BASE" low="12" high="31" shr="10"/>
+		<bitfield name="BASE" low="12" high="31" shr="12"/>
 	</reg32>
 	<reg32 offset="0x2002" name="RB_DEPTH_INFO">
 		<bitfield name="DEPTH_FORMAT" pos="0" type="adreno_rb_depth_format"/>
@@ -754,28 +757,116 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<enum name="sq_tex_filter">
 		<value name="SQ_TEX_FILTER_POINT" value="0"/>
 		<value name="SQ_TEX_FILTER_BILINEAR" value="1"/>
-		<value name="SQ_TEX_FILTER_BICUBIC" value="2"/>
+		<value name="SQ_TEX_FILTER_BASEMAP" value="2"/>
+		<value name="SQ_TEX_FILTER_USE_FETCH_CONST" value="3"/>
+	</enum>
+	<enum name="sq_tex_aniso_filter">
+		<value name="SQ_TEX_ANISO_FILTER_DISABLED" value="0"/>
+		<value name="SQ_TEX_ANISO_FILTER_MAX_1_1" value="1"/>
+		<value name="SQ_TEX_ANISO_FILTER_MAX_2_1" value="2"/>
+		<value name="SQ_TEX_ANISO_FILTER_MAX_4_1" value="3"/>
+		<value name="SQ_TEX_ANISO_FILTER_MAX_8_1" value="4"/>
+		<value name="SQ_TEX_ANISO_FILTER_MAX_16_1" value="5"/>
+		<value name="SQ_TEX_ANISO_FILTER_USE_FETCH_CONST" value="7"/>
+	</enum>
+	<enum name="sq_tex_dimension">
+		<value name="SQ_TEX_DIMENSION_1D" value="0"/>
+		<value name="SQ_TEX_DIMENSION_2D" value="1"/>
+		<value name="SQ_TEX_DIMENSION_3D" value="2"/>
+		<value name="SQ_TEX_DIMENSION_CUBE" value="3"/>
+	</enum>
+	<enum name="sq_tex_border_color">
+		<value name="SQ_TEX_BORDER_COLOR_BLACK" value="0"/>
+		<value name="SQ_TEX_BORDER_COLOR_WHITE" value="1"/>
+		<value name="SQ_TEX_BORDER_COLOR_ACBYCR_BLACK" value="2"/>
+		<value name="SQ_TEX_BORDER_COLOR_ACBCRY_BLACK" value="3"/>
+	</enum>
+	<enum name="sq_tex_sign">
+		<value name="SQ_TEX_SIGN_UNISIGNED" value="0"/>
+		<value name="SQ_TEX_SIGN_SIGNED" value="1"/>
+		<!-- biased: 2*color-1 (range -1,1 when sampling) -->
+		<value name="SQ_TEX_SIGN_UNISIGNED_BIASED" value="2"/>
+		<!-- gamma: sRGB to linear? -->
+		<value name="SQ_TEX_SIGN_GAMMA" value="3"/>
+	</enum>
+	<enum name="sq_tex_endian">
+		<value name="SQ_TEX_ENDIAN_NONE" value="0"/>
+		<value name="SQ_TEX_ENDIAN_8IN16" value="1"/>
+		<value name="SQ_TEX_ENDIAN_8IN32" value="2"/>
+		<value name="SQ_TEX_ENDIAN_16IN32" value="3"/>
+	</enum>
+	<enum name="sq_tex_clamp_policy">
+		<value name="SQ_TEX_CLAMP_POLICY_D3D" value="0"/>
+		<value name="SQ_TEX_CLAMP_POLICY_OGL" value="1"/>
+	</enum>
+	<enum name="sq_tex_num_format">
+		<value name="SQ_TEX_NUM_FORMAT_FRAC" value="0"/>
+		<value name="SQ_TEX_NUM_FORMAT_INT" value="1"/>
+	</enum>
+	<enum name="sq_tex_type">
+	<value name="SQ_TEX_TYPE_0" value="0"/>
+	<value name="SQ_TEX_TYPE_1" value="1"/>
+	<value name="SQ_TEX_TYPE_2" value="2"/>
+	<value name="SQ_TEX_TYPE_3" value="3"/>
 	</enum>
 	<reg32 offset="0" name="0">
+		<bitfield name="TYPE" low="0" high="1" type="sq_tex_type"/>
+		<bitfield name="SIGN_X" low="2" high="3" type="sq_tex_sign"/>
+		<bitfield name="SIGN_Y" low="4" high="5" type="sq_tex_sign"/>
+		<bitfield name="SIGN_Z" low="6" high="7" type="sq_tex_sign"/>
+		<bitfield name="SIGN_W" low="8" high="9" type="sq_tex_sign"/>
 		<bitfield name="CLAMP_X" low="10" high="12" type="sq_tex_clamp"/>
 		<bitfield name="CLAMP_Y" low="13" high="15" type="sq_tex_clamp"/>"
 		<bitfield name="CLAMP_Z" low="16" high="18" type="sq_tex_clamp"/>"
-		<bitfield name="PITCH" low="22" high="31" shr="5" type="uint"/>
+		<bitfield name="PITCH" low="22" high="30" shr="5" type="uint"/>
+		<bitfield name="TILED" pos="1" type="boolean"/>
 	</reg32>
 	<reg32 offset="1" name="1">
-		<doc>texture address + fmt</doc>
+		<bitfield name="FORMAT" low="0" high="5" type="a2xx_sq_surfaceformat"/>
+		<bitfield name="ENDIANNESS" low="6" high="7" type="sq_tex_endian"/>
+		<bitfield name="REQUEST_SIZE" low="8" high="9" type="uint"/>
+		<bitfield name="STACKED" pos="10" type="boolean"/>
+		<bitfield name="CLAMP_POLICY" pos="11" type="sq_tex_clamp_policy"/>
+		<bitfield name="BASE_ADDRESS" low="12" high="31" type="uint" shr="12"/>
 	</reg32>
 	<reg32 offset="2" name="2">
 		<bitfield name="WIDTH" low="0" high="12" type="uint"/>
 		<bitfield name="HEIGHT" low="13" high="25" type="uint"/>
+		<bitfield name="DEPTH" low="26" high="31" type="uint"/>
+		<!-- 1d/3d have different bit configurations -->
 	</reg32>
 	<reg32 offset="3" name="3">
+		<bitfield name="NUM_FORMAT" pos="0" type="sq_tex_num_format"/>
 		<bitfield name="SWIZ_X" low="1" high="3" type="sq_tex_swiz"/>
 		<bitfield name="SWIZ_Y" low="4" high="6" type="sq_tex_swiz"/>
 		<bitfield name="SWIZ_Z" low="7" high="9" type="sq_tex_swiz"/>
 		<bitfield name="SWIZ_W" low="10" high="12" type="sq_tex_swiz"/>
+		<bitfield name="EXP_ADJUST" low="13" high="18" type="uint"/>
 		<bitfield name="XY_MAG_FILTER" low="19" high="20" type="sq_tex_filter"/>
 		<bitfield name="XY_MIN_FILTER" low="21" high="22" type="sq_tex_filter"/>
+		<bitfield name="MIP_FILTER" low="23" high="24" type="sq_tex_filter"/>
+		<bitfield name="ANISO_FILTER" low="25" high="27" type="sq_tex_aniso_filter"/>
+		<bitfield name="BORDER_SIZE" pos="31" type="uint"/>
+	</reg32>
+	<reg32 offset="4" name="4">
+		<bitfield name="VOL_MAG_FILTER" pos="0" type="sq_tex_filter"/>
+		<bitfield name="VOL_MIN_FILTER" pos="1" type="sq_tex_filter"/>
+		<bitfield name="MIP_MIN_LEVEL" low="2" high="5" type="uint"/>
+		<bitfield name="MIP_MAX_LEVEL" low="6" high="9" type="uint"/>
+		<bitfield name="MAX_ANISO_WALK" pos="10" type="boolean"/>
+		<bitfield name="MIN_ANISO_WALK" pos="11" type="boolean"/>
+		<bitfield name="LOD_BIAS" low="12" high="21" type="fixed" radix="5"/>
+		<bitfield name="GRAD_EXP_ADJUST_H" low="22" high="26" type="uint"/>
+		<bitfield name="GRAD_EXP_ADJUST_V" low="27" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="5" name="5">
+		<bitfield name="BORDER_COLOR" low="0" high="1" type="sq_tex_border_color"/>
+		<bitfield name="FORCE_BCW_MAX" pos="2" type="boolean"/>
+		<bitfield name="TRI_CLAMP" low="3" high="4" type="uint"/>
+		<bitfield name="ANISO_BIAS" low="5" high="8" type="fixed" radix="0"/> <!-- radix unknown -->
+		<bitfield name="DIMENSION" low="9" high="10" type="sq_tex_dimension"/>
+		<bitfield name="PACKED_MIPS" pos="11" type="boolean"/>
+		<bitfield name="MIP_ADDRESS" low="12" high="31" type="uint" shr="12"/>
 	</reg32>
 </domain>
 
