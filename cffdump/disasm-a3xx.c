@@ -484,20 +484,22 @@ static void print_instr_cat2(struct disasm_ctx *ctx, instr_t *instr)
 	print_reg_dst(ctx, (reg_t)(cat2->dst), cat2->full ^ cat2->dst_half, false);
 	fprintf(ctx->out, ", ");
 
+	unsigned src1_r = cat2->repeat ? cat2->src1_r : 0;
 	if (cat2->c1.src1_c) {
-		print_reg_src(ctx, (reg_t)(cat2->c1.src1), cat2->full, cat2->src1_r,
+		print_reg_src(ctx, (reg_t)(cat2->c1.src1), cat2->full, src1_r,
 				cat2->c1.src1_c, cat2->src1_im, cat2->src1_neg,
 				cat2->src1_abs, false);
 	} else if (cat2->rel1.src1_rel) {
-		print_reg_src(ctx, (reg_t)(cat2->rel1.src1), cat2->full, cat2->src1_r,
+		print_reg_src(ctx, (reg_t)(cat2->rel1.src1), cat2->full, src1_r,
 				cat2->rel1.src1_c, cat2->src1_im, cat2->src1_neg,
 				cat2->src1_abs, cat2->rel1.src1_rel);
 	} else {
-		print_reg_src(ctx, (reg_t)(cat2->src1), cat2->full, cat2->src1_r,
+		print_reg_src(ctx, (reg_t)(cat2->src1), cat2->full, src1_r,
 				false, cat2->src1_im, cat2->src1_neg,
 				cat2->src1_abs, false);
 	}
 
+	unsigned src2_r = cat2->repeat ? cat2->src2_r : 0;
 	switch (_OPC(2, cat2->opc)) {
 	case OPC_ABSNEG_F:
 	case OPC_ABSNEG_S:
@@ -518,15 +520,15 @@ static void print_instr_cat2(struct disasm_ctx *ctx, instr_t *instr)
 	default:
 		fprintf(ctx->out, ", ");
 		if (cat2->c2.src2_c) {
-			print_reg_src(ctx, (reg_t)(cat2->c2.src2), cat2->full, cat2->src2_r,
+			print_reg_src(ctx, (reg_t)(cat2->c2.src2), cat2->full, src2_r,
 					cat2->c2.src2_c, cat2->src2_im, cat2->src2_neg,
 					cat2->src2_abs, false);
 		} else if (cat2->rel2.src2_rel) {
-			print_reg_src(ctx, (reg_t)(cat2->rel2.src2), cat2->full, cat2->src2_r,
+			print_reg_src(ctx, (reg_t)(cat2->rel2.src2), cat2->full, src2_r,
 					cat2->rel2.src2_c, cat2->src2_im, cat2->src2_neg,
 					cat2->src2_abs, cat2->rel2.src2_rel);
 		} else {
-			print_reg_src(ctx, (reg_t)(cat2->src2), cat2->full, cat2->src2_r,
+			print_reg_src(ctx, (reg_t)(cat2->src2), cat2->full, src2_r,
 					false, cat2->src2_im, cat2->src2_neg,
 					cat2->src2_abs, false);
 		}
@@ -542,22 +544,24 @@ static void print_instr_cat3(struct disasm_ctx *ctx, instr_t *instr)
 	fprintf(ctx->out, " ");
 	print_reg_dst(ctx, (reg_t)(cat3->dst), full ^ cat3->dst_half, false);
 	fprintf(ctx->out, ", ");
+	unsigned src1_r = cat3->repeat ? cat3->src1_r : 0;
 	if (cat3->c1.src1_c) {
 		print_reg_src(ctx, (reg_t)(cat3->c1.src1), full,
-				cat3->src1_r, cat3->c1.src1_c, false, cat3->src1_neg,
+				src1_r, cat3->c1.src1_c, false, cat3->src1_neg,
 				false, false);
 	} else if (cat3->rel1.src1_rel) {
 		print_reg_src(ctx, (reg_t)(cat3->rel1.src1), full,
-				cat3->src1_r, cat3->rel1.src1_c, false, cat3->src1_neg,
+				src1_r, cat3->rel1.src1_c, false, cat3->src1_neg,
 				false, cat3->rel1.src1_rel);
 	} else {
 		print_reg_src(ctx, (reg_t)(cat3->src1), full,
-				cat3->src1_r, false, false, cat3->src1_neg,
+				src1_r, false, false, cat3->src1_neg,
 				false, false);
 	}
 	fprintf(ctx->out, ", ");
+	unsigned src2_r = cat3->repeat ? cat3->src2_r : 0;
 	print_reg_src(ctx, (reg_t)cat3->src2, full,
-			cat3->src2_r, cat3->src2_c, false, cat3->src2_neg,
+			src2_r, cat3->src2_c, false, cat3->src2_neg,
 			false, false);
 	fprintf(ctx->out, ", ");
 	if (cat3->c2.src3_c) {
@@ -1221,8 +1225,15 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 		fprintf(ctx->out, "(jp)");
 	if (instr_sat(instr))
 		fprintf(ctx->out, "(sat)");
-	if (ctx->repeat)
+	if (ctx->repeat) {
 		fprintf(ctx->out, "(rpt%d)", ctx->repeat);
+	} else if ((instr->opc_cat == 2) && (instr->cat2.src1_r || instr->cat2.src2_r)) {
+		unsigned nop = (instr->cat2.src2_r * 2) + instr->cat2.src1_r;
+		fprintf(ctx->out, "(nop%d)", nop);
+	} else if ((instr->opc_cat == 3) && (instr->cat3.src1_r || instr->cat3.src2_r)) {
+		unsigned nop = (instr->cat3.src2_r * 2) + instr->cat3.src1_r;
+		fprintf(ctx->out, "(nop%d)", nop);
+	}
 	if (instr->ul && ((2 <= instr->opc_cat) && (instr->opc_cat <= 4)))
 		fprintf(ctx->out, "(ul)");
 

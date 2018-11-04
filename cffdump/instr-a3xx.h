@@ -399,13 +399,13 @@ typedef struct PACKED {
 	uint32_t dst      : 8;
 	uint32_t repeat   : 2;
 	uint32_t sat      : 1;
-	uint32_t src1_r   : 1;
+	uint32_t src1_r   : 1;   /* doubles as nop0 if repeat==0 */
 	uint32_t ss       : 1;
 	uint32_t ul       : 1;   /* dunno */
 	uint32_t dst_half : 1;   /* or widen/narrow.. ie. dst hrN <-> rN */
 	uint32_t ei       : 1;
 	uint32_t cond     : 3;
-	uint32_t src2_r   : 1;
+	uint32_t src2_r   : 1;   /* doubles as nop1 if repeat==0 */
 	uint32_t full     : 1;   /* not half */
 	uint32_t opc      : 6;
 	uint32_t jmp_tgt  : 1;
@@ -421,7 +421,7 @@ typedef struct PACKED {
 			uint32_t must_be_zero1: 2;
 			uint32_t src2_c       : 1;
 			uint32_t src1_neg     : 1;
-			uint32_t src2_r       : 1;
+			uint32_t src2_r       : 1;  /* doubles as nop1 if repeat==0 */
 		};
 		struct PACKED {
 			uint32_t src1         : 10;
@@ -463,7 +463,7 @@ typedef struct PACKED {
 	uint32_t dst      : 8;
 	uint32_t repeat   : 2;
 	uint32_t sat      : 1;
-	uint32_t src1_r   : 1;
+	uint32_t src1_r   : 1;   /* doubles as nop0 if repeat==0 */
 	uint32_t ss       : 1;
 	uint32_t ul       : 1;
 	uint32_t dst_half : 1;   /* or widen/narrow.. ie. dst hrN <-> rN */
