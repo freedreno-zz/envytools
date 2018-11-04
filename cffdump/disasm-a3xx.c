@@ -134,7 +134,7 @@ static void print_reg(struct disasm_ctx *ctx, reg_t reg, bool full, bool r,
 	} else if ((reg.num == REG_P0) && !c) {
 		fprintf(ctx->out, "p0.%c", component[reg.comp]);
 	} else {
-		fprintf(ctx->out, "%s%c%d.%c", full ? "" : "h", type, reg.num & 0x3f, component[reg.comp]);
+		fprintf(ctx->out, "%s%c%d.%c", full ? "" : "h", type, reg.num, component[reg.comp]);
 	}
 }
 
