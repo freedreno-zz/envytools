@@ -712,6 +712,44 @@ typedef union PACKED {
 	};
 } instr_cat6_t;
 
+/**
+ * For atomic ops (which return a value):
+ *
+ *    pad1=1, pad2=c, pad3=0, pad4=3
+ *    src1    - vecN offset/coords
+ *    src2.x  - is actually dest register
+ *    src2.y  - is 'data' except for cmpxchg where src2.y is 'compare'
+ *              and src2.z is 'data'
+ *
+ * For stib (which does not return a value):
+ *    pad1=0, pad2=c, pad3=0, pad4=2
+ *    src1    - vecN offset/coords
+ *    src2    - value to store
+ *
+ * for ldc (load from UBO using descriptor):
+ *    pad1=0, pad2=8, pad3=0, pad4=2
+ */
+typedef struct PACKED {
+	/* dword0: */
+	uint32_t pad1     : 9;
+	uint32_t d        : 2;
+	uint32_t typed    : 1;
+	uint32_t type_size : 2;
+	uint32_t opc      : 5;
+	uint32_t pad2     : 5;
+	uint32_t src1     : 8;  /* coordinate/offset */
+
+	/* dword1: */
+	uint32_t src2     : 8;
+	uint32_t pad3     : 1;  //mustbe0 ?? or zero means imm vs reg for ssbo??
+	uint32_t ssbo     : 8;  /* ssbo/image binding point */
+	uint32_t type     : 3;
+	uint32_t pad4     : 7;
+	uint32_t jmp_tgt  : 1;
+	uint32_t sync     : 1;
+	uint32_t opc_cat  : 3;
+} instr_cat6_a6xx_t;
+
 typedef struct PACKED {
 	/* dword0: */
 	uint32_t pad1     : 32;
@@ -738,6 +776,7 @@ typedef union PACKED {
 	instr_cat4_t cat4;
 	instr_cat5_t cat5;
 	instr_cat6_t cat6;
+	instr_cat6_a6xx_t cat6_a6xx;
 	instr_cat7_t cat7;
 	struct PACKED {
 		/* dword0: */
@@ -776,7 +815,7 @@ static inline bool instr_sat(instr_t *instr)
 	}
 }
 
-static inline uint32_t instr_opc(instr_t *instr)
+static inline uint32_t instr_opc(instr_t *instr, unsigned gpu_id)
 {
 	switch (instr->opc_cat) {
 	case 0:  return instr->cat0.opc;
@@ -785,7 +824,13 @@ static inline uint32_t instr_opc(instr_t *instr)
 	case 3:  return instr->cat3.opc;
 	case 4:  return instr->cat4.opc;
 	case 5:  return instr->cat5.opc;
-	case 6:  return instr->cat6.opc;
+	case 6:
+		// TODO not sure if this is the best way to figure
+		// out if new vs old encoding, but it kinda seemes
+		// to work:
+		if ((gpu_id >= 600) && (instr->cat6.opc == 0))
+			return instr->cat6_a6xx.opc;
+		return instr->cat6.opc;
 	case 7:  return instr->cat7.opc;
 	default: return 0;
 	}

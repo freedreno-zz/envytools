@@ -43,7 +43,7 @@ enum debug_t {
 };
 
 int disasm_a2xx(uint32_t *dwords, int sizedwords, int level, enum shader_t type);
-int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out);
+int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned gpu_id);
 void disasm_set_debug(enum debug_t debug);
 
 #endif /* DISASM_H_ */

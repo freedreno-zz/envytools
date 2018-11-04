@@ -76,6 +76,7 @@ typedef struct {
 struct disasm_ctx {
 	FILE *out;
 	int level;
+	unsigned gpu_id;
 
 	/* we have to process the dst register after src to avoid tripping up
 	 * the read-before-write detection
@@ -704,7 +705,7 @@ static void print_instr_cat5(struct disasm_ctx *ctx, instr_t *instr)
 	}
 }
 
-static void print_instr_cat6(struct disasm_ctx *ctx, instr_t *instr)
+static void print_instr_cat6_a3xx(struct disasm_ctx *ctx, instr_t *instr)
 {
 	instr_cat6_t *cat6 = &instr->cat6;
 	char sd = 0, ss = 0;  /* dst/src address space */
@@ -996,6 +997,56 @@ static void print_instr_cat6(struct disasm_ctx *ctx, instr_t *instr)
 	}
 }
 
+static void print_instr_cat6_a6xx(struct disasm_ctx *ctx, instr_t *instr)
+{
+	instr_cat6_a6xx_t *cat6 = &instr->cat6_a6xx;
+	struct reginfo src1, src2;
+	char ss = 0;
+
+	memset(&src1, 0, sizeof(src1));
+	memset(&src2, 0, sizeof(src2));
+
+	fprintf(ctx->out, ".%s", cat6->typed ? "typed" : "untyped");
+	fprintf(ctx->out, ".%dd", cat6->d + 1);
+	fprintf(ctx->out, ".%s", type[cat6->type]);
+	fprintf(ctx->out, ".%u ", cat6->type_size + 1);
+
+	/* NOTE: blob seems to use old encoding for ldl/stl (local memory) */
+	ss = 'g';
+
+	fprintf(ctx->out, "%c[%u", ss, cat6->ssbo);
+	fprintf(ctx->out, "] + ");
+	src1.reg = (reg_t)(cat6->src1);
+	src1.full = true; // XXX
+	print_src(ctx, &src1);
+	fprintf(ctx->out, ", ");
+
+	src2.reg = (reg_t)(cat6->src2);
+	src2.full = true; // XXX
+	print_src(ctx, &src2);
+
+	if (debug & PRINT_VERBOSE) {
+		fprintf(ctx->out, " (pad1=%x, pad2=%x, pad3=%x, pad4=%x)", cat6->pad1,
+				cat6->pad2, cat6->pad3, cat6->pad4);
+	}
+}
+
+static void print_instr_cat6(struct disasm_ctx *ctx, instr_t *instr)
+{
+	// TODO not sure if this is the best way to figure
+	// out if new vs old encoding, but it kinda seemes
+	// to work:
+	if ((ctx->gpu_id >= 600) && (instr->cat6.opc == 0)) {
+		print_instr_cat6_a6xx(ctx, instr);
+		if (debug & PRINT_VERBOSE)
+			fprintf(ctx->out, " NEW");
+	} else {
+		print_instr_cat6_a3xx(ctx, instr);
+		if (debug & PRINT_VERBOSE)
+			fprintf(ctx->out, " LEGACY");
+	}
+}
+
 static void print_instr_cat7(struct disasm_ctx *ctx, instr_t *instr)
 {
 	instr_cat7_t *cat7 = &instr->cat7;
@@ -1185,12 +1236,12 @@ static const struct opc_info {
 #undef OPC
 };
 
-#define GETINFO(instr) (&(opcs[((instr)->opc_cat << NOPC_BITS) | instr_opc(instr)]))
+#define GETINFO(instr) (&(opcs[((instr)->opc_cat << NOPC_BITS) | instr_opc(instr, ctx->gpu_id)]))
 
 static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 {
 	instr_t *instr = (instr_t *)dwords;
-	uint32_t opc = instr_opc(instr);
+	uint32_t opc = instr_opc(instr, ctx->gpu_id);
 	const char *name;
 
 	fprintf(ctx->out, "%s%04d[%08xx_%08xx] ", levels[ctx->level], n, dwords[1], dwords[0]);
@@ -1271,7 +1322,7 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 	return (instr->opc_cat == 0) && (opc == OPC_END);
 }
 
-int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out)
+int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned gpu_id)
 {
 	struct disasm_ctx ctx;
 	bool end = false;
@@ -1284,6 +1335,7 @@ int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out)
 	memset(&ctx, 0, sizeof(ctx));
 	ctx.out = out;
 	ctx.level = level;
+	ctx.gpu_id = gpu_id;
 
 	for (i = 0; i < sizedwords && !end; i += 2)
 		end = print_instr(&ctx, &dwords[i], i/2);
