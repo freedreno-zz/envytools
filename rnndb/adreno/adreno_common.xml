@@ -310,6 +310,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="MSAA_ONE" value="0"/>
 	<value name="MSAA_TWO" value="1"/>
 	<value name="MSAA_FOUR" value="2"/>
+	<value name="MSAA_EIGHT" value="3"/>
 </enum>
 
 <enum name="a3xx_threadmode">
