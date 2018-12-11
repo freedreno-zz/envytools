@@ -2671,8 +2671,16 @@ to upconvert to 32b float internally?
 
 	<reg32 offset="0xab20" name="SP_UNKNOWN_AB20"/>
 
-	<!-- bits 3..10 look like probably a color fmt.. possible src fmt for blit? -->
-	<reg32 offset="0xacc0" name="SP_UNKNOWN_ACC0"/>
+	<!--
+	I believe this describes the src format, but haven't seen traces with
+	src_format != dst_format
+	 -->
+	<reg32 offset="0xacc0" name="SP_2D_SRC_FORMAT">
+		<bitfield name="NORM" pos="0" type="boolean"/>
+		<bitfield name="SINT" pos="1" type="boolean"/>
+		<bitfield name="UINT" pos="2" type="boolean"/>
+		<bitfield name="COLOR_FORMAT" low="3" high="10" type="a6xx_color_fmt"/>
+	</reg32>
 
 	<!-- always 0x0 -->
 	<reg32 offset="0xae00" name="SP_UNKNOWN_AE00"/>
