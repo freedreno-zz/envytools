@@ -58,6 +58,7 @@ struct rnndecaddrinfo *rnn_reginfo(struct rnn *rnn, uint32_t regbase);
 const char *rnn_enumname(struct rnn *rnn, const char *name, uint32_t val);
 
 struct rnndelem *rnn_regelem(struct rnn *rnn, const char *name);
+struct rnndelem *rnn_regoff(struct rnn *rnn, uint32_t offset);
 enum rnnttype rnn_decodelem(struct rnn *rnn, struct rnntypeinfo *info,
 		uint32_t regval, union rnndecval *val);
 

@@ -161,12 +161,33 @@ static struct rnndelem *regelem(struct rnndomain *domain, const char *name)
 	return NULL;
 }
 
+/* Lookup rnndelem by name: */
 struct rnndelem *rnn_regelem(struct rnn *rnn, const char *name)
 {
 	struct rnndelem *elem = regelem(rnn->dom[0], name);
 	if (elem)
 		return elem;
 	return regelem(rnn->dom[1], name);
+}
+
+static struct rnndelem *regoff(struct rnndomain *domain, uint32_t offset)
+{
+	int i;
+	for (i = 0; i < domain->subelemsnum; i++) {
+		struct rnndelem *elem = domain->subelems[i];
+		if (elem->offset == offset)
+			return elem;
+	}
+	return NULL;
+}
+
+/* Lookup rnndelem by offset: */
+struct rnndelem *rnn_regoff(struct rnn *rnn, uint32_t offset)
+{
+	struct rnndelem *elem = regoff(rnn->dom[0], offset);
+	if (elem)
+		return elem;
+	return regoff(rnn->dom[1], offset);
 }
 
 enum rnnttype rnn_decodelem(struct rnn *rnn, struct rnntypeinfo *info,
