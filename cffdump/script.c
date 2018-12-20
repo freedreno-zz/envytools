@@ -284,8 +284,11 @@ static int l_rnn_reg_meta_index(lua_State *L)
 	for (i = 0; i < bitfieldsnum; i++) {
 		struct rnnbitfield *bf = bitfields[i];
 		if (!strcmp(name, bf->name)) {
-			uint32_t regval =
-				(rnn_val(rnndoff->rnn, rnndoff->offset) & bf->mask) >> bf->low;
+			uint32_t regval = rnn_val(rnndoff->rnn, rnndoff->offset);
+
+			regval &= bf->mask;
+			regval >>= bf->low;
+			regval <<= bf->typeinfo.shr;
 
 			DBG("name=%s, info=%p, subelemsnum=%d, type=%d, regval=%x",
 					name, info, rnndoff->elem->subelemsnum,
