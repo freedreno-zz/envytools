@@ -506,6 +506,13 @@ void script_start_cmdstream(const char *name)
 		return;
 
 	lua_getglobal(L, "start_cmdstream");
+
+	/* if no handler just ignore it: */
+	if (!lua_isfunction(L, -1)) {
+		lua_pop(L, 1);
+		return;
+	}
+
 	lua_pushstring(L, name);
 
 	/* do the call (1 arguments, 0 result) */
@@ -522,6 +529,13 @@ void script_draw(const char *primtype, uint32_t nindx)
 		return;
 
 	lua_getglobal(L, "draw");
+
+	/* if no handler just ignore it: */
+	if (!lua_isfunction(L, -1)) {
+		lua_pop(L, 1);
+		return;
+	}
+
 	lua_pushstring(L, primtype);
 	lua_pushnumber(L, nindx);
 
@@ -618,6 +632,12 @@ void script_end_cmdstream(void)
 
 	lua_getglobal(L, "end_cmdstream");
 
+	/* if no handler just ignore it: */
+	if (!lua_isfunction(L, -1)) {
+		lua_pop(L, 1);
+		return;
+	}
+
 	/* do the call (0 arguments, 0 result) */
 	if (lua_pcall(L, 0, 0, 0) != 0)
 		error("error running function `f': %s\n");
@@ -630,6 +650,12 @@ void script_finish(void)
 		return;
 
 	lua_getglobal(L, "finish");
+
+	/* if no handler just ignore it: */
+	if (!lua_isfunction(L, -1)) {
+		lua_pop(L, 1);
+		return;
+	}
 
 	/* do the call (0 arguments, 0 result) */
 	if (lua_pcall(L, 0, 0, 0) != 0)
