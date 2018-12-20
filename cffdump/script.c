@@ -500,6 +500,82 @@ void script_draw(const char *primtype, uint32_t nindx)
 		error("error running function `f': %s\n");
 }
 
+
+static int l_rnn_meta_dom_index(lua_State *L)
+{
+	struct rnn *rnn = lua_touserdata(L, 1);
+	uint32_t offset = (uint32_t)lua_tonumber(L, 2);
+	struct rnndelem *elem;
+
+	/* TODO might be nicer if the arg isn't a number, to search the domain
+	 * for matching bitfields.. so that the script could do something like
+	 * 'pkt.WIDTH' insteadl of 'pkt[1].WIDTH', ie. not have to remember the
+	 * offset of the dword containing the bitfield..
+	 */
+
+	elem = rnn_regoff(rnn, offset);
+	if (!elem)
+		return 0;
+
+	return l_rnn_etype(L, rnn, elem, elem->offset);
+}
+
+/*
+ * A wrapper object for rnndomain based decoding of an array of dwords
+ * (ie. for pm4 packet decoding).  Mostly re-uses the register-value
+ * decoding for the individual dwords and bitfields.
+ */
+
+static int l_rnn_meta_dom_gc(lua_State *L)
+{
+	// TODO
+	//struct rnn *rnn = lua_touserdata(L, 1);
+	//rnn_deinit(rnn);
+	return 0;
+}
+
+static const struct luaL_Reg l_meta_rnn_dom[] = {
+	{"__index", l_rnn_meta_dom_index},
+	{"__gc", l_rnn_meta_dom_gc},
+	{NULL, NULL}  /* sentinel */
+};
+
+/* called to general pm4 packet decoding, such as texture/sampler state
+ */
+void script_packet(uint32_t *dwords, uint32_t sizedwords,
+		struct rnn *rnn, struct rnndomain *dom)
+{
+	if (!L)
+		return;
+
+	lua_getglobal(L, dom->name);
+
+	/* if no handler for the packet, just ignore it: */
+	if (!lua_isfunction(L, -1)) {
+		lua_pop(L, 1);
+		return;
+	}
+
+	struct rnndec *rnndec = lua_newuserdata(L, sizeof(*rnndec));
+
+	rnndec->base = *rnn;
+	rnndec->base.dom[0] = dom;
+	rnndec->base.dom[1] = NULL;
+	rnndec->dwords = dwords;
+	rnndec->sizedwords = sizedwords;
+
+	luaL_newmetatable(L, "rnnmetadom");
+	luaL_setfuncs(L, l_meta_rnn_dom, 0);
+	lua_pop(L, 1);
+
+	luaL_setmetatable(L, "rnnmetadom");
+
+	lua_pushnumber(L, sizedwords);
+
+	if (lua_pcall(L, 2, 0, 0) != 0)
+		error("error running function `f': %s\n");
+}
+
 /* maybe at some point it is interesting to add additional script
  * hooks for CP_EVENT_WRITE, etc?
  */

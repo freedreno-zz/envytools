@@ -203,6 +203,10 @@ static void dump_hex(uint32_t *dwords, uint32_t sizedwords, int level)
 {
 	int i, j;
 	int lastzero = 1;
+
+	if (quiet(2))
+		return;
+
 	for (i = 0; i < sizedwords; i += 8) {
 		int zero = 1;
 
@@ -835,6 +839,11 @@ static void dump_domain(uint32_t *dwords, uint32_t sizedwords, int level,
 	if (!dom)
 		return;
 
+	script_packet(dwords, sizedwords, rnn, dom);
+
+	if (quiet(2))
+		return;
+
 	for (i = 0; i < sizedwords; i++) {
 		struct rnndecaddrinfo *info = rnndec_decodeaddr(rnn->vc, dom, i, 0);
 		char *decoded;
@@ -1086,7 +1095,7 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 	void *contents = NULL;
 	int i;
 
-	if (quiet(2))
+	if (quiet(2) && !script)
 		return;
 
 	if (gpu_id >= 600)
@@ -1118,6 +1127,9 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 	case SHADER_PROG: {
 		const char *ext = NULL;
 
+		if (quiet(2))
+			return;
+
 		if (gpu_id >= 400)
 			num_unit *= 16;
 		else if (gpu_id >= 300)
@@ -1148,6 +1160,9 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		break;
 	}
 	case SHADER_CONST: {
+		if (quiet(2))
+			return;
+
 		/* uniforms/consts:
 		 *
 		 * note: num_unit seems to be # of pairs of dwords??
@@ -1163,6 +1178,9 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 	}
 	case TEX_MIPADDR: {
 		uint32_t *addrs = contents;
+
+		if (quiet(2))
+			return;
 
 		/* mipmap consts block just appears to be array of num_unit gpu addr's: */
 		for (i = 0; i < num_unit; i++) {
@@ -1292,18 +1310,26 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		break;
 	}
 	case UNKNOWN_DWORDS: {
+		if (quiet(2))
+			return;
 		dump_hex(contents, num_unit, level+1);
 		break;
 	}
 	case UNKNOWN_2DWORDS: {
+		if (quiet(2))
+			return;
 		dump_hex(contents, num_unit * 2, level+1);
 		break;
 	}
 	case UNKNOWN_4DWORDS: {
+		if (quiet(2))
+			return;
 		dump_hex(contents, num_unit * 4, level+1);
 		break;
 	}
 	default:
+		if (quiet(2))
+			return;
 		/* hmm.. */
 		dump_hex(contents, num_unit, level+1);
 		break;
@@ -2312,15 +2338,14 @@ static void dump_commands(uint32_t *dwords, uint32_t sizedwords, int level)
 				load_all_groups(level+1);
 			printl(3, "t3");
 			init();
+			const char *name = rnn_enumname(rnn, "adreno_pm4_type3_packets", val);
 			if (!quiet(2)) {
-				const char *name;
-				name = rnn_enumname(rnn, "adreno_pm4_type3_packets", val);
 				printf("\t%sopcode: %s%s%s (%02x) (%d dwords)%s\n", levels[level],
 						rnn->vc->colors->bctarg, name, rnn->vc->colors->reset,
 						val, count, (dwords[0] & 0x1) ? " (predicated)" : "");
-				if (name)
-					dump_domain(dwords+1, count-1, level+2, name);
 			}
+			if (name)
+				dump_domain(dwords+1, count-1, level+2, name);
 			op->fxn(dwords+1, count-1, level+1);
 			if (!quiet(2))
 				dump_hex(dwords, count, level+1);
@@ -2332,21 +2357,20 @@ static void dump_commands(uint32_t *dwords, uint32_t sizedwords, int level)
 				load_all_groups(level+1);
 			printl(3, "t7");
 			init();
+			const char *name = rnn_enumname(rnn, "adreno_pm4_type3_packets", val);
 			if (!quiet(2)) {
-				const char *name;
-				name = rnn_enumname(rnn, "adreno_pm4_type3_packets", val);
 				printf("\t%sopcode: %s%s%s (%02x) (%d dwords)\n", levels[level],
 						rnn->vc->colors->bctarg, name, rnn->vc->colors->reset,
 						val, count);
-				if (name) {
-					/* special hack for two packets that decode the same way
-					 * on a6xx:
-					 */
-					if (!strcmp(name, "CP_LOAD_STATE6_FRAG") ||
-							!strcmp(name, "CP_LOAD_STATE6_GEOM"))
-						name = "CP_LOAD_STATE6";
-					dump_domain(dwords+1, count-1, level+2, name);
-				}
+			}
+			if (name) {
+				/* special hack for two packets that decode the same way
+				 * on a6xx:
+				 */
+				if (!strcmp(name, "CP_LOAD_STATE6_FRAG") ||
+						!strcmp(name, "CP_LOAD_STATE6_GEOM"))
+					name = "CP_LOAD_STATE6";
+				dump_domain(dwords+1, count-1, level+2, name);
 			}
 			op->fxn(dwords+1, count-1, level+1);
 			if (!quiet(2))

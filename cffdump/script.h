@@ -48,6 +48,11 @@ void script_start_cmdstream(const char *name);
  */
 void script_draw(const char *primtype, uint32_t nindx);
 
+struct rnn;
+struct rnndomain;
+void script_packet(uint32_t *dwords, uint32_t sizedwords,
+		struct rnn *rnn, struct rnndomain *dom);
+
 /* maybe at some point it is interesting to add additional script
  * hooks for CP_EVENT_WRITE, etc?
  */
