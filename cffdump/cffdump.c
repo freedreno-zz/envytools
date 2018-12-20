@@ -166,7 +166,7 @@ static uint64_t gpuaddr(void *hostptr)
 	return 0;
 }
 
-static uint64_t gpubaseaddr(uint64_t gpuaddr)
+uint64_t gpubaseaddr(uint64_t gpuaddr)
 {
 	int i;
 	if (!gpuaddr)
@@ -188,7 +188,7 @@ static void *hostptr(uint64_t gpuaddr)
 	return 0;
 }
 
-static unsigned hostlen(uint64_t gpuaddr)
+unsigned hostlen(uint64_t gpuaddr)
 {
 	int i;
 	if (!gpuaddr)

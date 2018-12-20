@@ -445,6 +445,35 @@ static const struct luaL_Reg l_regs[] = {
 	{NULL, NULL}  /* sentinel */
 };
 
+/* Expose API to lookup snapshot buffers:
+ */
+
+uint64_t gpubaseaddr(uint64_t gpuaddr);
+unsigned hostlen(uint64_t gpuaddr);
+
+/* given address, return base-address of buffer: */
+static int l_bo_base(lua_State *L)
+{
+	uint64_t addr = (uint64_t)lua_tonumber(L, 1);
+	lua_pushnumber(L, gpubaseaddr(addr));
+	return 1;
+}
+
+/* given address, return the remaining size of the buffer: */
+static int l_bo_size(lua_State *L)
+{
+	uint64_t addr = (uint64_t)lua_tonumber(L, 1);
+	lua_pushnumber(L, hostlen(addr));
+	return 1;
+}
+
+static const struct luaL_Reg l_bos[] = {
+	{"base", l_bo_base},
+	{"size", l_bo_size},
+	{NULL, NULL}  /* sentinel */
+};
+
+
 /* called at start to load the script: */
 int script_load(const char *file)
 {
@@ -454,6 +483,7 @@ int script_load(const char *file)
 
 	L = luaL_newstate();
 	luaL_openlibs(L);
+	luaL_openlib(L, "bos", l_bos, 0);
 	luaL_openlib(L, "regs", l_regs, 0);
 	luaL_openlib(L, "rnn", l_rnn, 0);
 
