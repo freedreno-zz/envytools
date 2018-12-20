@@ -53,6 +53,36 @@ uint32_t reg_written(uint32_t regbase);
 uint32_t reg_lastval(uint32_t regbase);
 uint32_t reg_val(uint32_t regbase);
 
+/* An rnn based decoder, which can either be decoding current register
+ * values, or domain based decoding of a pm4 packet.
+ *
+ */
+struct rnndec {
+	struct rnn base;
+
+	/* for pm4 packet decoding: */
+	uint32_t sizedwords;
+	uint32_t *dwords;
+};
+
+static inline struct rnndec *to_rnndec(struct rnn *rnn)
+{
+	return (struct rnndec *)rnn;
+}
+
+uint32_t rnn_val(struct rnn *rnn, uint32_t regbase)
+{
+	struct rnndec *rnndec = to_rnndec(rnn);
+
+	if (!rnndec->sizedwords) {
+		return reg_val(regbase);
+	} else if (regbase < rnndec->sizedwords) {
+		return rnndec->dwords[regbase];
+	} else {
+		// XXX throw an error
+		return -1;
+	}
+}
 
 /* does not return */
 static void error(const char *fmt)
@@ -121,7 +151,7 @@ static int l_rnn_etype(lua_State *L, struct rnn *rnn,
 		/* if a register has no bitfields, just return
 		 * the raw value:
 		 */
-		ret = pushdecval(L, rnn, reg_val(offset), &elem->typeinfo);
+		ret = pushdecval(L, rnn, rnn_val(rnn, offset), &elem->typeinfo);
 		if (ret)
 			return ret;
 		return l_rnn_etype_reg(L, rnn, elem, offset);
@@ -254,7 +284,8 @@ static int l_rnn_reg_meta_index(lua_State *L)
 	for (i = 0; i < bitfieldsnum; i++) {
 		struct rnnbitfield *bf = bitfields[i];
 		if (!strcmp(name, bf->name)) {
-			uint32_t regval = (reg_val(rnndoff->offset) & bf->mask) >> bf->low;
+			uint32_t regval =
+				(rnn_val(rnndoff->rnn, rnndoff->offset) & bf->mask) >> bf->low;
 
 			DBG("name=%s, info=%p, subelemsnum=%d, type=%d, regval=%x",
 					name, info, rnndoff->elem->subelemsnum,
@@ -321,9 +352,10 @@ static const struct luaL_Reg l_meta_rnn[] = {
 static int l_rnn_init(lua_State *L)
 {
 	const char *gpuname = lua_tostring(L, 1);
-	struct rnn *rnn = lua_newuserdata(L, sizeof(*rnn));
-	_rnn_init(rnn, 0);
-	rnn_load(rnn, gpuname);
+	struct rnndec *rnndec = lua_newuserdata(L, sizeof(*rnndec));
+	_rnn_init(&rnndec->base, 0);
+	rnn_load(&rnndec->base, gpuname);
+	rnndec->sizedwords = 0;
 
 	luaL_newmetatable(L, "rnnmeta");
 	luaL_setfuncs(L, l_meta_rnn, 0);
