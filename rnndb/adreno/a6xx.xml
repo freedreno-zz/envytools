@@ -2914,7 +2914,14 @@ to upconvert to 32b float internally?
 		<bitfield name="TYPE" low="29" high="30" type="a6xx_tex_type"/>
 	</reg32>
 	<reg32 offset="3" name="3">
+		<!--
+		ARRAY_PITCH is basically LAYERSZ for the first mipmap level, and
+		for 3d textures (laid out mipmap level first) MIN_LAYERSZ is the
+		layer size at the point that it stops being reduced moving to
+		higher (smaller) mipmap levels
+		 -->
 		<bitfield name="ARRAY_PITCH" low="0" high="13" shr="12" type="uint"/>
+		<bitfield name="MIN_LAYERSZ" low="23" high="26" shr="12"/>
 		<bitfield name="FLAG" pos="28" type="boolean"/>
 	</reg32>
 	<reg32 offset="4" name="4">
