@@ -1852,6 +1852,8 @@ struct draw_state state[32];
 #define FLAG_DISABLE_ALL_GROUPS 0x4
 #define FLAG_LOAD_IMMED         0x8
 
+static int draw_mode;
+
 static void disable_group(unsigned group_id)
 {
 	struct draw_state *ds = &state[group_id];
@@ -1874,6 +1876,7 @@ static void load_group(unsigned group_id, int level)
 	printl(2, "%sgroup_id: %u\n", levels[level], group_id);
 	printl(2, "%scount: %d\n", levels[level], ds->count);
 	printl(2, "%saddr: %016llx\n", levels[level], ds->addr);
+	printl(2, "%sflags: %x\n", levels[level], ds->flags);
 
 	if (gpu_id >= 600) {
 		printl(2, "%senable_mask: 0x%x\n", levels[level], ds->enable_mask);
@@ -1889,7 +1892,7 @@ static void load_group(unsigned group_id, int level)
 		 */
 		unsigned mode;
 
-		if (strstr(render_mode, "BINNING")) {
+		if (draw_mode == 1) {
 			mode = 0x1;
 		} else {
 			mode = 0x6;
@@ -1911,10 +1914,7 @@ static void load_group(unsigned group_id, int level)
 		ib--;
 	}
 
-	/* TODO figure out if a group getting loaded is a one-shot thing
-	 * (ie. should we automatically disable_group() after it is
-	 * evaluated?  Need to device some experiments..)
-	 */
+	disable_group(group_id);
 }
 
 static void load_all_groups(int level)
@@ -1979,6 +1979,11 @@ static void cp_set_draw_state(uint32_t *dwords, uint32_t sizedwords, int level)
 			disable_group(group_id);
 		}
 	}
+}
+
+static void cp_set_mode(uint32_t *dwords, uint32_t sizedwords, int level)
+{
+	draw_mode = dwords[0];
 }
 
 /* execute compute shader */
@@ -2123,6 +2128,9 @@ static void cp_compute_checkpoint(uint32_t *dwords, uint32_t sizedwords, int lev
 
 static void cp_blit(uint32_t *dwords, uint32_t sizedwords, int level)
 {
+	if ((gpu_id >= 500) && !quiet(2)) {
+		printf("%smode: %s\n", levels[level], render_mode);
+	}
 	do_query(rnn_enumname(rnn, "cp_blit_cmd", dwords[0]), 0);
 	dump_register_summary(level);
 }
@@ -2144,6 +2152,16 @@ static void cp_context_reg_bunch(uint32_t *dwords, uint32_t sizedwords, int leve
 	}
 
 	summary = saved_summary;
+}
+
+static void cp_reg_write(uint32_t *dwords, uint32_t sizedwords, int level)
+{
+	uint32_t reg = dwords[1] & 0xffff;
+
+	assert(dwords[0] == 0x2);  /* not sure what a value other than 2 does */
+
+	dump_register(reg, dwords[2], level+1);
+	reg_set(reg, dwords[2]);
 }
 
 #define CP(x, fxn, ...)   { "CP_" #x, fxn, ##__VA_ARGS__ }
@@ -2192,7 +2210,9 @@ static const struct type3_op {
 		/* for a6xx */
 		CP(LOAD_STATE6_GEOM, cp_load_state),
 		CP(LOAD_STATE6_FRAG, cp_load_state),
+		CP(SET_MODE, cp_set_mode),
 		CP(SET_MARKER, cp_set_marker),
+		CP(REG_WRITE, cp_reg_write),
 };
 
 static void noop_fxn(uint32_t *dwords, uint32_t sizedwords, int level)
