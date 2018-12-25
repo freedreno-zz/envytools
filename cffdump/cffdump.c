@@ -2656,6 +2656,7 @@ static int handle_file(const char *filename, int start, int end, int draw)
 	int submit = 0, got_gpu_id = 0;
 	int sz, i, ret = 0;
 	bool needs_reset = false;
+	bool skip = false;
 
 	draw_filter = draw;
 	draw_count = 0;
@@ -2764,6 +2765,8 @@ static int handle_file(const char *filename, int start, int end, int draw)
 		case RD_CMD:
 			is_blob = true;
 			printl(2, "cmd: %s\n", (char *)buf);
+			// hack to skip xserver cmdstream
+			//skip = ((char *)buf)[0] == 'X';
 			break;
 		case RD_VERT_SHADER:
 			printl(2, "vertex shader:\n%s\n", (char *)buf);
@@ -2809,9 +2812,11 @@ static int handle_file(const char *filename, int start, int end, int draw)
 				parse_addr(buf, sz, &sizedwords, &gpuaddr);
 				printl(2, "############################################################\n");
 				printl(2, "cmdstream: %d dwords\n", sizedwords);
-				script_start_submit();
-				dump_commands(hostptr(gpuaddr), sizedwords, 0);
-				script_end_submit();
+				if (!skip) {
+					script_start_submit();
+					dump_commands(hostptr(gpuaddr), sizedwords, 0);
+					script_end_submit();
+				}
 				printl(2, "############################################################\n");
 				printl(2, "vertices: %d\n", vertices);
 			}
