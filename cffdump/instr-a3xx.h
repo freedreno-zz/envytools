@@ -826,7 +826,7 @@ static inline uint32_t instr_opc(instr_t *instr, unsigned gpu_id)
 	case 5:  return instr->cat5.opc;
 	case 6:
 		// TODO not sure if this is the best way to figure
-		// out if new vs old encoding, but it kinda seemes
+		// out if new vs old encoding, but it kinda seems
 		// to work:
 		if ((gpu_id >= 600) && (instr->cat6.opc == 0))
 			return instr->cat6_a6xx.opc;

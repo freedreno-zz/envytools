@@ -623,17 +623,13 @@ void script_packet(uint32_t *dwords, uint32_t sizedwords,
 		error("error running function `f': %s\n");
 }
 
-/* maybe at some point it is interesting to add additional script
- * hooks for CP_EVENT_WRITE, etc?
- */
-
-/* called at end of each cmdstream file: */
-void script_end_cmdstream(void)
+/* helper to call fxn that takes and returns void: */
+static void simple_call(const char *name)
 {
 	if (!L)
 		return;
 
-	lua_getglobal(L, "end_cmdstream");
+	lua_getglobal(L, name);
 
 	/* if no handler just ignore it: */
 	if (!lua_isfunction(L, -1)) {
@@ -646,23 +642,31 @@ void script_end_cmdstream(void)
 		error("error running function `f': %s\n");
 }
 
+/* called at end of each cmdstream file: */
+void script_end_cmdstream(void)
+{
+	simple_call("end_cmdstream");
+}
+
+/* called at start of submit/issueibcmds: */
+void script_start_submit(void)
+{
+	simple_call("start_submit");
+}
+
+/* called at end of submit/issueibcmds: */
+void script_end_submit(void)
+{
+	simple_call("end_submit");
+}
+
 /* called after last cmdstream file: */
 void script_finish(void)
 {
 	if (!L)
 		return;
 
-	lua_getglobal(L, "finish");
-
-	/* if no handler just ignore it: */
-	if (!lua_isfunction(L, -1)) {
-		lua_pop(L, 1);
-		return;
-	}
-
-	/* do the call (0 arguments, 0 result) */
-	if (lua_pcall(L, 0, 0, 0) != 0)
-		error("error running function `f': %s\n");
+	simple_call("finish");
 
 	lua_close(L);
 	L = NULL;

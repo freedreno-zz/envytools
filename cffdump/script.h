@@ -60,6 +60,9 @@ void script_packet(uint32_t *dwords, uint32_t sizedwords,
 /* called at end of each cmdstream file: */
 void script_end_cmdstream(void);
 
+void script_start_submit(void);
+void script_end_submit(void);
+
 /* called after last cmdstream file: */
 void script_finish(void);
 

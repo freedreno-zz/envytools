@@ -2809,7 +2809,9 @@ static int handle_file(const char *filename, int start, int end, int draw)
 				parse_addr(buf, sz, &sizedwords, &gpuaddr);
 				printl(2, "############################################################\n");
 				printl(2, "cmdstream: %d dwords\n", sizedwords);
+				script_start_submit();
 				dump_commands(hostptr(gpuaddr), sizedwords, 0);
+				script_end_submit();
 				printl(2, "############################################################\n");
 				printl(2, "vertices: %d\n", vertices);
 			}
