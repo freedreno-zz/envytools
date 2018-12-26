@@ -91,6 +91,65 @@ static void error(const char *fmt)
 	exit(1);
 }
 
+/*
+ * An enum type that can be used as string or number:
+ */
+
+struct rnndenum {
+	const char *str;
+	int val;
+};
+
+static int l_meta_rnn_enum_tostring(lua_State *L)
+{
+	struct rnndenum *e = lua_touserdata(L, 1);
+	if (e->str) {
+		lua_pushstring(L, e->str);
+	} else {
+		char buf[32];
+		sprintf(buf, "%u", e->val);
+		lua_pushstring(L, buf);
+	}
+	return 1;
+}
+
+/* so, this doesn't actually seem to be implemented yet, but hopefully
+ * some day lua comes to it's senses
+ */
+static int l_meta_rnn_enum_tonumber(lua_State *L)
+{
+	struct rnndenum *e = lua_touserdata(L, 1);
+	lua_pushinteger(L, e->val);
+	return 1;
+}
+
+static const struct luaL_Reg l_meta_rnn_enum[] = {
+	{"__tostring", l_meta_rnn_enum_tostring},
+	{"__tonumber", l_meta_rnn_enum_tonumber},
+	{NULL, NULL}  /* sentinel */
+};
+
+static void pushenum(struct lua_State *L, int val, struct rnnenum *info)
+{
+	struct rnndenum *e = lua_newuserdata(L, sizeof(*e));
+
+	e->val = val;
+	e->str = NULL;
+
+	for (int i = 0; i < info->valsnum; i++) {
+		if (info->vals[i]->valvalid && (info->vals[i]->value == val)) {
+			e->str = info->vals[i]->name;
+			break;
+		}
+	}
+
+	luaL_newmetatable(L, "rnnmetaenum");
+	luaL_setfuncs(L, l_meta_rnn_enum, 0);
+	lua_pop(L, 1);
+
+	luaL_setmetatable(L, "rnnmetaenum");
+}
+
 /* Expose rnn decode to script environment as "rnn" library:
  */
 
@@ -119,9 +178,11 @@ static int pushdecval(struct lua_State *L, struct rnn *rnn,
 {
 	union rnndecval val;
 	switch (rnn_decodelem(rnn, info, regval, &val)) {
-	case RNN_TTYPE_INT:
 	case RNN_TTYPE_ENUM:
 	case RNN_TTYPE_INLINE_ENUM:
+		pushenum(L, val.i, info->eenum);
+		return 1;
+	case RNN_TTYPE_INT:
 		lua_pushinteger(L, val.i);
 		return 1;
 	case RNN_TTYPE_UINT:
