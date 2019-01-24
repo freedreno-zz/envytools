@@ -1745,7 +1745,6 @@ static void cp_nop(uint32_t *dwords, uint32_t sizedwords, int level)
 static void cp_indirect(uint32_t *dwords, uint32_t sizedwords, int level)
 {
 	/* traverse indirect buffers */
-	int i;
 	uint64_t ibaddr;
 	uint32_t ibsize;
 	uint32_t *ptr = NULL;
@@ -1772,12 +1771,7 @@ static void cp_indirect(uint32_t *dwords, uint32_t sizedwords, int level)
 	}
 
 	/* map gpuaddr back to hostptr: */
-	for (i = 0; i < nbuffers; i++) {
-		if (buffer_contains_gpuaddr(&buffers[i], ibaddr, ibsize)) {
-			ptr = buffers[i].hostptr + (ibaddr - buffers[i].gpuaddr);
-			break;
-		}
-	}
+	ptr = hostptr(ibaddr);
 
 	if (ptr) {
 		ib++;
