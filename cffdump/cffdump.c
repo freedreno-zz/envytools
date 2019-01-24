@@ -2230,6 +2230,21 @@ static void cp_reg_write(uint32_t *dwords, uint32_t sizedwords, int level)
 	reg_set(reg, dwords[2]);
 }
 
+static void cp_unk_a6xx_55(uint32_t *dwords, uint32_t sizedwords, int level)
+{
+	uint64_t addr;
+	uint32_t size = dwords[2] & 0xffff;
+	void *ptr;
+
+	addr = dwords[0] | ((uint64_t)dwords[1] << 32);
+
+	printf("addr=%lx\n", addr);
+	ptr = hostptr(addr);
+	if (ptr) {
+		dump_commands(ptr, size, level+1);
+	}
+}
+
 #define CP(x, fxn, ...)   { "CP_" #x, fxn, ##__VA_ARGS__ }
 static const struct type3_op {
 	const char *name;
@@ -2280,6 +2295,8 @@ static const struct type3_op {
 		CP(SET_MODE, cp_set_mode),
 		CP(SET_MARKER, cp_set_marker),
 		CP(REG_WRITE, cp_reg_write),
+
+		CP(UNK_A6XX_55, cp_unk_a6xx_55),
 };
 
 static void noop_fxn(uint32_t *dwords, uint32_t sizedwords, int level)
