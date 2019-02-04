@@ -1016,7 +1016,7 @@ _get_state_type(unsigned state_block_id, unsigned state_type,
 	static const struct {
 		enum shader_t stage;
 		enum state_t  state;
-	} lookup[0x10][0x3] = {
+	} lookup[0x10][0x4] = {
 		// SB4_VS_TEX:
 		[0x0][0] = { SHADER_VERTEX,    TEX_SAMP },
 		[0x0][1] = { SHADER_VERTEX,    TEX_CONST },
@@ -1053,8 +1053,9 @@ _get_state_type(unsigned state_block_id, unsigned state_type,
 		// SB4_CS_SHADER:
 		[0xd][0] = { SHADER_COMPUTE,   SHADER_PROG },
 		[0xd][1] = { SHADER_COMPUTE,   SHADER_CONST },
+		[0xd][3] = { SHADER_COMPUTE,   SSBO_0 },      /* a6xx location */
 		// SB4_SSBO (shared across all stages)
-		[0xe][0] = { 0, SSBO_0 },
+		[0xe][0] = { 0, SSBO_0 },                     /* a5xx (and a4xx?) location */
 		[0xe][1] = { 0, SSBO_1 },
 		[0xe][2] = { 0, SSBO_2 },
 		// SB4_CS_SSBO
@@ -1270,12 +1271,17 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		uint32_t *ssboconst = (uint32_t *)contents;
 
 		for (i = 0; i < num_unit; i++) {
-			if (400 <= gpu_id && gpu_id < 500)
+			int sz = 4;
+			if (400 <= gpu_id && gpu_id < 500) {
 				dump_domain(ssboconst, 4, level+2, "A4XX_SSBO_0");
-			else if (500 <= gpu_id && gpu_id < 600)
+			} else if (500 <= gpu_id && gpu_id < 600) {
 				dump_domain(ssboconst, 4, level+2, "A5XX_SSBO_0");
-			dump_hex(ssboconst, 4, level+1);
-			ssboconst += 4;
+			} else if (600 <= gpu_id && gpu_id < 700) {
+				sz = 16;
+				dump_domain(ssboconst, 16, level+2, "A6XX_IBO");
+			}
+			dump_hex(ssboconst, sz, level+1);
+			ssboconst += sz;
 		}
 		break;
 	}
@@ -2204,6 +2210,7 @@ static const struct type3_op {
 		/* for a6xx */
 		CP(LOAD_STATE6_GEOM, cp_load_state),
 		CP(LOAD_STATE6_FRAG, cp_load_state),
+		CP(LOAD_STATE6, cp_load_state),
 		CP(SET_MODE, cp_set_mode),
 		CP(SET_MARKER, cp_set_marker),
 		CP(REG_WRITE, cp_reg_write),
