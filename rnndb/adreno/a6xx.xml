@@ -2539,7 +2539,8 @@ to upconvert to 32b float internally?
 		always see the same value for both.
 		 -->
 		<bitfield name="NTEX" low="9" high="16" type="uint"/>
-		<bitfield name="NSAMP" low="17" high="24" type="uint"/>
+		<bitfield name="NSAMP" low="17" high="21" type="uint"/>
+		<bitfield name="NIBO" low="22" high="29" type="uint"/>
 	</bitset>
 
 	<reg32 offset="0xa800" name="SP_VS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
@@ -2666,13 +2667,26 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xa9b5" name="SP_CS_OBJ_START_HI"/>
 	<reg32 offset="0xa9bc" name="SP_CS_INSTRLEN" type="uint"/>
 
+	<!--
+	IBO state for compute shader:
+	 -->
+	<reg32 offset="0xa9f2" name="SP_CS_IBO_LO"/>
+	<reg32 offset="0xa9f3" name="SP_CS_IBO_HI"/>
+	<reg32 offset="0xaa00" name="SP_CS_IBO_COUNT" type="uint"/>
+
 	<!-- always 0x5 ? -->
 	<reg32 offset="0xab00" name="SP_UNKNOWN_AB00"/>
 
 	<reg32 offset="0xab04" name="SP_FS_CONFIG" type="a6xx_sp_xs_config"/>
 	<reg32 offset="0xab05" name="SP_FS_INSTRLEN" type="uint"/>
 
-	<reg32 offset="0xab20" name="SP_UNKNOWN_AB20"/>
+	<!--
+	Combined IBO state for 3d pipe, used for Image and SSBO write/atomic
+	instructions VS/HS/DS/GS/FS.  See SP_CS_IBO_* for compute shaders.
+	 -->
+	<reg32 offset="0xab1a" name="SP_IBO_LO"/>
+	<reg32 offset="0xab1b" name="SP_IBO_HI"/>
+	<reg32 offset="0xab20" name="SP_IBO_COUNT" type="uint"/>
 
 	<!--
 	I believe this describes the src format, but haven't seen traces with
@@ -2953,6 +2967,46 @@ to upconvert to 32b float internally?
 	<reg32 offset="13" name="13"/>
 	<reg32 offset="14" name="14"/>
 	<reg32 offset="15" name="15"/>
+</domain>
+
+<!--
+Note the "SSBO" state blocks are actually used for both images and SSBOs,
+naming is just because I r/e'd SSBOs first.  I should probably come up
+with a better name.
+-->
+<domain name="A6XX_IBO" width="32">
+	<reg32 offset="0" name="0">
+		<!--
+		NOTE: same position as in TEX_CONST state.. I don't see other bits
+		used but if they are good chance position is same as TEX_CONST
+		 -->
+		<bitfield name="FMT" low="22" high="29" type="a6xx_tex_fmt"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="WIDTH" low="0" high="14" type="uint"/>
+		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
+	</reg32>
+	<reg32 offset="2" name="2">
+		<doc>Pitch in bytes (so actually stride)</doc>
+		<bitfield name="PITCH" low="7" high="28" type="uint"/>
+		<bitfield name="TYPE" low="29" high="30" type="a6xx_tex_type"/>
+	</reg32>
+	<reg32 offset="3" name="3">
+		<!--
+		ARRAY_PITCH is basically LAYERSZ for the first mipmap level, and
+		for 3d textures (laid out mipmap level first) MIN_LAYERSZ is the
+		layer size at the point that it stops being reduced moving to
+		higher (smaller) mipmap levels
+		 -->
+		<bitfield name="ARRAY_PITCH" low="0" high="13" shr="12" type="uint"/>
+	</reg32>
+	<reg32 offset="4" name="4">
+		<bitfield name="BASE_LO" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="5" name="5">
+		<bitfield name="BASE_HI" low="0" high="16"/>
+		<bitfield name="DEPTH" low="17" high="29" type="uint"/>
+	</reg32>
 </domain>
 
 <domain name="A6XX_PDC" width="32">

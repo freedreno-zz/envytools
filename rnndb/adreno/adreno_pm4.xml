@@ -541,19 +541,13 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		<value name="SB6_GS_SHADER" value="0xb"/>
 		<value name="SB6_FS_SHADER" value="0xc"/>
 		<value name="SB6_CS_SHADER" value="0xd"/>
-		<!--
-		for SSBO, STATE_TYPE=0 appears to be addresses (four dwords each),
-		STATE_TYPE=1 sizes, STATE_TYPE=2 addresses again (two dwords each)
-
-		Compute has it's own dedicated SSBO state, it seems, but the rest
-		of the stages share state
-		 -->
-		<value name="SB6_SSBO"   value="0xe"/>
-		<value name="SB6_CS_SSBO"   value="0xf"/>
+		<value name="SB6_IBO"       value="0xe"/>
+		<value name="SB6_CS_IBO"    value="0xf"/>
 	</enum>
 	<enum name="a6xx_state_type">
 		<value name="ST6_SHADER" value="0"/>
 		<value name="ST6_CONSTANTS" value="1"/>
+		<value name="ST6_IBO" value="3"/>
 	</enum>
 	<enum name="a6xx_state_src">
 		<value name="SS6_DIRECT" value="0"/>
