@@ -354,6 +354,13 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	 -->
 	<value name="CP_LOAD_STATE6_GEOM" value="0x32" variants="A6XX"/>
 	<value name="CP_LOAD_STATE6_FRAG" value="0x34" variants="A6XX"/>
+	<!--
+	Note: For IBO state (Image/SSBOs) which have shared state across
+	shader stages, for 3d pipeline CP_LOAD_STATE6 is used.  But for
+	compute shaders, CP_LOAD_STATE6_FRAG is used.  Possibly they are
+	interchangable.
+	 -->
+	<value name="CP_LOAD_STATE6" value="0x36" variants="A6XX"/>
 
 	<!-- internal packets: -->
 	<value name="IN_IB_PREFETCH_END" value="0x17" variants="A2XX"/>
@@ -371,12 +378,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 unknown a6xx opcodes:
 
 opcode: (null) (14) (5 dwords)
-opcode: (null) (36) (4 dwords)
 opcode: (null) (55) (4 dwords)
 opcode: (null) (6d) (4 dwords)
  -->
 	<value name="CP_UNK_A6XX_14" value="0x14" variants="A6XX"/>
-	<value name="CP_UNK_A6XX_36" value="0x36" variants="A6XX"/>
 	<value name="CP_UNK_A6XX_55" value="0x55" variants="A6XX"/>
 
 	<!--
@@ -555,7 +560,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	</enum>
 	<reg32 offset="0" name="0">
 		<bitfield name="DST_OFF" low="0" high="13" type="uint"/>
-		<bitfield name="STATE_TYPE" pos="14" type="a6xx_state_type"/>
+		<bitfield name="STATE_TYPE" low="14" high="15" type="a6xx_state_type"/>
 		<bitfield name="STATE_SRC" low="16" high="17" type="a6xx_state_src"/>
 		<bitfield name="STATE_BLOCK" low="18" high="21" type="a6xx_state_block"/>
 		<bitfield name="NUM_UNIT" low="22" high="31" type="uint"/>
