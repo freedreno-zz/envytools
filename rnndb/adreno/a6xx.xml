@@ -2645,6 +2645,14 @@ to upconvert to 32b float internally?
 	<!-- always 0x0 ? -->
 	<reg32 offset="0xa9a8" name="SP_UNKNOWN_A9A8"/>
 
+	<!-- set for compute shaders, always 0x41 -->
+	<reg32 offset="0xa9b1" name="SP_CS_UNKNOWN_A9B1" type="uint"/>
+
+	<!-- set for compute shaders, always 0x0 -->
+	<reg32 offset="0xa9b3" name="SP_CS_UNKNOWN_A9B3" type="uint"/>
+
+	<reg32 offset="0xa9ba" name="SP_CS_TEX_COUNT" type="uint"/>
+
 	<reg32 offset="0xa9e0" name="SP_FS_TEX_SAMP_LO"/>
 	<reg32 offset="0xa9e1" name="SP_FS_TEX_SAMP_HI"/>
 	<reg32 offset="0xa9e2" name="SP_CS_TEX_SAMP_LO"/>
@@ -2665,6 +2673,7 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xa9b0" name="SP_CS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xa9b4" name="SP_CS_OBJ_START_LO"/>
 	<reg32 offset="0xa9b5" name="SP_CS_OBJ_START_HI"/>
+	<reg32 offset="0xa9bb" name="SP_CS_CONFIG" type="a6xx_sp_xs_config"/>
 	<reg32 offset="0xa9bc" name="SP_CS_INSTRLEN" type="uint"/>
 
 	<!--
@@ -2764,6 +2773,7 @@ to upconvert to 32b float internally?
 
 	<bitset name="a6xx_hlsq_xs_cntl" inline="yes">
 		<bitfield name="CONSTLEN" low="0" high="7" shr="2" type="uint"/>
+		<bitfield name="ENABLED" pos="8" type="boolean"/>
 	</bitset>
 
 	<reg32 offset="0xb800" name="HLSQ_VS_CNTL" type="a6xx_hlsq_xs_cntl"/>
@@ -2793,6 +2803,7 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xb986" name="HLSQ_CONTROL_5_REG">
 		<!-- unknown regid in low 8b -->
 	</reg32>
+	<reg32 offset="0xb987" name="HLSQ_CS_CNTL" type="a6xx_hlsq_xs_cntl"/>
 
 	<reg32 offset="0xb990" name="HLSQ_CS_NDRANGE_0">
 		<bitfield name="KERNELDIM" low="0" high="1" type="uint"/>
@@ -2825,6 +2836,7 @@ to upconvert to 32b float internally?
 		<bitfield name="UNK1" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="LOCALIDREGID" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
+	<reg32 offset="0xb998" name="HLSQ_CS_UNKNOWN_B998"/> <!-- always 0x2fc -->
 	<reg32 offset="0xb999" name="HLSQ_CS_KERNEL_GROUP_X"/>
 	<reg32 offset="0xb99a" name="HLSQ_CS_KERNEL_GROUP_Y"/>
 	<reg32 offset="0xb99b" name="HLSQ_CS_KERNEL_GROUP_Z"/>
