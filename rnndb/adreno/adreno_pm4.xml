@@ -254,10 +254,10 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 		(A4x) save PM4 stream pointers to execute upon a visible draw
 	</doc>
-	<value name="CP_SET_DRAW_STATE" value="0x43"/>
+	<value name="CP_SET_DRAW_STATE" value="0x43" variants="A4XX,A5XX,A6XX"/>
 	<value name="CP_DRAW_INDX_OFFSET" value="0x38"/>
-	<value name="CP_DRAW_INDIRECT" value="0x28"/>
-	<value name="CP_DRAW_INDX_INDIRECT" value="0x29"/>
+	<value name="CP_DRAW_INDIRECT" value="0x28" variants="A4XX,A5XX,A6XX"/>
+	<value name="CP_DRAW_INDX_INDIRECT" value="0x29" variants="A4XX,A5XX,A6XX"/>
 	<value name="CP_DRAW_AUTO" value="0x24"/>
 
 	<value name="CP_UNKNOWN_19" value="0x19"/>
@@ -288,7 +288,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>Memory to REG copy</doc>
 	<value name="CP_MEM_TO_REG" value="0x42"/>
 
-	<value name="CP_EXEC_CS_INDIRECT" value="0x41"/>
+	<value name="CP_EXEC_CS_INDIRECT" value="0x41" variants="A4XX,A5XX,A6XX"/>
 	<value name="CP_EXEC_CS" value="0x33"/>
 
 	<doc>
@@ -373,7 +373,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="IN_INCR_UPDT_INSTR" value="0x57" variants="A2XX"/>
 
 	<!-- jmptable entry used to handle type4 packet on a5xx+: -->
-	<value name="PKT4" value="0x04" variants="A5XX-"/>
+	<value name="PKT4" value="0x04" variants="A5XX,A6XX"/>
 <!--
 unknown a6xx opcodes:
 
