@@ -1917,6 +1917,9 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x8110" name="GRAS_UNKNOWN_8110"/>
 
 	<bitset name="a6xx_2d_blit_cntl" inline="yes">
+		<bitfield name="ROTATE" low="0" high="1" type="a6xx_rotation"/>
+		<bitfield name="HORIZONTAL_FLIP" low="2" high="2" type="boolean"/>
+		<bitfield name="SOLID_COLOR" low="4" high="4" type="boolean"/>
 		<bitfield name="COLOR_FORMAT" low="8" high="15" type="a6xx_color_fmt"/>
 		<bitfield name="SCISSOR" pos="16" type="boolean"/>
 		<!-- double check these:
@@ -1931,16 +1934,16 @@ to upconvert to 32b float internally?
 
 	<!-- could be the src coords are fixed point? -->
 	<reg32 offset="0x8401" name="GRAS_2D_SRC_TL_X">
-		<bitfield name="X" low="8" high="23" type="uint"/>
+		<bitfield name="X" low="8" high="31" type="int"/>
 	</reg32>
 	<reg32 offset="0x8402" name="GRAS_2D_SRC_BR_X">
-		<bitfield name="X" low="8" high="23" type="uint"/>
+		<bitfield name="X" low="8" high="31" type="int"/>
 	</reg32>
 	<reg32 offset="0x8403" name="GRAS_2D_SRC_TL_Y">
-		<bitfield name="Y" low="8" high="23" type="uint"/>
+		<bitfield name="Y" low="8" high="31" type="int"/>
 	</reg32>
 	<reg32 offset="0x8404" name="GRAS_2D_SRC_BR_Y">
-		<bitfield name="Y" low="8" high="23" type="uint"/>
+		<bitfield name="Y" low="8" high="31" type="int"/>
 	</reg32>
 
 	<reg32 offset="0x8405" name="GRAS_2D_DST_TL" type="adreno_reg_xy"/>
