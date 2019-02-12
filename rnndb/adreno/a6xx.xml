@@ -2003,7 +2003,7 @@ to upconvert to 32b float internally?
 	</reg32>
 	<reg32 offset="0x880a" name="RB_RENDER_CONTROL1">
 		<bitfield name="SAMPLEMASK" pos="0" type="boolean"/>
-		<bitfield name="FACENESS" pos="1" type="boolean"/>
+		<bitfield name="FACENESS" pos="2" type="boolean"/>
 		<bitfield name="SAMPLEID" pos="3" type="boolean"/>
 	</reg32>
 
