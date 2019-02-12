@@ -2336,7 +2336,9 @@ to upconvert to 32b float internally?
 	</array>
 
 	<!-- always 0x0 ? -->
-	<reg32 offset="0x9236" name="VPC_UNKNOWN_9236"/>
+	<reg32 offset="0x9236" name="VPC_UNKNOWN_9236">
+		<bitfield name="POINT_COORD_INVERT" pos="0" type="bool"/>
+	</reg32>
 
 	<!-- always 0x0 ? -->
 	<reg32 offset="0x9300" name="VPC_UNKNOWN_9300"/>
