@@ -2939,10 +2939,16 @@ to upconvert to 32b float internally?
 		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
 	</reg32>
 	<reg32 offset="2" name="2">
+		<!--
+		b4 and b31 set for buffer/ssbo case, in which case low 15 bits
+		of size encoded in WIDTH, and high 15 bits encoded in HEIGHT
+		 -->
+		<bitfield name="UNK4" pos="4" type="boolean"/>
 		<bitfield name="FETCHSIZE" low="0" high="3" type="a6xx_tex_fetchsize"/>
 		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="7" high="28" type="uint"/>
 		<bitfield name="TYPE" low="29" high="30" type="a6xx_tex_type"/>
+		<bitfield name="UNK31" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="3" name="3">
 		<!--
@@ -3001,9 +3007,15 @@ with a better name.
 		<bitfield name="HEIGHT" low="15" high="29" type="uint"/>
 	</reg32>
 	<reg32 offset="2" name="2">
+		<!--
+		b4 and b31 set for buffer/ssbo case, in which case low 15 bits
+		of size encoded in WIDTH, and high 15 bits encoded in HEIGHT
+		 -->
+		<bitfield name="UNK4" pos="4" type="boolean"/>
 		<doc>Pitch in bytes (so actually stride)</doc>
 		<bitfield name="PITCH" low="7" high="28" type="uint"/>
 		<bitfield name="TYPE" low="29" high="30" type="a6xx_tex_type"/>
+		<bitfield name="UNK31" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="3" name="3">
 		<!--
