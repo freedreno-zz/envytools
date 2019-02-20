@@ -1242,6 +1242,7 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 {
 	instr_t *instr = (instr_t *)dwords;
 	uint32_t opc = instr_opc(instr, ctx->gpu_id);
+	unsigned nop = 0;
 	const char *name;
 
 	fprintf(ctx->out, "%s%04d[%08xx_%08xx] ", levels[ctx->level], n, dwords[1], dwords[0]);
@@ -1276,15 +1277,15 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 		fprintf(ctx->out, "(jp)");
 	if (instr_sat(instr))
 		fprintf(ctx->out, "(sat)");
-	if (ctx->repeat) {
+	if (ctx->repeat)
 		fprintf(ctx->out, "(rpt%d)", ctx->repeat);
-	} else if ((instr->opc_cat == 2) && (instr->cat2.src1_r || instr->cat2.src2_r)) {
-		unsigned nop = (instr->cat2.src2_r * 2) + instr->cat2.src1_r;
+	else if ((instr->opc_cat == 2) && (instr->cat2.src1_r || instr->cat2.src2_r))
+		nop = (instr->cat2.src2_r * 2) + instr->cat2.src1_r;
+	else if ((instr->opc_cat == 3) && (instr->cat3.src1_r || instr->cat3.src2_r))
+		nop = (instr->cat3.src2_r * 2) + instr->cat3.src1_r;
+	if (nop)
 		fprintf(ctx->out, "(nop%d)", nop);
-	} else if ((instr->opc_cat == 3) && (instr->cat3.src1_r || instr->cat3.src2_r)) {
-		unsigned nop = (instr->cat3.src2_r * 2) + instr->cat3.src1_r;
-		fprintf(ctx->out, "(nop%d)", nop);
-	}
+
 	if (instr->ul && ((2 <= instr->opc_cat) && (instr->opc_cat <= 4)))
 		fprintf(ctx->out, "(ul)");
 
@@ -1303,6 +1304,10 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 
 	if ((instr->opc_cat <= 4) && (debug & EXPAND_REPEAT)) {
 		int i;
+		for (i = 0; i < nop; i++) {
+			fprintf(ctx->out, "%s%04d[                   ] ", levels[ctx->level], n);
+			fprintf(ctx->out, "nop\n");
+		}
 		for (i = 0; i < ctx->repeat; i++) {
 			ctx->repeatidx = i + 1;
 			fprintf(ctx->out, "%s%04d[                   ] ", levels[ctx->level], n);
