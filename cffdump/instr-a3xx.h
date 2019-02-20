@@ -170,7 +170,6 @@ typedef enum {
 	OPC_STG             = _OPC(6, 3),        /* store-global */
 	OPC_STL             = _OPC(6, 4),
 	OPC_STP             = _OPC(6, 5),
-	OPC_STI             = _OPC(6, 6),
 	OPC_G2L             = _OPC(6, 7),
 	OPC_L2G             = _OPC(6, 8),
 	OPC_PREFETCH        = _OPC(6, 9),

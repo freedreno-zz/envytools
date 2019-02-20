@@ -733,7 +733,6 @@ static void print_instr_cat6_a3xx(struct disasm_ctx *ctx, instr_t *instr)
 	case OPC_STG:
 	case OPC_STL:
 	case OPC_STP:
-	case OPC_STI:
 	case OPC_STLW:
 	case OPC_STIB:
 		dst.full  = true;
@@ -829,10 +828,6 @@ static void print_instr_cat6_a3xx(struct disasm_ctx *ctx, instr_t *instr)
 	case OPC_PREFETCH:
 		ss = 'g';
 		nodst = true;
-		break;
-
-	case OPC_STI:
-		dst.full = false;  // XXX or inverts??
 		break;
 	}
 
@@ -1204,7 +1199,6 @@ static const struct opc_info {
 	OPC(6, OPC_STG,          stg),
 	OPC(6, OPC_STL,          stl),
 	OPC(6, OPC_STP,          stp),
-	OPC(6, OPC_STI,          sti),
 	OPC(6, OPC_G2L,          g2l),
 	OPC(6, OPC_L2G,          l2g),
 	OPC(6, OPC_PREFETCH,     prefetch),
