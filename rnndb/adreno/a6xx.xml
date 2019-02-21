@@ -2752,6 +2752,7 @@ to upconvert to 32b float internally?
 		<bitfield name="COLOR_SWAP" low="10" high="11" type="a3xx_color_swap"/>
 		<!-- b12 seems to be set when UBWC "FLAGS" buffer enabled -->
 		<bitfield name="FLAGS" pos="12" type="boolean"/>
+		<bitfield name="SAMPLES" low="14" high="15" type="a3xx_msaa_samples"/>
 		<bitfield name="FILTER" pos="16" type="boolean"/>
 	</reg32>
 	<reg32 offset="0xb4c1" name="SP_PS_2D_SRC_SIZE">
