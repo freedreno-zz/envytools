@@ -2902,7 +2902,7 @@ to upconvert to 32b float internally?
 		<bitfield name="MIN_LOD" low="20" high="31" type="ufixed" radix="8"/>
 	</reg32>
 	<reg32 offset="2" name="2">
-		<bitfield name="BCOLOR_OFFSET" low="4" high="31"/>
+		<bitfield name="BCOLOR_OFFSET" low="0" high="31"/>
 	</reg32>
 	<reg32 offset="3" name="3"/>
 </domain>
