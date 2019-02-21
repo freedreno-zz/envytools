@@ -2942,6 +2942,9 @@ to upconvert to 32b float internally?
 		<!--
 		b4 and b31 set for buffer/ssbo case, in which case low 15 bits
 		of size encoded in WIDTH, and high 15 bits encoded in HEIGHT
+
+		b31 is probably the 'BUFFER' bit.. it is the one that changes
+		behavior of texture in dEQP-GLES31.functional.texture.texture_buffer.render.as_fragment_texture.buffer_size_131071
 		 -->
 		<bitfield name="UNK4" pos="4" type="boolean"/>
 		<bitfield name="FETCHSIZE" low="0" high="3" type="a6xx_tex_fetchsize"/>
@@ -3000,6 +3003,7 @@ with a better name.
 		NOTE: same position as in TEX_CONST state.. I don't see other bits
 		used but if they are good chance position is same as TEX_CONST
 		 -->
+		<bitfield name="TILE_MODE" low="0" high="1" type="a6xx_tile_mode"/>
 		<bitfield name="FMT" low="22" high="29" type="a6xx_tex_fmt"/>
 	</reg32>
 	<reg32 offset="1" name="1">
