@@ -1809,7 +1809,17 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x8005" name="GRAS_CNTL">
 		<!-- see also RB_RENDER_CONTROL0 -->
 		<bitfield name="VARYING" pos="0" type="boolean"/>
-		<bitfield name="UNK3" pos="3" type="boolean"/>
+		<!-- b1 set for interpolateAtCentroid() -->
+		<bitfield name="CENTROID" pos="1" type="boolean"/>
+		<!-- b2 set instead of b0 when running in per-sample mode -->
+		<bitfield name="PERSAMP_VARYING" pos="2" type="boolean"/>
+		<!--
+		b3 set for interpolateAt{Offset,Sample}() if not in per-sample
+		mode, and frag_face
+		 -->
+		<bitfield name="SIZE" pos="3" type="boolean"/>
+		<!-- b5 set ofr interpolateAt{Offset,Sample}() if in per-sample mode -->
+		<bitfield name="SIZE_PERSAMP" pos="5" type="boolean"/>
 		<bitfield name="XCOORD" pos="6" type="boolean"/>
 		<bitfield name="YCOORD" pos="7" type="boolean"/>
 		<bitfield name="ZCOORD" pos="8" type="boolean"/>
@@ -1912,7 +1922,9 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x8106" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE_LO"/>
 	<reg32 offset="0x8107" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE_HI"/>
 
-	<reg32 offset="0x8109" name="GRAS_UNKNOWN_8109"/>
+	<reg32 offset="0x8109" name="GRAS_SAMPLE_CNTL">
+		<bitfield name="PER_SAMP_MODE" pos="0" type="boolean"/>
+	</reg32>
 
 	<reg32 offset="0x8110" name="GRAS_UNKNOWN_8110"/>
 
@@ -1994,7 +2006,17 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x8809" name="RB_RENDER_CONTROL0">
 		<!-- see also GRAS_CNTL -->
 		<bitfield name="VARYING" pos="0" type="boolean"/>
-		<bitfield name="UNK3" pos="3" type="boolean"/>
+		<!-- b1 set for interpolateAtCentroid() -->
+		<bitfield name="CENTROID" pos="1" type="boolean"/>
+		<!-- b2 set instead of b0 when running in per-sample mode -->
+		<bitfield name="PERSAMP_VARYING" pos="2" type="boolean"/>
+		<!--
+		b3 set for interpolateAt{Offset,Sample}() if not in per-sample
+		mode, and frag_face
+		 -->
+		<bitfield name="SIZE" pos="3" type="boolean"/>
+		<!-- b5 set ofr interpolateAt{Offset,Sample}() if in per-sample mode -->
+		<bitfield name="SIZE_PERSAMP" pos="5" type="boolean"/>
 		<bitfield name="XCOORD" pos="6" type="boolean"/>
 		<bitfield name="YCOORD" pos="7" type="boolean"/>
 		<bitfield name="ZCOORD" pos="8" type="boolean"/>
@@ -2002,13 +2024,19 @@ to upconvert to 32b float internally?
 		<bitfield name="UNK10" pos="10" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x880a" name="RB_RENDER_CONTROL1">
+		<!-- enable bits for various FS sysvalue regs: -->
 		<bitfield name="SAMPLEMASK" pos="0" type="boolean"/>
 		<bitfield name="FACENESS" pos="2" type="boolean"/>
 		<bitfield name="SAMPLEID" pos="3" type="boolean"/>
+		<!-- b4 and b5 set in per-sample mode: -->
+		<bitfield name="UNK4" pos="4" type="boolean"/>
+		<bitfield name="UNK5" pos="5" type="boolean"/>
+		<bitfield name="SIZE" pos="6" type="boolean"/>
 	</reg32>
 
 	<reg32 offset="0x880b" name="RB_FS_OUTPUT_CNTL0">
 		<bitfield name="FRAG_WRITES_Z" pos="1" type="boolean"/>
+		<bitfield name="FRAG_WRITES_SAMPMASK" pos="2" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x880c" name="RB_FS_OUTPUT_CNTL1">
 		<bitfield name="MRT" low="0" high="3" type="uint"/>
@@ -2045,7 +2073,9 @@ to upconvert to 32b float internally?
 		<bitfield name="SRGB_MRT7" pos="7" type="boolean"/>
 	</reg32>
 
-	<reg32 offset="0x8810" name="RB_UNKNOWN_8810"/>
+	<reg32 offset="0x8810" name="RB_SAMPLE_CNTL">
+		<bitfield name="PER_SAMP_MODE" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x8811" name="RB_UNKNOWN_8811"/>
 
 	<!-- always 0x0 ? -->
@@ -2626,7 +2656,7 @@ to upconvert to 32b float internally?
 	</reg32>
 	<reg32 offset="0xa98c" name="SP_FS_OUTPUT_CNTL0">
 		<bitfield name="DEPTH_REGID" low="8" high="15" type="a3xx_regid"/>
-		<!-- one of the other two regid fields in here is probably SAMPLEMASK_REGID -->
+		<bitfield name="SAMPMASK_REGID" low="16" high="23" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xa98d" name="SP_FS_OUTPUT_CNTL1">
 		<bitfield name="MRT" low="0" high="3" type="uint"/>
@@ -2794,12 +2824,20 @@ to upconvert to 32b float internally?
 		<!-- SAMPLEID is loaded into a half-precision register: -->
 		<bitfield name="SAMPLEID" low="8" high="15" type="a3xx_regid"/>
 		<bitfield name="SAMPLEMASK" low="16" high="23" type="a3xx_regid"/>
+		<!--
+		SIZE is the "size" of the primitive, ie. what the i/j coords need
+		to be divided by to scale to a single fragment.  It is probably
+		the longer of the two lines that form the tri (ie v0v1 and v0v2)?
+		 -->
+		<bitfield name="SIZE" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xb984" name="HLSQ_CONTROL_3_REG">
 		<!-- register loaded with position (bary.f) -->
-		<bitfield name="FRAGCOORDXYREGID" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="BARY_IJ_PIXEL" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="BARY_IJ_CENTROID" low="16" high="23" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xb985" name="HLSQ_CONTROL_4_REG">
+		<bitfield name="BARY_IJ_PIXEL_PERSAMP" low="0" high="7" type="a3xx_regid"/>
 		<bitfield name="XYCOORDREGID" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="ZWCOORDREGID" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
