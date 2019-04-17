@@ -89,7 +89,8 @@ static int current_draw_count;
  */
 static char **querystrs;
 static int *queryvals;
-int nquery;
+static int nquery;
+static bool disasm;
 
 static char *script;
 
@@ -767,6 +768,14 @@ static void dump_register_val(uint32_t regbase, uint32_t dword, int level)
 					gpubaseaddr(gpuaddr),
 					gpuaddr - gpubaseaddr(gpuaddr),
 					hostlen(gpubaseaddr(gpuaddr)));
+
+			if (disasm && (gpu_id >= 300)) {
+				/* low bits of gpuaddr are actually some other bitfield: */
+				gpuaddr &= ~0xf;
+				printf("\n");
+				disasm_a3xx(hostptr(gpuaddr), hostlen(gpuaddr) / 4,
+						level + 1, stdout, gpu_id);
+			}
 		}
 
 		printf("\n");
@@ -2437,6 +2446,8 @@ static void print_usage(const char *name)
 	printf("                        each draw; multiple --query/-q args can be given to\n");
 	printf("                        dump multiple registers; register can be specified\n");
 	printf("                        either by name or numeric offset\n");
+	printf("    --disasm/-d       - combine with query mode, disassembles shader referenced\n");
+	printf("                        by queried register\n");
 	printf("    --help            - show this message\n");
 }
 
@@ -2512,7 +2523,7 @@ int main(int argc, char **argv)
 
 	while (n < argc) {
 		if (!strcmp(argv[n], "--verbose")) {
-			disasm_set_debug(PRINT_RAW);
+			disasm_set_debug(PRINT_RAW | EXPAND_REPEAT | PRINT_VERBOSE);
 			n++;
 			continue;
 		}
@@ -2603,6 +2614,13 @@ int main(int argc, char **argv)
 			continue;
 		}
 
+		if (!strcmp(argv[n], "--disasm") ||
+				!strcmp(argv[n], "-d")) {
+			n++;
+			disasm = true;
+			continue;
+		}
+
 		if (!strcmp(argv[n], "--help")) {
 			n++;
 			print_usage(argv[0]);
@@ -2610,6 +2628,12 @@ int main(int argc, char **argv)
 		}
 
 		break;
+	}
+
+	if (disasm && (nquery == 0)) {
+		printf("disasm mode only valid with query!\n");
+		print_usage(argv[0]);
+		return 0;
 	}
 
 	if (interactive) {
