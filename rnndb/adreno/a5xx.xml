@@ -2974,4 +2974,14 @@ with a better name.
 	</reg32>
 </domain>
 
+<domain name="A5XX_UBO" width="32">
+	<reg32 offset="0" name="0">
+		<bitfield name="BASE_LO" low="0" high="31"/>
+	</reg32>
+	<reg32 offset="1" name="1">
+		<bitfield name="BASE_HI" low="0" high="16"/>
+		<!-- size probably in high bits -->
+	</reg32>
+</domain>
+
 </database>

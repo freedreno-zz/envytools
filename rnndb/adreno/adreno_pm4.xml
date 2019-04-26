@@ -510,6 +510,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	<enum name="a4xx_state_type">
 		<value name="ST4_SHADER" value="0"/>
 		<value name="ST4_CONSTANTS" value="1"/>
+		<value name="ST4_UBO" value="2"/>
 	</enum>
 	<enum name="a4xx_state_src">
 		<value name="SS4_DIRECT" value="0"/>
@@ -552,6 +553,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	<enum name="a6xx_state_type">
 		<value name="ST6_SHADER" value="0"/>
 		<value name="ST6_CONSTANTS" value="1"/>
+		<value name="ST6_UBO" value="2"/>
 		<value name="ST6_IBO" value="3"/>
 	</enum>
 	<enum name="a6xx_state_src">
