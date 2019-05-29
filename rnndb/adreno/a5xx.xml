@@ -1523,6 +1523,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 	<reg32 offset="0x0e00" name="HLSQ_TIMEOUT_THRESHOLD_0"/>
 	<reg32 offset="0x0e01" name="HLSQ_TIMEOUT_THRESHOLD_1"/>
+	<reg32 offset="0x0e04" name="HLSQ_DBG_ECO_CNTL"/>
 	<reg32 offset="0x0e05" name="HLSQ_ADDR_MODE_CNTL"/>
 	<reg32 offset="0x0e06" name="HLSQ_MODE_CNTL"/> <!-- always 00000001? -->
 	<reg32 offset="0x0e10" name="HLSQ_PERFCTR_HLSQ_SEL_0" type="a5xx_hlsq_perfcounter_select"/>
