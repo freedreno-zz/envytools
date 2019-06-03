@@ -10,7 +10,7 @@ if (NOT "${LUA_FOUND}")
 endif()
 pkg_check_modules(LIBARCHIVE REQUIRED libarchive)
 
-include_directories(${LUA_INCLUDE_DIR} ${LIBARCHIVE_INCLUDE_DIR})
+include_directories(${LUA_INCLUDE_DIRS} ${LIBARCHIVE_INCLUDE_DIRS})
 
 add_library(util disasm-a2xx.c disasm-a3xx.c io.c rnnutil.c)
 
