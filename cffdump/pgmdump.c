@@ -585,7 +585,7 @@ printf("hdr_size=%d\n", hdr_size);
 			instrs_size -= 32;
 		}
 
-		disasm_a3xx((uint32_t *)instrs, instrs_size / 4, level+1, SHADER_VERTEX);
+		disasm_a3xx((uint32_t *)instrs, instrs_size / 4, level+1, SHADER_VERTEX, gpu_id);
 		dump_raw_shader((uint32_t *)instrs, instrs_size / 4, i, "vo3");
 		free(vs_hdr);
 	}
@@ -664,7 +664,7 @@ printf("hdr_size=%d\n", hdr_size);
 				instrs_size -= 32;
 			}
 		}
-		disasm_a3xx((uint32_t *)instrs, instrs_size / 4, level+1, stdout);
+		disasm_a3xx((uint32_t *)instrs, instrs_size / 4, level+1, stdout, gpu_id);
 		dump_raw_shader((uint32_t *)instrs, instrs_size / 4, i, "fo3");
 		free(fs_hdr);
 	}
@@ -1003,7 +1003,7 @@ int main(int argc, char **argv)
 			return disasm_a2xx(buf, ret/4, 0, shader);
 		} else {
 			/* disassembly does not depend on shader stage on a3xx+: */
-			return disasm_a3xx(buf, ret/4, 0, stdout);
+			return disasm_a3xx(buf, ret/4, 0, stdout, gpu_id);
 		}
 	}
 

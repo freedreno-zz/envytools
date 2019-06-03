@@ -54,7 +54,7 @@
 const char *infile;
 static int dump_full = 0;
 static int dump_offsets = 0;
-
+static int gpu_id = 320;
 
 struct state {
 	char *buf;
@@ -302,7 +302,7 @@ static void decode_shader_descriptor_block(struct state *state,
 			break;
 		case SHADER:
 			printf("%sshader %u:\n", tab(state->lvl-1), i);
-			disasm_a3xx(ptr, blk->size/4, state->lvl, stdout);
+			disasm_a3xx(ptr, blk->size/4, state->lvl, stdout, gpu_id);
 			/* this is a special case in a way, blk->count is # of
 			 * instructions but disasm_a3xx() decodes all instructions,
 			 * so just bail.
@@ -447,7 +447,7 @@ int main(int argc, char **argv)
 			fprintf(stderr, "error: %m");
 			return -1;
 		}
-		return disasm_a3xx(buf, ret/4, 0, stdout);
+		return disasm_a3xx(buf, ret/4, 0, stdout, gpu_id);
 	}
 
 	while ((io_readn(io, &type, sizeof(type)) > 0) && (io_readn(io, &sz, 4) > 0)) {
