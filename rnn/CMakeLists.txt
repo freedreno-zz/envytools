@@ -13,6 +13,7 @@ pkg_check_modules(LIBDRM REQUIRED libdrm_freedreno)
 
 find_path(LIBICONV_INCLUDE_DIR iconv.h)
 include_directories(${LIBXML2_INCLUDE_DIR} ${LIBICONV_INCLUDE_DIR} ${CURSES_INCLUDE_DIR} ${LIBDRM_INCLUDE_DIRS})
+link_directories(${LIBCONFIG_LIBRARY_DIRS} ${LIBDRM_LIBRARY_DIRS})
 
 configure_file(rnn_path.h.in rnn_path.h ESCAPE_QUOTES)
 include_directories(${PROJECT_BINARY_DIR})
