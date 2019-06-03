@@ -4,7 +4,10 @@ cmake_minimum_required(VERSION 2.6)
 include_directories(${PROJECT_BINARY_DIR})
 
 find_package(PkgConfig)
-pkg_check_modules(LUA REQUIRED lua)
+pkg_check_modules(LUA lua52)
+if (NOT "${LUA_FOUND}")
+  pkg_check_modules(LUA lua)
+endif()
 pkg_check_modules(LIBARCHIVE REQUIRED libarchive)
 
 include_directories(${LUA_INCLUDE_DIR} ${LIBARCHIVE_INCLUDE_DIR})
