@@ -59,6 +59,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="DI_PT_LINESTRIP_ADJ" value="0xb"/>
 	<value name="DI_PT_TRI_ADJ" value="0xc"/>
 	<value name="DI_PT_TRISTRIP_ADJ" value="0xd"/>
+	<value name="DI_PT_PATCHES" value="0x29"/>
 </enum>
 
 <enum name="pc_di_src_sel">
@@ -311,7 +312,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value name="CP_YIELD_ENABLE" value="0x1c" variants="A5XX"/>
 	<value name="CP_SKIP_IB2_ENABLE_GLOBAL" value="0x1d" variants="A5XX,A6XX"/>
 	<value name="CP_SKIP_IB2_ENABLE_LOCAL" value="0x23" variants="A5XX,A6XX"/>
-	<value name="CP_SET_SUBDRAW_SIZE" value="0x35" variants="A5XX"/>
+	<value name="CP_SET_SUBDRAW_SIZE" value="0x35" variants="A5XX,A6XX"/>
 	<value name="CP_SET_VISIBILITY_OVERRIDE" value="0x64" variants="A5XX,A6XX"/>
 	<!-- Enable/Disable/Defer A5x global preemption model -->
 	<value name="CP_PREEMPT_ENABLE_GLOBAL" value="0x69" variants="A5XX"/>
@@ -593,13 +594,20 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	<value name="INDEX4_SIZE_32_BIT" value="2"/>
 </enum>
 
+<enum name="a6xx_patch_type">
+  <value name="TESS_QUADS" value="0"/>
+  <value name="TESS_TRIANGLES" value="1"/>
+  <value name="TESS_ISOLINES" value="2"/>
+</enum>
+
 <bitset name="vgt_draw_initiator_a4xx" inline="yes">
 	<!-- When the 0x20 bit is set, it's the number of patch vertices - 1 -->
 	<bitfield name="PRIM_TYPE" low="0" high="5" type="pc_di_primtype"/>
 	<bitfield name="SOURCE_SELECT" low="6" high="7" type="pc_di_src_sel"/>
 	<bitfield name="VIS_CULL" low="8" high="9" type="pc_di_vis_cull_mode"/>
 	<bitfield name="INDEX_SIZE" low="10" high="11" type="a4xx_index_size"/>
-	<bitfield name="TESS_MODE" low="20" high="24"/>
+	<bitfield name="PATCH_TYPE" low="12" high="13" type="a6xx_patch_type"/>
+	<bitfield name="TESS_ENABLE" pos="17" type="boolean"/>
 </bitset>
 
 <domain name="CP_DRAW_INDX" width="32">

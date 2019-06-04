@@ -2382,6 +2382,25 @@ to upconvert to 32b float internally?
 		 -->
 		<bitfield name="PSIZELOC" low="16" high="23" type="uint"/>
 	</reg32>
+
+	<reg32 offset="0x9303" name="VPC_PACK_3">
+		<doc>
+		  domain shader version
+
+			num of varyings plus four for gl_Position (plus one if gl_PointSize)
+			plus # of transform-feedback (streamout) varyings if using the
+			hw streamout (rather than stg instructions in shader)
+		</doc>
+		<bitfield name="STRIDE_IN_VPC" low="0" high="7" type="uint"/>
+		<bitfield name="NUMNONPOSVAR" low="8" high="15" type="uint"/>
+		<!--
+		This seems to be the OUTLOC for the psize output.  It could possibly
+		be the max-OUTLOC position, but it is only set when VS writes psize
+		(and blob always puts psize at highest OUTLOC)
+		 -->
+		<bitfield name="PSIZELOC" low="16" high="23" type="uint"/>
+	</reg32>
+
 	<reg32 offset="0x9304" name="VPC_CNTL_0">
 		<bitfield name="NUMNONPOSVAR" low="0" high="7" type="uint"/>
 		<bitfield name="VARYING" pos="16" type="boolean"/>
@@ -2403,8 +2422,22 @@ to upconvert to 32b float internally?
 	<!-- always 0x0 ? -->
 	<reg32 offset="0x9602" name="VPC_UNKNOWN_9602"/>
 
+	<reg32 offset="0x9800" name="PC_TESS_NUM_VERTEX"/>
+
 	<!-- always 0x0 ? -->
 	<reg32 offset="0x9801" name="PC_UNKNOWN_9801"/>
+
+	<enum name="a6xx_tess_spacing">
+	  <value value="0x0" name="TESS_EQUAL"/>
+	  <value value="0x2" name="TESS_FRACTIONAL_ODD"/>
+	  <value value="0x3" name="TESS_FRACTIONAL_EVEN"/>
+	</enum>
+
+	<reg32 offset="0x9802" name="PC_TESS_CNTL">
+	  <bitfield name="SPACING" low="0" high="1" type="a6xx_tess_spacing"/>
+	  <bitfield name="CCW" pos="2" type="boolean"/>
+	  <bitfield name="PRIMITIVES" pos="3" type="boolean"/>
+	</reg32>
 
 	<!-- probably: -->
 	<reg32 offset="0x9803" name="PC_RESTART_INDEX"/>
@@ -2426,6 +2459,30 @@ to upconvert to 32b float internally?
 	</reg32>
 	<reg32 offset="0x9b01" name="PC_PRIMITIVE_CNTL_1">
 		<doc>
+		        vertex shader
+
+			num of varyings plus four for gl_Position (plus one if gl_PointSize)
+			plus # of transform-feedback (streamout) varyings if using the
+			hw streamout (rather than stg instructions in shader)
+		</doc>
+		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
+		<bitfield name="PSIZE" pos="8" type="boolean"/>
+	</reg32>
+
+	<reg32 offset="0x9b03" name="PC_PRIMITIVE_CNTL_3">
+		<doc>
+		        hull shader?
+
+			num of varyings plus four for gl_Position (plus one if gl_PointSize)
+			plus # of transform-feedback (streamout) varyings if using the
+			hw streamout (rather than stg instructions in shader)
+		</doc>
+		<bitfield name="STRIDE_IN_VPC" low="0" high="6" type="uint"/>
+		<bitfield name="PSIZE" pos="8" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x9b04" name="PC_PRIMITIVE_CNTL_4">
+		<doc>
+		        domain shader
 			num of varyings plus four for gl_Position (plus one if gl_PointSize)
 			plus # of transform-feedback (streamout) varyings if using the
 			hw streamout (rather than stg instructions in shader)
@@ -2453,10 +2510,11 @@ to upconvert to 32b float internally?
 		<bitfield name="REGID4PRIMID" low="16" high="23" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xa002" name="VFD_CONTROL_2">
-		<bitfield name="REGID_PATCHID" low="0" high="7" type="a3xx_regid"/><!-- same as VFD_CONTROL_3.REGID_PATCHID? -->
+		<bitfield name="REGID_HSPATCHID" low="0" high="7" type="a3xx_regid"/>
+		<bitfield name="REGID_INVOCATIONID" low="8" high="15" type="a3xx_regid"/>
 	</reg32>
 	<reg32 offset="0xa003" name="VFD_CONTROL_3">
-		<bitfield name="REGID_PATCHID" low="8" high="15" type="a3xx_regid"/>
+		<bitfield name="REGID_DSPATCHID" low="8" high="15" type="a3xx_regid"/>
 		<bitfield name="REGID_TESSX" low="16" high="23" type="a3xx_regid"/>
 		<bitfield name="REGID_TESSY" low="24" high="31" type="a3xx_regid"/>
 	</reg32>
@@ -2579,6 +2637,7 @@ to upconvert to 32b float internally?
 
 	<reg32 offset="0xa830" name="SP_HS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
 	<reg32 offset="0xa831" name="SP_HS_UNKNOWN_A831"/>
+	<reg32 offset="0xa833" name="SP_HS_UNKNOWN_A833"/>
 	<reg32 offset="0xa834" name="SP_HS_OBJ_START_LO"/>
 	<reg32 offset="0xa835" name="SP_HS_OBJ_START_HI"/>
 	<reg32 offset="0xa83a" name="SP_HS_TEX_COUNT" type="uint"/>
@@ -2586,6 +2645,28 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xa83c" name="SP_HS_INSTRLEN" type="uint"/>
 
 	<reg32 offset="0xa840" name="SP_DS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
+	<reg32 offset="0xa842" name="SP_DS_PRIMITIVE_CNTL">
+		<!-- # of DS outputs including pos/psize -->
+		<bitfield name="DSOUT" low="0" high="4" type="uint"/>
+	</reg32>
+	<array offset="0xa843" name="SP_DS_OUT" stride="1" length="16">
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="A_REGID" low="0" high="7" type="a3xx_regid"/>
+			<bitfield name="A_COMPMASK" low="8" high="11" type="hex"/>
+			<bitfield name="B_REGID" low="16" high="23" type="a3xx_regid"/>
+			<bitfield name="B_COMPMASK" low="24" high="27" type="hex"/>
+		</reg32>
+	</array>
+	<array offset="0xa853" name="SP_DS_VPC_DST" stride="1" length="8">
+		<reg32 offset="0x0" name="REG">
+			<bitfield name="OUTLOC0" low="0" high="7" type="uint"/>
+			<bitfield name="OUTLOC1" low="8" high="15" type="uint"/>
+			<bitfield name="OUTLOC2" low="16" high="23" type="uint"/>
+			<bitfield name="OUTLOC3" low="24" high="31" type="uint"/>
+		</reg32>
+	</array>
+
+	<reg32 offset="0xa85b" name="SP_DS_UNKNOWN_A85B"/>
 	<reg32 offset="0xa85c" name="SP_DS_OBJ_START_LO"/>
 	<reg32 offset="0xa85d" name="SP_DS_OBJ_START_HI"/>
 	<reg32 offset="0xa862" name="SP_DS_TEX_COUNT" type="uint"/>
