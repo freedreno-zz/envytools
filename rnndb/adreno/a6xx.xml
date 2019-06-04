@@ -1212,12 +1212,6 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x0468" name="RBBM_PERFCTR_TSE_1_LO"/>
 	<reg32 offset="0x0469" name="RBBM_PERFCTR_TSE_1_HI"/>
 	<reg32 offset="0x046a" name="RBBM_PERFCTR_TSE_2_LO"/>
-	<reg32 offset="0x0465" name="RBBM_PERFCTR_CCU_4_HI"/>
-	<reg32 offset="0x0466" name="RBBM_PERFCTR_TSE_0_LO"/>
-	<reg32 offset="0x0467" name="RBBM_PERFCTR_TSE_0_HI"/>
-	<reg32 offset="0x0468" name="RBBM_PERFCTR_TSE_1_LO"/>
-	<reg32 offset="0x0469" name="RBBM_PERFCTR_TSE_1_HI"/>
-	<reg32 offset="0x046a" name="RBBM_PERFCTR_TSE_2_LO"/>
 	<reg32 offset="0x046b" name="RBBM_PERFCTR_TSE_2_HI"/>
 	<reg32 offset="0x046c" name="RBBM_PERFCTR_TSE_3_LO"/>
 	<reg32 offset="0x046d" name="RBBM_PERFCTR_TSE_3_HI"/>
