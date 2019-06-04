@@ -184,7 +184,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>selective invalidation of state pointers</doc>
 	<value name="CP_INVALIDATE_STATE" value="0x3b"/>
 	<doc>dynamically changes shader instruction memory partition</doc>
-	<value name="CP_SET_SHADER_BASES" value="0x4a"/>
+	<value name="CP_SET_SHADER_BASES" value="0x4a" variants="A2XX,A3XX,A4XX"/>
 	<doc>sets the 64-bit BIN_MASK register in the PFP</doc>
 	<value name="CP_SET_BIN_MASK" value="0x50" variants="A2XX,A3XX,A4XX"/>
 	<doc>sets the 64-bit BIN_SELECT register in the PFP</doc>
@@ -225,7 +225,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<doc>Conditionally load a IB based on a flag, prefetch disabled</doc>
 	<value name="CP_COND_INDIRECT_BUFFER_PFD" value="0x32" variants="A3XX"/>
 	<doc>Load a buffer with pre-fetch enabled</doc>
-	<value name="CP_INDIRECT_BUFFER_PFE" value="0x3f"/>
+	<value name="CP_INDIRECT_BUFFER_PFE" value="0x3f" variants="A5XX"/>
 	<doc>Set bin (?)</doc>
 	<value name="CP_SET_BIN" value="0x4c"/>
 
