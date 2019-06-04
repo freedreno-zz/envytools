@@ -73,6 +73,60 @@ static int is_64b(void)
 	return gpu_id >= 500;
 }
 
+#define CP_TYPE0_PKT 0x00000000
+#define CP_TYPE2_PKT 0x80000000
+#define CP_TYPE3_PKT 0xc0000000
+#define CP_TYPE4_PKT 0x40000000
+#define CP_TYPE7_PKT 0x70000000
+
+#define pkt_is_type0(pkt) (((pkt) & 0XC0000000) == CP_TYPE0_PKT)
+#define type0_pkt_size(pkt) ((((pkt) >> 16) & 0x3FFF) + 1)
+#define type0_pkt_offset(pkt) ((pkt) & 0x7FFF)
+
+#define pkt_is_type2(pkt) ((pkt) == CP_TYPE2_PKT)
+
+/*
+ * Check both for the type3 opcode and make sure that the reserved bits [1:7]
+ * and 15 are 0
+ */
+
+static inline uint pm4_calc_odd_parity_bit(uint val)
+{
+	return (0x9669 >> (0xf & ((val) ^
+			((val) >> 4) ^ ((val) >> 8) ^ ((val) >> 12) ^
+			((val) >> 16) ^ ((val) >> 20) ^ ((val) >> 24) ^
+			((val) >> 28)))) & 1;
+}
+
+#define pkt_is_type3(pkt) \
+        ((((pkt) & 0xC0000000) == CP_TYPE3_PKT) && \
+         (((pkt) & 0x80FE) == 0))
+
+#define cp_type3_opcode(pkt) (((pkt) >> 8) & 0xFF)
+#define type3_pkt_size(pkt) ((((pkt) >> 16) & 0x3FFF) + 1)
+
+#define pkt_is_type4(pkt) \
+        ((((pkt) & 0xF0000000) == CP_TYPE4_PKT) && \
+         ((((pkt) >> 27) & 0x1) == \
+         pm4_calc_odd_parity_bit(type4_pkt_offset(pkt))) \
+         && ((((pkt) >> 7) & 0x1) == \
+         pm4_calc_odd_parity_bit(type4_pkt_size(pkt))))
+
+#define type4_pkt_offset(pkt) (((pkt) >> 8) & 0x7FFFF)
+#define type4_pkt_size(pkt) ((pkt) & 0x7F)
+
+#define pkt_is_type7(pkt) \
+        ((((pkt) & 0xF0000000) == CP_TYPE7_PKT) && \
+         (((pkt) & 0x0F000000) == 0) && \
+         ((((pkt) >> 23) & 0x1) == \
+         pm4_calc_odd_parity_bit(cp_type7_opcode(pkt))) \
+         && ((((pkt) >> 15) & 0x1) == \
+         pm4_calc_odd_parity_bit(type7_pkt_size(pkt))))
+
+#define cp_type7_opcode(pkt) (((pkt) >> 16) & 0x7F)
+#define type7_pkt_size(pkt) ((pkt) & 0x3FFF)
+
+
 /* note: not sure if CP_SET_DRAW_STATE counts as a complete extra level
  * of IB or if it is restricted to just have register writes:
  */
@@ -1811,7 +1865,10 @@ static void cp_mem_write(uint32_t *dwords, uint32_t sizedwords, int level)
 	if (is_64b()) {
 		uint64_t gpuaddr = dwords[0] | (((uint64_t)dwords[1]) << 32);
 		printf("%sgpuaddr:%016lx\n", levels[level], gpuaddr);
-		dump_float((float *)&dwords[2], sizedwords-2, level+1);
+		dump_hex(&dwords[2], sizedwords-2, level+1);
+
+		if (pkt_is_type4(dwords[2]) || pkt_is_type7(dwords[2]))
+			dump_commands(&dwords[2], sizedwords-2, level+1);
 	} else {
 		uint32_t gpuaddr = dwords[0];
 		printf("%sgpuaddr:%08x\n", levels[level], gpuaddr);
@@ -2245,60 +2302,6 @@ static const struct type3_op *get_type3_op(unsigned opc)
 
 	return &dummy_op;
 }
-
-static inline uint pm4_calc_odd_parity_bit(uint val)
-{
-	return (0x9669 >> (0xf & ((val) ^
-			((val) >> 4) ^ ((val) >> 8) ^ ((val) >> 12) ^
-			((val) >> 16) ^ ((val) >> 20) ^ ((val) >> 24) ^
-			((val) >> 28)))) & 1;
-}
-
-#define CP_TYPE0_PKT 0x00000000
-#define CP_TYPE2_PKT 0x80000000
-#define CP_TYPE3_PKT 0xc0000000
-#define CP_TYPE4_PKT 0x40000000
-#define CP_TYPE7_PKT 0x70000000
-
-#define pkt_is_type0(pkt) (((pkt) & 0XC0000000) == CP_TYPE0_PKT)
-#define type0_pkt_size(pkt) ((((pkt) >> 16) & 0x3FFF) + 1)
-#define type0_pkt_offset(pkt) ((pkt) & 0x7FFF)
-
-#define pkt_is_type2(pkt) ((pkt) == CP_TYPE2_PKT)
-
-/*
- * Check both for the type3 opcode and make sure that the reserved bits [1:7]
- * and 15 are 0
- */
-
-#define pkt_is_type3(pkt) \
-        ((((pkt) & 0xC0000000) == CP_TYPE3_PKT) && \
-         (((pkt) & 0x80FE) == 0))
-
-#define cp_type3_opcode(pkt) (((pkt) >> 8) & 0xFF)
-#define type3_pkt_size(pkt) ((((pkt) >> 16) & 0x3FFF) + 1)
-
-#define pkt_is_type4(pkt) \
-        ((((pkt) & 0xF0000000) == CP_TYPE4_PKT) && \
-         ((((pkt) >> 27) & 0x1) == \
-         pm4_calc_odd_parity_bit(type4_pkt_offset(pkt))) \
-         && ((((pkt) >> 7) & 0x1) == \
-         pm4_calc_odd_parity_bit(type4_pkt_size(pkt))))
-
-#define type4_pkt_offset(pkt) (((pkt) >> 8) & 0x7FFFF)
-#define type4_pkt_size(pkt) ((pkt) & 0x7F)
-
-#define pkt_is_type7(pkt) \
-        ((((pkt) & 0xF0000000) == CP_TYPE7_PKT) && \
-         (((pkt) & 0x0F000000) == 0) && \
-         ((((pkt) >> 23) & 0x1) == \
-         pm4_calc_odd_parity_bit(cp_type7_opcode(pkt))) \
-         && ((((pkt) >> 15) & 0x1) == \
-         pm4_calc_odd_parity_bit(type7_pkt_size(pkt))))
-
-#define cp_type7_opcode(pkt) (((pkt) >> 16) & 0x7F)
-#define type7_pkt_size(pkt) ((pkt) & 0x3FFF)
-
 
 static void dump_commands(uint32_t *dwords, uint32_t sizedwords, int level)
 {
