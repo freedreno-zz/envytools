@@ -2241,6 +2241,11 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x88db" name="RB_BLIT_DST_ARRAY_PITCH" shr="6" type="uint"/>
 	<reg32 offset="0x88dc" name="RB_BLIT_FLAG_DST_LO"/>
 	<reg32 offset="0x88dd" name="RB_BLIT_FLAG_DST_HI"/>
+	<reg32 offset="0x88de" name="RB_BLIT_FLAG_DST_PITCH">
+		<bitfield name="PITCH" low="0" high="10" shr="6" type="uint"/>
+		<bitfield name="ARRAY_PITCH" low="11" high="21" shr="7" type="uint"/>
+	</reg32>
+
 	<reg32 offset="0x88df" name="RB_BLIT_CLEAR_COLOR_DW0"/>
 	<reg32 offset="0x88e0" name="RB_BLIT_CLEAR_COLOR_DW1"/>
 	<reg32 offset="0x88e1" name="RB_BLIT_CLEAR_COLOR_DW2"/>
@@ -2269,6 +2274,8 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x8900" name="RB_DEPTH_FLAG_BUFFER_BASE_LO"/>
 	<reg32 offset="0x8901" name="RB_DEPTH_FLAG_BUFFER_BASE_HI"/>
 	<reg32 offset="0x8902" name="RB_DEPTH_FLAG_BUFFER_PITCH">
+		<bitfield name="PITCH" low="0" high="10" shr="6" type="uint"/>
+		<bitfield name="ARRAY_PITCH" low="11" high="21" shr="7" type="uint"/>
 	</reg32>
 	<array offset="0x8903" name="RB_MRT_FLAG_BUFFER" stride="3" length="8">
 		<reg32 offset="0" name="ADDR_LO"/>
@@ -2872,6 +2879,10 @@ to upconvert to 32b float internally?
 
 	<reg32 offset="0xb4ca" name="SP_PS_2D_SRC_FLAGS_LO"/>
 	<reg32 offset="0xb4cb" name="SP_PS_2D_SRC_FLAGS_HI"/>
+	<reg32 offset="0xb4cc" name="SP_PS_2D_SRC_FLAGS_PITCH">
+		<bitfield name="PITCH" low="0" high="10" shr="6" type="uint"/>
+		<bitfield name="ARRAY_PITCH" low="11" high="21" shr="7" type="uint"/>
+	</reg32>
 
 	<!-- always 0x00100000 ? -->
 	<reg32 offset="0xb600" name="SP_UNKNOWN_B600"/>
