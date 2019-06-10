@@ -2306,6 +2306,10 @@ to upconvert to 32b float internally?
 
 	<reg32 offset="0x8c20" name="RB_2D_DST_FLAGS_LO"/>
 	<reg32 offset="0x8c21" name="RB_2D_DST_FLAGS_HI"/>
+	<reg32 offset="0x8c22" name="RB_2D_DST_FLAGS_PITCH">
+		<bitfield name="PITCH" low="0" high="10" shr="6" type="uint"/>
+		<bitfield name="ARRAY_PITCH" low="11" high="21" shr="7" type="uint"/>
+	</reg32>
 
 	<!-- unlike a5xx, these are per channel values rather than packed -->
 	<reg32 offset="0x8c2c" name="RB_2D_SRC_SOLID_C0"/>
