@@ -52,6 +52,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x82" name="RB6_R32G32B32A32_FLOAT"/>
 	<value value="0x83" name="RB6_R32G32B32A32_UINT"/>
 	<value value="0x84" name="RB6_R32G32B32A32_SINT"/>
+	<value value="0x91" name="RB6_Z24_UNORM_S8_UINT"/>
 	<value value="0xa0" name="RB6_X8Z24_UNORM"/>
 </enum>
 
@@ -194,6 +195,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x82" name="TFMT6_32_32_32_32_FLOAT"/>
 	<value value="0x83" name="TFMT6_32_32_32_32_UINT"/>
 	<value value="0x84" name="TFMT6_32_32_32_32_SINT"/>
+	<value value="0x91" name="TFMT6_Z24_UNORM_S8_UINT"/>
 	<value value="0xa0" name="TFMT6_X8Z24_UNORM"/>
 
 	<value value="0xab" name="TFMT6_ETC2_RG11_UNORM"/>
