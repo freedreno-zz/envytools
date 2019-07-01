@@ -92,7 +92,31 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 
 	<reg32 offset="0x00008" name="FIFO_STATUS">
+		<bitfield name="VIDEO_MDP_FIFO_OVERFLOW" pos="0" type="boolean"/>
+		<bitfield name="VIDEO_MDP_FIFO_UNDERFLOW" pos="3" type="boolean"/>
 		<bitfield name="CMD_MDP_FIFO_UNDERFLOW" pos="7" type="boolean"/>
+		<bitfield name="CMD_DMA_FIFO_RD_WATERMARK_REACH" pos="8" type="boolean"/>
+		<bitfield name="CMD_DMA_FIFO_WR_WATERMARK_REACH" pos="9" type="boolean"/>
+		<bitfield name="CMD_DMA_FIFO_UNDERFLOW" pos="10" type="boolean"/>
+		<bitfield name="DLN0_LP_FIFO_EMPTY"     pos="12" type="boolean"/>
+		<bitfield name="DLN0_LP_FIFO_FULL"      pos="13" type="boolean"/>
+		<bitfield name="DLN0_LP_FIFO_OVERFLOW"  pos="14" type="boolean"/>
+		<bitfield name="DLN0_HS_FIFO_EMPTY"     pos="16" type="boolean"/>
+		<bitfield name="DLN0_HS_FIFO_FULL"      pos="17" type="boolean"/>
+		<bitfield name="DLN0_HS_FIFO_OVERFLOW"  pos="18" type="boolean"/>
+		<bitfield name="DLN0_HS_FIFO_UNDERFLOW" pos="19" type="boolean"/>
+		<bitfield name="DLN1_HS_FIFO_EMPTY"     pos="20" type="boolean"/>
+		<bitfield name="DLN1_HS_FIFO_FULL"      pos="21" type="boolean"/>
+		<bitfield name="DLN1_HS_FIFO_OVERFLOW"  pos="22" type="boolean"/>
+		<bitfield name="DLN1_HS_FIFO_UNDERFLOW" pos="23" type="boolean"/>
+		<bitfield name="DLN2_HS_FIFO_EMPTY"     pos="24" type="boolean"/>
+		<bitfield name="DLN2_HS_FIFO_FULL"      pos="25" type="boolean"/>
+		<bitfield name="DLN2_HS_FIFO_OVERFLOW"  pos="26" type="boolean"/>
+		<bitfield name="DLN2_HS_FIFO_UNDERFLOW" pos="27" type="boolean"/>
+		<bitfield name="DLN3_HS_FIFO_EMPTY"     pos="28" type="boolean"/>
+		<bitfield name="DLN3_HS_FIFO_FULL"      pos="29" type="boolean"/>
+		<bitfield name="DLN3_HS_FIFO_OVERFLOW"  pos="30" type="boolean"/>
+		<bitfield name="DLN3_HS_FIFO_UNDERFLOW" pos="31" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x0000c" name="VID_CFG0">
 		<bitfield name="VIRT_CHANNEL" low="0" high="1" type="uint"/>  <!-- always zero? -->
@@ -156,14 +180,23 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x00044" name="DMA_BASE"/>
 	<reg32 offset="0x00048" name="DMA_LEN"/>
-	<reg32 offset="0x00054" name="CMD_MDP_STREAM_CTRL">
+	<reg32 offset="0x00054" name="CMD_MDP_STREAM0_CTRL">
 		<bitfield name="DATA_TYPE" low="0" high="5" type="uint"/>
 		<bitfield name="VIRTUAL_CHANNEL" low="8" high="9" type="uint"/>
 		<bitfield name="WORD_COUNT" low="16" high="31" type="uint"/>
 	</reg32>
-	<reg32 offset="0x00058" name="CMD_MDP_STREAM_TOTAL">
+	<reg32 offset="0x00058" name="CMD_MDP_STREAM0_TOTAL">
 		<bitfield name="H_TOTAL" low="0" high="11" type="uint"/>
 		<bitfield name="V_TOTAL" low="16" high="27" type="uint"/>
+	</reg32>
+	<reg32 offset="0x0005c" name="CMD_MDP_STREAM1_CTRL">
+		<bitfield name="DATA_TYPE" low="0" high="5" type="uint"/>
+		<bitfield name="VIRTUAL_CHANNEL" low="8" high="9" type="uint"/>
+		<bitfield name="WORD_COUNT" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x00060" name="CMD_MDP_STREAM1_TOTAL">
+		<bitfield name="H_TOTAL" low="0" high="15" type="uint"/>
+		<bitfield name="V_TOTAL" low="16" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x00064" name="ACK_ERR_STATUS"/>
 	<array offset="0x00068" name="RDBK" length="4" stride="4">
@@ -184,6 +217,15 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="DLN0_ERR_CONTENTION_LP0" pos="12" type="boolean"/>
 		<bitfield name="DLN0_ERR_CONTENTION_LP1" pos="16" type="boolean"/>
 	</reg32>
+	<reg32 offset="0x000b4" name="LP_TIMER_CTRL">
+		<bitfield name="LP_RX_TO" low="0" high="15" type="uint"/>
+		<bitfield name="BTA_TO" low="16" high="31" type="uint"/>
+	</reg32>
+	<reg32 offset="0x000b8" name="HS_TIMER_CTRL">
+		<bitfield name="HS_TX_TO" low="0" high="15" type="uint"/>
+		<bitfield name="TIMER_RESOLUTION" low="16" high="19" type="uint"/>
+		<bifield name="HS_TX_TO_STOP_EN" pos="28" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x000bc" name="TIMEOUT_STATUS"/>
 	<reg32 offset="0x000c0" name="CLKOUT_TIMING_CTRL">
 		<bitfield name="T_CLK_PRE" low="0" high="5" type="uint"/>
@@ -192,6 +234,19 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x000c8" name="EOT_PACKET_CTRL">
 		<bitfield name="TX_EOT_APPEND" pos="0" type="boolean"/>
 		<bitfield name="RX_EOT_IGNORE" pos="4" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x000a4" name="LANE_STATUS">
+		<bitfield name="DLN0_STOPSTATE" pos="0" type="boolean"/>
+		<bitfield name="DLN1_STOPSTATE" pos="1" type="boolean"/>
+		<bitfield name="DLN2_STOPSTATE" pos="2" type="boolean"/>
+		<bitfield name="DLN3_STOPSTATE" pos="3" type="boolean"/>
+		<bitfield name="CLKLN_STOPSTATE" pos="4" type="boolean"/>
+		<bitfield name="DLN0_ULPS_ACTIVE_NOT" pos="8" type="boolean"/>
+		<bitfield name="DLN1_ULPS_ACTIVE_NOT" pos="9" type="boolean"/>
+		<bitfield name="DLN2_ULPS_ACTIVE_NOT" pos="10" type="boolean"/>
+		<bitfield name="DLN3_ULPS_ACTIVE_NOT" pos="11" type="boolean"/>
+		<bitfield name="CLKLN_ULPS_ACTIVE_NOT" pos="12" type="boolean"/>
+		<bitfield name="DLN0_DIRECTION" pos="16" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x000a8" name="LANE_CTRL">
 		<bitfield name="CLKLN_HS_FORCE_REQUEST" pos="28" type="boolean"/>
@@ -212,6 +267,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<bitfield name="FORCE_ON_DYN_AHBM_HCLK" pos="9" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x0011c" name="CLK_STATUS">
+		<bitfield name="DSI_AON_AHBM_HCLK_ACTIVE" pos="0" type="boolean"/>
+		<bitfield name="DSI_DYN_AHBM_HCLK_ACTIVE" pos="1" type="boolean"/>
+		<bitfield name="DSI_AON_AHBS_HCLK_ACTIVE" pos="2" type="boolean"/>
+		<bitfield name="DSI_DYN_AHBS_HCLK_ACTIVE" pos="3" type="boolean"/>
+		<bitfield name="DSI_AON_DSICLK_ACTIVE" pos="4" type="boolean"/>
+		<bitfield name="DSI_DYN_DSICLK_ACTIVE" pos="5" type="boolean"/>
+		<bitfield name="DSI_AON_BYTECLK_ACTIVE" pos="6" type="boolean"/>
+		<bitfield name="DSI_DYN_BYTECLK_ACTIVE" pos="7" type="boolean"/>
+		<bitfield name="DSI_AON_ESCCLK_ACTIVE" pos="8" type="boolean"/>
+		<bitfield name="DSI_AON_PCLK_ACTIVE" pos="9" type="boolean"/>
+		<bitfield name="DSI_DYN_PCLK_ACTIVE" pos="10" type="boolean"/>
+		<bitfield name="DSI_DYN_CMD_PCLK_ACTIVE" pos="12" type="boolean"/>
+		<bitfield name="DSI_CMD_PCLK_ACTIVE" pos="13" type="boolean"/>
+		<bitfield name="DSI_VID_PCLK_ACTIVE" pos="14" type="boolean"/>
+		<bitfield name="DSI_CAM_BIST_PCLK_ACT" pos="15" type="boolean"/>
 		<bitfield name="PLL_UNLOCKED" pos="16" type="boolean"/>
 	</reg32>
 	<reg32 offset="0x00128" name="PHY_RESET">
@@ -219,6 +289,21 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x0017c" name="T_CLK_PRE_EXTEND">
 		<bitfield name="INC_BY_2_BYTECLK" pos="0" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x001b4" name="CMD_MODE_MDP_CTRL2">
+		<bitfield name="DST_FORMAT2" low="0" high="3" type="dsi_cmd_dst_format"/>
+		<bitfield name="R_SEL" pos="4" type="boolean"/>
+		<bitfield name="G_SEL" pos="5" type="boolean"/>
+		<bitfield name="B_SEL" pos="6" type="boolean"/>
+		<bitfield name="BYTE_MSB_LSB_FLIP" pos="7" type="boolean"/>
+		<bitfield name="RGB_SWAP" low="8" high="10" type="dsi_rgb_swap"/>
+		<bitfield name="INPUT_RGB_SWAP" low="12" high="14" type="dsi_rgb_swap"/>
+		<bitfield name="BURST_MODE" pos="16" type="boolean"/>
+	</reg32>
+	<reg32 offset="0x001b8" name="CMD_MODE_MDP_STREAM2_CTRL">
+		<bitfield name="DATA_TYPE" low="0" high="5" type="uint"/>
+		<bitfield name="VIRTUAL_CHANNEL" low="8" high="9" type="uint"/>
+		<bitfield name="WORD_COUNT" low="16" high="31" type="uint"/>
 	</reg32>
 	<reg32 offset="0x001d0" name="RDBK_DATA_CTRL">
 		<bitfield name="COUNT" low="16" high="23" type="uint"/>
