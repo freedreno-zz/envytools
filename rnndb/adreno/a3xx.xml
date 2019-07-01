@@ -8,7 +8,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 
 <enum name="a3xx_tile_mode">
 	<value name="LINEAR" value="0"/>
-	<value name="TILE_32X32" value="2"/>
+	<value name="TILE_4X4" value="1"/>    <!-- "normal" case for textures -->
+	<value name="TILE_32X32" value="2"/>  <!-- only used in GMEM -->
+	<value name="TILE_4X2" value="3"/>    <!-- only used for CrCb -->
 </enum>
 
 <enum name="a3xx_state_block_id">
@@ -1712,7 +1714,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 		<value name="A3XX_TPL1_MSAA8X" value="3"/>
 	</enum>
 	<reg32 offset="0" name="0">
-		<bitfield name="TILED" pos="0" type="boolean"/>
+		<bitfield name="TILE_MODE" low="0" high="1" type="a3xx_tile_mode"/>
 		<bitfield name="SRGB" pos="2" type="boolean"/>
 		<bitfield name="SWIZ_X" low="4" high="6" type="a3xx_tex_swiz"/>
 		<bitfield name="SWIZ_Y" low="7" high="9" type="a3xx_tex_swiz"/>
