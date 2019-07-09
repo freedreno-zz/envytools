@@ -1924,6 +1924,13 @@ to upconvert to 32b float internally?
 
 	<reg32 offset="0x8110" name="GRAS_UNKNOWN_8110"/>
 
+	<enum name="a6xx_rotation">
+	  <value value="0x0" name="ROTATE_0"/>
+	  <value value="0x1" name="ROTATE_90"/>
+	  <value value="0x2" name="ROTATE_180"/>
+	  <value value="0x3" name="ROTATE_270"/>
+	</enum>
+
 	<bitset name="a6xx_2d_blit_cntl" inline="yes">
 		<bitfield name="ROTATE" low="0" high="1" type="a6xx_rotation"/>
 		<bitfield name="HORIZONTAL_FLIP" low="2" high="2" type="boolean"/>
@@ -2374,7 +2381,7 @@ to upconvert to 32b float internally?
 
 	<!-- always 0x0 ? -->
 	<reg32 offset="0x9236" name="VPC_UNKNOWN_9236">
-		<bitfield name="POINT_COORD_INVERT" pos="0" type="bool"/>
+		<bitfield name="POINT_COORD_INVERT" pos="0" type="uint"/>
 	</reg32>
 
 	<!-- always 0x0 ? -->

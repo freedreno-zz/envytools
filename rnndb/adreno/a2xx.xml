@@ -1081,8 +1081,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x0f26" name="RB_DEBUG_CNTL"/>
 	<reg32 offset="0x0f27" name="RB_DEBUG_DATA"/>
 	<reg32 offset="0x2000" name="RB_SURFACE_INFO">
-		<bitfield name="SURFACE_PITCH" low="0" high="13" shr="uint"/>
-		<bitfield name="MSAA_SAMPLES" low="14" high="15" shr="uint"/>
+		<bitfield name="SURFACE_PITCH" low="0" high="13" type="uint"/>
+		<bitfield name="MSAA_SAMPLES" low="14" high="15" type="uint"/>
 	</reg32>
 	<reg32 offset="0x2001" name="RB_COLOR_INFO">
 		<bitfield name="FORMAT" low="0" high="3" type="a2xx_colorformatx"/>
