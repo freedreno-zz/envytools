@@ -65,6 +65,9 @@ struct state {
 	 * this, rather than relative to start of buffer.
 	 */
 	void *shader;
+
+	/* size of each entry within a shader_descriptor_blk: */
+	int desc_size;
 };
 
 #define PACKED __attribute__((__packed__))
@@ -216,6 +219,23 @@ static void decode_shader_entry_point(struct state *state,
 	S(e, name);
 }
 
+struct PACKED shader_config {
+	uint32_t unk_0000_0008[3];
+	uint32_t full_regs;
+	uint32_t half_regs;
+};
+
+static void decode_shader_config(struct state *state, struct shader_config *cfg)
+{
+	U(cfg, 0000, 0008);
+	D(cfg, full_regs);
+	D(cfg, half_regs);
+
+	/* dump reset of unknown (size differs btwn versions) */
+	dump_unknown(state, (void *)cfg + sizeof(*cfg), sizeof(*cfg),
+			(state->desc_size - sizeof(*cfg))/4);
+}
+
 struct PACKED shader_io_block {
 	/* name of TBD length followed by unknown.. 42 dwords total */
 	char name[20];
@@ -247,6 +267,7 @@ static void decode_shader_constant_block(struct state *state,
 
 enum {
 	ENTRY_POINT    =  0,     /* shader_entry_point */
+	SHADER_CONFIG  =  1,     /* XXX placeholder name */
 	SHADER_INPUT   =  2,     /* shader_io_block */
 	SHADER_OUTPUT  =  3,     /* shader_io_block */
 	CONSTANTS      =  6,     /* shader_constant_block */
@@ -277,12 +298,23 @@ static void decode_shader_descriptor_block(struct state *state,
 	/* offset relative to current shader block: */
 	void *ptr = state->shader + blk->offset;
 
+	if (blk->count == 0) {
+		assert(blk->size == 0);
+	} else {
+		assert((blk->size % blk->count) == 0);
+	}
+
+	state->desc_size = blk->size / blk->count;
 	state->lvl++;
 	for (unsigned i = 0; i < blk->count; i++) {
 		switch (blk->type) {
 		case ENTRY_POINT:
 			printf("%sentry point %u:\n", tab(state->lvl-1), i);
 			decode_shader_entry_point(state, ptr);
+			break;
+		case SHADER_CONFIG:
+			printf("%sconfig %u:\n", tab(state->lvl-1), i);
+			decode_shader_config(state, ptr);
 			break;
 		case SHADER_INPUT:
 			printf("%sinput %u:\n", tab(state->lvl-1), i);
@@ -310,10 +342,10 @@ static void decode_shader_descriptor_block(struct state *state,
 			i = blk->count;
 			break;
 		default:
-			dump_unknown(state, ptr, 0, blk->size/4);
+			dump_unknown(state, ptr, 0, state->desc_size/4);
 			break;
 		}
-		ptr += blk->size / blk->count;
+		ptr += state->desc_size;
 	}
 	state->lvl--;
 }
@@ -322,24 +354,28 @@ static void decode_shader_descriptor_block(struct state *state,
  * some more info, and then the shader itself.
  */
 struct PACKED shader_info {
-	uint32_t unk_0000_0014[6];
+	uint32_t unk_0000_0010[5];
+	uint32_t desc_off;       /* offset to first descriptor block */
 	uint32_t num_blocks;
-	uint32_t unk_001c_0024[3];
-	struct shader_descriptor_block blocks[];
 };
 
 static void decode_shader_info(struct state *state, struct shader_info *info)
 {
-	U(info, 0000, 0014);
+	assert((info->desc_off % 4) == 0);
+
+	U(info, 0000, 0010);
+	X(info, desc_off);
 	D(info, num_blocks);
-	U(info, 001c, 0024);
+
+	dump_unknown(state, &info[1], 0, (info->desc_off - sizeof(*info))/4);
 
 	state->shader = info;
 
+	struct shader_descriptor_block *blocks = ((void *)info) + info->desc_off;
 	for (unsigned i = 0; i < info->num_blocks; i++) {
 		printf("%sdescriptor %u:\n", tab(state->lvl), i);
 		state->lvl++;
-		decode_shader_descriptor_block(state, &info->blocks[i]);
+		decode_shader_descriptor_block(state, &blocks[i]);
 		state->lvl--;
 	}
 }
@@ -481,6 +517,9 @@ int main(int argc, char **argv)
 			printf("############################################################\n");
 			break;
 		}
+		case RD_GPU_ID:
+			gpu_id = *((unsigned int *)buf);
+			break;
 		default:
 			break;
 		}
