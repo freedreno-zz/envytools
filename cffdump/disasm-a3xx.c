@@ -1339,6 +1339,12 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned gpu_id)
 {
 	struct shader_stats stats;
+	return disasm_a3xx_stat(dwords, sizedwords, level, out, gpu_id, &stats);
+}
+
+int disasm_a3xx_stat(uint32_t *dwords, int sizedwords, int level, FILE *out,
+		unsigned gpu_id, struct shader_stats *stats)
+{
 	struct disasm_ctx ctx;
 	bool end = false;
 	int i;
@@ -1349,7 +1355,7 @@ int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned
 	ctx.out = out;
 	ctx.level = level;
 	ctx.gpu_id = gpu_id;
-	ctx.stats = &stats;
+	ctx.stats = stats;
 	memset(ctx.stats, 0, sizeof(*ctx.stats));
 
 	for (i = 0; i < sizedwords && !end; i += 2)

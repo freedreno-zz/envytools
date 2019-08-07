@@ -51,6 +51,8 @@ struct shader_stats {
 
 int disasm_a2xx(uint32_t *dwords, int sizedwords, int level, enum shader_t type);
 int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned gpu_id);
+int disasm_a3xx_stat(uint32_t *dwords, int sizedwords, int level, FILE *out,
+		unsigned gpu_id, struct shader_stats *stats);
 void disasm_set_debug(enum debug_t debug);
 
 #endif /* DISASM_H_ */
