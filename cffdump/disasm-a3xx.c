@@ -78,6 +78,8 @@ struct disasm_ctx {
 	int level;
 	unsigned gpu_id;
 
+	struct shader_stats *stats;
+
 	/* we have to process the dst register after src to avoid tripping up
 	 * the read-before-write detection
 	 */
@@ -218,10 +220,6 @@ static int print_regs(struct disasm_ctx *ctx, regmask_t *regmask, bool full)
 	return max;
 }
 
-/* instructions counts rpnN, and instlen does not */
-static int instructions, instlen;
-static int ss, sy;
-
 static void print_reg_stats(struct disasm_ctx *ctx)
 {
 	int fullreg, halfreg;
@@ -264,8 +262,10 @@ static void print_reg_stats(struct disasm_ctx *ctx)
 	// Note this count of instructions includes rptN, which matches
 	// up to how mesa prints this:
 	fprintf(ctx->out, "%s- shaderdb: %d instructions (%d instlen), %d half, %d full\n",
-			levels[ctx->level], instructions, instlen, halfreg, fullreg);
-	fprintf(ctx->out, "%s- shaderdb: %d (ss), %d (sy)\n", levels[ctx->level], ss, sy);
+			levels[ctx->level], ctx->stats->instructions, ctx->stats->instlen,
+			halfreg, fullreg);
+	fprintf(ctx->out, "%s- shaderdb: %d (ss), %d (sy)\n", levels[ctx->level],
+			ctx->stats->ss, ctx->stats->sy);
 }
 
 static void process_reg_dst(struct disasm_ctx *ctx)
@@ -339,6 +339,10 @@ static void print_reg_src(struct disasm_ctx *ctx, reg_t reg, bool full, bool r,
 			if (!r)
 				break;
 		}
+
+		unsigned max = (num + ctx->repeat + 1 + 3) / 4;
+		if (max > ctx->stats->constlen)
+			ctx->stats->constlen = max;
 	}
 
 	if (r)
@@ -1266,16 +1270,16 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 	 */
 
 	ctx->repeat = instr_repeat(instr);
-	instructions += 1 + ctx->repeat;
-	instlen++;
+	ctx->stats->instructions += 1 + ctx->repeat;
+	ctx->stats->instlen++;
 
 	if (instr->sync) {
 		fprintf(ctx->out, "(sy)");
-		sy++;
+		ctx->stats->sy++;
 	}
 	if (instr->ss && ((instr->opc_cat <= 4) || (instr->opc_cat == 7))) {
 		fprintf(ctx->out, "(ss)");
-		ss++;
+		ctx->stats->ss++;
 	}
 	if (instr->jmp_tgt)
 		fprintf(ctx->out, "(jp)");
@@ -1287,6 +1291,7 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 		nop = (instr->cat2.src2_r * 2) + instr->cat2.src1_r;
 	else if ((instr->opc_cat == 3) && (instr->cat3.src1_r || instr->cat3.src2_r))
 		nop = (instr->cat3.src2_r * 2) + instr->cat3.src1_r;
+	ctx->stats->instructions += nop;
 	if (nop)
 		fprintf(ctx->out, "(nop%d)", nop);
 
@@ -1333,18 +1338,19 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 
 int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned gpu_id)
 {
+	struct shader_stats stats;
 	struct disasm_ctx ctx;
 	bool end = false;
 	int i;
 
 //	assert((sizedwords % 2) == 0);
 
-	ss = sy = instructions = instlen = 0;
-
 	memset(&ctx, 0, sizeof(ctx));
 	ctx.out = out;
 	ctx.level = level;
 	ctx.gpu_id = gpu_id;
+	ctx.stats = &stats;
+	memset(ctx.stats, 0, sizeof(*ctx.stats));
 
 	for (i = 0; i < sizedwords && !end; i += 2)
 		end = print_instr(&ctx, &dwords[i], i/2);

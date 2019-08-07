@@ -42,6 +42,13 @@ enum debug_t {
 	EXPAND_REPEAT  = 0x4,
 };
 
+struct shader_stats {
+	/* instructions counts rpnN, and instlen does not */
+	int instructions, instlen;
+	int ss, sy;
+	int constlen;
+};
+
 int disasm_a2xx(uint32_t *dwords, int sizedwords, int level, enum shader_t type);
 int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned gpu_id);
 void disasm_set_debug(enum debug_t debug);
