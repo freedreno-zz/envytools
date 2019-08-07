@@ -55,6 +55,7 @@ const char *infile;
 static int dump_full = 0;
 static int dump_offsets = 0;
 static int gpu_id = 320;
+static int shaderdb = 0;     /* output shaderdb style traces to stderr */
 
 struct state {
 	char *buf;
@@ -68,6 +69,10 @@ struct state {
 
 	/* size of each entry within a shader_descriptor_blk: */
 	int desc_size;
+
+	const char *shader_type;
+	int full_regs;
+	int half_regs;
 };
 
 #define PACKED __attribute__((__packed__))
@@ -191,13 +196,16 @@ static void decode_header(struct state *state, struct header *hdr)
 	U(hdr, 0020, 0020);
 	X(hdr, chksum);
 	U(hdr, 0028, 0050);
+	state->shader_type = "FRAG";
 	O(hdr, fs_info, shader_info);
 	U(hdr, 0058, 0090);
+	state->shader_type = "VERT";
 	O(hdr, vs_info, shader_info);
 	U(hdr, 0098, 00b0);
 	assert(hdr->vs_info == hdr->vs_info2);  /* not sure what this if it is ever different */
 	X(hdr, vs_info2);
 	U(hdr, 00b8, 0110);
+	state->shader_type = "BVERT";
 	O(hdr, bs_info, shader_info);
 
 	/* not sure how much of the rest of contents before start of fs_info
@@ -230,6 +238,9 @@ static void decode_shader_config(struct state *state, struct shader_config *cfg)
 	U(cfg, 0000, 0008);
 	D(cfg, full_regs);
 	D(cfg, half_regs);
+
+	state->full_regs = cfg->full_regs;
+	state->half_regs = cfg->half_regs;
 
 	/* dump reset of unknown (size differs btwn versions) */
 	dump_unknown(state, (void *)cfg + sizeof(*cfg), sizeof(*cfg),
@@ -332,15 +343,34 @@ static void decode_shader_descriptor_block(struct state *state,
 			printf("%sconstant %u:\n", tab(state->lvl-1), i);
 			decode_shader_constant_block(state, ptr);
 			break;
-		case SHADER:
+		case SHADER: {
+			struct shader_stats stats;
 			printf("%sshader %u:\n", tab(state->lvl-1), i);
-			disasm_a3xx(ptr, blk->size/4, state->lvl, stdout, gpu_id);
+			disasm_a3xx_stat(ptr, blk->size/4, state->lvl, stdout, gpu_id, &stats);
+			if (shaderdb) {
+				unsigned dwords = 2 * stats.instlen;
+
+				if (gpu_id >= 400) {
+					dwords = ALIGN(dwords, 16 * 2);
+				} else {
+					dwords = ALIGN(dwords, 4 * 2);
+				}
+
+				fprintf(stderr, "%s shader: %u inst, %u dwords, "
+								"%u half, %u full, %u constlen, "
+								"%u (ss), %u (sy), %d max_sun, %d loops\n",
+					state->shader_type, stats.instructions, dwords,
+					state->half_regs, state->full_regs,
+					stats.constlen, stats.ss, stats.sy,
+					0, 0);  /* max_sun or loops not possible */
+			}
 			/* this is a special case in a way, blk->count is # of
 			 * instructions but disasm_a3xx() decodes all instructions,
 			 * so just bail.
 			 */
 			i = blk->count;
 			break;
+		}
 		default:
 			dump_unknown(state, ptr, 0, state->desc_size/4);
 			break;
@@ -433,11 +463,17 @@ int main(int argc, char **argv)
 			argc--;
 			continue;
 		}
+		if ((argc > 1) && !strcmp(argv[1], "--shaderdb")) {
+			shaderdb = 1;
+			argv++;
+			argc--;
+			continue;
+		}
 		break;
 	}
 
 	if (argc != 2) {
-		fprintf(stderr, "usage: pgmdump2 [--verbose] [--short] [--dump-shaders] testlog.rd\n");
+		fprintf(stderr, "usage: pgmdump2 [--verbose] [--expand] [--full] [--dump-offsets] [--raw] [--shaderdb] testlog.rd\n");
 		return -1;
 	}
 
