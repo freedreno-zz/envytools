@@ -356,11 +356,26 @@ static void decode_shader_descriptor_block(struct state *state,
 					dwords = ALIGN(dwords, 4 * 2);
 				}
 
+				unsigned half_regs = state->half_regs;
+				unsigned full_regs = state->full_regs;
+
+				/* On a6xx w/ merged/conflicting half and full regs, the
+				 * full_regs footprint will be max of full_regs and half
+				 * of half_regs.. we only care about which value is higher.
+				 */
+				if (gpu_id >= 600) {
+					/* footprint of half_regs in units of full_regs: */
+					unsigned half_full = (half_regs + 1) / 2;
+					if (half_full > full_regs)
+						full_regs = half_full;
+					half_regs = 0;
+				}
+
 				fprintf(stderr, "%s shader: %u inst, %u dwords, "
 								"%u half, %u full, %u constlen, "
 								"%u (ss), %u (sy), %d max_sun, %d loops\n",
-					state->shader_type, stats.instructions, dwords,
-					state->half_regs, state->full_regs,
+					state->shader_type, stats.instructions,
+					dwords, half_regs, full_regs,
 					stats.constlen, stats.ss, stats.sy,
 					0, 0);  /* max_sun or loops not possible */
 			}
@@ -555,6 +570,7 @@ int main(int argc, char **argv)
 		}
 		case RD_GPU_ID:
 			gpu_id = *((unsigned int *)buf);
+			printf("gpu_id: %d\n", gpu_id);
 			break;
 		default:
 			break;
