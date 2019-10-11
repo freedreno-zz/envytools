@@ -2798,7 +2798,10 @@ to upconvert to 32b float internally?
 
 	<reg32 offset="0xa99e" name="SP_FS_PREFETCH_CNTL">
 		<!-- unknown bits 0x7fc0 always set -->
-		<bitfield name="COUNT" low="0" high="3" type="uint"/>
+		<bitfield name="COUNT" low="0" high="2" type="uint"/>
+		<!-- b3 set if no other use of varyings in the shader itself.. maybe alternative to dummy bary.f? -->
+		<bitfield name="UNK3" pos="3" type="boolean"/>
+		<bitfield name="UNK4" low="4" high="11" type="a3xx_regid"/>
 	</reg32>
 	<array offset="0xa99f" name="SP_FS_PREFETCH" stride="1" length="4">
 		<reg32 offset="0" name="CMD">
