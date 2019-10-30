@@ -1246,12 +1246,35 @@ static const struct opc_info {
 
 #define GETINFO(instr) (&(opcs[((instr)->opc_cat << NOPC_BITS) | instr_opc(instr, ctx->gpu_id)]))
 
+static void print_single_instr(struct disasm_ctx *ctx, instr_t *instr)
+{
+	const char *name = GETINFO(instr)->name;
+	uint32_t opc = instr_opc(instr, ctx->gpu_id);
+
+	if (name) {
+		fprintf(ctx->out, "%s", name);
+		GETINFO(instr)->print(ctx, instr);
+	} else {
+		fprintf(ctx->out, "unknown(%d,%d)", instr->opc_cat, opc);
+
+		switch (instr->opc_cat) {
+		case 0: print_instr_cat0(ctx, instr); break;
+		case 1: print_instr_cat1(ctx, instr); break;
+		case 2: print_instr_cat2(ctx, instr); break;
+		case 3: print_instr_cat3(ctx, instr); break;
+		case 4: print_instr_cat4(ctx, instr); break;
+		case 5: print_instr_cat5(ctx, instr); break;
+		case 6: print_instr_cat6(ctx, instr); break;
+		case 7: print_instr_cat7(ctx, instr); break;
+		}
+	}
+}
+
 static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 {
 	instr_t *instr = (instr_t *)dwords;
 	uint32_t opc = instr_opc(instr, ctx->gpu_id);
 	unsigned nop = 0;
-	const char *name;
 
 	fprintf(ctx->out, "%s%04d[%08xx_%08xx] ", levels[ctx->level], n, dwords[1], dwords[0]);
 
@@ -1298,15 +1321,7 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 	if (instr->ul && ((2 <= instr->opc_cat) && (instr->opc_cat <= 4)))
 		fprintf(ctx->out, "(ul)");
 
-	name = GETINFO(instr)->name;
-
-	if (name) {
-		fprintf(ctx->out, "%s", name);
-		GETINFO(instr)->print(ctx, instr);
-	} else {
-		fprintf(ctx->out, "unknown(%d,%d)", instr->opc_cat, opc);
-	}
-
+	print_single_instr(ctx, instr);
 	fprintf(ctx->out, "\n");
 
 	process_reg_dst(ctx);
@@ -1321,13 +1336,7 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 			ctx->repeatidx = i + 1;
 			fprintf(ctx->out, "%s%04d[                   ] ", levels[ctx->level], n);
 
-			if (name) {
-				fprintf(ctx->out, "%s", name);
-				GETINFO(instr)->print(ctx, instr);
-			} else {
-				fprintf(ctx->out, "unknown(%d,%d)", instr->opc_cat, opc);
-			}
-
+			print_single_instr(ctx, instr);
 			fprintf(ctx->out, "\n");
 		}
 		ctx->repeatidx = 0;
