@@ -1173,6 +1173,9 @@ static const struct opc_info {
 	OPC(4, OPC_SIN,          sin),
 	OPC(4, OPC_COS,          cos),
 	OPC(4, OPC_SQRT,         sqrt),
+	OPC(4, OPC_HRSQ,         hrsq),
+	OPC(4, OPC_HLOG2,        hlog2),
+	OPC(4, OPC_HEXP2,        hexp2),
 
 	/* category 5: */
 	OPC(5, OPC_ISAM,         isam),
