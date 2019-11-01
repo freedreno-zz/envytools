@@ -2925,6 +2925,7 @@ end:
 	script_end_cmdstream();
 
 	io_close(io);
+	fflush(stdout);
 
 	if (ret < 0) {
 		printf("corrupt file\n");
