@@ -641,7 +641,7 @@ static void print_instr_cat5(struct disasm_ctx *ctx, instr_t *instr)
 			[opc_op(OPC_SAMGP3)]   = { true,  false, true,  true,  },
 			[opc_op(OPC_DSXPP_1)]  = { true,  false, false, false, },
 			[opc_op(OPC_DSYPP_1)]  = { true,  false, false, false, },
-			[opc_op(OPC_RGETPOS)]  = { false, false, false, false, },
+			[opc_op(OPC_RGETPOS)]  = { true,  false, false, false, },
 			[opc_op(OPC_RGETINFO)] = { false, false, false, false, },
 	};
 	instr_cat5_t *cat5 = &instr->cat5;
@@ -680,9 +680,11 @@ static void print_instr_cat5(struct disasm_ctx *ctx, instr_t *instr)
 	}
 
 	if (cat5->is_s2en) {
-		fprintf(ctx->out, ", ");
-		print_reg_src(ctx, (reg_t)(cat5->s2en.src2), cat5->full, false, false, false,
-				false, false, false);
+		if (cat5->is_o || info[cat5->opc].src2) {
+			fprintf(ctx->out, ", ");
+			print_reg_src(ctx, (reg_t)(cat5->s2en.src2), cat5->full,
+					false, false, false, false, false, false);
+		}
 		fprintf(ctx->out, ", ");
 		print_reg_src(ctx, (reg_t)(cat5->s2en.src3), false, false, false, false,
 				false, false, false);
@@ -1158,8 +1160,8 @@ static const struct opc_info {
 	OPC(2, OPC_XOR_B,        xor.b),
 	OPC(2, OPC_CMPV_U,       cmpv.u),
 	OPC(2, OPC_CMPV_S,       cmpv.s),
-	OPC(2, OPC_MUL_U,        mul.u),
-	OPC(2, OPC_MUL_S,        mul.s),
+	OPC(2, OPC_MUL_U24,      mul.u24),
+	OPC(2, OPC_MUL_S24,      mul.s24),
 	OPC(2, OPC_MULL_U,       mull.u),
 	OPC(2, OPC_BFREV_B,      bfrev.b),
 	OPC(2, OPC_CLZ_S,        clz.s),

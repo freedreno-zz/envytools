@@ -88,8 +88,8 @@ typedef enum {
 	OPC_CMPV_U          = _OPC(2, 33),
 	OPC_CMPV_S          = _OPC(2, 34),
 	/* 35-47 - invalid */
-	OPC_MUL_U           = _OPC(2, 48),
-	OPC_MUL_S           = _OPC(2, 49),
+	OPC_MUL_U24         = _OPC(2, 48), /* 24b mul into 32b result */
+	OPC_MUL_S24         = _OPC(2, 49), /* 24b mul into 32b result with sign extension */
 	OPC_MULL_U          = _OPC(2, 50),
 	OPC_BFREV_B         = _OPC(2, 51),
 	OPC_CLZ_S           = _OPC(2, 52),
@@ -928,5 +928,19 @@ static inline bool is_ssbo(opc_t opc)
 		return false;
 	}
 }
+
+static inline bool is_isam(opc_t opc)
+{
+	switch (opc) {
+	case OPC_ISAM:
+	case OPC_ISAML:
+	case OPC_ISAMM:
+		return true;
+	default:
+		return false;
+	}
+}
+
+int disasm_a3xx(uint32_t *dwords, int sizedwords, int level, FILE *out, unsigned gpu_id);
 
 #endif /* INSTR_A3XX_H_ */
