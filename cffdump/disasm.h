@@ -45,6 +45,7 @@ enum debug_t {
 struct shader_stats {
 	/* instructions counts rpnN, and instlen does not */
 	int instructions, instlen;
+	int nops;
 	int ss, sy;
 	int constlen;
 };

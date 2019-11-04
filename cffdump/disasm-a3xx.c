@@ -1348,6 +1348,9 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 	else if ((instr->opc_cat == 3) && (instr->cat3.src1_r || instr->cat3.src2_r))
 		nop = (instr->cat3.src2_r * 2) + instr->cat3.src1_r;
 	ctx->stats->instructions += nop;
+	ctx->stats->nops += nop;
+	if (opc == OPC_NOP)
+		ctx->stats->nops += 1 + ctx->repeat;
 	if (nop)
 		fprintf(ctx->out, "(nop%d)", nop);
 

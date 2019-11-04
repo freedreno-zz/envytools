@@ -371,10 +371,12 @@ static void decode_shader_descriptor_block(struct state *state,
 					half_regs = 0;
 				}
 
-				fprintf(stderr, "%s shader: %u inst, %u dwords, "
-								"%u half, %u full, %u constlen, "
-								"%u (ss), %u (sy), %d max_sun, %d loops\n",
+				fprintf(stderr,
+						"%s shader: %u inst, %u nops, %u non-nops, %u dwords, "
+						"%u half, %u full, %u constlen, "
+						"%u (ss), %u (sy), %d max_sun, %d loops\n",
 					state->shader_type, stats.instructions,
+					stats.nops, stats.instructions - stats.nops,
 					dwords, half_regs, full_regs,
 					stats.constlen, stats.ss, stats.sy,
 					0, 0);  /* max_sun or loops not possible */
