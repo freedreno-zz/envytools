@@ -1748,6 +1748,32 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x3119" name="VBIF_PERF_PWR_CNT_HIGH1"/>
 	<reg32 offset="0x311a" name="VBIF_PERF_PWR_CNT_HIGH2"/>
 
+	<!-- GBIF registers -->
+	<reg32 offset="0x3c02" name="GBIF_SCACHE_CNTL1"/>
+	<reg32 offset="0x3c03" name="GBIF_QSB_SIDE0"/>
+	<reg32 offset="0x3c04" name="GBIF_QSB_SIDE1"/>
+	<reg32 offset="0x3c05" name="GBIF_QSB_SIDE2"/>
+	<reg32 offset="0x3c06" name="GBIF_QSB_SIDE3"/>
+	<reg32 offset="0x3c45" name="GBIF_HALT"/>
+	<reg32 offset="0x3c46" name="GBIF_HALT_ACK"/>
+
+	<reg32 offset="0x3cc0" name="GBIF_PERF_PWR_CNT_EN"/>
+	<reg32 offset="0x3cc2" name="GBIF_PERF_CNT_SEL"/>
+	<reg32 offset="0x3cc3" name="GBIF_PERF_PWR_CNT_SEL"/>
+	<reg32 offset="0x3cc4" name="GBIF_PERF_CNT_LOW0"/>
+	<reg32 offset="0x3cc5" name="GBIF_PERF_CNT_LOW1"/>
+	<reg32 offset="0x3cc6" name="GBIF_PERF_CNT_LOW2"/>
+	<reg32 offset="0x3cc7" name="GBIF_PERF_CNT_LOW3"/>
+	<reg32 offset="0x3cc8" name="GBIF_PERF_CNT_HIGH0"/>
+	<reg32 offset="0x3cc9" name="GBIF_PERF_CNT_HIGH1"/>
+	<reg32 offset="0x3cca" name="GBIF_PERF_CNT_HIGH2"/>
+	<reg32 offset="0x3ccb" name="GBIF_PERF_CNT_HIGH3"/>
+	<reg32 offset="0x3ccc" name="GBIF_PWR_CNT_LOW0"/>
+	<reg32 offset="0x3ccd" name="GBIF_PWR_CNT_LOW1"/>
+	<reg32 offset="0x3cce" name="GBIF_PWR_CNT_LOW2"/>
+	<reg32 offset="0x3ccf" name="GBIF_PWR_CNT_HIGH0"/>
+	<reg32 offset="0x3cd0" name="GBIF_PWR_CNT_HIGH1"/>
+	<reg32 offset="0x3cd1" name="GBIF_PWR_CNT_HIGH2"/>
 	<!-- move/rename these.. -->
 
 	<reg32 offset="0x88d4" name="RB_WINDOW_OFFSET2" type="adreno_reg_xy"/>
