@@ -363,8 +363,40 @@ static int l_rnn_reg_meta_index(lua_State *L)
 	return 0;
 }
 
+static int l_rnn_reg_meta_tostring(lua_State *L)
+{
+	struct rnndoff *rnndoff = lua_touserdata(L, 1);
+	uint32_t regval = rnn_val(rnndoff->rnn, rnndoff->offset);
+	struct rnndecaddrinfo *info = rnn_reginfo(rnndoff->rnn, rnndoff->offset);
+	char *decoded;
+	if (info && info->typeinfo) {
+		decoded = rnndec_decodeval(rnndoff->rnn->vc,
+				info->typeinfo, regval, info->width);
+	} else {
+		asprintf(&decoded, "%08x", regval);
+	}
+	lua_pushstring(L, decoded);
+	free(decoded);
+	if (info) {
+		free(info->name);
+		free(info);
+	}
+	return 1;
+}
+
+static int l_rnn_reg_meta_tonumber(lua_State *L)
+{
+	struct rnndoff *rnndoff = lua_touserdata(L, 1);
+	uint32_t regval = rnn_val(rnndoff->rnn, rnndoff->offset);
+
+	lua_pushnumber(L, regval);
+	return 1;
+}
+
 static const struct luaL_Reg l_meta_rnn_reg[] = {
 	{"__index", l_rnn_reg_meta_index},
+	{"__tostring", l_rnn_reg_meta_tostring},
+	{"__tonumber", l_rnn_reg_meta_tonumber},
 	{NULL, NULL}  /* sentinel */
 };
 
