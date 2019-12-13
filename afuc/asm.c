@@ -249,7 +249,7 @@ static void emit_instructions(int outfd)
 			assert(0);
 		}
 
-		afuc_set_opc(&instr, opc, ai->flush);
+		afuc_set_opc(&instr, opc, ai->rep);
 
 		write(outfd, &instr, 4);
 	}

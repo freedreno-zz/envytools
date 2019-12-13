@@ -76,7 +76,7 @@ extern YYSTYPE yylval;
 "jump"                            return TOKEN(T_OP_JUMP);
 "waitin"                          return TOKEN(T_OP_WAITIN);
 "<<"                              return TOKEN(T_LSHIFT);
-"(f)"                             return TOKEN(T_F);
+"(rep)"                           return TOKEN(T_REP);
 
 ","                               return ',';
 "["                               return '[';

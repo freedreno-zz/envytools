@@ -48,7 +48,7 @@ struct asm_instruction {
 	bool has_shift : 1;
 	bool has_bit   : 1;
 	bool is_literal : 1;
-	bool flush     : 1;
+	bool rep        : 1;
 };
 
 struct asm_label {

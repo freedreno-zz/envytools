@@ -162,7 +162,7 @@ static void print_token(FILE *file, int type, YYSTYPE value)
 %token <tok> T_OP_JUMP
 %token <tok> T_OP_WAITIN
 %token <tok> T_LSHIFT
-%token <tok> T_F
+%token <tok> T_REP
 
 %type <num> reg
 %type <num> immediate
@@ -176,14 +176,14 @@ static void print_token(FILE *file, int type, YYSTYPE value)
 instrs:            instr_or_label instrs
 |                  instr_or_label
 
-instr_or_label:    instr_f
-|                  T_F instr_f    { instr->flush = true; }
+instr_or_label:    instr_r
+|                  T_REP instr_r    { instr->rep = true; }
 |                  branch_instr
 |                  other_instr
 |                  T_LABEL_DECL   { decl_label($1); }
 
-/* instructions that can optionally have (f) flag: */
-instr_f:           alu_instr
+/* instructions that can optionally have (rep) flag: */
+instr_r:           alu_instr
 |                  config_instr
 
 /* need to special case not (since src) and mov (single src, plus possibly a shift)

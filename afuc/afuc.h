@@ -38,7 +38,7 @@ RB.
 #define PACKED __attribute__((__packed__))
 
 /* The opcode is encoded variable length.  Opcodes less than 0x30
- * are encoded as 5 bits followed by (f)lush flag.  Opcodes >= 0x30
+ * are encoded as 5 bits followed by (rep) flag.  Opcodes >= 0x30
  * (ie. top two bits are '11' are encoded as 6 bits.  See get_opc()
  */
 typedef enum {
@@ -143,31 +143,31 @@ typedef union PACKED {
 	} waitin;
 	struct PACKED {
 		uint32_t pad     : 26;
-		uint32_t opc_f   : 6;
+		uint32_t opc_r   : 6;
 	};
 
 } afuc_instr;
 
 static inline void
-afuc_get_opc(afuc_instr *ai, afuc_opc *opc, bool *flush)
+afuc_get_opc(afuc_instr *ai, afuc_opc *opc, bool *rep)
 {
-	if (ai->opc_f < 0x30) {
-		*opc = ai->opc_f >> 1;
-		*flush = ai->opc_f & 0x1;
+	if (ai->opc_r < 0x30) {
+		*opc = ai->opc_r >> 1;
+		*rep = ai->opc_r & 0x1;
 	} else {
-		*opc = ai->opc_f;
-		*flush = false;
+		*opc = ai->opc_r;
+		*rep = false;
 	}
 }
 
 static inline void
-afuc_set_opc(afuc_instr *ai, afuc_opc opc, bool flush)
+afuc_set_opc(afuc_instr *ai, afuc_opc opc, bool rep)
 {
 	if (opc < 0x30) {
-		ai->opc_f = opc << 1;
-		ai->opc_f |= !!flush;
+		ai->opc_r = opc << 1;
+		ai->opc_r |= !!rep;
 	} else {
-		ai->opc_f = opc;
+		ai->opc_r = opc;
 	}
 }
 

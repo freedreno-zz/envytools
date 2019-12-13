@@ -300,7 +300,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 	const int jmptbl_start = instrs[1] & 0xffff;
 	uint32_t *jmptbl = &buf[jmptbl_start];
 	afuc_opc opc;
-	bool flush;
+	bool rep;
 	int i;
 
 
@@ -317,7 +317,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 	for (i = 0; i < jmptbl_start; i++) {
 		afuc_instr *instr = (void *)&instrs[i];
 
-		afuc_get_opc(instr, &opc, &flush);
+		afuc_get_opc(instr, &opc, &rep);
 
 		switch (opc) {
 		case OPC_BRNEI:
@@ -340,9 +340,9 @@ static void disasm(uint32_t *buf, int sizedwords)
 		afuc_instr *instr = (void *)&instrs[i];
 		const char *fname, *lname;
 		afuc_opc opc;
-		bool flush;
+		bool rep;
 
-		afuc_get_opc(instr, &opc, &flush);
+		afuc_get_opc(instr, &opc, &rep);
 
 		lname = label_name(i, false);
 		fname = fxn_name(i);
@@ -389,8 +389,8 @@ static void disasm(uint32_t *buf, int sizedwords)
 				printerr("[%08x]", instrs[i]);
 				printf("  ; ");
 			}
-			if (flush)
-				printf("(f)");
+			if (rep)
+				printf("(rep)");
 			printf("nop");
 			print_gpu_reg(instrs[i]);
 
@@ -416,8 +416,8 @@ static void disasm(uint32_t *buf, int sizedwords)
 			if (opc == OPC_NOT)
 				src1 = false;
 
-			if (flush)
-				printf("(f)");
+			if (rep)
+				printf("(rep)");
 
 			print_alu_name(opc, instrs[i]);
 			print_dst(instr->alui.dst);
@@ -438,8 +438,8 @@ static void disasm(uint32_t *buf, int sizedwords)
 			break;
 		}
 		case OPC_MOVI: {
-			if (flush)
-				printf("(f)");
+			if (rep)
+				printf("(rep)");
 			printf("mov ");
 			print_dst(instr->movi.dst);
 			printf(", 0x%04x", instr->movi.uimm);
@@ -487,8 +487,8 @@ static void disasm(uint32_t *buf, int sizedwords)
 			if (instr->alu.pad)
 				printf("[%08x]  ; ", instrs[i]);
 
-			if (flush)
-				printf("(f)");
+			if (rep)
+				printf("(rep)");
 
 			/* special case mnemonics:
 			 *   reading $00 seems to always yield zero, and so:
@@ -523,9 +523,8 @@ static void disasm(uint32_t *buf, int sizedwords)
 		case OPC_OP17:
 		case OPC_CWRITE:
 		case OPC_CREAD: {
-
-			if (flush)
-				printf("(f)");
+			if (rep)
+				printf("(rep)");
 
 			if (opc == OPC_CWRITE) {
 				printf("cwrite ");
@@ -547,7 +546,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 		case OPC_BREQB: {
 			unsigned off = i + instr->br.ioff;
 
-			assert(!flush);
+			assert(!rep);
 
 			/* Since $00 reads back zero, it can be used as src for
 			 * unconditional branches.  (This only really makes sense
@@ -595,7 +594,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 			break;
 		}
 		case OPC_CALL:
-			assert(!flush);
+			assert(!rep);
 			printf("call #");
 			printlbl("%s", fxn_name(instr->call.uoff));
 			if (verbose) {
@@ -607,13 +606,13 @@ static void disasm(uint32_t *buf, int sizedwords)
 			}
 			break;
 		case OPC_RET:
-			assert(!flush);
+			assert(!rep);
 			if (instr->pad)
 				printf("[%08x]  ; ", instrs[i]);
 			printf("ret");
 			break;
 		case OPC_WIN:
-			assert(!flush);
+			assert(!rep);
 			if (instr->waitin.pad)
 				printf("[%08x]  ; ", instrs[i]);
 			printf("waitin");
