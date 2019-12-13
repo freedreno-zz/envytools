@@ -7,7 +7,7 @@ find_package(BISON REQUIRED)
 flex_target(lexer lexer.l ${CMAKE_CURRENT_BINARY_DIR}/lexer.c)
 bison_target(parser parser.y ${CMAKE_CURRENT_BINARY_DIR}/parser.c)
 
-include_directories(${PROJECT_BINARY_DIR})
+include_directories(${PROJECT_BINARY_DIR} .)
 
 add_executable(disasm disasm.c)
 target_link_libraries(disasm rnn)
