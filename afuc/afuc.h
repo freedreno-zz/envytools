@@ -84,9 +84,16 @@ typedef enum {
 	 * 0x0b22->0x0b24 (IB2).  Presumably $05 ends up w/ different value
 	 * for RB->IB1 vs IB1->IB2.
 	 */
-	OPC_CWRITE = 0x15,
-	OPC_CREAD  = 0x16,
-	OPC_OP17   = 0x17,  /* placeholder, seems a variant of cread?? */
+	OPC_CWRITE5 = 0x15,
+	OPC_CREAD5  = 0x16,
+
+	/* A6xx shuffled around the cwrite/cread opcodes and added new opcodes
+	 * that let you read/write directly to memory (and bypass the IOMMU?).
+	 */
+	OPC_STORE6  = 0x14,
+	OPC_CWRITE6 = 0x15,
+	OPC_LOAD6   = 0x16,
+	OPC_CREAD6  = 0x17,
 
 	OPC_BRNEI  = 0x30,  /* relative branch (if $src != immed) */
 	OPC_BREQI  = 0x31,  /* relative branch (if $src == immed) */

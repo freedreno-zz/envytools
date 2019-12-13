@@ -205,13 +205,28 @@ static void emit_instructions(int outfd)
 			break;
 		case T_OP_CWRITE:
 		case T_OP_CREAD:
-		case T_OP_OP17:
-			if (ai->tok == T_OP_CWRITE) {
-				opc = OPC_CWRITE;
-			} else if (ai->tok == T_OP_CREAD) {
-				opc = OPC_CREAD;
-			} else if (ai->tok == T_OP_OP17) {
-				opc = OPC_OP17;
+		case T_OP_STORE:
+		case T_OP_LOAD:
+			if (gpuver >= 6) {
+				if (ai->tok == T_OP_CWRITE) {
+					opc = OPC_CWRITE6;
+				} else if (ai->tok == T_OP_CREAD) {
+					opc = OPC_CREAD6;
+				} else if (ai->tok == T_OP_STORE) {
+					opc = OPC_STORE6;
+				} else if (ai->tok == T_OP_LOAD) {
+					opc = OPC_LOAD6;
+				}
+			} else {
+				if (ai->tok == T_OP_CWRITE) {
+					opc = OPC_CWRITE5;
+				} else if (ai->tok == T_OP_CREAD) {
+					opc = OPC_CREAD5;
+				} else if (ai->tok == T_OP_STORE ||
+					   ai->tok == T_OP_LOAD) {
+					fprintf(stderr, "load and store do not exist on a5xx\n");
+					exit(1);
+				}
 			}
 			instr.control.src1 = ai->src1;
 			instr.control.src2 = ai->src2;

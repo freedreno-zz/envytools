@@ -387,7 +387,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 			/* a6xx changed the default immediate, and apparently 0
 			 * is illegal now.
 			 */
-			static uint32_t nop = gpuver >= 6 ? 0x1000000 : 0x0;
+			const uint32_t nop = gpuver >= 6 ? 0x1000000 : 0x0;
 			if (instrs[i] != nop) {
 				printerr("[%08x]", instrs[i]);
 				printf("  ; ");
@@ -524,18 +524,42 @@ static void disasm(uint32_t *buf, int sizedwords)
 			}
 			break;
 		}
-		case OPC_OP17:
-		case OPC_CWRITE:
-		case OPC_CREAD: {
+		case OPC_CWRITE6:
+		case OPC_CREAD6:
+		case OPC_STORE6:
+		case OPC_LOAD6: {
 			if (rep)
 				printf("(rep)");
 
-			if (opc == OPC_CWRITE) {
-				printf("cwrite ");
-			} else if (opc == OPC_CREAD) {
-				printf("cread ");
-			} else if (opc == 0x17) {
-				printf("op17 ");
+			if (gpuver >= 6) {
+				switch (opc) {
+				case OPC_CWRITE6:
+					printf("cwrite ");
+					break;
+				case OPC_CREAD6:
+					printf("cread ");
+					break;
+				case OPC_STORE6:
+					printf("store ");
+					break;
+				case OPC_LOAD6:
+					printf("load ");
+					break;
+				default:
+					assert(!"unreachable");
+				}
+			} else {
+				switch (opc) {
+				case OPC_CWRITE5:
+					printf("cwrite ");
+					break;
+				case OPC_CREAD5:
+					printf("cread ");
+					break;
+				default:
+					fprintf(stderr, "A6xx control opcode on A5xx?\n");
+					exit(1);
+				}
 			}
 
 			print_src(instr->control.src1);
