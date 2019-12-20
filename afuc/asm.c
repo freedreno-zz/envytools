@@ -144,6 +144,8 @@ static void emit_instructions(int outfd)
 		switch (ai->tok) {
 		case T_OP_NOP:
 			opc = OPC_NOP;
+			if (gpuver >= 6)
+				instr.pad = 0x1000000;
 			break;
 		case T_OP_ADD:
 		case T_OP_ADDHI:

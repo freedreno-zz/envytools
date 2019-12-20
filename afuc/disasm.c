@@ -383,9 +383,12 @@ static void disasm(uint32_t *buf, int sizedwords)
 		}
 
 		switch (opc) {
-		case OPC_NOP:
-
-			if (instrs[i] != 0x0) {
+		case OPC_NOP: {
+			/* a6xx changed the default immediate, and apparently 0
+			 * is illegal now.
+			 */
+			static uint32_t nop = gpuver >= 6 ? 0x1000000 : 0x0;
+			if (instrs[i] != nop) {
 				printerr("[%08x]", instrs[i]);
 				printf("  ; ");
 			}
@@ -395,6 +398,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 			print_gpu_reg(instrs[i]);
 
 			break;
+		}
 		case OPC_ADD:
 		case OPC_ADDHI:
 		case OPC_SUB:
