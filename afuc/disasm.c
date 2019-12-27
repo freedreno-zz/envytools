@@ -41,6 +41,7 @@ static int gpuver;
 
 static struct rnndeccontext *ctx;
 static struct rnndb *db;
+static struct rnnenum *config_regs;
 struct rnndomain *dom[2];
 const char *variant;
 
@@ -294,6 +295,18 @@ fxn_name(uint32_t offset)
 	return name;
 }
 
+static char *get_config_reg(uint32_t id)
+{
+	int i;
+	for (i = 0; i < config_regs->valsnum; i++) {
+		if (config_regs->vals[i]->valvalid &&
+		    config_regs->vals[i]->value == id) {
+			return config_regs->vals[i]->name;
+		}
+	}
+	return NULL;
+}
+
 static void disasm(uint32_t *buf, int sizedwords)
 {
 	uint32_t *instrs = buf;
@@ -531,6 +544,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 			if (rep)
 				printf("(rep)");
 
+			bool is_control_reg = true;
 			if (gpuver >= 6) {
 				switch (opc) {
 				case OPC_CWRITE6:
@@ -540,9 +554,11 @@ static void disasm(uint32_t *buf, int sizedwords)
 					printf("cread ");
 					break;
 				case OPC_STORE6:
+					is_control_reg = false;
 					printf("store ");
 					break;
 				case OPC_LOAD6:
+					is_control_reg = false;
 					printf("load ");
 					break;
 				default:
@@ -565,7 +581,13 @@ static void disasm(uint32_t *buf, int sizedwords)
 			print_src(instr->control.src1);
 			printf(", [");
 			print_src(instr->control.src2);
-			printf(" + 0x%03x], 0x%x", instr->control.uimm, instr->control.flags);
+			printf(" + ");
+			const char *name = get_config_reg(instr->control.uimm);
+			if (name && is_control_reg && instr->control.flags != 0x4)
+				printf("@%s", name);
+			else
+				printf("0x%03x", instr->control.uimm);
+			printf("], 0x%x", instr->control.flags);
 			break;
 		}
 		case OPC_BRNEI:
@@ -721,7 +743,7 @@ static void usage(void)
 int main(int argc, char **argv)
 {
 	uint32_t *buf;
-	char *file;
+	char *file, *config_reg_name;
 	bool colors = false;
 	int sz, c;
 
@@ -762,10 +784,12 @@ int main(int argc, char **argv)
 	case 6:
 		printf("; a6xx microcode\n");
 		variant = "A6XX";
+		config_reg_name = "a6xx_config_reg";
 		break;
 	case 5:
 		printf("; a5xx microcode\n");
 		variant = "A5XX";
+		config_reg_name = "a5xx_config_reg";
 		break;
 	default:
 		fprintf(stderr, "unknown GPU version!\n");
@@ -781,6 +805,7 @@ int main(int argc, char **argv)
 	rnn_parsefile(db, "adreno.xml");
 	dom[0] = rnn_finddomain(db, variant);
 	dom[1] = rnn_finddomain(db, "AXXX");
+	config_regs = rnn_findenum(db, config_reg_name);
 
 	buf = (uint32_t *)readfile(file, &sz);
 

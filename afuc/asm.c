@@ -38,11 +38,12 @@
 #include "parser.h"
 #include "asm.h"
 
-static int gpuver;
+int gpuver;
 
 
 static struct rnndeccontext *ctx;
 static struct rnndb *db;
+static struct rnnenum *config_regs;
 struct rnndomain *dom[2];
 
 
@@ -284,6 +285,17 @@ static int find_enum_val(struct rnnenum *en, const char *name)
 	return -1;
 }
 
+unsigned parse_config_reg(const char *name)
+{
+	/* skip leading "@" */
+	int val = find_enum_val(config_regs, name + 1);
+	if (val < 0) {
+		printf("invalid config reg: %s\n", name);
+		exit(2);
+	}
+	return (unsigned)val;
+}
+
 static void emit_jumptable(int outfd)
 {
 	struct rnnenum *en = rnn_findenum(ctx->db, "adreno_pm4_type3_packets");
@@ -320,7 +332,7 @@ static void usage(void)
 int main(int argc, char **argv)
 {
 	FILE *in;
-	char *file, *outfile, *name;
+	char *file, *outfile, *name, *config_reg_name;
 	int c, ret, outfd;
 
 	/* Argument parsing: */
@@ -368,9 +380,11 @@ int main(int argc, char **argv)
 	switch (gpuver) {
 	case 6:
 		name = "A6XX";
+		config_reg_name = "a6xx_config_reg";
 		break;
 	case 5:
 		name = "A5XX";
+		config_reg_name = "a5xx_config_reg";
 		break;
 	default:
 		fprintf(stderr, "unknown GPU version!\n");
@@ -385,6 +399,7 @@ int main(int argc, char **argv)
 	rnn_parsefile(db, "adreno.xml");
 	dom[0] = rnn_finddomain(db, name);
 	dom[1] = rnn_finddomain(db, "AXXX");
+	config_regs = rnn_findenum(db, config_reg_name);
 
 	ret = yyparse();
 	if (ret) {
