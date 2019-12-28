@@ -318,7 +318,7 @@ static void disasm(uint32_t *buf, int sizedwords)
 
 
 	/* parse jumptable: */
-	for (i = 0; i < 0x7f; i++) {
+	for (i = 0; i < 0x80; i++) {
 		unsigned offset = jmptbl[i];
 		unsigned n = i;// + CP_NOP;
 		add_jump_table_entry(n, offset);
