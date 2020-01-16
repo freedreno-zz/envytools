@@ -102,6 +102,7 @@ typedef enum {
 	OPC_RET    = 0x34,  /* return */
 	OPC_CALL   = 0x35,  /* "function" call */
 	OPC_WIN    = 0x36,  /* wait for input (ie. wait for WPTR to advance) */
+	OPC_PREEMPTLEAVE6 = 0x38,  /* try to leave preemption */
 } afuc_opc;
 
 

@@ -163,6 +163,7 @@ static void print_token(FILE *file, int type, YYSTYPE value)
 %token <tok> T_OP_CALL
 %token <tok> T_OP_JUMP
 %token <tok> T_OP_WAITIN
+%token <tok> T_OP_PREEMPTLEAVE
 %token <tok> T_LSHIFT
 %token <tok> T_REP
 
@@ -244,6 +245,7 @@ branch_instr:      branch_op reg ',' T_BIT ',' T_LABEL_REF     { src1($2); bit($
 |                  branch_op reg ',' immediate ',' T_LABEL_REF { src1($2); immed($4); label($6); }
 
 other_instr:       T_OP_CALL T_LABEL_REF { new_instr($1); label($2); }
+|                  T_OP_PREEMPTLEAVE T_LABEL_REF { new_instr($1); label($2); }
 |                  T_OP_RET              { new_instr($1); }
 |                  T_OP_JUMP T_LABEL_REF { new_instr($1); label($2); }
 |                  T_OP_WAITIN           { new_instr($1); }

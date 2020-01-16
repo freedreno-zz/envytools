@@ -339,6 +339,10 @@ static void disasm(uint32_t *buf, int sizedwords)
 		case OPC_BREQB:
 			label_idx(i + instr->br.ioff, true);
 			break;
+		case OPC_PREEMPTLEAVE6:
+			if (gpuver >= 6)
+				label_idx(instr->call.uoff, true);
+			break;
 		case OPC_CALL:
 			fxn_idx(instr->call.uoff, true);
 			break;
@@ -668,6 +672,13 @@ static void disasm(uint32_t *buf, int sizedwords)
 			printf("waitin");
 			if (verbose && instr->waitin.pad)
 				printerr("  (pad=%x)", instr->waitin.pad);
+			break;
+		case OPC_PREEMPTLEAVE6:
+			if (gpuver < 6) {
+				printf("[%08x]  ; op38", instrs[i]);
+			}
+			printf("preemptleave #");
+			printlbl("%s", label_name(instr->call.uoff, true));
 			break;
 		default:
 			printerr("[%08x]", instrs[i]);

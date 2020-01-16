@@ -253,6 +253,10 @@ static void emit_instructions(int outfd)
 			opc = OPC_CALL;
 			instr.call.uoff = resolve_label(ai->label);
 			break;
+		case T_OP_PREEMPTLEAVE:
+			opc = OPC_PREEMPTLEAVE6;
+			instr.call.uoff = resolve_label(ai->label);
+			break;
 		case T_OP_JUMP:
 			/* encode jump as: brne $00, b0, #label */
 			opc = OPC_BRNEB;
