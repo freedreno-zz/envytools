@@ -26,7 +26,7 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<value value="0x18" name="RB6_R16_UINT"/>
 	<value value="0x19" name="RB6_R16_SINT"/>
 	<value value="0x30" name="RB6_R8G8B8A8_UNORM"/>
-	<value value="0x31" name="RB6_R8G8B8_UNORM"/>
+	<value value="0x31" name="RB6_R8G8B8X8_UNORM"/> <!-- 32 bpp format, samples 1 for alpha -->
 	<value value="0x32" name="RB6_R8G8B8A8_SNORM"/>
 	<value value="0x33" name="RB6_R8G8B8A8_UINT"/>
 	<value value="0x34" name="RB6_R8G8B8A8_SINT"/>
@@ -1998,6 +1998,7 @@ to upconvert to 32b float internally?
 	</reg32>
 	<reg32 offset="0x8106" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE_LO"/>
 	<reg32 offset="0x8107" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE_HI"/>
+	<reg32 offset="0x8106" name="GRAS_LRZ_FAST_CLEAR_BUFFER_BASE" type="waddress"/>
 
 	<reg32 offset="0x8109" name="GRAS_SAMPLE_CNTL">
 		<bitfield name="PER_SAMP_MODE" pos="0" type="boolean"/>
@@ -2483,11 +2484,13 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x9219" name="VPC_SO_STREAM_COUNTS_HI"/>
 
 	<array offset="0x921a" name="VPC_SO" stride="7" length="4">
+		<reg64 offset="0" name="BUFFER_BASE" type="waddress"/>
 		<reg32 offset="0" name="BUFFER_BASE_LO"/>
 		<reg32 offset="1" name="BUFFER_BASE_HI"/>
 		<reg32 offset="2" name="BUFFER_SIZE"/>
 		<reg32 offset="3" name="NCOMP"/>  <!-- component count -->
 		<reg32 offset="4" name="BUFFER_OFFSET"/>
+		<reg64 offset="5" name="FLUSH_BASE" type="waddress"/>
 		<reg32 offset="5" name="FLUSH_BASE_LO"/>
 		<reg32 offset="6" name="FLUSH_BASE_HI"/>
 	</array>
@@ -2707,11 +2710,17 @@ to upconvert to 32b float internally?
 
 	<!-- always 0x0 ? -->
 	<reg32 offset="0xa008" name="VFD_UNKNOWN_A008"/>
-	<reg32 offset="0xa009" name="VFD_UNKNOWN_A009"/>
+	<reg32 offset="0xa009" name="VFD_ADD_OFFSET">
+		<!-- add VFD_INDEX_OFFSET to REGID4VTX -->
+		<bitfield name="VERTEX" pos="0" type="boolean"/>
+		<!-- add VFD_INSTANCE_START_OFFSET to REGID4INST -->
+		<bitfield name="INSTANCE" pos="1" type="boolean"/>
+	</reg32>
 
 	<reg32 offset="0xa00e" name="VFD_INDEX_OFFSET"/>
 	<reg32 offset="0xa00f" name="VFD_INSTANCE_START_OFFSET"/>
 	<array offset="0xa010" name="VFD_FETCH" stride="4" length="32">
+		<reg64 offset="0x0" name="BASE" type="address"/>
 		<reg32 offset="0x0" name="BASE_LO"/>
 		<reg32 offset="0x1" name="BASE_HI"/>
 		<reg32 offset="0x2" name="SIZE" type="uint"/>
@@ -3076,6 +3085,7 @@ to upconvert to 32b float internally?
 	</reg32>
 
 	<!-- looks to work in the same way as a5xx: -->
+	<reg64 offset="0xb302" name="SP_TP_BORDER_COLOR_BASE_ADDR" type="address"/>
 	<reg32 offset="0xb302" name="SP_TP_BORDER_COLOR_BASE_ADDR_LO"/>
 	<reg32 offset="0xb303" name="SP_TP_BORDER_COLOR_BASE_ADDR_HI"/>
 	<!-- always 0x0 ? -->
@@ -3419,18 +3429,6 @@ with a better name.
 	<reg32 offset="1" name="1">
 		<bitfield name="BASE_HI" low="0" high="16"/>
 		<!-- size probably in high bits -->
-	</reg32>
-</domain>
-
-<domain name="CP_UNK_A6XX_55" width="32">
-	<reg32 offset="0" name="0">
-		<bitfield name="BASE_LO" low="0" high="31"/>
-	</reg32>
-	<reg32 offset="1" name="1">
-		<bitfield name="BASE_HI" low="0" high="16"/>
-	</reg32>
-	<reg32 offset="2" name="2">
-		<bitfield name="SIZE" low="0" high="15"/>
 	</reg32>
 </domain>
 

@@ -2261,7 +2261,7 @@ static void cp_reg_write(uint32_t *dwords, uint32_t sizedwords, int level)
 	reg_set(reg, dwords[2]);
 }
 
-static void cp_unk_a6xx_55(uint32_t *dwords, uint32_t sizedwords, int level)
+static void cp_set_ctxswitch_ib(uint32_t *dwords, uint32_t sizedwords, int level)
 {
 	uint64_t addr;
 	uint32_t size = dwords[2] & 0xffff;
@@ -2327,7 +2327,7 @@ static const struct type3_op {
 		CP(SET_MARKER, cp_set_marker),
 		CP(REG_WRITE, cp_reg_write),
 
-		CP(UNK_A6XX_55, cp_unk_a6xx_55),
+		CP(SET_CTXSWITCH_IB, cp_set_ctxswitch_ib),
 };
 
 static void noop_fxn(uint32_t *dwords, uint32_t sizedwords, int level)

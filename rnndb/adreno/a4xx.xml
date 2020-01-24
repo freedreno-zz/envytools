@@ -1304,8 +1304,6 @@ perhaps they should be taken with a grain of salt
 	<reg32 offset="0x0113" name="RBBM_PERFCTR_UCHE_7_HI"/>
 	<reg32 offset="0x0114" name="RBBM_PERFCTR_TP_0_LO"/>
 	<reg32 offset="0x0115" name="RBBM_PERFCTR_TP_0_HI"/>
-	<reg32 offset="0x0114" name="RBBM_PERFCTR_TP_0_LO"/>
-	<reg32 offset="0x0115" name="RBBM_PERFCTR_TP_0_HI"/>
 	<reg32 offset="0x0116" name="RBBM_PERFCTR_TP_1_LO"/>
 	<reg32 offset="0x0117" name="RBBM_PERFCTR_TP_1_HI"/>
 	<reg32 offset="0x0118" name="RBBM_PERFCTR_TP_2_LO"/>
