@@ -228,12 +228,23 @@ function draw(primtype, nindx)
 	end
 
 	drawmode = m
+	local render_components = {}
+	render_components[0] = r.RB_RENDER_COMPONENTS.RT0;
+	render_components[1] = r.RB_RENDER_COMPONENTS.RT1;
+	render_components[2] = r.RB_RENDER_COMPONENTS.RT2;
+	render_components[3] = r.RB_RENDER_COMPONENTS.RT3;
+	render_components[4] = r.RB_RENDER_COMPONENTS.RT4;
+	render_components[5] = r.RB_RENDER_COMPONENTS.RT5;
+	render_components[6] = r.RB_RENDER_COMPONENTS.RT6;
+	render_components[7] = r.RB_RENDER_COMPONENTS.RT7;
 	for n = 0,r.RB_FS_OUTPUT_CNTL1.MRT-1 do
-		push_mrt(r.RB_MRT[n].BUF_INFO.COLOR_FORMAT,
-			r.GRAS_SC_SCREEN_SCISSOR_BR_0.X + 1,
-			r.GRAS_SC_SCREEN_SCISSOR_BR_0.Y + 1,
-			r.RB_MRT[n].BASE_LO | (r.RB_MRT[n].BASE_HI << 32),
-			r.RB_MRT[n].BASE_GMEM)
+		if render_components[n] ~= 0 then
+			push_mrt(r.RB_MRT[n].BUF_INFO.COLOR_FORMAT,
+				r.GRAS_SC_SCREEN_SCISSOR_BR_0.X + 1,
+				r.GRAS_SC_SCREEN_SCISSOR_BR_0.Y + 1,
+				r.RB_MRT[n].BASE_LO | (r.RB_MRT[n].BASE_HI << 32),
+				r.RB_MRT[n].BASE_GMEM)
+		end
 	end
 
 	local depthbase = r.RB_DEPTH_BUFFER_BASE_LO |
