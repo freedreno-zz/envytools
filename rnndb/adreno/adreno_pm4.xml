@@ -1473,11 +1473,11 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 		-->
 
 		<!-- RM6_BINNING -->
-		<bitfield name="BINNING" pos="20" variants="A6XX-" type="boolean"/>
+		<bitfield name="BINNING" pos="25" variants="A6XX-" type="boolean"/>
 		<!-- all others -->
-		<bitfield name="GMEM" pos="21" variants="A6XX-" type="boolean"/>
+		<bitfield name="GMEM" pos="26" variants="A6XX-" type="boolean"/>
 		<!-- RM6_BYPASS -->
-		<bitfield name="SYSMEM" pos="22" variants="A6XX-" type="boolean"/>
+		<bitfield name="SYSMEM" pos="27" variants="A6XX-" type="boolean"/>
 
 		<bitfield name="MODE" low="28" high="31" type="compare_mode"/>
 	</reg32>
@@ -1510,7 +1510,7 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	<reg32 offset="4" name="4">
 		<bitfield name="REF" low="0" high="31"/>
 	</reg32>
-	<reg32 offset="1" name="1">
+	<reg32 offset="5" name="5">
 		<bitfield name="DWORDS" low="0" high="31" type="uint"/>
 	</reg32>
 </domain>
@@ -1561,6 +1561,38 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 	<reg32 offset="2" name="2">
 		<bitfield name="DWORDS" low="0" high="19" type="uint"/>
 		<bitfield name="TYPE" low="20" high="21" type="ctxswitch_ib"/>
+	</reg32>
+</domain>
+
+<domain name="CP_REG_WRITE" width="32">
+	<enum name="reg_tracker">
+		<doc>
+			Keep shadow copies of these registers and only set them
+			when drawing, avoiding redundant writes:
+			- VPC_CNTL_0
+			- HLSQ_CONTROL_1_REG
+			- HLSQ_UNKNOWN_B980
+		</doc>
+		<value name="TRACK_CNTL_REG" value="0x1"/>
+		<doc>
+			Track RB_RENDER_CNTL, and insert a WFI in the following
+			situation:
+			- There is a write that disables binning
+			- There was a draw with binning left enabled, but in
+			  BYPASS mode
+			Presumably this is a hang workaround?
+		</doc>
+		<value name="TRACK_RENDER_CNTL" value="0x2"/>
+		<doc>
+			Do a mysterious CP_EVENT_WRITE 0x3f when the low bit of
+			the data to write is 0. Used by the Vulkan blob with
+			PC_UNKNOWN_9B07, but this isn't predicated on particular
+			register(s) like the others.
+		</doc>
+		<value name="UNK_EVENT_WRITE" value="0x4"/>
+	</enum>
+	<reg32 offset="0" name="0">
+		<bitfield name="TRACKER" low="0" high="2" type="reg_tracker"/>
 	</reg32>
 </domain>
 

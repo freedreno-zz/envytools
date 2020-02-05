@@ -2255,8 +2255,6 @@ static void cp_reg_write(uint32_t *dwords, uint32_t sizedwords, int level)
 {
 	uint32_t reg = dwords[1] & 0xffff;
 
-	assert(dwords[0] == 0x2);  /* not sure what a value other than 2 does */
-
 	dump_register(reg, dwords[2], level+1);
 	reg_set(reg, dwords[2]);
 }
