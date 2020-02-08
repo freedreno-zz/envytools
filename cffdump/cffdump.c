@@ -1167,7 +1167,82 @@ a6xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state)
 	_get_state_type(state_block_id, state_type, stage, state);
 }
 
-static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
+static void
+dump_tex_samp(uint32_t *texsamp, int num_unit, int level)
+{
+	for (int i = 0; i < num_unit; i++) {
+		/* work-around to reduce noise for opencl blob which always
+		 * writes the max # regardless of # of textures used
+		 */
+		if ((num_unit == 16) && (texsamp[0] == 0) && (texsamp[1] == 0))
+			break;
+
+		if ((300 <= gpu_id) && (gpu_id < 400)) {
+			dump_domain(texsamp, 2, level+2, "A3XX_TEX_SAMP");
+			dump_hex(texsamp, 2, level+1);
+			texsamp += 2;
+		} else if ((400 <= gpu_id) && (gpu_id < 500)) {
+			dump_domain(texsamp, 2, level+2, "A4XX_TEX_SAMP");
+			dump_hex(texsamp, 2, level+1);
+			texsamp += 2;
+		} else if ((500 <= gpu_id) && (gpu_id < 600)) {
+			dump_domain(texsamp, 4, level+2, "A5XX_TEX_SAMP");
+			dump_hex(texsamp, 4, level+1);
+			texsamp += 4;
+		} else if ((600 <= gpu_id) && (gpu_id < 700)) {
+			dump_domain(texsamp, 4, level+2, "A6XX_TEX_SAMP");
+			dump_hex(texsamp, 4, level+1);
+			texsamp += 4;
+		}
+	}
+}
+
+static void
+dump_tex_const(uint32_t *texconst, int num_unit, int level)
+{
+	for (int i = 0; i < num_unit; i++) {
+		/* work-around to reduce noise for opencl blob which always
+		 * writes the max # regardless of # of textures used
+		 */
+		if ((num_unit == 16) &&
+			(texconst[0] == 0) && (texconst[1] == 0) &&
+			(texconst[2] == 0) && (texconst[3] == 0))
+			break;
+
+		if ((300 <= gpu_id) && (gpu_id < 400)) {
+			dump_domain(texconst, 4, level+2, "A3XX_TEX_CONST");
+			dump_hex(texconst, 4, level+1);
+			texconst += 4;
+		} else if ((400 <= gpu_id) && (gpu_id < 500)) {
+			dump_domain(texconst, 8, level+2, "A4XX_TEX_CONST");
+			if (dump_textures) {
+				uint32_t addr = texconst[4] & ~0x1f;
+				dump_gpuaddr(addr, level-2);
+			}
+			dump_hex(texconst, 8, level+1);
+			texconst += 8;
+		} else if ((500 <= gpu_id) && (gpu_id < 600)) {
+			dump_domain(texconst, 12, level+2, "A5XX_TEX_CONST");
+			if (dump_textures) {
+				uint64_t addr = (((uint64_t)texconst[5] & 0x1ffff) << 32) | texconst[4];
+				dump_gpuaddr_size(addr, level-2, hostlen(addr) / 4, 3);
+			}
+			dump_hex(texconst, 12, level+1);
+			texconst += 12;
+		} else if ((600 <= gpu_id) && (gpu_id < 700)) {
+			dump_domain(texconst, 16, level+2, "A6XX_TEX_CONST");
+			if (dump_textures) {
+				uint64_t addr = (((uint64_t)texconst[5] & 0x1ffff) << 32) | texconst[4];
+				dump_gpuaddr_size(addr, level-2, hostlen(addr) / 4, 3);
+			}
+			dump_hex(texconst, 16, level+1);
+			texconst += 16;
+		}
+	}
+}
+
+static void
+cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 {
 	enum shader_t stage;
 	enum state_t state;
@@ -1275,76 +1350,11 @@ static void cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		break;
 	}
 	case TEX_SAMP: {
-		uint32_t *texsamp = (uint32_t *)contents;
-		for (i = 0; i < num_unit; i++) {
-			/* work-around to reduce noise for opencl blob which always
-			 * writes the max # regardless of # of textures used
-			 */
-			if ((num_unit == 16) && (texsamp[0] == 0) && (texsamp[1] == 0))
-				break;
-
-			if ((300 <= gpu_id) && (gpu_id < 400)) {
-				dump_domain(texsamp, 2, level+2, "A3XX_TEX_SAMP");
-				dump_hex(texsamp, 2, level+1);
-				texsamp += 2;
-			} else if ((400 <= gpu_id) && (gpu_id < 500)) {
-				dump_domain(texsamp, 2, level+2, "A4XX_TEX_SAMP");
-				dump_hex(texsamp, 2, level+1);
-				texsamp += 2;
-			} else if ((500 <= gpu_id) && (gpu_id < 600)) {
-				dump_domain(texsamp, 4, level+2, "A5XX_TEX_SAMP");
-				dump_hex(texsamp, 4, level+1);
-				texsamp += 4;
-			} else if ((600 <= gpu_id) && (gpu_id < 700)) {
-				dump_domain(texsamp, 4, level+2, "A6XX_TEX_SAMP");
-				dump_hex(texsamp, 4, level+1);
-				texsamp += 4;
-			}
-		}
+		dump_tex_samp(contents, num_unit, level);
 		break;
 	}
 	case TEX_CONST: {
-		uint32_t *texconst = (uint32_t *)contents;
-
-		for (i = 0; i < num_unit; i++) {
-			/* work-around to reduce noise for opencl blob which always
-			 * writes the max # regardless of # of textures used
-			 */
-			if ((num_unit == 16) &&
-				(texconst[0] == 0) && (texconst[1] == 0) &&
-				(texconst[2] == 0) && (texconst[3] == 0))
-				break;
-
-			if ((300 <= gpu_id) && (gpu_id < 400)) {
-				dump_domain(texconst, 4, level+2, "A3XX_TEX_CONST");
-				dump_hex(texconst, 4, level+1);
-				texconst += 4;
-			} else if ((400 <= gpu_id) && (gpu_id < 500)) {
-				dump_domain(texconst, 8, level+2, "A4XX_TEX_CONST");
-				if (dump_textures) {
-					uint32_t addr = texconst[4] & ~0x1f;
-					dump_gpuaddr(addr, level-2);
-				}
-				dump_hex(texconst, 8, level+1);
-				texconst += 8;
-			} else if ((500 <= gpu_id) && (gpu_id < 600)) {
-				dump_domain(texconst, 12, level+2, "A5XX_TEX_CONST");
-				if (dump_textures) {
-					uint64_t addr = (((uint64_t)texconst[5] & 0x1ffff) << 32) | texconst[4];
-					dump_gpuaddr_size(addr, level-2, hostlen(addr) / 4, 3);
-				}
-				dump_hex(texconst, 12, level+1);
-				texconst += 12;
-			} else if ((600 <= gpu_id) && (gpu_id < 700)) {
-				dump_domain(texconst, 16, level+2, "A6XX_TEX_CONST");
-				if (dump_textures) {
-					uint64_t addr = (((uint64_t)texconst[5] & 0x1ffff) << 32) | texconst[4];
-					dump_gpuaddr_size(addr, level-2, hostlen(addr) / 4, 3);
-				}
-				dump_hex(texconst, 16, level+1);
-				texconst += 16;
-			}
-		}
+		dump_tex_const(contents, num_unit, level);
 		break;
 	}
 	case SSBO_0: {
