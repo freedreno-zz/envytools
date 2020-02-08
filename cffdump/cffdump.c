@@ -54,6 +54,7 @@ static bool needs_wfi = false;
 static bool dump_shaders = false;
 static bool no_color = false;
 static bool summary = false;
+static bool in_summary = false;
 static bool allregs = false;
 static bool dump_textures = false;
 static bool is_blob = false;
@@ -189,6 +190,8 @@ static const char *levels[] = {
 
 static void dump_commands(uint32_t *dwords, uint32_t sizedwords, int level);
 static void dump_register_val(uint32_t regbase, uint32_t dword, int level);
+static void dump_tex_samp(uint32_t *texsamp, int num_unit, int level);
+static void dump_tex_const(uint32_t *texsamp, int num_unit, int level);
 static const char *regname(uint32_t regbase, int color);
 static uint32_t regbase(const char *name);
 
@@ -493,14 +496,60 @@ static void reg_disasm_gpuaddr_hi(const char *name, uint32_t dword, int level)
 	disasm_gpuaddr(name, gpuaddr_lo | (((uint64_t)dword) << 32), level);
 }
 
+/* Find the value of the TEX_COUNT register that corresponds to the named
+ * TEX_SAMP/TEX_CONST reg.
+ *
+ * Note, this kinda assumes an equal # of samplers and textures, but not
+ * really sure if there is a much better option.  I suppose on a6xx we
+ * could instead decode the bitfields in SP_xS_CONFIG
+ */
+static int
+get_tex_count(const char *name)
+{
+	char count_reg[strlen(name) + 5];
+	char *p;
+
+	p = strstr(name, "CONST");
+	if (!p)
+		p = strstr(name, "SAMP");
+	if (!p)
+		return 0;
+
+	int n = p - name;
+	strncpy(count_reg, name, n);
+	strcpy(count_reg + n, "COUNT");
+
+	return reg_val(regbase(count_reg));
+}
+
 static void reg_dump_tex_samp_hi(const char *name, uint32_t dword, int level)
 {
-	reg_dump_gpuaddr_hi(name, dword, level); // XXX TODO
+	if (!in_summary)
+		return;
+
+	int num_unit = get_tex_count(name);
+	uint64_t gpuaddr = gpuaddr_lo | (((uint64_t)dword) << 32);
+	void *buf = hostptr(gpuaddr);
+
+	if (!buf)
+		return;
+
+	dump_tex_samp(buf, num_unit, level+1);
 }
 
 static void reg_dump_tex_const_hi(const char *name, uint32_t dword, int level)
 {
-	reg_dump_gpuaddr_hi(name, dword, level); // XXX TODO
+	if (!in_summary)
+		return;
+
+	int num_unit = get_tex_count(name);
+	uint64_t gpuaddr = gpuaddr_lo | (((uint64_t)dword) << 32);
+	void *buf = hostptr(gpuaddr);
+
+	if (!buf)
+		return;
+
+	dump_tex_const(buf, num_unit, level+1);
 }
 
 /*
@@ -1615,6 +1664,8 @@ static void dump_register_summary(int level)
 	bool saved_summary = summary;
 	summary = false;
 
+	in_summary = true;
+
 	/* dump current state of registers: */
 	printl(2, "%sdraw[%i] register values\n", levels[level], draw_count);
 	for (i = 0; i < regcnt(); i++) {
@@ -1643,6 +1694,8 @@ static void dump_register_summary(int level)
 	}
 
 	clear_rewritten();
+
+	in_summary = false;
 
 	draw_count++;
 	summary = saved_summary;
