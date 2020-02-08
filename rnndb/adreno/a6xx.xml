@@ -1014,6 +1014,9 @@ to upconvert to 32b float internally?
 	<reg32 offset="0x0806" name="CP_RB_RPTR"/>
 	<reg32 offset="0x0807" name="CP_RB_WPTR"/>
 	<reg32 offset="0x0808" name="CP_SQE_CNTL"/>
+	<reg32 offset="0x0812" name="CP_POWER_CNTL">
+		<bitfield name="IFPC" pos="0" type="boolean"/>
+	</reg32>
 	<reg32 offset="0x0821" name="CP_HW_FAULT"/>
 	<reg32 offset="0x0823" name="CP_INTERRUPT_STATUS"/>
 	<reg32 offset="0x0824" name="CP_PROTECT_STATUS"/>
