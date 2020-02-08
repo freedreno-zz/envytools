@@ -2173,24 +2173,7 @@ static void cp_exec_cs_indirect(uint32_t *dwords, uint32_t sizedwords, int level
 
 static void cp_set_marker(uint32_t *dwords, uint32_t sizedwords, int level)
 {
-	static const char *modes[] = {
-		[0x0] = "MODE_0",
-		[0x1] = "BYPASS",
-		[0x2] = "BINNING",
-		[0x4] = "GMEM",
-		[0x5] = "BLIT2D",
-		[0x6] = "RESOLVE",
-		[0x7] = "MODE_7",
-		[0x8] = "MODE_8",
-		[0x9] = "MODE_9",
-		[0xa] = "MODE_a",
-		[0xb] = "MODE_b",
-		[0xc] = "MODE_c",
-		[0xd] = "MODE_d",
-		[0xe] = "MODE_e",
-		[0xf] = "MODE_f",
-	};
-	render_mode = modes[dwords[0] & 0xf];
+	render_mode = rnn_enumname(rnn, "a6xx_render_mode", dwords[0] & 0xf);
 }
 
 static void cp_set_render_mode(uint32_t *dwords, uint32_t sizedwords, int level)
