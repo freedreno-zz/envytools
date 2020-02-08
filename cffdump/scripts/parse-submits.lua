@@ -17,7 +17,7 @@ local r = rnn.init("a630")
 -- Each submit, all draws will target the same N MRTs:
 local mrts = {}
 local allmrts = {}  -- includes historical render targets
-function push_mrt(fmt, w, h, base, gmem)
+function push_mrt(fmt, w, h, base, flag, gmem)
 	dbg("MRT: %s %ux%u 0x%x\n", fmt, w, h, base)
 
 	local mrt = {}
@@ -25,6 +25,7 @@ function push_mrt(fmt, w, h, base, gmem)
 	mrt.w = w
 	mrt.h = h
 	mrt.base = base
+	mrt.flag = flag
 	mrt.gmem = gmem
 
 	mrts[base] = mrt
@@ -33,7 +34,7 @@ end
 
 -- And each each draw will read from M sources/textures:
 local sources = {}
-function push_source(fmt, w, h, base)
+function push_source(fmt, w, h, base, flag)
 	dbg("SRC: %s %ux%u 0x%x\n", fmt, w, h, base)
 
 	local source = {}
@@ -41,6 +42,7 @@ function push_source(fmt, w, h, base)
 	source.w = w
 	source.h = h
 	source.base = base
+	source.flag = flag
 
 	sources[base] = source
 end
@@ -64,8 +66,8 @@ function start_cmdstream(name)
 	printf("Parsing %s\n", name)
 end
 
-function start_submit()
-	dbg("start_submit\n")
+function reset()
+	dbg("reset\n")
 	mrts = {}
 	sources = {}
 	draws = 0
@@ -73,15 +75,21 @@ function start_submit()
 	cleared = {}
 	restored = {}
 	resolved = {}
-	nullbatch = true
 	depthtest = false
 	depthwrite = false
 	stenciltest = false
 	stencilwrite = false
+	drawmode = Nil
 end
 
-function end_submit()
-	dbg("end_submit\n")
+function start_submit()
+	dbg("start_submit\n")
+	reset()
+	nullbatch = true
+end
+
+function finish()
+	dbg("finish\n")
 
 	printf("\n")
 
@@ -131,7 +139,7 @@ function end_submit()
 	end
 
 	for base,mrt in pairs(mrts) do
-		printf("  MRT[0x%x]:\t%ux%u\t\t%s", base, mrt.w, mrt.h, mrt.format)
+		printf("  MRT[0x%x:0x%x]:\t%ux%u\t\t%s", base, mrt.flag, mrt.w, mrt.h, mrt.format)
 		if drawmode == "RM6_GMEM" then
 			if cleared[mrt.gmem] then
 				printf("\tCLEARED")
@@ -142,18 +150,36 @@ function end_submit()
 			if resolved[mrt.gmem] then
 				printf("\tRESOLVED")
 			end
+		else
+			if cleared[mrt.base] then
+				printf("\tCLEARED")
+			end
 		end
 		printf("\n")
+	end
+
+	function print_source(source)
+		printf("  SRC[0x%x:0x%x]:\t%ux%u\t\t%s\n", source.base, source.flag, source.w, source.h, source.format)
 	end
 
 	for base,source in pairs(sources) do
 		-- only show sources that have been previously rendered to, other
 		-- textures are less interesting.  Possibly this should be an
 		-- option somehow
-		if allmrts[base] then
-			printf("  SRC[0x%x]:\t%ux%u\t\t%s\n", base, source.w, source.h, source.format)
+		if draws < 10 then
+			print_source(source)
+		elseif allmrts[base] or draws == 0 then
+			print_source(source)
+		elseif source.flag and allmrts[source.flag] then
+			print_source(source)
 		end
 	end
+	reset()
+end
+
+function end_submit()
+	dbg("end_submit\n")
+	finish()
 end
 
 -- Track the current mode:
@@ -188,10 +214,16 @@ end
 function A6XX_TEX_CONST(pkt, size)
 	push_source(pkt[0].FMT,
 		pkt[1].WIDTH, pkt[1].HEIGHT,
-		pkt[4].BASE_LO | (pkt[5].BASE_HI << 32))
+		pkt[4].BASE_LO | (pkt[5].BASE_HI << 32),
+		pkt[7].FLAG_LO | (pkt[8].FLAG_HI << 32))
 end
 
 function handle_blit()
+	if draws > 0 then
+		finish()
+	end
+	reset()
+	drawmode = "BLIT"
 	-- This kinda assumes that we are doing full img blits, which is maybe
 	-- Not completely legit.  We could perhaps instead just track pitch and
 	-- size/pitch??  Or maybe the size doesn't matter much
@@ -199,12 +231,30 @@ function handle_blit()
 		r.GRAS_2D_DST_BR.X + 1,
 		r.GRAS_2D_DST_BR.Y + 1,
 		r.RB_2D_DST_LO | (r.RB_2D_DST_HI << 32),
+		r.RB_2D_DST_FLAGS_LO | (r.RB_2D_DST_FLAGS_HI << 32),
 		-1)
-	push_source(r.SP_2D_SRC_FORMAT.COLOR_FORMAT,
-		r.GRAS_2D_SRC_BR_X.X + 1,
-		r.GRAS_2D_SRC_BR_Y.Y + 1,
-		r.SP_PS_2D_SRC_LO | (r.SP_PS_2D_SRC_HI << 32))
+	if r.RB_2D_BLIT_CNTL.SOLID_COLOR then
+		dbg("CLEAR=%x\n", r.RB_2D_DST_LO | (r.RB_2D_DST_HI << 32))
+		cleared[r.RB_2D_DST_LO | (r.RB_2D_DST_HI << 32)] = 1
+	else
+		push_source(r.SP_2D_SRC_FORMAT.COLOR_FORMAT,
+			r.GRAS_2D_SRC_BR_X.X + 1,
+			r.GRAS_2D_SRC_BR_Y.Y + 1,
+			r.SP_PS_2D_SRC_LO | (r.SP_PS_2D_SRC_HI << 32),
+			r.SP_PS_2D_SRC_FLAGS_LO | (r.SP_PS_2D_SRC_FLAGS_HI << 32))
+	end
 	blits = blits + 1
+	finish()
+end
+
+function valid_transition(curmode, newmode)
+	if curmode == "RM6_BINNING" and newmode == "RM6_GMEM" then
+		return true
+	end
+	if curmode == "RM6_GMEM" and newmode == "RM6_RESOLVE" then
+		return true
+	end
+	return false
 end
 
 function draw(primtype, nindx)
@@ -214,8 +264,30 @@ function draw(primtype, nindx)
 		handle_blit()
 		return
 	end
+
 	local m = tostring(mode)
+
+	-- detect changes in drawmode which indicate a different
+	-- pass..  BINNING->GMEM means same pass, but other
+	-- transitions mean different pass:
+	if drawmode and m ~= drawmode then
+		dbg("%s -> %s transition\n", drawmode, m)
+		if not valid_transition(drawmode, m) then
+			dbg("invalid transition, new render pass!\n")
+			finish()
+			reset()
+		end
+	end
+
 	if m ~= "RM6_GMEM" and m ~= "RM6_BYPASS" then
+		if m == "RM6_BINNING" then
+			drawmode = m
+			return
+		end
+		if m == "RM6_RESOLVE" and primtype == "EVENT:BLIT" then
+			return
+		end
+		printf("unknown MODE %s for primtype %s\n", m, primtype)
 		return
 	end
 
@@ -243,6 +315,7 @@ function draw(primtype, nindx)
 				r.GRAS_SC_SCREEN_SCISSOR_BR_0.X + 1,
 				r.GRAS_SC_SCREEN_SCISSOR_BR_0.Y + 1,
 				r.RB_MRT[n].BASE_LO | (r.RB_MRT[n].BASE_HI << 32),
+				r.RB_MRT_FLAG_BUFFER[n].ADDR_LO | (r.RB_MRT_FLAG_BUFFER[n].ADDR_HI << 32),
 				r.RB_MRT[n].BASE_GMEM)
 		end
 	end
@@ -255,6 +328,7 @@ function draw(primtype, nindx)
 			r.GRAS_SC_SCREEN_SCISSOR_BR_0.X + 1,
 			r.GRAS_SC_SCREEN_SCISSOR_BR_0.Y + 1,
 			depthbase,
+			r.RB_DEPTH_FLAG_BUFFER_BASE_LO | (r.RB_DEPTH_FLAG_BUFFER_BASE_HI << 32),
 			r.RB_DEPTH_BUFFER_BASE_GMEM)
 	end
 
