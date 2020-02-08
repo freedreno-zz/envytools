@@ -58,6 +58,7 @@ static bool in_summary = false;
 static bool allregs = false;
 static bool dump_textures = false;
 static bool is_blob = false;
+static bool show_comp = false;
 static int vertices;
 static unsigned gpu_id = 220;
 
@@ -2640,6 +2641,12 @@ int main(int argc, char **argv)
 			continue;
 		}
 
+		if (!strcmp(argv[n], "--show-compositor")) {
+			show_comp = true;
+			n++;
+			continue;
+		}
+
 		if (!strcmp(argv[n], "--dump-shaders")) {
 			dump_shaders = true;
 			n++;
@@ -2902,8 +2909,13 @@ static int handle_file(const char *filename, int start, int end, int draw)
 		case RD_CMD:
 			is_blob = true;
 			printl(2, "cmd: %s\n", (char *)buf);
-			// hack to skip xserver cmdstream
-			//skip = ((char *)buf)[0] == 'X';
+			skip = false;
+			if (!show_comp) {
+				skip |= (strstr(buf, "fdperf") == buf);
+				skip |= (strstr(buf, "chrome") == buf);
+				skip |= (strstr(buf, "surfaceflinger") == buf);
+				skip |= ((char *)buf)[0] == 'X';
+			}
 			break;
 		case RD_VERT_SHADER:
 			printl(2, "vertex shader:\n%s\n", (char *)buf);
