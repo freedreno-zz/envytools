@@ -1444,7 +1444,7 @@ static void cp_set_bin(uint32_t *dwords, uint32_t sizedwords, int level)
 	bin_y2 = dwords[2] >> 16;
 }
 
-static void dump_tex_const(uint32_t *dwords, uint32_t sizedwords, uint32_t val, int level)
+static void dump_a2xx_tex_const(uint32_t *dwords, uint32_t sizedwords, uint32_t val, int level)
 {
 	uint32_t w, h, p;
 	uint32_t gpuaddr, flags, mip_gpuaddr, mip_flags;
@@ -1507,7 +1507,7 @@ static void dump_tex_const(uint32_t *dwords, uint32_t sizedwords, uint32_t val, 
 			mip_gpuaddr, mip_flags);
 }
 
-static void dump_shader_const(uint32_t *dwords, uint32_t sizedwords, uint32_t val, int level)
+static void dump_a2xx_shader_const(uint32_t *dwords, uint32_t sizedwords, uint32_t val, int level)
 {
 	int i;
 	printf("%sset shader const %04x\n", levels[level], val);
@@ -1545,9 +1545,9 @@ static void cp_set_const(uint32_t *dwords, uint32_t sizedwords, int level)
 		 * attributes, textures, etc..
 		 */
 		if (val < 0x78) {
-			dump_tex_const(dwords+1, sizedwords-1, val, level);
+			dump_a2xx_tex_const(dwords+1, sizedwords-1, val, level);
 		} else {
-			dump_shader_const(dwords+1, sizedwords-1, val, level);
+			dump_a2xx_shader_const(dwords+1, sizedwords-1, val, level);
 		}
 		break;
 	case 0x2:
