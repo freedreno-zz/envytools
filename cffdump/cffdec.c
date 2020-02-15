@@ -24,6 +24,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <err.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -70,10 +71,31 @@ static int is_64b(void)
 }
 
 
-/* note: not sure if CP_SET_DRAW_STATE counts as a complete extra level
- * of IB or if it is restricted to just have register writes:
- */
 static int draws[3];
+static struct {
+	uint64_t base;
+	uint32_t size;   /* in dwords */
+	/* Generally cmdstream consists of multiple IB calls to different
+	 * buffers, which are themselves often re-used for each tile.  The
+	 * triggered flag serves two purposes to help make it more clear
+	 * what part of the cmdstream is before vs after the the GPU hang:
+	 *
+	 * 1) if in IB2 we are passed the point within the IB2 buffer where
+	 *    the GPU hung, but IB1 is not passed the point within its
+	 *    buffer where the GPU had hung, then we know the GPU hang
+	 *    happens on a future use of that IB2 buffer.
+	 *
+	 * 2) if in an IB1 or IB2 buffer that is not the one where the GPU
+	 *    hung, but we've already passed the trigger point at the same
+	 *    IB level, we know that we are passed the point where the GPU
+	 *    had hung.
+	 *
+	 * So this is a one way switch, false->true.  And a higher #'d
+	 * IB level isn't considered triggered unless the lower #'d IB
+	 * level is.
+	 */
+	bool triggered;
+} ibs[3];
 static int ib;
 
 static int draw_count;
@@ -130,6 +152,34 @@ static void dump_tex_samp(uint32_t *texsamp, int num_unit, int level);
 static void dump_tex_const(uint32_t *texsamp, int num_unit, int level);
 static const char *regname(uint32_t regbase, int color);
 
+static bool
+highlight_gpuaddr(uint64_t gpuaddr)
+{
+	if (!options->color)
+		return false;
+
+	if (!options->ibs[ib].base)
+		return false;
+
+	if ((ib > 0) && options->ibs[ib-1].base && !ibs[ib-1].triggered)
+		return false;
+
+	if (ibs[ib].triggered)
+		return true;
+
+	if (options->ibs[ib].base != ibs[ib].base)
+		return false;
+
+	uint64_t start = ibs[ib].base + 4 * (ibs[ib].size - options->ibs[ib].rem);
+	uint64_t end   = ibs[ib].base + 4 * ibs[ib].size;
+
+	bool triggered = (start <= gpuaddr) && (gpuaddr <= end);
+
+	ibs[ib].triggered |= triggered;
+
+	return triggered;
+}
+
 static void
 dump_hex(uint32_t *dwords, uint32_t sizedwords, int level)
 {
@@ -158,11 +208,20 @@ dump_hex(uint32_t *dwords, uint32_t sizedwords, int level)
 		if (zero)
 			continue;
 
+		uint64_t addr = gpuaddr(&dwords[i]);
+		bool highlight = highlight_gpuaddr(addr);
+
+		if (highlight)
+			printf("\x1b[0;1;31m");
+
 		if (is_64b()) {
-			printf("%016lx:%s", gpuaddr(&dwords[i]), levels[level]);
+			printf("%016lx:%s", addr, levels[level]);
 		} else {
-			printf("%08x:%s", (uint32_t)gpuaddr(&dwords[i]), levels[level]);
+			printf("%08x:%s", (uint32_t)addr, levels[level]);
 		}
+
+		if (highlight)
+			printf("\x1b[0m");
 
 		printf("%04x:", i * 4);
 
@@ -669,6 +728,7 @@ reset_regs(void)
 {
 	clear_written();
 	clear_lastvals();
+	memset(&ibs, 0, sizeof(ibs));
 }
 
 void
@@ -1840,11 +1900,21 @@ cp_indirect(uint32_t *dwords, uint32_t sizedwords, int level)
 	ptr = hostptr(ibaddr);
 
 	if (ptr) {
+		/* If the GPU hung within the target IB, the trigger point will be
+		 * just after the current CP_INDIRECT_BUFFER.  Because the IB is
+		 * executed but never returns.  Account for this by checking if
+		 * the IB returned:
+		 */
+		highlight_gpuaddr(gpuaddr(&dwords[is_64b() ? 3 : 2]));
+
 		ib++;
+		ibs[ib].base = ibaddr;
+		ibs[ib].size = ibsize;
+
 		dump_commands(ptr, ibsize, level);
 		ib--;
 	} else {
-		fprintf(stderr, "could not find: %016lx (%d)\n", ibaddr, ibsize);
+		fprintf(stderr, "could not find: %016"PRIx64" (%d)\n", ibaddr, ibsize);
 	}
 }
 
