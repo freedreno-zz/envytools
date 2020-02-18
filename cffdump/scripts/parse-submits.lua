@@ -185,7 +185,7 @@ end
 -- Track the current mode:
 local mode = ""
 function CP_SET_MARKER(pkt, size)
-	mode = pkt[0].MODE
+	mode = pkt[0].MARKER
 	dbg("mode: %s\n", mode)
 end
 
