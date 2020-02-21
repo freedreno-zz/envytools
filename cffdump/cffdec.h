@@ -46,7 +46,7 @@ struct cffdec_options {
 	struct {
 		uint64_t base;
 		uint32_t rem;
-	} ibs[3];
+	} ibs[4];
 };
 
 void printl(int lvl, const char *fmt, ...);

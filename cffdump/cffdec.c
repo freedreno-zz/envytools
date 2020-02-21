@@ -95,7 +95,7 @@ static struct {
 	 * level is.
 	 */
 	bool triggered;
-} ibs[3];
+} ibs[4];
 static int ib;
 
 static int draw_count;
