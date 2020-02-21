@@ -547,6 +547,43 @@ decode_shader_blocks(void)
 }
 
 /*
+ * Decode debugbus section:
+ */
+
+static void
+decode_debugbus(void)
+{
+	char *block = NULL;
+	uint32_t sizedwords = 0;
+
+	foreach_line_in_section (line) {
+		if (startswith(line, "  - debugbus-block:")) {
+			free(block);
+			parseline(line, "  - debugbus-block: %ms", &block);
+		} else if (startswith(line, "    count:")) {
+			parseline(line, "    count: %u", &sizedwords);
+		} else if (startswith(line, "    data: !!ascii85 |")) {
+			uint32_t *buf = popline_ascii85(sizedwords);
+
+			/* some of the sections are pretty large, and are (at least
+			 * so far) not useful, so skip them if not in verbose mode:
+			 */
+			bool dump = verbose ||
+				0;
+
+			if (dump)
+				dump_hex_ascii(buf, 4 * sizedwords, 1);
+
+			free(buf);
+
+			continue;
+		}
+
+		printf("%s", line);
+	}
+}
+
+/*
  * Main crashdump decode loop:
  */
 
@@ -586,6 +623,8 @@ decode(void)
 			decode_shader_blocks();
 		} else if (startswith(line, "clusters:")) {
 			decode_clusters();
+		} else if (startswith(line, "debugbus:")) {
+			decode_debugbus();
 		}
 	}
 }
