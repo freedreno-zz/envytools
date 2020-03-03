@@ -920,6 +920,14 @@ static uint32_t bin_x1, bin_x2, bin_y1, bin_y2;
 static unsigned mode;
 static const char *render_mode;
 
+static void
+print_mode(int level)
+{
+	if ((options->gpu_id >= 500) && !quiet(2)) {
+		printf("%smode: %s\n", levels[level], render_mode);
+	}
+}
+
 /* well, actually query and script..
  * NOTE: call this before dump_register_summary()
  */
@@ -1608,6 +1616,7 @@ cp_event_write(uint32_t *dwords, uint32_t sizedwords, int level)
 		snprintf(eventname, sizeof(eventname), "EVENT:%s", name);
 		if (!strcmp(name, "BLIT")) {
 			do_query(eventname, 0);
+			print_mode(level);
 			dump_register_summary(level);
 		}
 	}
@@ -1783,10 +1792,7 @@ cp_draw_indx_offset(uint32_t *dwords, uint32_t sizedwords, int level)
 	uint32_t prim_type = dwords[0] & 0x1f;
 
 	do_query(rnn_enumname(rnn, "pc_di_primtype", prim_type), num_indices);
-
-	if ((options->gpu_id >= 500) && !quiet(2)) {
-		printf("%smode: %s\n", levels[level], render_mode);
-	}
+	print_mode(level);
 
 	/* don't bother dumping registers for the dummy draw_indx's.. */
 	if (num_indices > 0)
@@ -1800,10 +1806,7 @@ cp_draw_indx_indirect(uint32_t *dwords, uint32_t sizedwords, int level)
 	uint64_t addr;
 
 	do_query(rnn_enumname(rnn, "pc_di_primtype", prim_type), 0);
-
-	if ((options->gpu_id >= 500) && !quiet(2)) {
-		printf("%smode: %s\n", levels[level], render_mode);
-	}
+	print_mode(level);
 
 	if (is_64b())
 		addr = (((uint64_t)dwords[2] & 0x1ffff) << 32) | dwords[1];
@@ -1827,10 +1830,7 @@ cp_draw_indirect(uint32_t *dwords, uint32_t sizedwords, int level)
 	uint64_t addr;
 
 	do_query(rnn_enumname(rnn, "pc_di_primtype", prim_type), 0);
-
-	if ((options->gpu_id >= 500) && !quiet(2)) {
-		printf("%smode: %s\n", levels[level], render_mode);
-	}
+	print_mode(level);
 
 	addr = (((uint64_t)dwords[2] & 0x1ffff) << 32) | dwords[1];
 	dump_gpuaddr_size(addr, level, 0x10, 2);
@@ -2259,10 +2259,8 @@ cp_compute_checkpoint(uint32_t *dwords, uint32_t sizedwords, int level)
 static void
 cp_blit(uint32_t *dwords, uint32_t sizedwords, int level)
 {
-	if ((options->gpu_id >= 500) && !quiet(2)) {
-		printf("%smode: %s\n", levels[level], render_mode);
-	}
 	do_query(rnn_enumname(rnn, "cp_blit_cmd", dwords[0]), 0);
+	print_mode(level);
 	dump_register_summary(level);
 }
 
