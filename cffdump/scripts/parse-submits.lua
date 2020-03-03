@@ -202,12 +202,45 @@ function CP_EVENT_WRITE(pkt, size)
 		else
 			cleared[r.RB_BLIT_BASE_GMEM] = 1
 		end
-	else
-		if m ~= "RM6_RESOLVE" then
-			printf("I am confused!!!\n")
-			return
+		-- push_mrt() because we could have GMEM
+		-- passes with only a clear and no draws:
+		local flag = 0
+		local sysmem = 0;
+		-- try to match up the GMEM addr with the MRT/DEPTH state,
+		-- to avoid relying on RB_BLIT_DST also getting written:
+		for n = 0,r.RB_FS_OUTPUT_CNTL1.MRT-1 do
+			if r.RB_MRT[n].BASE_GMEM == r.RB_BLIT_BASE_GMEM then
+				sysmem = r.RB_MRT[n].BASE_LO | (r.RB_MRT[n].BASE_HI << 32)
+				flag = r.RB_MRT_FLAG_BUFFER[n].ADDR_LO | (r.RB_MRT_FLAG_BUFFER[n].ADDR_HI << 32)
+				break
+			end
 		end
+		if sysmem == 0 and r.RB_BLIT_BASE_GMEM == r.RB_DEPTH_BUFFER_BASE_GMEM then
+			sysmem = r.RB_DEPTH_BUFFER_BASE_LO | (r.RB_DEPTH_BUFFER_BASE_HI << 32)
+			flag = r.RB_DEPTH_FLAG_BUFFER_BASE_LO | (r.RB_DEPTH_FLAG_BUFFER_BASE_HI << 32)
+
+		end
+		if sysmem == 0 then
+			-- fallback:
+			sysmem = r.RB_BLIT_DST_LO | (r.RB_BLIT_DST_HI << 32)
+			flag = r.RB_BLIT_FLAG_DST_LO | (r.RB_BLIT_FLAG_DST_HI << 32)
+		end
+		if not r.RB_BLIT_DST_INFO.FLAGS then
+			flag = 0
+		end
+		-- TODO maybe just emit RB_BLIT_DST_LO/HI for clears.. otherwise
+		-- we get confused by stale values in registers.. not sure
+		-- if this is a problem w/ blob
+		push_mrt(r.RB_BLIT_DST_INFO.COLOR_FORMAT,
+			r.RB_BLIT_SCISSOR_BR.X + 1,
+			r.RB_BLIT_SCISSOR_BR.Y + 1,
+			sysmem,
+			flag,
+			r.RB_BLIT_BASE_GMEM)
+	elseif m == "RM6_RESOLVE" then
 		resolved[r.RB_BLIT_BASE_GMEM] = 1
+	else
+		printf("I am confused!!!\n")
 	end
 end
 
@@ -219,6 +252,13 @@ function A6XX_TEX_CONST(pkt, size)
 end
 
 function handle_blit()
+	-- blob sometimes uses CP_BLIT for resolves, so filter those out:
+	-- TODO it would be nice to not hard-code GMEM addr:
+	-- TODO I guess the src can be an offset from GMEM addr..
+	if r.SP_PS_2D_SRC_LO == 0x100000 and not r.RB_2D_BLIT_CNTL.SOLID_COLOR then
+		resolved[0] = 1
+		return
+	end
 	if draws > 0 then
 		finish()
 	end
@@ -262,6 +302,8 @@ function draw(primtype, nindx)
 	nullbatch = false
 	if primtype == "BLIT_OP_SCALE" then
 		handle_blit()
+		return
+	elseif primtype == "EVENT:BLIT" then
 		return
 	end
 
