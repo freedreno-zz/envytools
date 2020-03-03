@@ -919,12 +919,15 @@ dump_domain(uint32_t *dwords, uint32_t sizedwords, int level,
 static uint32_t bin_x1, bin_x2, bin_y1, bin_y2;
 static unsigned mode;
 static const char *render_mode;
+static bool skip_ib2_enable_global;
+static bool skip_ib2_enable_local;
 
 static void
 print_mode(int level)
 {
 	if ((options->gpu_id >= 500) && !quiet(2)) {
 		printf("%smode: %s\n", levels[level], render_mode);
+		printf("%sskip_ib2: g=%d, l=%d\n", levels[level], skip_ib2_enable_global, skip_ib2_enable_local);
 	}
 }
 
@@ -2309,6 +2312,18 @@ cp_set_ctxswitch_ib(uint32_t *dwords, uint32_t sizedwords, int level)
 	}
 }
 
+static void
+cp_skip_ib2_enable_global(uint32_t *dwords, uint32_t sizedwords, int level)
+{
+	skip_ib2_enable_global = dwords[0];
+}
+
+static void
+cp_skip_ib2_enable_local(uint32_t *dwords, uint32_t sizedwords, int level)
+{
+	skip_ib2_enable_local = dwords[0];
+}
+
 #define CP(x, fxn, ...)   { "CP_" #x, fxn, ##__VA_ARGS__ }
 static const struct type3_op {
 	const char *name;
@@ -2351,6 +2366,8 @@ static const struct type3_op {
 		CP(CONTEXT_REG_BUNCH, cp_context_reg_bunch),
 		CP(DRAW_INDIRECT, cp_draw_indirect, {.load_all_groups=true}),
 		CP(DRAW_INDX_INDIRECT, cp_draw_indx_indirect, {.load_all_groups=true}),
+		CP(SKIP_IB2_ENABLE_GLOBAL, cp_skip_ib2_enable_global),
+		CP(SKIP_IB2_ENABLE_LOCAL, cp_skip_ib2_enable_local),
 
 		/* for a6xx */
 		CP(LOAD_STATE6_GEOM, cp_load_state),
