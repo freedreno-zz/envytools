@@ -637,13 +637,14 @@ static void
 usage(void)
 {
 	fprintf(stderr, "Usage:\n\n"
-			"\tcrashdec [-achsv] [-f FILE]\n\n"
+			"\tcrashdec [-achmsv] [-f FILE]\n\n"
 			"Options:\n"
 			"\t-a, --allregs   - show all registers (including ones not written since\n"
 			"\t                  previous draw) at each draw\n"
 			"\t-c, --color     - use colors\n"
 			"\t-f, --file=FILE - read input from specified file (rather than stdin)\n"
 			"\t-h, --help      - this usage message\n"
+			"\t-m, --markers   - try to decode CP_NOP string markers\n"
 			"\t-s, --summary   - don't show individual register writes, but just show\n"
 			"\t                  register values on draws\n"
 			"\t-v, --verbose   - dump more verbose output, including contents of\n"
@@ -658,6 +659,7 @@ static const struct option opts[] = {
 	{ .name = "color",   .has_arg = 0, NULL, 'c' },
 	{ .name = "file",    .has_arg = 1, NULL, 'f' },
 	{ .name = "help",    .has_arg = 0, NULL, 'h' },
+	{ .name = "markers", .has_arg = 0, NULL, 'm' },
 	{ .name = "summary", .has_arg = 0, NULL, 's' },
 	{ .name = "verbose", .has_arg = 0, NULL, 'v' },
 	{}
@@ -686,7 +688,7 @@ main(int argc, char **argv)
 	/* default to read from stdin: */
 	in = stdin;
 
-	while ((c = getopt_long(argc, argv, "acf:sv", opts, NULL)) != -1) {
+	while ((c = getopt_long(argc, argv, "acf:hmsv", opts, NULL)) != -1) {
 		switch (c) {
 		case 'a':
 			options.allregs = true;
@@ -696,6 +698,9 @@ main(int argc, char **argv)
 			break;
 		case 'f':
 			in = fopen(optarg, "r");
+			break;
+		case 'm':
+			options.decode_markers = true;
 			break;
 		case 's':
 			options.summary = true;
