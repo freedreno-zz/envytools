@@ -264,8 +264,10 @@ static void print_reg_stats(struct disasm_ctx *ctx)
 
 	// Note this count of instructions includes rptN, which matches
 	// up to how mesa prints this:
-	fprintf(ctx->out, "%s- shaderdb: %d instructions (%d instlen), %d half, %d full\n",
-			levels[ctx->level], ctx->stats->instructions, ctx->stats->instlen,
+	fprintf(ctx->out, "%s- shaderdb: %d instructions, %d nops, %d non-nops, "
+			"(%d instlen), %d half, %d full\n",
+			levels[ctx->level], ctx->stats->instructions, ctx->stats->nops,
+			ctx->stats->instructions - ctx->stats->nops, ctx->stats->instlen,
 			halfreg, fullreg);
 	fprintf(ctx->out, "%s- shaderdb: %d (ss), %d (sy)\n", levels[ctx->level],
 			ctx->stats->ss, ctx->stats->sy);
@@ -1403,8 +1405,10 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 	instr_t *instr = (instr_t *)dwords;
 	uint32_t opc = instr_opc(instr, ctx->gpu_id);
 	unsigned nop = 0;
+	unsigned cycles = ctx->stats->instructions;
 
-	fprintf(ctx->out, "%s%04d[%08xx_%08xx] ", levels[ctx->level], n, dwords[1], dwords[0]);
+	fprintf(ctx->out, "%s:%d:%04d:%04d[%08xx_%08xx] ", levels[ctx->level],
+			instr->opc_cat, n, cycles++, dwords[1], dwords[0]);
 
 #if 0
 	/* print unknown bits: */
@@ -1460,12 +1464,14 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 	if ((instr->opc_cat <= 4) && (debug & EXPAND_REPEAT)) {
 		int i;
 		for (i = 0; i < nop; i++) {
-			fprintf(ctx->out, "%s%04d[                   ] ", levels[ctx->level], n);
+			fprintf(ctx->out, "%s:%d:%04d:%04d[                   ] ",
+					levels[ctx->level], instr->opc_cat, n, cycles++);
 			fprintf(ctx->out, "nop\n");
 		}
 		for (i = 0; i < ctx->repeat; i++) {
 			ctx->repeatidx = i + 1;
-			fprintf(ctx->out, "%s%04d[                   ] ", levels[ctx->level], n);
+			fprintf(ctx->out, "%s:%d:%04d:%04d[                   ] ",
+					levels[ctx->level], instr->opc_cat, n, cycles++);
 
 			print_single_instr(ctx, instr);
 			fprintf(ctx->out, "\n");
