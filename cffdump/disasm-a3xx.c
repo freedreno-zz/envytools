@@ -133,7 +133,10 @@ static void print_reg(struct disasm_ctx *ctx, reg_t reg, bool full, bool r,
 		else
 			fprintf(ctx->out, "%s%c<a0.x>", full ? "" : "h", type);
 	} else if ((reg.num == REG_A0) && !c) {
-		fprintf(ctx->out, "a0.%c", component[reg.comp]);
+		/* This matches libllvm output, the second (scalar) address register
+		 * seems to be called a1.x instead of a0.y.
+		 */
+		fprintf(ctx->out, "a%d.x", reg.comp);
 	} else if ((reg.num == REG_P0) && !c) {
 		fprintf(ctx->out, "p0.%c", component[reg.comp]);
 	} else {
@@ -389,11 +392,11 @@ static void print_instr_cat0(struct disasm_ctx *ctx, instr_t *instr)
 		break;
 	case OPC_BR:
 		fprintf(ctx->out, " %sp0.%c, #%d", cat0->inv ? "!" : "",
-				component[cat0->comp], cat0->a5xx.immed);
+				component[cat0->comp], cat0->a3xx.immed);
 		break;
 	case OPC_JUMP:
 	case OPC_CALL:
-		fprintf(ctx->out, " #%d", cat0->a5xx.immed);
+		fprintf(ctx->out, " #%d", cat0->a3xx.immed);
 		break;
 	}
 
@@ -411,7 +414,7 @@ static void print_instr_cat1(struct disasm_ctx *ctx, instr_t *instr)
 	if (cat1->src_type == cat1->dst_type) {
 		if ((cat1->src_type == TYPE_S16) && (((reg_t)cat1->dst).num == REG_A0)) {
 			/* special case (nmemonic?): */
-			fprintf(ctx->out, "mova.%s%s", type[cat1->src_type], type[cat1->dst_type]);
+			fprintf(ctx->out, "mova");
 		} else {
 			fprintf(ctx->out, "mov.%s%s", type[cat1->src_type], type[cat1->dst_type]);
 		}
@@ -445,12 +448,13 @@ static void print_instr_cat1(struct disasm_ctx *ctx, instr_t *instr)
 		 * libllvm-a3xx...
 		 */
 		char type = cat1->src_rel_c ? 'c' : 'r';
+		const char *full = (type_size(cat1->src_type) == 32) ? "" : "h";
 		if (cat1->off < 0)
-			fprintf(ctx->out, "%c<a0.x - %d>", type, -cat1->off);
+			fprintf(ctx->out, "%s%c<a0.x - %d>", full, type, -cat1->off);
 		else if (cat1->off > 0)
-			fprintf(ctx->out, "%c<a0.x + %d>", type, cat1->off);
+			fprintf(ctx->out, "%s%c<a0.x + %d>", full, type, cat1->off);
 		else
-			fprintf(ctx->out, "%c<a0.x>", type);
+			fprintf(ctx->out, "%s%c<a0.x>", full, type);
 	} else {
 		print_reg_src(ctx, (reg_t)(cat1->src), type_size(cat1->src_type) == 32,
 				cat1->src_r, cat1->src_c, cat1->src_im, false, false, false);
@@ -645,15 +649,70 @@ static void print_instr_cat5(struct disasm_ctx *ctx, instr_t *instr)
 			[opc_op(OPC_RGETPOS)]  = { true,  false, false, false, },
 			[opc_op(OPC_RGETINFO)] = { false, false, false, false, },
 	};
+
+	static const struct {
+		bool indirect;
+		bool bindless;
+		bool use_a1;
+		bool uniform;
+	} desc_features[8] = {
+		[CAT5_NONUNIFORM] = { .indirect = true, },
+		[CAT5_UNIFORM] = { .indirect = true, .uniform = true, },
+		[CAT5_BINDLESS_IMM] = { .bindless = true, },
+		[CAT5_BINDLESS_UNIFORM] = {
+			.bindless = true,
+			.indirect = true,
+			.uniform = true,
+		},
+		[CAT5_BINDLESS_NONUNIFORM] = {
+			.bindless = true,
+			.indirect = true,
+		},
+		[CAT5_BINDLESS_A1_IMM] = {
+			.bindless = true,
+			.use_a1 = true,
+		},
+		[CAT5_BINDLESS_A1_UNIFORM] = {
+			.bindless = true,
+			.indirect = true,
+			.uniform = true,
+			.use_a1 = true,
+		},
+		[CAT5_BINDLESS_A1_NONUNIFORM] = {
+			.bindless = true,
+			.indirect = true,
+			.use_a1 = true,
+		},
+	};
+
 	instr_cat5_t *cat5 = &instr->cat5;
 	int i;
+
+	bool desc_indirect =
+		cat5->is_s2en_bindless &&
+		desc_features[cat5->s2en_bindless.desc_mode].indirect;
+	bool bindless =
+		cat5->is_s2en_bindless &&
+		desc_features[cat5->s2en_bindless.desc_mode].bindless;
+	bool use_a1 =
+		cat5->is_s2en_bindless &&
+		desc_features[cat5->s2en_bindless.desc_mode].use_a1;
+	bool uniform =
+		cat5->is_s2en_bindless &&
+		desc_features[cat5->s2en_bindless.desc_mode].uniform;
 
 	if (cat5->is_3d)   fprintf(ctx->out, ".3d");
 	if (cat5->is_a)    fprintf(ctx->out, ".a");
 	if (cat5->is_o)    fprintf(ctx->out, ".o");
 	if (cat5->is_p)    fprintf(ctx->out, ".p");
 	if (cat5->is_s)    fprintf(ctx->out, ".s");
-	if (cat5->is_s2en) fprintf(ctx->out, ".s2en");
+	if (desc_indirect) fprintf(ctx->out, ".s2en");
+	if (uniform)       fprintf(ctx->out, ".uniform");
+
+	if (bindless) {
+		unsigned base = (cat5->s2en_bindless.base_hi << 1) | cat5->base_lo;
+		fprintf(ctx->out, ".base%d", base);
+	}
 
 	fprintf(ctx->out, " ");
 
@@ -680,34 +739,47 @@ static void print_instr_cat5(struct disasm_ctx *ctx, instr_t *instr)
 				false, false, false);
 	}
 
-	if (cat5->is_s2en) {
-		if (cat5->is_o || info[cat5->opc].src2) {
-			fprintf(ctx->out, ", ");
-			print_reg_src(ctx, (reg_t)(cat5->s2en.src2), cat5->full,
-					false, false, false, false, false, false);
-		}
+	if (cat5->is_o || info[cat5->opc].src2) {
 		fprintf(ctx->out, ", ");
-		print_reg_src(ctx, (reg_t)(cat5->s2en.src3), false, false, false, false,
-				false, false, false);
-	} else {
-		if (cat5->is_o || info[cat5->opc].src2) {
-			fprintf(ctx->out, ", ");
-			print_reg_src(ctx, (reg_t)(cat5->norm.src2), cat5->full,
-					false, false, false, false, false, false);
+		print_reg_src(ctx, (reg_t)(cat5->src2), cat5->full,
+				false, false, false, false, false, false);
+	}
+	if (cat5->is_s2en_bindless) {
+		if (!desc_indirect) {
+			if (info[cat5->opc].samp) {
+				if (use_a1)
+					fprintf(ctx->out, ", s#%d", cat5->s2en_bindless.src3);
+				else
+					fprintf(ctx->out, ", s#%d", cat5->s2en_bindless.src3 & 0xf);
+			}
+
+			if (info[cat5->opc].tex && !use_a1) {
+				fprintf(ctx->out, ", t#%d", cat5->s2en_bindless.src3 >> 4);
+			}
 		}
+	} else {
 		if (info[cat5->opc].samp)
 			fprintf(ctx->out, ", s#%d", cat5->norm.samp);
 		if (info[cat5->opc].tex)
 			fprintf(ctx->out, ", t#%d", cat5->norm.tex);
 	}
 
+	if (desc_indirect) {
+		fprintf(ctx->out, ", ");
+		print_reg_src(ctx, (reg_t)(cat5->s2en_bindless.src3), bindless,
+					  false, false, false, false, false, false);
+	}
+
+	if (use_a1)
+		fprintf(ctx->out, ", a1.x");
+
 	if (debug & PRINT_VERBOSE) {
-		if (cat5->is_s2en) {
-			if ((debug & PRINT_VERBOSE) && (cat5->s2en.dummy1|cat5->s2en.dummy2|cat5->dummy2))
-				fprintf(ctx->out, "\t{5: %x,%x,%x}", cat5->s2en.dummy1, cat5->s2en.dummy2, cat5->dummy2);
+		if (cat5->is_s2en_bindless) {
+			if ((debug & PRINT_VERBOSE) && cat5->s2en_bindless.dummy1)
+				fprintf(ctx->out, "\t{5: %x}", cat5->s2en_bindless.dummy1);
 		} else {
-			if ((debug & PRINT_VERBOSE) && (cat5->norm.dummy1|cat5->dummy2))
-				fprintf(ctx->out, "\t{5: %x,%x}", cat5->norm.dummy1, cat5->dummy2);
+			if ((debug & PRINT_VERBOSE) && cat5->norm.dummy1)
+				fprintf(ctx->out, "\t{5: %x}", cat5->norm.dummy1);
 		}
 	}
 }
@@ -887,6 +959,7 @@ static void print_instr_cat6_a3xx(struct disasm_ctx *ctx, instr_t *instr)
 			 * a simple dword offset..  src3 appears to be
 			 * uvec2(offset * 4, 0).  Not sure the point of that.
 			 */
+
 			fprintf(ctx->out, "g[%u], ", cat6->ldgb.src_ssbo);
 			print_src(ctx, &src1);  /* value */
 			fprintf(ctx->out, ", ");
@@ -960,7 +1033,6 @@ static void print_instr_cat6_a3xx(struct disasm_ctx *ctx, instr_t *instr)
 
 		return;
 	}
-
 	if (cat6->dst_off) {
 		dst.reg = (reg_t)(cat6->c.dst);
 		dstoff  = cat6->c.off;
@@ -1030,46 +1102,66 @@ static void print_instr_cat6_a3xx(struct disasm_ctx *ctx, instr_t *instr)
 static void print_instr_cat6_a6xx(struct disasm_ctx *ctx, instr_t *instr)
 {
 	instr_cat6_a6xx_t *cat6 = &instr->cat6_a6xx;
-	struct reginfo src1, src2;
-	bool has_dest = _OPC(6, cat6->opc) == OPC_LDIB;
-	char ss = 0;
+	struct reginfo src1, src2, ssbo;
+	bool uses_type = _OPC(6, cat6->opc) != OPC_LDC;
+
+	static const struct {
+		bool indirect;
+		bool bindless;
+		bool uniform;
+	} desc_features[8] = {
+		[CAT6_IMM] = { false },
+		[CAT6_BINDLESS_IMM] = { .bindless = true, },
+		[CAT6_BINDLESS_UNIFORM] = {
+			.bindless = true,
+			.indirect = true,
+			.uniform = true,
+		},
+		[CAT6_BINDLESS_NONUNIFORM] = {
+			.bindless = true,
+			.indirect = true,
+		},
+	};
+
+	bool indirect_ssbo = desc_features[cat6->desc_mode].indirect;
+	bool bindless = desc_features[cat6->desc_mode].bindless;
+	bool uniform = desc_features[cat6->desc_mode].uniform;
+
 
 	memset(&src1, 0, sizeof(src1));
 	memset(&src2, 0, sizeof(src2));
+	memset(&ssbo, 0, sizeof(ssbo));
 
-	fprintf(ctx->out, ".%s", cat6->typed ? "typed" : "untyped");
-	fprintf(ctx->out, ".%dd", cat6->d + 1);
-	fprintf(ctx->out, ".%s", type[cat6->type]);
-	fprintf(ctx->out, ".%u ", cat6->type_size + 1);
-
-	if (has_dest) {
-		src2.reg = (reg_t)(cat6->src2);
-		src2.full = true; // XXX
-		print_src(ctx, &src2);
-
-		fprintf(ctx->out, ", ");
+	if (uses_type) {
+		fprintf(ctx->out, ".%s", cat6->typed ? "typed" : "untyped");
+		fprintf(ctx->out, ".%dd", cat6->d + 1);
+		fprintf(ctx->out, ".%s", type[cat6->type]);
 	}
+	fprintf(ctx->out, ".%u", cat6->type_size + 1);
 
-	/* NOTE: blob seems to use old encoding for ldl/stl (local memory) */
-	ss = 'g';
+	if (bindless)
+		fprintf(ctx->out, ".base%d", cat6->base);
+	if (uniform)
+		fprintf(ctx->out, ".uniform");
+	fprintf(ctx->out, " ");
 
-	fprintf(ctx->out, "%c[%u", ss, cat6->ssbo);
-	fprintf(ctx->out, "] + ");
+	src2.reg = (reg_t)(cat6->src2);
+	src2.full = true; // XXX
+	print_src(ctx, &src2);
+	fprintf(ctx->out, ", ");
+
 	src1.reg = (reg_t)(cat6->src1);
 	src1.full = true; // XXX
 	print_src(ctx, &src1);
-
-	if (!has_dest) {
-		fprintf(ctx->out, ", ");
-
-		src2.reg = (reg_t)(cat6->src2);
-		src2.full = true; // XXX
-		print_src(ctx, &src2);
-	}
+	fprintf(ctx->out, ", ");
+	ssbo.reg = (reg_t)(cat6->ssbo);
+	ssbo.im = !indirect_ssbo;
+	ssbo.full = true;
+	print_src(ctx, &ssbo);
 
 	if (debug & PRINT_VERBOSE) {
-		fprintf(ctx->out, " (pad1=%x, pad2=%x, pad3=%x, pad4=%x)", cat6->pad1,
-				cat6->pad2, cat6->pad3, cat6->pad4);
+		fprintf(ctx->out, " (pad1=%x, pad2=%x, pad3=%x, pad4=%x, pad5=%x)",
+				cat6->pad1, cat6->pad2, cat6->pad3, cat6->pad4, cat6->pad5);
 	}
 }
 
@@ -1085,7 +1177,6 @@ static void print_instr_cat6(struct disasm_ctx *ctx, instr_t *instr)
 			fprintf(ctx->out, " LEGACY");
 	}
 }
-
 static void print_instr_cat7(struct disasm_ctx *ctx, instr_t *instr)
 {
 	instr_cat7_t *cat7 = &instr->cat7;
