@@ -384,17 +384,41 @@ static void print_src(struct disasm_ctx *ctx, struct reginfo *info)
 
 static void print_instr_cat0(struct disasm_ctx *ctx, instr_t *instr)
 {
+	static const struct {
+		const char *suffix;
+		int nsrc;
+		bool idx;
+	} brinfo[7] = {
+		[BRANCH_PLAIN] = { "r",   1, false },
+		[BRANCH_OR]    = { "rao", 2, false },
+		[BRANCH_AND]   = { "raa", 2, false },
+		[BRANCH_CONST] = { "rac", 0, true  },
+		[BRANCH_ANY]   = { "any", 1, false },
+		[BRANCH_ALL]   = { "all", 1, false },
+		[BRANCH_X]     = { "rax", 0, false },
+	};
 	instr_cat0_t *cat0 = &instr->cat0;
 
 	switch (cat0->opc) {
 	case OPC_KILL:
 	case OPC_IF:
-		fprintf(ctx->out, " %sp0.%c", cat0->inv ? "!" : "",
-				component[cat0->comp]);
+		fprintf(ctx->out, " %sp0.%c", cat0->inv0 ? "!" : "",
+				component[cat0->comp0]);
 		break;
-	case OPC_BR:
-		fprintf(ctx->out, " %sp0.%c, #%d", cat0->inv ? "!" : "",
-				component[cat0->comp], cat0->a3xx.immed);
+	case OPC_B:
+		fprintf(ctx->out, "%s", brinfo[cat0->brtype].suffix);
+		if (brinfo[cat0->brtype].idx) {
+			fprintf(ctx->out, ".%u", cat0->idx);
+		}
+		if (brinfo[cat0->brtype].nsrc >= 1) {
+			fprintf(ctx->out, " %sp0.%c,", cat0->inv0 ? "!" : "",
+					component[cat0->comp0]);
+		}
+		if (brinfo[cat0->brtype].nsrc >= 2) {
+			fprintf(ctx->out, " %sp0.%c,", cat0->inv1 ? "!" : "",
+					component[cat0->comp1]);
+		}
+		fprintf(ctx->out, " #%d", cat0->a3xx.immed);
 		break;
 	case OPC_JUMP:
 	case OPC_CALL:
@@ -402,8 +426,8 @@ static void print_instr_cat0(struct disasm_ctx *ctx, instr_t *instr)
 		break;
 	}
 
-	if ((debug & PRINT_VERBOSE) && (cat0->dummy2|cat0->dummy3|cat0->dummy4))
-		fprintf(ctx->out, "\t{0: %x,%x,%x}", cat0->dummy2, cat0->dummy3, cat0->dummy4);
+	if ((debug & PRINT_VERBOSE) && (cat0->dummy3|cat0->dummy4))
+		fprintf(ctx->out, "\t{0: %x,%x}", cat0->dummy3, cat0->dummy4);
 }
 
 static void print_instr_cat1(struct disasm_ctx *ctx, instr_t *instr)
@@ -1208,7 +1232,7 @@ static const struct opc_info {
 #define OPC(cat, opc, name) [(opc)] = { (cat), (opc), #name, print_instr_cat##cat }
 	/* category 0: */
 	OPC(0, OPC_NOP,          nop),
-	OPC(0, OPC_BR,           br),
+	OPC(0, OPC_B,            b),
 	OPC(0, OPC_JUMP,         jump),
 	OPC(0, OPC_CALL,         call),
 	OPC(0, OPC_RET,          ret),

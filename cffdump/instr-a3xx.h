@@ -38,7 +38,7 @@
 typedef enum {
 	/* category 0: */
 	OPC_NOP             = _OPC(0, 0),
-	OPC_BR              = _OPC(0, 1),
+	OPC_B               = _OPC(0, 1),
 	OPC_JUMP            = _OPC(0, 2),
 	OPC_CALL            = _OPC(0, 3),
 	OPC_RET             = _OPC(0, 4),
@@ -290,6 +290,16 @@ static inline int reg_special(reg_t reg)
 	return (reg.num == REG_A0) || (reg.num == REG_P0);
 }
 
+typedef enum {
+	BRANCH_PLAIN = 0,   /* br */
+	BRANCH_OR    = 1,   /* brao */
+	BRANCH_AND   = 2,   /* braa */
+	BRANCH_CONST = 3,   /* brac */
+	BRANCH_ANY   = 4,   /* bany */
+	BRANCH_ALL   = 5,   /* ball */
+	BRANCH_X     = 6,   /* brax ??? */
+} brtype_t;
+
 typedef struct PACKED {
 	/* dword0: */
 	union PACKED {
@@ -307,13 +317,16 @@ typedef struct PACKED {
 	};
 
 	/* dword1: */
-	uint32_t dummy2   : 8;
+	uint32_t idx      : 5;  /* brac.N index */
+	uint32_t brtype   : 3;  /* branch type, see brtype_t */
 	uint32_t repeat   : 3;
 	uint32_t dummy3   : 1;
 	uint32_t ss       : 1;
-	uint32_t dummy4   : 7;
-	uint32_t inv      : 1;
-	uint32_t comp     : 2;
+	uint32_t inv1     : 1;
+	uint32_t comp1    : 2;
+	uint32_t dummy4   : 4;
+	uint32_t inv0     : 1;
+	uint32_t comp0    : 2;  /* component for first src */
 	uint32_t opc      : 4;
 	uint32_t jmp_tgt  : 1;
 	uint32_t sync     : 1;
