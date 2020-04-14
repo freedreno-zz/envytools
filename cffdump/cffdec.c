@@ -148,7 +148,13 @@ static const char *levels[] = {
 		"x",
 };
 
-static void dump_tex_samp(uint32_t *texsamp, int num_unit, int level);
+enum state_src_t {
+	STATE_SRC_DIRECT,
+	STATE_SRC_INDIRECT,
+	STATE_SRC_BINDLESS,
+};
+
+static void dump_tex_samp(uint32_t *texsamp, enum state_src_t src, int num_unit, int level);
 static void dump_tex_const(uint32_t *texsamp, int num_unit, int level);
 static const char *regname(uint32_t regbase, int color);
 
@@ -483,7 +489,7 @@ reg_dump_tex_samp_hi(const char *name, uint32_t dword, int level)
 	if (!buf)
 		return;
 
-	dump_tex_samp(buf, num_unit, level+1);
+	dump_tex_samp(buf, STATE_SRC_DIRECT, num_unit, level+1);
 }
 
 static void
@@ -1062,7 +1068,8 @@ enum adreno_state_block {
  */
 
 static void
-a3xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state)
+a3xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state,
+		    enum state_src_t *src)
 {
 	unsigned state_block_id = (dwords[0] >> 19) & 0x7;
 	unsigned state_type = dwords[1] & 0x3;
@@ -1082,6 +1089,26 @@ a3xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state)
 
 	*stage = lookup[state_block_id][state_type].stage;
 	*state = lookup[state_block_id][state_type].state;
+	unsigned state_src = (dwords[0] >> 16) & 0x7;
+	if (state_src == 0 /* SS_DIRECT */)
+		*src = STATE_SRC_DIRECT;
+	else
+		*src = STATE_SRC_INDIRECT;
+}
+
+static enum state_src_t
+_get_state_src(unsigned dword0)
+{
+	switch ((dword0 >> 16) & 0x3) {
+	case 0: /* SS4_DIRECT / SS6_DIRECT */
+		return STATE_SRC_DIRECT;
+	case 2: /* SS4_INDIRECT / SS6_INDIRECT */
+		return STATE_SRC_INDIRECT;
+	case 1: /* SS6_BINDLESS */
+		return STATE_SRC_BINDLESS;
+	default:
+		return STATE_SRC_DIRECT;
+	}
 }
 
 static void
@@ -1162,23 +1189,27 @@ _get_state_type(unsigned state_block_id, unsigned state_type,
 }
 
 static void
-a4xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state)
+a4xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state,
+		    enum state_src_t *src)
 {
 	unsigned state_block_id = (dwords[0] >> 18) & 0xf;
 	unsigned state_type = dwords[1] & 0x3;
 	_get_state_type(state_block_id, state_type, stage, state);
+	*src = _get_state_src(dwords[0]);
 }
 
 static void
-a6xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state)
+a6xx_get_state_type(uint32_t *dwords, enum shader_t *stage, enum state_t *state,
+		    enum state_src_t *src)
 {
 	unsigned state_block_id = (dwords[0] >> 18) & 0xf;
 	unsigned state_type = (dwords[0] >> 14) & 0x3;
 	_get_state_type(state_block_id, state_type, stage, state);
+	*src = _get_state_src(dwords[0]);
 }
 
 static void
-dump_tex_samp(uint32_t *texsamp, int num_unit, int level)
+dump_tex_samp(uint32_t *texsamp, enum state_src_t src, int num_unit, int level)
 {
 	for (int i = 0; i < num_unit; i++) {
 		/* work-around to reduce noise for opencl blob which always
@@ -1202,7 +1233,7 @@ dump_tex_samp(uint32_t *texsamp, int num_unit, int level)
 		} else if ((600 <= options->gpu_id) && (options->gpu_id < 700)) {
 			dump_domain(texsamp, 4, level+2, "A6XX_TEX_SAMP");
 			dump_hex(texsamp, 4, level+1);
-			texsamp += 4;
+			texsamp += src == STATE_SRC_BINDLESS ? 16 : 4;
 		}
 	}
 }
@@ -1256,35 +1287,55 @@ cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 {
 	enum shader_t stage;
 	enum state_t state;
+	enum state_src_t src;
 	uint32_t num_unit = (dwords[0] >> 22) & 0x1ff;
 	uint64_t ext_src_addr;
-	void *contents = NULL;
+	void *contents;
 	int i;
 
 	if (quiet(2) && !options->script)
 		return;
 
 	if (options->gpu_id >= 600)
-		a6xx_get_state_type(dwords, &stage, &state);
+		a6xx_get_state_type(dwords, &stage, &state, &src);
 	else if (options->gpu_id >= 400)
-		a4xx_get_state_type(dwords, &stage, &state);
+		a4xx_get_state_type(dwords, &stage, &state, &src);
 	else
-		a3xx_get_state_type(dwords, &stage, &state);
+		a3xx_get_state_type(dwords, &stage, &state, &src);
 
-	if (is_64b()) {
-		ext_src_addr = dwords[1] & 0xfffffffc;
-		ext_src_addr |= ((uint64_t)dwords[2]) << 32;
-		contents = dwords + 3;
-	} else {
-		ext_src_addr = dwords[1] & 0xfffffffc;
-		contents = dwords + 2;
+	switch (src) {
+	case STATE_SRC_DIRECT: ext_src_addr = 0; break;
+	case STATE_SRC_INDIRECT:
+		if (is_64b()) {
+			ext_src_addr = dwords[1] & 0xfffffffc;
+			ext_src_addr |= ((uint64_t)dwords[2]) << 32;
+		} else {
+			ext_src_addr = dwords[1] & 0xfffffffc;
+		}
+
+		break;
+	case STATE_SRC_BINDLESS: {
+		const unsigned base_reg =
+			stage == SHADER_COMPUTE ? regbase("HLSQ_CS_BINDLESS_BASE[0]") : regbase("HLSQ_BINDLESS_BASE[0]");
+
+		if (is_64b()) {
+			const unsigned reg = base_reg + (dwords[1] >> 28) * 2;
+			ext_src_addr = reg_val(reg) & 0xfffffffc;
+			ext_src_addr |= ((uint64_t)reg_val(reg + 1)) << 32;
+		} else {
+			const unsigned reg = base_reg + (dwords[1] >> 28);
+			ext_src_addr = reg_val(reg) & 0xfffffffc;
+		}
+
+		ext_src_addr += 4 * (dwords[1] & 0xffffff);
+		break;
+	}
 	}
 
-	/* we could either have a ptr to other gpu buffer, or directly have
-	 * contents inline:
-	 */
 	if (ext_src_addr)
 		contents = hostptr(ext_src_addr);
+	else
+		contents = is_64b() ? dwords + 3 : dwords + 2;
 
 	if (!contents)
 		return;
@@ -1360,7 +1411,7 @@ cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 		break;
 	}
 	case TEX_SAMP: {
-		dump_tex_samp(contents, num_unit, level);
+		dump_tex_samp(contents, src, num_unit, level);
 		break;
 	}
 	case TEX_CONST: {
@@ -1425,7 +1476,7 @@ cp_load_state(uint32_t *dwords, uint32_t sizedwords, int level)
 			else if (600 <= options->gpu_id && options->gpu_id < 700)
 				dump_domain(uboconst, 2, level+2, "A6XX_UBO");
 			dump_hex(uboconst, 2, level+1);
-			uboconst += 2;
+			uboconst += src == STATE_SRC_BINDLESS ? 16 : 2;
 		}
 		break;
 	}
