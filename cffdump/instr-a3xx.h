@@ -50,9 +50,19 @@ typedef enum {
 	OPC_CHSH            = _OPC(0, 10),
 	OPC_FLOW_REV        = _OPC(0, 11),
 
-	OPC_IF              = _OPC(0, 13),
-	OPC_ELSE            = _OPC(0, 14),
-	OPC_ENDIF           = _OPC(0, 15),
+	OPC_BKT             = _OPC(0, 16),
+	OPC_STKS            = _OPC(0, 17),
+	OPC_STKR            = _OPC(0, 18),
+	OPC_XSET            = _OPC(0, 19),
+	OPC_XCLR            = _OPC(0, 20),
+	OPC_GETONE          = _OPC(0, 21),
+	OPC_DBG             = _OPC(0, 22),
+	OPC_SHPS            = _OPC(0, 23),   /* shader prologue start */
+	OPC_SHPE            = _OPC(0, 24),   /* shader prologue end */
+
+	OPC_PREDT           = _OPC(0, 29),   /* predicated true */
+	OPC_PREDF           = _OPC(0, 30),   /* predicated false */
+	OPC_PREDE           = _OPC(0, 31),   /* predicated end */
 
 	/* category 1: */
 	OPC_MOV             = _OPC(1, 0),
@@ -324,7 +334,9 @@ typedef struct PACKED {
 	uint32_t ss       : 1;
 	uint32_t inv1     : 1;
 	uint32_t comp1    : 2;
-	uint32_t dummy4   : 4;
+	uint32_t eq       : 1;
+	uint32_t opc_hi   : 1;  /* at least one bit */
+	uint32_t dummy4   : 2;
 	uint32_t inv0     : 1;
 	uint32_t comp0    : 2;  /* component for first src */
 	uint32_t opc      : 4;
@@ -955,7 +967,7 @@ static inline bool is_cat6_legacy(instr_t *instr, unsigned gpu_id)
 static inline uint32_t instr_opc(instr_t *instr, unsigned gpu_id)
 {
 	switch (instr->opc_cat) {
-	case 0:  return instr->cat0.opc;
+	case 0:  return instr->cat0.opc | instr->cat0.opc_hi << 4;
 	case 1:  return 0;
 	case 2:  return instr->cat2.opc;
 	case 3:  return instr->cat3.opc;
