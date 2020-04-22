@@ -66,6 +66,9 @@ static void print_usage(const char *name)
 	printf("    --no-color        - disable colorized output (default for non-console\n");
 	printf("                        output)\n");
 	printf("    --color           - enable colorized output (default for tty output)\n");
+	printf("    --no-pager        - disable pager (default for non-console\n");
+	printf("                        output)\n");
+	printf("    --pager           - enable pager (default for tty output)\n");
 	printf("    --summary         - don't show individual register writes, but just show\n");
 	printf("                        register values on draws\n");
 	printf("    --allregs         - show all registers (including ones not written since\n");
@@ -120,6 +123,18 @@ int main(int argc, char **argv)
 
 		if (!strcmp(argv[n], "--color")) {
 			options.color = true;
+			n++;
+			continue;
+		}
+
+		if (!strcmp(argv[n], "--no-pager")) {
+			interactive = 0;
+			n++;
+			continue;
+		}
+
+		if (!strcmp(argv[n], "--pager")) {
+			interactive = 1;
 			n++;
 			continue;
 		}
