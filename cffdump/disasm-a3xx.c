@@ -31,6 +31,8 @@
 #include "disasm.h"
 #include "instr-a3xx.h"
 
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+
 extern enum debug_t debug;
 
 static const char *levels[] = {
@@ -102,7 +104,23 @@ struct disasm_ctx {
 	} regs;
 };
 
-static void print_reg(struct disasm_ctx *ctx, reg_t reg, bool full, bool r,
+static const char *float_imms[] = {
+	"0.0",
+	"0.5",
+	"1.0",
+	"2.0",
+	"e",
+	"pi",
+	"1/pi",
+	"1/log2(e)",
+	"log2(e)",
+	"1/log2(10)",
+	"log2(10)",
+	"4.0",
+};
+
+static void print_reg(struct disasm_ctx *ctx, reg_t reg, bool full,
+		bool is_float, bool r,
 		bool c, bool im, bool neg, bool abs, bool addr_rel)
 {
 	const char type = c ? 'c' : 'r';
@@ -121,7 +139,11 @@ static void print_reg(struct disasm_ctx *ctx, reg_t reg, bool full, bool r,
 		fprintf(ctx->out, "(r)");
 
 	if (im) {
-		fprintf(ctx->out, "%d", reg.iim_val);
+		if (is_float && full && reg.iim_val < ARRAY_SIZE(float_imms)) {
+			fprintf(ctx->out, "(%s)", float_imms[reg.iim_val]);
+		} else {
+			fprintf(ctx->out, "%d", reg.iim_val);
+		}
 	} else if (addr_rel) {
 		/* I would just use %+d but trying to make it diff'able with
 		 * libllvm-a3xx...
@@ -306,10 +328,10 @@ static void print_reg_dst(struct disasm_ctx *ctx, reg_t reg, bool full, bool add
 		ctx->last_dst_valid = true;
 	}
 	reg = idxreg(regidx(reg) + ctx->repeatidx);
-	print_reg(ctx, reg, full, false, false, false, false, false, addr_rel);
+	print_reg(ctx, reg, full, false, false, false, false, false, false, addr_rel);
 }
 
-static void print_reg_src(struct disasm_ctx *ctx, reg_t reg, bool full, bool r,
+static void print_reg_src(struct disasm_ctx *ctx, reg_t reg, bool full, bool f, bool r,
 		bool c, bool im, bool neg, bool abs, bool addr_rel)
 {
 	/* presumably the special registers a0.c and p0.c don't count.. */
@@ -353,7 +375,7 @@ static void print_reg_src(struct disasm_ctx *ctx, reg_t reg, bool full, bool r,
 	if (r)
 		reg = idxreg(regidx(reg) + ctx->repeatidx);
 
-	print_reg(ctx, reg, full, r, c, im, neg, abs, addr_rel);
+	print_reg(ctx, reg, full, f, r, c, im, neg, abs, addr_rel);
 }
 
 /* TODO switch to using reginfo struct everywhere, since more readable
@@ -365,6 +387,7 @@ struct reginfo {
 	bool full;
 	bool r;
 	bool c;
+	bool f; /* src reg is interpreted as float, used for printing immediates */
 	bool im;
 	bool neg;
 	bool abs;
@@ -373,7 +396,12 @@ struct reginfo {
 
 static void print_src(struct disasm_ctx *ctx, struct reginfo *info)
 {
-	print_reg_src(ctx, info->reg, info->full, info->r, info->c, info->im,
+	reg_t reg = info->reg;
+
+	if (info->r)
+		reg = idxreg(regidx(info->reg) + ctx->repeatidx);
+
+	print_reg_src(ctx, reg, info->full, info->f, info->r, info->c, info->im,
 			info->neg, info->abs, info->addr_rel);
 }
 
@@ -486,8 +514,14 @@ static void print_instr_cat1(struct disasm_ctx *ctx, instr_t *instr)
 		else
 			fprintf(ctx->out, "%s%c<a0.x>", full, type);
 	} else {
-		print_reg_src(ctx, (reg_t)(cat1->src), type_size(cat1->src_type) == 32,
-				cat1->src_r, cat1->src_c, cat1->src_im, false, false, false);
+		struct reginfo src = {
+			.reg = (reg_t)cat1->src,
+			.full = type_size(cat1->src_type) == 32,
+			.r = cat1->src_r,
+			.c = cat1->src_c,
+			.im = cat1->src_im,
+		};
+		print_src(ctx, &src);
 	}
 
 	if ((debug & PRINT_VERBOSE) && (cat1->must_be_0))
@@ -497,6 +531,7 @@ static void print_instr_cat1(struct disasm_ctx *ctx, instr_t *instr)
 static void print_instr_cat2(struct disasm_ctx *ctx, instr_t *instr)
 {
 	instr_cat2_t *cat2 = &instr->cat2;
+	int opc = _OPC(2, cat2->opc);
 	static const char *cond[] = {
 			"lt",
 			"le",
@@ -507,7 +542,7 @@ static void print_instr_cat2(struct disasm_ctx *ctx, instr_t *instr)
 			"?6?",
 	};
 
-	switch (_OPC(2, cat2->opc)) {
+	switch (opc) {
 	case OPC_CMPS_F:
 	case OPC_CMPS_U:
 	case OPC_CMPS_S:
@@ -524,23 +559,36 @@ static void print_instr_cat2(struct disasm_ctx *ctx, instr_t *instr)
 	print_reg_dst(ctx, (reg_t)(cat2->dst), cat2->full ^ cat2->dst_half, false);
 	fprintf(ctx->out, ", ");
 
-	unsigned src1_r = cat2->repeat ? cat2->src1_r : 0;
-	if (cat2->c1.src1_c) {
-		print_reg_src(ctx, (reg_t)(cat2->c1.src1), cat2->full, src1_r,
-				cat2->c1.src1_c, cat2->src1_im, cat2->src1_neg,
-				cat2->src1_abs, false);
-	} else if (cat2->rel1.src1_rel) {
-		print_reg_src(ctx, (reg_t)(cat2->rel1.src1), cat2->full, src1_r,
-				cat2->rel1.src1_c, cat2->src1_im, cat2->src1_neg,
-				cat2->src1_abs, cat2->rel1.src1_rel);
-	} else {
-		print_reg_src(ctx, (reg_t)(cat2->src1), cat2->full, src1_r,
-				false, cat2->src1_im, cat2->src1_neg,
-				cat2->src1_abs, false);
-	}
+	struct reginfo src1 = {
+		.full = cat2->full,
+		.r = cat2->repeat ? cat2->src1_r : 0,
+		.f = is_cat2_float(opc),
+		.im = cat2->src1_im,
+		.abs = cat2->src1_abs,
+		.neg = cat2->src1_neg,
+	};
 
-	unsigned src2_r = cat2->repeat ? cat2->src2_r : 0;
-	switch (_OPC(2, cat2->opc)) {
+	if (cat2->c1.src1_c) {
+		src1.reg = (reg_t)(cat2->c1.src1);
+		src1.c = true;
+	} else if (cat2->rel1.src1_rel) {
+		src1.reg = (reg_t)(cat2->rel1.src1);
+		src1.c = cat2->rel1.src1_c;
+		src1.addr_rel = true;
+	} else {
+		src1.reg = (reg_t)(cat2->src1);
+	}
+	print_src(ctx, &src1);
+
+	struct reginfo src2 = {
+		.r = cat2->repeat ? cat2->src2_r : 0,
+		.full = cat2->full,
+		.f = is_cat2_float(opc),
+		.abs = cat2->src2_abs,
+		.neg = cat2->src2_neg,
+		.im = cat2->src2_im,
+	};
+	switch (opc) {
 	case OPC_ABSNEG_F:
 	case OPC_ABSNEG_S:
 	case OPC_CLZ_B:
@@ -560,18 +608,16 @@ static void print_instr_cat2(struct disasm_ctx *ctx, instr_t *instr)
 	default:
 		fprintf(ctx->out, ", ");
 		if (cat2->c2.src2_c) {
-			print_reg_src(ctx, (reg_t)(cat2->c2.src2), cat2->full, src2_r,
-					cat2->c2.src2_c, cat2->src2_im, cat2->src2_neg,
-					cat2->src2_abs, false);
+			src2.reg = (reg_t)(cat2->c2.src2);
+			src2.c = true;
 		} else if (cat2->rel2.src2_rel) {
-			print_reg_src(ctx, (reg_t)(cat2->rel2.src2), cat2->full, src2_r,
-					cat2->rel2.src2_c, cat2->src2_im, cat2->src2_neg,
-					cat2->src2_abs, cat2->rel2.src2_rel);
+			src2.reg = (reg_t)(cat2->rel2.src2);
+			src2.c = cat2->rel2.src2_c;
+			src2.addr_rel = true;
 		} else {
-			print_reg_src(ctx, (reg_t)(cat2->src2), cat2->full, src2_r,
-					false, cat2->src2_im, cat2->src2_neg,
-					cat2->src2_abs, false);
+			src2.reg = (reg_t)(cat2->src2);
 		}
+		print_src(ctx, &src2);
 		break;
 	}
 }
@@ -584,39 +630,51 @@ static void print_instr_cat3(struct disasm_ctx *ctx, instr_t *instr)
 	fprintf(ctx->out, " ");
 	print_reg_dst(ctx, (reg_t)(cat3->dst), full ^ cat3->dst_half, false);
 	fprintf(ctx->out, ", ");
-	unsigned src1_r = cat3->repeat ? cat3->src1_r : 0;
+
+	struct reginfo src1 = {
+		.r = cat3->repeat ? cat3->src1_r : 0,
+		.full = full,
+		.neg = cat3->src1_neg,
+	};
 	if (cat3->c1.src1_c) {
-		print_reg_src(ctx, (reg_t)(cat3->c1.src1), full,
-				src1_r, cat3->c1.src1_c, false, cat3->src1_neg,
-				false, false);
+		src1.reg = (reg_t)(cat3->c1.src1);
+		src1.c = true;
 	} else if (cat3->rel1.src1_rel) {
-		print_reg_src(ctx, (reg_t)(cat3->rel1.src1), full,
-				src1_r, cat3->rel1.src1_c, false, cat3->src1_neg,
-				false, cat3->rel1.src1_rel);
+		src1.reg = (reg_t)(cat3->rel1.src1);
+		src1.c = cat3->rel1.src1_c;
+		src1.addr_rel = true;
 	} else {
-		print_reg_src(ctx, (reg_t)(cat3->src1), full,
-				src1_r, false, false, cat3->src1_neg,
-				false, false);
+		src1.reg = (reg_t)(cat3->src1);
 	}
+	print_src(ctx, &src1);
+
 	fprintf(ctx->out, ", ");
-	unsigned src2_r = cat3->repeat ? cat3->src2_r : 0;
-	print_reg_src(ctx, (reg_t)cat3->src2, full,
-			src2_r, cat3->src2_c, false, cat3->src2_neg,
-			false, false);
+	struct reginfo src2 = {
+		.reg = (reg_t)cat3->src2,
+		.full = full,
+		.r = cat3->repeat ? cat3->src2_r : 0,
+		.c = cat3->src2_c,
+		.neg = cat3->src2_neg,
+	};
+	print_src(ctx, &src2);
+
 	fprintf(ctx->out, ", ");
+	struct reginfo src3 = {
+		.r = cat3->src3_r,
+		.full = full,
+		.neg = cat3->src3_neg,
+	};
 	if (cat3->c2.src3_c) {
-		print_reg_src(ctx, (reg_t)(cat3->c2.src3), full,
-				cat3->src3_r, cat3->c2.src3_c, false, cat3->src3_neg,
-				false, false);
+		src3.reg = (reg_t)(cat3->c2.src3);
+		src3.c = true;
 	} else if (cat3->rel2.src3_rel) {
-		print_reg_src(ctx, (reg_t)(cat3->rel2.src3), full,
-				cat3->src3_r, cat3->rel2.src3_c, false, cat3->src3_neg,
-				false, cat3->rel2.src3_rel);
+		src3.reg = (reg_t)(cat3->rel2.src3);
+		src3.c = cat3->rel2.src3_c;
+		src3.addr_rel = true;
 	} else {
-		print_reg_src(ctx, (reg_t)(cat3->src3), full,
-				cat3->src3_r, false, false, cat3->src3_neg,
-				false, false);
+		src3.reg = (reg_t)(cat3->src3);
 	}
+	print_src(ctx, &src3);
 }
 
 static void print_instr_cat4(struct disasm_ctx *ctx, instr_t *instr)
@@ -627,19 +685,24 @@ static void print_instr_cat4(struct disasm_ctx *ctx, instr_t *instr)
 	print_reg_dst(ctx, (reg_t)(cat4->dst), cat4->full ^ cat4->dst_half, false);
 	fprintf(ctx->out, ", ");
 
+	struct reginfo src = {
+		.r = cat4->src_r,
+		.im = cat4->src_im,
+		.full = cat4->full,
+		.neg = cat4->src_neg,
+		.abs = cat4->src_abs,
+	};
 	if (cat4->c.src_c) {
-		print_reg_src(ctx, (reg_t)(cat4->c.src), cat4->full,
-				cat4->src_r, cat4->c.src_c, cat4->src_im,
-				cat4->src_neg, cat4->src_abs, false);
+		src.reg = (reg_t)(cat4->c.src);
+		src.c = true;
 	} else if (cat4->rel.src_rel) {
-		print_reg_src(ctx, (reg_t)(cat4->rel.src), cat4->full,
-				cat4->src_r, cat4->rel.src_c, cat4->src_im,
-				cat4->src_neg, cat4->src_abs, cat4->rel.src_rel);
+		src.reg = (reg_t)(cat4->rel.src);
+		src.c = cat4->rel.src_c;
+		src.addr_rel = true;
 	} else {
-		print_reg_src(ctx, (reg_t)(cat4->src), cat4->full,
-				cat4->src_r, false, cat4->src_im,
-				cat4->src_neg, cat4->src_abs, false);
+		src.reg = (reg_t)(cat4->src);
 	}
+	print_src(ctx, &src);
 
 	if ((debug & PRINT_VERBOSE) && (cat4->dummy1|cat4->dummy2))
 		fprintf(ctx->out, "\t{4: %x,%x}", cat4->dummy1, cat4->dummy2);
@@ -765,14 +828,14 @@ static void print_instr_cat5(struct disasm_ctx *ctx, instr_t *instr)
 
 	if (info[cat5->opc].src1) {
 		fprintf(ctx->out, ", ");
-		print_reg_src(ctx, (reg_t)(cat5->src1), cat5->full, false, false, false,
-				false, false, false);
+		struct reginfo src = { .reg = (reg_t)(cat5->src1), .full = cat5->full };
+		print_src(ctx, &src);
 	}
 
 	if (cat5->is_o || info[cat5->opc].src2) {
 		fprintf(ctx->out, ", ");
-		print_reg_src(ctx, (reg_t)(cat5->src2), cat5->full,
-				false, false, false, false, false, false);
+		struct reginfo src = { .reg = (reg_t)(cat5->src2), .full = cat5->full };
+		print_src(ctx, &src);
 	}
 	if (cat5->is_s2en_bindless) {
 		if (!desc_indirect) {
@@ -796,8 +859,8 @@ static void print_instr_cat5(struct disasm_ctx *ctx, instr_t *instr)
 
 	if (desc_indirect) {
 		fprintf(ctx->out, ", ");
-		print_reg_src(ctx, (reg_t)(cat5->s2en_bindless.src3), bindless,
-					  false, false, false, false, false, false);
+		struct reginfo src = { .reg = (reg_t)(cat5->s2en_bindless.src3), .full = bindless };
+		print_src(ctx, &src);
 	}
 
 	if (use_a1)
@@ -844,7 +907,7 @@ static void print_instr_cat6_a3xx(struct disasm_ctx *ctx, instr_t *instr)
 	case OPC_STP:
 	case OPC_STLW:
 	case OPC_STIB:
-		dst.full  = true;
+		dst.full  = type_size(cat6->type) == 32;
 		src1.full = type_size(cat6->type) == 32;
 		src2.full = type_size(cat6->type) == 32;
 		break;
@@ -1490,7 +1553,7 @@ static bool print_instr(struct disasm_ctx *ctx, uint32_t *dwords, int n)
 	if (opc == OPC_NOP)
 		ctx->stats->nops += 1 + ctx->repeat;
 	if (nop)
-		fprintf(ctx->out, "(nop%d)", nop);
+		fprintf(ctx->out, "(nop%d) ", nop);
 
 	if (instr->ul && ((2 <= instr->opc_cat) && (instr->opc_cat <= 4)))
 		fprintf(ctx->out, "(ul)");
