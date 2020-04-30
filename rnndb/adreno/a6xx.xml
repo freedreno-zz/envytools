@@ -2861,12 +2861,7 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xa824" name="SP_VS_INSTRLEN" type="uint"/>
 
 	<reg32 offset="0xa830" name="SP_HS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
-	<reg32 offset="0xa831" name="SP_HS_BRANCH_COND" type="hex">
-		<!--
-		bitmask of true/false conditions for FS brac.N instructions,
-		bit N corresponds to brac.N
-		 -->
-	</reg32>
+	<reg32 offset="0xa831" name="SP_HS_UNKNOWN_A831"/>
 	<reg32 offset="0xa833" name="SP_HS_UNKNOWN_A833"/>
 	<reg32 offset="0xa834" name="SP_HS_OBJ_START_LO"/>
 	<reg32 offset="0xa835" name="SP_HS_OBJ_START_HI"/>
@@ -2875,12 +2870,6 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xa83c" name="SP_HS_INSTRLEN" type="uint"/>
 
 	<reg32 offset="0xa840" name="SP_DS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
-	<reg32 offset="0xa841" name="SP_DS_BRANCH_COND" type="hex">
-		<!--
-		bitmask of true/false conditions for FS brac.N instructions,
-		bit N corresponds to brac.N
-		 -->
-	</reg32>
 	<reg32 offset="0xa842" name="SP_DS_PRIMITIVE_CNTL">
 		<!-- # of DS outputs including pos/psize -->
 		<bitfield name="DSOUT" low="0" high="4" type="uint"/>
@@ -2910,7 +2899,8 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xa864" name="SP_DS_INSTRLEN" type="uint"/>
 
 	<reg32 offset="0xa870" name="SP_GS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
-	<reg32 offset="0xa871" name="SP_GS_BRANCH_COND" type="hex">
+	<reg32 offset="0xa871" name="SP_GS_UNKNOWN_A871"/>
+	<reg32 offset="0xa872" name="SP_GS_BRANCH_COND" type="hex">
 		<!--
 		bitmask of true/false conditions for FS brac.N instructions,
 		bit N corresponds to brac.N
@@ -3086,12 +3076,6 @@ to upconvert to 32b float internally?
 	</array>
 
 	<reg32 offset="0xa9b0" name="SP_CS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
-	<reg32 offset="0xa9b1" name="SP_CS_BRANCH_COND" type="hex">
-		<!--
-		bitmask of true/false conditions for FS brac.N instructions,
-		bit N corresponds to brac.N
-		 -->
-	</reg32>
 	<reg32 offset="0xa9b4" name="SP_CS_OBJ_START_LO"/>
 	<reg32 offset="0xa9b5" name="SP_CS_OBJ_START_HI"/>
 	<reg32 offset="0xa9bb" name="SP_CS_CONFIG" type="a6xx_sp_xs_config"/>
