@@ -2899,7 +2899,9 @@ to upconvert to 32b float internally?
 	<reg32 offset="0xa864" name="SP_DS_INSTRLEN" type="uint"/>
 
 	<reg32 offset="0xa870" name="SP_GS_CTRL_REG0" type="a6xx_sp_xs_ctrl_reg0"/>
-	<reg32 offset="0xa871" name="SP_GS_UNKNOWN_A871"/>
+	<reg32 offset="0xa871" name="SP_GS_PRIM_SIZE">
+		<!-- size of output of previous stage -->
+	</reg32>
 	<reg32 offset="0xa872" name="SP_GS_BRANCH_COND" type="hex">
 		<!--
 		bitmask of true/false conditions for FS brac.N instructions,
