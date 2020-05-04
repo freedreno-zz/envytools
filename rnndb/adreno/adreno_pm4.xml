@@ -723,11 +723,11 @@ opcode: CP_LOAD_STATE4 (30) (4 dwords)
 
 <domain name="CP_DRAW_INDIRECT" width="32" varset="chip" prefix="chip" variants="A4XX-">
 	<reg32 offset="0" name="0" type="vgt_draw_initiator_a4xx"/>
-	<strip variants="A4XX">
+	<stripe variants="A4XX">
 		<reg32 offset="1" name="1">
 			<bitfield name="INDIRECT" low="0" high="31"/>
 		</reg32>
-	</strip>
+	</stripe>
 	<stripe variants="A5XX-">
 		<reg32 offset="1" name="1">
 			<bitfield name="INDIRECT_LO" low="0" high="31"/>
