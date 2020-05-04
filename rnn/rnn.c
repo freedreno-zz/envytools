@@ -1019,7 +1019,7 @@ static void prepvarinfo (struct rnndb *db, char *what, struct rnnvarinfo *vi, st
 	if (vi->variantsstr) {
 		char *vars = vi->variantsstr;
 		if (!varset) {
-			fprintf (stderr, "%s: tried to use variants without active varset!\n", what);
+			//fprintf (stderr, "%s: tried to use variants without active varset!\n", what);
 			db->estatus = 1;
 			return;
 		}
@@ -1165,6 +1165,8 @@ static void preptypeinfo(struct rnndb *db, struct rnntypeinfo *ti, char *prefix,
 			ti->type = RNN_TTYPE_UFIXED;
 		} else if (!strcmp(ti->name, "a3xx_regid")) {
 			ti->type = RNN_TTYPE_A3XX_REGID;
+		} else if (!strcmp(ti->name, "waddress") || !strcmp(ti->name, "address")) {
+			ti->type = RNN_TTYPE_HEX;
 		} else {
 			ti->type = RNN_TTYPE_HEX;
 			fprintf (stderr, "%s: unknown type %s\n", prefix, ti->name);
