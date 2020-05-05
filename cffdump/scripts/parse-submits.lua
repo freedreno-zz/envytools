@@ -17,13 +17,14 @@ local r = rnn.init("a630")
 -- Each submit, all draws will target the same N MRTs:
 local mrts = {}
 local allmrts = {}  -- includes historical render targets
-function push_mrt(fmt, w, h, base, flag, gmem)
+function push_mrt(fmt, w, h, samples, base, flag, gmem)
 	dbg("MRT: %s %ux%u 0x%x\n", fmt, w, h, base)
 
 	local mrt = {}
 	mrt.format = fmt
 	mrt.w = w
 	mrt.h = h
+	mrt.samples = samples
 	mrt.base = base
 	mrt.flag = flag
 	mrt.gmem = gmem
@@ -34,13 +35,14 @@ end
 
 -- And each each draw will read from M sources/textures:
 local sources = {}
-function push_source(fmt, w, h, base, flag)
+function push_source(fmt, w, h, samples, base, flag)
 	dbg("SRC: %s %ux%u 0x%x\n", fmt, w, h, base)
 
 	local source = {}
 	source.format = fmt
 	source.w = w
 	source.h = h
+	source.samples = samples
 	source.base = base
 	source.flag = flag
 
@@ -139,7 +141,7 @@ function finish()
 	end
 
 	for base,mrt in pairs(mrts) do
-		printf("  MRT[0x%x:0x%x]:\t%ux%u\t\t%s", base, mrt.flag, mrt.w, mrt.h, mrt.format)
+		printf("  MRT[0x%x:0x%x]:\t%ux%u\t\t%s (%s)", base, mrt.flag, mrt.w, mrt.h, mrt.format, mrt.samples)
 		if drawmode == "RM6_GMEM" then
 			if cleared[mrt.gmem] then
 				printf("\tCLEARED")
@@ -159,7 +161,7 @@ function finish()
 	end
 
 	function print_source(source)
-		printf("  SRC[0x%x:0x%x]:\t%ux%u\t\t%s\n", source.base, source.flag, source.w, source.h, source.format)
+		printf("  SRC[0x%x:0x%x]:\t%ux%u\t\t%s (%s)\n", source.base, source.flag, source.w, source.h, source.format, source.samples)
 	end
 
 	for base,source in pairs(sources) do
@@ -220,11 +222,12 @@ function CP_EVENT_WRITE(pkt, size)
 			flag = r.RB_DEPTH_FLAG_BUFFER_BASE_LO | (r.RB_DEPTH_FLAG_BUFFER_BASE_HI << 32)
 
 		end
-		if sysmem == 0 then
-			-- fallback:
-			sysmem = r.RB_BLIT_DST_LO | (r.RB_BLIT_DST_HI << 32)
-			flag = r.RB_BLIT_FLAG_DST_LO | (r.RB_BLIT_FLAG_DST_HI << 32)
-		end
+		--NOTE this can get confused by previous blits:
+		--if sysmem == 0 then
+		--	-- fallback:
+		--	sysmem = r.RB_BLIT_DST_LO | (r.RB_BLIT_DST_HI << 32)
+		--	flag = r.RB_BLIT_FLAG_DST_LO | (r.RB_BLIT_FLAG_DST_HI << 32)
+		--end
 		if not r.RB_BLIT_DST_INFO.FLAGS then
 			flag = 0
 		end
@@ -234,6 +237,7 @@ function CP_EVENT_WRITE(pkt, size)
 		push_mrt(r.RB_BLIT_DST_INFO.COLOR_FORMAT,
 			r.RB_BLIT_SCISSOR_BR.X + 1,
 			r.RB_BLIT_SCISSOR_BR.Y + 1,
+			r.RB_BLIT_DST_INFO.SAMPLES,
 			sysmem,
 			flag,
 			r.RB_BLIT_BASE_GMEM)
@@ -247,6 +251,7 @@ end
 function A6XX_TEX_CONST(pkt, size)
 	push_source(pkt[0].FMT,
 		pkt[1].WIDTH, pkt[1].HEIGHT,
+		pkt[0].SAMPLES,
 		pkt[4].BASE_LO | (pkt[5].BASE_HI << 32),
 		pkt[7].FLAG_LO | (pkt[8].FLAG_HI << 32))
 end
@@ -270,6 +275,7 @@ function handle_blit()
 	push_mrt(r.RB_2D_DST_INFO.COLOR_FORMAT,
 		r.GRAS_2D_DST_BR.X + 1,
 		r.GRAS_2D_DST_BR.Y + 1,
+		"MSAA_ONE",
 		r.RB_2D_DST_LO | (r.RB_2D_DST_HI << 32),
 		r.RB_2D_DST_FLAGS_LO | (r.RB_2D_DST_FLAGS_HI << 32),
 		-1)
@@ -280,6 +286,7 @@ function handle_blit()
 		push_source(r.SP_2D_SRC_FORMAT.COLOR_FORMAT,
 			r.GRAS_2D_SRC_BR_X.X + 1,
 			r.GRAS_2D_SRC_BR_Y.Y + 1,
+			"MSAA_ONE",
 			r.SP_PS_2D_SRC_LO | (r.SP_PS_2D_SRC_HI << 32),
 			r.SP_PS_2D_SRC_FLAGS_LO | (r.SP_PS_2D_SRC_FLAGS_HI << 32))
 	end
@@ -356,6 +363,7 @@ function draw(primtype, nindx)
 			push_mrt(r.RB_MRT[n].BUF_INFO.COLOR_FORMAT,
 				r.GRAS_SC_SCREEN_SCISSOR_BR_0.X + 1,
 				r.GRAS_SC_SCREEN_SCISSOR_BR_0.Y + 1,
+				r.RB_MSAA_CNTL.SAMPLES,
 				r.RB_MRT[n].BASE_LO | (r.RB_MRT[n].BASE_HI << 32),
 				r.RB_MRT_FLAG_BUFFER[n].ADDR_LO | (r.RB_MRT_FLAG_BUFFER[n].ADDR_HI << 32),
 				r.RB_MRT[n].BASE_GMEM)
@@ -369,6 +377,7 @@ function draw(primtype, nindx)
 		push_mrt(r.RB_DEPTH_BUFFER_INFO.DEPTH_FORMAT,
 			r.GRAS_SC_SCREEN_SCISSOR_BR_0.X + 1,
 			r.GRAS_SC_SCREEN_SCISSOR_BR_0.Y + 1,
+			r.RB_MSAA_CNTL.SAMPLES,
 			depthbase,
 			r.RB_DEPTH_FLAG_BUFFER_BASE_LO | (r.RB_DEPTH_FLAG_BUFFER_BASE_HI << 32),
 			r.RB_DEPTH_BUFFER_BASE_GMEM)
