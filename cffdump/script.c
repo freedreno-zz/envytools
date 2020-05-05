@@ -27,6 +27,7 @@
  */
 
 #define _GNU_SOURCE
+#define LUA_COMPAT_APIINTCASTS
 
 #include <stdio.h>
 #include <string.h>
@@ -569,6 +570,12 @@ static const struct luaL_Reg l_bos[] = {
 	{NULL, NULL}  /* sentinel */
 };
 
+static void openlib(const char *lib, const luaL_Reg *reg)
+{
+  lua_newtable(L);
+  luaL_setfuncs(L, reg, 0);
+  lua_setglobal(L, lib);
+}
 
 /* called at start to load the script: */
 int script_load(const char *file)
@@ -579,9 +586,9 @@ int script_load(const char *file)
 
 	L = luaL_newstate();
 	luaL_openlibs(L);
-	luaL_openlib(L, "bos", l_bos, 0);
-	luaL_openlib(L, "regs", l_regs, 0);
-	luaL_openlib(L, "rnn", l_rnn, 0);
+	openlib("bos", l_bos);
+	openlib("regs", l_regs);
+	openlib("rnn", l_rnn);
 
 	ret = luaL_loadfile(L, file);
 	if (ret)
