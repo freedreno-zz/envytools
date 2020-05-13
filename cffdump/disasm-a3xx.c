@@ -1201,24 +1201,38 @@ static void print_instr_cat6_a6xx(struct disasm_ctx *ctx, instr_t *instr)
 	static const struct {
 		bool indirect;
 		bool bindless;
-		bool uniform;
+		const char *name;
 	} desc_features[8] = {
-		[CAT6_IMM] = { false },
-		[CAT6_BINDLESS_IMM] = { .bindless = true, },
+		[CAT6_IMM] = {
+			.name = "imm"
+		},
+		[CAT6_UNIFORM] = {
+			.indirect = true,
+			.name = "uniform"
+		},
+		[CAT6_NONUNIFORM] = {
+			.indirect = true,
+			.name = "nonuniform"
+		},
+		[CAT6_BINDLESS_IMM] = {
+			.bindless = true,
+			.name = "imm"
+		},
 		[CAT6_BINDLESS_UNIFORM] = {
 			.bindless = true,
 			.indirect = true,
-			.uniform = true,
+			.name = "uniform"
 		},
 		[CAT6_BINDLESS_NONUNIFORM] = {
 			.bindless = true,
 			.indirect = true,
+			.name = "nonuniform"
 		},
 	};
 
 	bool indirect_ssbo = desc_features[cat6->desc_mode].indirect;
 	bool bindless = desc_features[cat6->desc_mode].bindless;
-	bool uniform = desc_features[cat6->desc_mode].uniform;
+	bool type_full = cat6->type != TYPE_U16;
 
 
 	memset(&src1, 0, sizeof(src1));
@@ -1229,17 +1243,18 @@ static void print_instr_cat6_a6xx(struct disasm_ctx *ctx, instr_t *instr)
 		fprintf(ctx->out, ".%s", cat6->typed ? "typed" : "untyped");
 		fprintf(ctx->out, ".%dd", cat6->d + 1);
 		fprintf(ctx->out, ".%s", type[cat6->type]);
+	} else {
+		fprintf(ctx->out, ".offset%d", cat6->d);
 	}
 	fprintf(ctx->out, ".%u", cat6->type_size + 1);
 
+	fprintf(ctx->out, ".%s", desc_features[cat6->desc_mode].name);
 	if (bindless)
 		fprintf(ctx->out, ".base%d", cat6->base);
-	if (uniform)
-		fprintf(ctx->out, ".uniform");
 	fprintf(ctx->out, " ");
 
 	src2.reg = (reg_t)(cat6->src2);
-	src2.full = true; // XXX
+	src2.full = type_full;
 	print_src(ctx, &src2);
 	fprintf(ctx->out, ", ");
 
