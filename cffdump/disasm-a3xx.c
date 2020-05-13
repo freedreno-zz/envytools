@@ -1611,6 +1611,7 @@ int disasm_a3xx_stat(uint32_t *dwords, int sizedwords, int level, FILE *out,
 	struct disasm_ctx ctx;
 	int i;
 	int nop_count = 0;
+	bool has_end = false;
 
 //	assert((sizedwords % 2) == 0);
 
@@ -1622,7 +1623,9 @@ int disasm_a3xx_stat(uint32_t *dwords, int sizedwords, int level, FILE *out,
 	memset(ctx.stats, 0, sizeof(*ctx.stats));
 
 	for (i = 0; i < sizedwords; i += 2) {
-		print_instr(&ctx, &dwords[i], i/2);
+		has_end |= print_instr(&ctx, &dwords[i], i/2);
+		if (!has_end)
+			continue;
 		if (dwords[i] == 0 && dwords[i + 1] == 0)
 			nop_count++;
 		else
