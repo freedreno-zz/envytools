@@ -182,30 +182,32 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x9313" name="GMU_AHB_FENCE_STATUS"/>
 	<reg32 offset="0x9315" name="GMU_RBBM_INT_UNMASKED_STATUS"/>
 	<reg32 offset="0x9316" name="GMU_AO_SPARE_CNTL"/>
-	<reg32 offset="0x8c04" name="GPU_RSCC_RSC_STATUS0_DRV0"/>
 	<reg32 offset="0x9307" name="GMU_RSCC_CONTROL_REQ"/>
 	<reg32 offset="0x9308" name="GMU_RSCC_CONTROL_ACK"/>
 	<reg32 offset="0x9311" name="GMU_AHB_FENCE_RANGE_0"/>
 	<reg32 offset="0x9312" name="GMU_AHB_FENCE_RANGE_1"/>
 	<reg32 offset="0x9c03" name="GPU_CC_GX_GDSCR"/>
 	<reg32 offset="0x9d42" name="GPU_CC_GX_DOMAIN_MISC"/>
-	<reg32 offset="0x8c08" name="RSCC_PDC_SEQ_START_ADDR"/>
-	<reg32 offset="0x8c09" name="RSCC_PDC_MATCH_VALUE_LO"/>
-	<reg32 offset="0x8c0a" name="RSCC_PDC_MATCH_VALUE_HI"/>
-	<reg32 offset="0x8c0b" name="RSCC_PDC_SLAVE_ID_DRV0"/>
-	<reg32 offset="0x8c0d" name="RSCC_HIDDEN_TCS_CMD0_ADDR"/>
-	<reg32 offset="0x8c0e" name="RSCC_HIDDEN_TCS_CMD0_DATA"/>
-	<reg32 offset="0x8c82" name="RSCC_TIMESTAMP_UNIT0_TIMESTAMP_L_DRV0"/>
-	<reg32 offset="0x8c83" name="RSCC_TIMESTAMP_UNIT0_TIMESTAMP_H_DRV0"/>
-	<reg32 offset="0x8c89" name="RSCC_TIMESTAMP_UNIT1_EN_DRV0"/>
-	<reg32 offset="0x8c8c" name="RSCC_TIMESTAMP_UNIT1_OUTPUT_DRV0"/>
-	<reg32 offset="0x8d00" name="RSCC_OVERRIDE_START_ADDR"/>
-	<reg32 offset="0x8d01" name="RSCC_SEQ_BUSY_DRV0"/>
-	<reg32 offset="0x8d80" name="RSCC_SEQ_MEM_0_DRV0"/>
-	<reg32 offset="0x8f46" name="RSCC_TCS0_DRV0_STATUS"/>
-	<reg32 offset="0x90ae" name="RSCC_TCS1_DRV0_STATUS"/>
-	<reg32 offset="0x9216" name="RSCC_TCS2_DRV0_STATUS"/>
-	<reg32 offset="0x937e" name="RSCC_TCS3_DRV0_STATUS"/>
+
+	<!-- starts at offset 0x8c00 on most gpus -->
+	<reg32 offset="0x0004" name="GPU_RSCC_RSC_STATUS0_DRV0"/>
+	<reg32 offset="0x0008" name="RSCC_PDC_SEQ_START_ADDR"/>
+	<reg32 offset="0x0009" name="RSCC_PDC_MATCH_VALUE_LO"/>
+	<reg32 offset="0x000a" name="RSCC_PDC_MATCH_VALUE_HI"/>
+	<reg32 offset="0x000b" name="RSCC_PDC_SLAVE_ID_DRV0"/>
+	<reg32 offset="0x000d" name="RSCC_HIDDEN_TCS_CMD0_ADDR"/>
+	<reg32 offset="0x000e" name="RSCC_HIDDEN_TCS_CMD0_DATA"/>
+	<reg32 offset="0x0082" name="RSCC_TIMESTAMP_UNIT0_TIMESTAMP_L_DRV0"/>
+	<reg32 offset="0x0083" name="RSCC_TIMESTAMP_UNIT0_TIMESTAMP_H_DRV0"/>
+	<reg32 offset="0x0089" name="RSCC_TIMESTAMP_UNIT1_EN_DRV0"/>
+	<reg32 offset="0x008c" name="RSCC_TIMESTAMP_UNIT1_OUTPUT_DRV0"/>
+	<reg32 offset="0x0100" name="RSCC_OVERRIDE_START_ADDR"/>
+	<reg32 offset="0x0101" name="RSCC_SEQ_BUSY_DRV0"/>
+	<reg32 offset="0x0180" name="RSCC_SEQ_MEM_0_DRV0"/>
+	<reg32 offset="0x0346" name="RSCC_TCS0_DRV0_STATUS"/>
+	<reg32 offset="0x03ee" name="RSCC_TCS1_DRV0_STATUS"/>
+	<reg32 offset="0x0496" name="RSCC_TCS2_DRV0_STATUS"/>
+	<reg32 offset="0x053e" name="RSCC_TCS3_DRV0_STATUS"/>
 </domain>
 
 </database>
