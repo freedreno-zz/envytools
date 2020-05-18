@@ -51,6 +51,8 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	<reg32 offset="0x23fd" name="GMU_DCVS_PERF_SETTING"/>
 	<reg32 offset="0x23fe" name="GMU_DCVS_BW_SETTING"/>
 	<reg32 offset="0x23ff" name="GMU_DCVS_RETURN"/>
+	<reg32 offset="0x4c00" name="GMU_ICACHE_CONFIG"/>
+	<reg32 offset="0x4c01" name="GMU_DCACHE_CONFIG"/>
 	<reg32 offset="0x4c0f" name="GMU_SYS_BUS_CONFIG"/>
 	<reg32 offset="0x5000" name="GMU_CM3_SYSRESET"/>
 	<reg32 offset="0x5001" name="GMU_CM3_BOOT_CONFIG"/>
@@ -109,6 +111,9 @@ xsi:schemaLocation="http://nouveau.freedesktop.org/ rules-ng.xsd">
 	</reg32>
 	<reg32 offset="0x50e9" name="GMU_RPMH_HYST_CTRL"/>
 	<reg32 offset="0x50ec" name="GPU_GMU_CX_GMU_RPMH_POWER_STATE"/>
+	<reg32 offset="0x50f0" name="GPU_GMU_CX_GMU_CX_FAL_INTF"/>
+	<reg32 offset="0x5100" name="GPU_GMU_CX_GMU_PWR_COL_CP_MSG"/>
+	<reg32 offset="0x5101" name="GPU_GMU_CX_GMU_PWR_COL_CP_RESP"/>
 	<reg32 offset="0x51f0" name="GMU_BOOT_KMD_LM_HANDSHAKE"/>
 	<reg32 offset="0x5157" name="GMU_LLM_GLM_SLEEP_CTRL"/>
 	<reg32 offset="0x5158" name="GMU_LLM_GLM_SLEEP_STATUS"/>
