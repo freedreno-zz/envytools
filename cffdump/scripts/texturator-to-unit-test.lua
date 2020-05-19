@@ -155,20 +155,22 @@ function A6XX_TEX_CONST(pkt, size)
   until w == 1 and h == 1
   printf("			},\n")
 
-  printf("			.ubwc_slices = {\n")
-  level = 0
-  repeat
-    local w = minify(width0, level)
-    local h = minify(height0, level)
-    local blit = get_first_blit(basebase, w, h)
-    if blit then
-      printf("				{ .offset = %d, .pitch = %u },\n",
-          blit.ubwc_addr - ubwc_base,
-          blit.ubwc_pitch);
-    end
-    level = level + 1
-  until w == 1 and h == 1
-  printf("			},\n")
+  if pkt[3].FLAG then
+    printf("			.ubwc_slices = {\n")
+    level = 0
+    repeat
+      local w = minify(width0, level)
+      local h = minify(height0, level)
+      local blit = get_first_blit(basebase, w, h)
+      if blit then
+        printf("				{ .offset = %d, .pitch = %u },\n",
+            blit.ubwc_addr - ubwc_base,
+            blit.ubwc_pitch);
+      end
+      level = level + 1
+    until w == 1 and h == 1
+    printf("			},\n")
+  end
 
   printf("		},\n")
   printf("	},\n")
