@@ -11,10 +11,26 @@ local posix = require "posix"
 
 io.write("Analyzing Data...\n")
 
-local allblits = {}
-local nallblits = 0
 local r = rnn.init("a630")
 local found_tex = 0
+
+local allblits = {}
+local nallblits = 0
+
+function get_first_blit(base, width, height)
+  local first_blit = nil
+
+  for n = 0,nallblits-1 do
+    local blit = allblits[n]
+    if blit.base == base and blit.width == width and blit.height == height then
+      if not first_blit or blit.addr < first_blit.addr then
+        first_blit = blit
+      end
+    end
+  end
+
+  return first_blit
+end
 
 function minify(val, lvls)
   val = val >> lvls
@@ -56,7 +72,7 @@ function draw(primtype, nindx)
   blit.ubwc_base = bos.base(blit.uwbc_addr)
   blit.ubwc_pitch = r.RB_2D_DST_FLAGS_PITCH.PITCH
   blit.endaddr = 0  -- filled in later
-  printf("Found blit: 0x%x (0x%x) %dx%d\n", blit.addr, blit.base, blit.width, blit.height)
+  printf("Found blit: 0x%x (0x%x) %dx%d UBWC 0x%x (0x%x)\n", blit.addr, blit.base, blit.width, blit.height, blit.ubwc_addr, blit.ubwc_base)
 
   allblits[nallblits] = blit
   nallblits = nallblits + 1
@@ -106,79 +122,54 @@ function A6XX_TEX_CONST(pkt, size)
     end
   end
 
-  -- now go thru the relevant blits and print out interesting details
-  local level = 0
-  local layer = 0
-  local w = width0   -- track current width/height to detect changing
-  local h = height0  -- mipmap level
-
   printf("	{\n")
   printf("		.format = %s,\n", pkt[0].FMT)
+  if (tostring(pkt[2].TYPE) == "A6XX_TEX_3D") then
+    printf("		.is_3d = true,\n")
+  end
 
   printf("		.layout = {\n")
   printf("			.tile_mode = %s,\n", pkt[0].TILE_MODE)
   printf("			.ubwc = %s,\n", tostring(pkt[3].FLAG))
-  printf("			.width0 = %d, .height0 = %d,\n", width0, height0)
-  printf("			.slices = {\n")
-  for n = 0,nblits-1 do
-    local blit = blits[n]
-    --printf("%u: %ux%u, addr=%x\n", n, blit.width, blit.height, blit.addr)
-    if w ~= blit.width or h ~= blit.height then
-      level = level + 1
-      layer = 0
 
-
-      if blit.width ~= minify(w, 1) or blit.height ~= minify(h, 1) then
-        printf("I am confused! %ux%u vs %ux%u\n", blit.width, blit.height, minify(w, 1), minify(h, 1))
-	printf("addr=%x\n", blit.addr)
-        --return
-      end
-
-      w = blit.width
-      h = blit.height
-    end
-
-    printf("				{ .offset = %d, .pitch = %u },\n",
-        blit.addr - base,
-        blit.pitch
-    );
-
-    layer = layer + 1
+  if (tostring(pkt[2].TYPE) == "A6XX_TEX_3D") then
+    printf("			.width0 = %d, .height0 = %d, .depth = %d,\n", width0, height0, depth0)
+  else
+    printf("			.width0 = %d, .height0 = %d,\n", width0, height0)
   end
-  printf("			},\n")
 
-  layer = 0
-  level = 0
-  w = width0
-  h = height0
+  printf("			.slices = {\n")
+  local w = 0
+  local h = 0
+  local level = 0
+  repeat
+    local w = minify(width0, level)
+    local h = minify(height0, level)
+    local blit = get_first_blit(basebase, w, h)
+    if blit then
+      printf("				{ .offset = %d, .pitch = %u },\n",
+          blit.addr - base,
+          blit.pitch);
+    end
+    level = level + 1
+  until w == 1 and h == 1
+  printf("			},\n")
 
   printf("			.ubwc_slices = {\n")
-  for n = 0,nblits-1 do
-    local blit = blits[n]
-    --printf("%u: %ux%u, addr=%x\n", n, blit.width, blit.height, blit.addr)
-    if w ~= blit.width or h ~= blit.height then
-      level = level + 1
-      layer = 0
-
-      if blit.width ~= minify(w, 1) or blit.height ~= minify(h, 1) then
-        printf("I am confused! %ux%u vs %ux%u\n", blit.width, blit.height, minify(w, 1), minify(h, 1))
-	printf("addr=%x\n", blit.addr)
-        --return
-      end
-
-      w = blit.width
-      h = blit.height
+  level = 0
+  repeat
+    local w = minify(width0, level)
+    local h = minify(height0, level)
+    local blit = get_first_blit(basebase, w, h)
+    if blit then
+      printf("				{ .offset = %d, .pitch = %u },\n",
+          blit.ubwc_addr - ubwc_base,
+          blit.ubwc_pitch);
     end
-
-    printf("				{ .offset = %d, .pitch = %u },\n",
-        blit.ubwc_addr - ubwc_base,
-        blit.ubwc_pitch
-    );
-
-    layer = layer + 1
-  end
-
+    level = level + 1
+  until w == 1 and h == 1
   printf("			},\n")
+
   printf("		},\n")
   printf("	},\n")
   printf("\n\n")
