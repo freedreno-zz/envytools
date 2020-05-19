@@ -207,13 +207,16 @@ static int l_rnn_etype(lua_State *L, struct rnn *rnn,
 		struct rnndelem *elem, uint64_t offset)
 {
 	int ret;
+	uint32_t regval;
 	DBG("elem=%p (%d), offset=%lu", elem, elem->type, offset);
 	switch (elem->type) {
 	case RNN_ETYPE_REG:
 		/* if a register has no bitfields, just return
 		 * the raw value:
 		 */
-		ret = pushdecval(L, rnn, rnn_val(rnn, offset), &elem->typeinfo);
+		regval = rnn_val(rnn, offset);
+		regval <<= elem->typeinfo.shr;
+		ret = pushdecval(L, rnn, regval, &elem->typeinfo);
 		if (ret)
 			return ret;
 		return l_rnn_etype_reg(L, rnn, elem, offset);
@@ -389,6 +392,8 @@ static int l_rnn_reg_meta_tonumber(lua_State *L)
 {
 	struct rnndoff *rnndoff = lua_touserdata(L, 1);
 	uint32_t regval = rnn_val(rnndoff->rnn, rnndoff->offset);
+
+	regval <<= rnndoff->elem->typeinfo.shr;
 
 	lua_pushnumber(L, regval);
 	return 1;
