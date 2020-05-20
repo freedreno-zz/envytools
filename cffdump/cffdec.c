@@ -2407,8 +2407,8 @@ static const struct type3_op {
 		CP(LOAD_STATE4, cp_load_state),
 		CP(SET_DRAW_STATE, cp_set_draw_state),
 		CP(DRAW_INDX_OFFSET, cp_draw_indx_offset, {.load_all_groups=true}),
-		CP(EXEC_CS, cp_exec_cs),
-		CP(EXEC_CS_INDIRECT, cp_exec_cs_indirect),
+		CP(EXEC_CS, cp_exec_cs, {.load_all_groups=true}),
+		CP(EXEC_CS_INDIRECT, cp_exec_cs_indirect, {.load_all_groups=true}),
 
 		/* for a5xx */
 		CP(SET_RENDER_MODE, cp_set_render_mode),
