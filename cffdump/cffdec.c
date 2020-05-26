@@ -183,6 +183,9 @@ highlight_gpuaddr(uint64_t gpuaddr)
 
 	ibs[ib].triggered |= triggered;
 
+	if (triggered)
+		printf("ESTIMATED CRASH LOCATION!\n");
+
 	return triggered;
 }
 
