@@ -29,12 +29,12 @@
 struct cffdec_options {
 	unsigned gpu_id;
 	int draw_filter;
-	bool color;
-	bool dump_shaders;
-	bool summary;
-	bool allregs;
-	bool dump_textures;
-	bool decode_markers;
+	int color;
+	int dump_shaders;
+	int summary;
+	int allregs;
+	int dump_textures;
+	int decode_markers;
 	char *script;
 	char **querystrs;
 	int nquery;

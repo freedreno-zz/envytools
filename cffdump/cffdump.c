@@ -23,6 +23,8 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <err.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -53,187 +55,136 @@ static struct cffdec_options options = {
 
 static bool needs_wfi = false;
 static bool is_blob = false;
-static bool show_comp = false;
+static int show_comp = false;
+static int interactive;
 static int vertices;
 
 static int handle_file(const char *filename, int start, int end, int draw);
 
 static void print_usage(const char *name)
 {
-	printf("Usage: %s [OPTIONS]... FILE...\n", name);
-	printf("    --verbose         - more verbose disassembly\n");
-	printf("    --dump-shaders    - dump each shader to raw file\n");
-	printf("    --no-color        - disable colorized output (default for non-console\n");
-	printf("                        output)\n");
-	printf("    --color           - enable colorized output (default for tty output)\n");
-	printf("    --no-pager        - disable pager (default for non-console\n");
-	printf("                        output)\n");
-	printf("    --pager           - enable pager (default for tty output)\n");
-	printf("    --summary         - don't show individual register writes, but just show\n");
-	printf("                        register values on draws\n");
-	printf("    --allregs         - show all registers (including ones not written since\n");
-	printf("                        previous draw) at each draw\n");
-	printf("    --start N         - decode start frame number\n");
-	printf("    --end N           - decode end frame number\n");
-	printf("    --frame N         - decode specified frame number\n");
-	printf("    --draw N          - decode specified draw number\n");
-	printf("    --textures        - dump texture contents (if possible)\n");
-	printf("    --script FILE     - run specified lua script to analyze state at draws\n");
-	printf("    --query/-q REG    - query mode, dump only specified query registers on\n");
-	printf("                        each draw; multiple --query/-q args can be given to\n");
-	printf("                        dump multiple registers; register can be specified\n");
-	printf("                        either by name or numeric offset\n");
-	printf("    --disasm/-d       - combine with query mode, disassembles shader referenced\n");
-	printf("                        by queried register\n");
-	printf("    --help            - show this message\n");
+	fprintf(stderr, "Usage:\n\n"
+			"\t%s [OPTSIONS]... FILE...\n\n"
+			"Options:\n"
+			"\t-v, --verbose    - more verbose disassembly\n"
+			"\t--dump-shaders   - dump each shader to a raw file\n"
+			"\t--no-color       - disable colorized output (default for non-console\n"
+			"\t                   output)\n"
+			"\t--color          - enable colorized output (default for tty output)\n"
+			"\t--no-pager       - disable pager (default for non-console output)\n"
+			"\t--pager          - enable pager (default for tty output)\n"
+			"\t-s, --summary    - don't show individual register writes, but just\n"
+			"\t                   register values on draws\n"
+			"\t-a, --allregs    - show all registers (including ones not written\n"
+			"\t                   since previous draw) on each draw\n"
+			"\t-S, --start=N    - start decoding from frame N\n"
+			"\t-E, --end=N      - stop decoding after frame N\n"
+			"\t-F, --frame=N    - decode only frame N\n"
+			"\t-D, --draw=N     - decode only draw N\n"
+			"\t--textures       - dump texture contents (if possible)\n"
+			"\t-L, --script=LUA - run specified lua script to analyze state\n"
+			"\t-q, --query=REG  - query mode, dump only specified query registers on\n"
+			"\t                   each draw; multiple --query/-q args can be given to\n"
+			"\t                   dump multiple registers; register can be specified\n"
+			"\t                   either by name or numeric offset\n"
+			"\t-h, --help       - show this message\n"
+			, name);
+	exit(2);
 }
+
+static const struct option opts[] = {
+	/* Long opts that simply set a flag (no corresponding short alias: */
+	{ "dump-shaders",    no_argument, &options.dump_shaders,  1 },
+	{ "no-color",        no_argument, &options.color,         0 },
+	{ "color",           no_argument, &options.color,         1 },
+	{ "no-pager",        no_argument, &interactive,           0 },
+	{ "pager",           no_argument, &interactive,           1 },
+	{ "textures",        no_argument, &options.dump_textures, 1 },
+	{ "show-compositor", no_argument, &show_comp,             1 },
+
+	/* Long opts with short alias: */
+	{ "verbose",   no_argument,       0, 'v' },
+	{ "summary",   no_argument,       0, 's' },
+	{ "allregs",   no_argument,       0, 'a' },
+	{ "start",     required_argument, 0, 'S' },
+	{ "end",       required_argument, 0, 'E' },
+	{ "frame",     required_argument, 0, 'F' },
+	{ "draw",      required_argument, 0, 'D' },
+	{ "script",    required_argument, 0, 'L' },
+	{ "query",     required_argument, 0, 'q' },
+	{ "help",      no_argument,       0, 'h' },
+};
 
 int main(int argc, char **argv)
 {
-	int ret = -1, n = 1;
+	int ret = -1;
 	int start = 0, end = 0x7ffffff, draw = -1;
-	int interactive = isatty(STDOUT_FILENO);
+	int c;
+
+	interactive = isatty(STDOUT_FILENO);
 
 	options.color = interactive;
 
-	while (n < argc) {
-		if (!strcmp(argv[n], "--verbose")) {
+	while ((c = getopt_long(argc, argv, "vsaS:E:F:D:L:q:h", opts, NULL)) != -1) {
+		switch (c) {
+		case 0:
+			/* option that set a flag, nothing to do */
+			break;
+		case 'v':
 			disasm_set_debug(PRINT_RAW | EXPAND_REPEAT | PRINT_VERBOSE);
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--show-compositor")) {
-			show_comp = true;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--dump-shaders")) {
-			options.dump_shaders = true;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--no-color")) {
-			options.color = false;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--color")) {
-			options.color = true;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--no-pager")) {
-			interactive = 0;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--pager")) {
-			interactive = 1;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--summary")) {
+			break;
+		case 's':
 			options.summary = true;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--allregs")) {
+			break;
+		case 'a':
 			options.allregs = true;
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--start")) {
-			n++;
-			start = atoi(argv[n]);
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--end")) {
-			n++;
-			end = atoi(argv[n]);
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--frame")) {
-			n++;
-			end = start = atoi(argv[n]);
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--draw")) {
-			n++;
-			draw = atoi(argv[n]);
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--textures")) {
-			n++;
-			options.dump_textures = true;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--script")) {
-			n++;
-			options.script = argv[n];
+			break;
+		case 'S':
+			start = atoi(optarg);
+			break;
+		case 'E':
+			end = atoi(optarg);
+			break;
+		case 'F':
+			start = end = atoi(optarg);
+			break;
+		case 'D':
+			draw = atoi(optarg);
+			break;
+		case 'L':
+			options.script = optarg;
 			if (script_load(options.script)) {
-				fprintf(stderr, "error loading %s\n", argv[n]);
-				return 1;
+				errx(-1, "error loading %s\n", options.script);
 			}
-			n++;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--query") ||
-				!strcmp(argv[n], "-q")) {
-			n++;
+			break;
+		case 'q':
 			options.querystrs = realloc(options.querystrs,
 					(options.nquery + 1) * sizeof(*options.querystrs));
-			options.querystrs[options.nquery] = argv[n];
+			options.querystrs[options.nquery] = optarg;
 			options.nquery++;
-			n++;
 			interactive = 0;
-			continue;
-		}
-
-		if (!strcmp(argv[n], "--help")) {
-			n++;
+			break;
+		case 'h':
+		default:
 			print_usage(argv[0]);
-			return 0;
 		}
-
-		break;
 	}
 
 	if (interactive) {
 		pager_open();
 	}
 
-	while (n < argc) {
-		ret = handle_file(argv[n], start, end, draw);
+	while (optind < argc) {
+		ret = handle_file(argv[optind], start, end, draw);
 		if (ret) {
-			fprintf(stderr, "error reading: %s\n", argv[n]);
+			fprintf(stderr, "error reading: %s\n", argv[optind]);
 			fprintf(stderr, "continuing..\n");
 		}
-		n++;
+		optind++;
 	}
 
-	if (ret) {
+	if (ret)
 		print_usage(argv[0]);
-		return ret;
-	}
 
 	script_finish();
 
@@ -241,7 +192,7 @@ int main(int argc, char **argv)
 		pager_close();
 	}
 
-	return 0;
+	return ret;
 }
 
 static void parse_addr(uint32_t *buf, int sz, unsigned int *len, uint64_t *gpuaddr)
